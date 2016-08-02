@@ -374,3 +374,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+
+## VS 2015 Project Specific exclusions:
+*/CritterClient/js/
