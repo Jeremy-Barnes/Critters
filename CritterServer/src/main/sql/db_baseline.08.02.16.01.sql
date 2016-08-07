@@ -1,4 +1,4 @@
-CREATE TABLE user(
+CREATE TABLE users(
     userID SERIAL NOT NULL PRIMARY KEY,
     userName VARCHAR(24) NOT NULL,
     firstName VARCHAR(24),
@@ -14,30 +14,30 @@ CREATE TABLE user(
     tokenSelector VARCHAR,
     tokenValidator VARCHAR,
     critterbuxx INT NOT NULL,
-    CONSTRAINT uk_email UNIQUE (userName),
+    CONSTRAINT uk_username UNIQUE (userName),
     CONSTRAINT uk_email UNIQUE (emailAddress)
 );
 
-CREATE TABLE petSpeciesConfig(
+CREATE TABLE petSpeciesConfigs(
     petSpeciesConfigID SERIAL NOT NULL PRIMARY KEY,
     petTypeName VARCHAR(24) NOT NULL
 );
 
-CREATE TABLE petColorConfig(
-    petsColorConfigID SERIAL NOT NULL PRIMARY KEY,
+CREATE TABLE petColorConfigs(
+    petColorConfigID SERIAL NOT NULL PRIMARY KEY,
     petColorName VARCHAR(24) NOT NULL
 );
 
-CREATE TABLE pet(
+CREATE TABLE pets(
     petID SERIAL NOT NULL PRIMARY KEY,
     petName VARCHAR(24) NOT NULL,
     sex BOOLEAN NULL,
-    colorID INT NOT NULL REFERENCES petsColorConfig(petsColorConfigID),
+    colorID INT NOT NULL REFERENCES petColorConfigs(petColorConfigID),
     ownerID INT NOT NULL REFERENCES users(userID),
-    speciesID INT NOT NULL REFERENCES petSpeciesConfig(petSpeciesConfigID)
+    speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID)
 );
 
-CREATE TABLE itemConfig(
+CREATE TABLE itemConfigs(
     itemConfigID SERIAL NOT NULL PRIMARY KEY,
     itemName VARCHAR(24) NOT NULL,
     itemDescription VARCHAR(1000) NOT NULL
@@ -45,23 +45,23 @@ CREATE TABLE itemConfig(
 
 CREATE TABLE inventoryItems(
     inventoryItemID SERIAL NOT NULL PRIMARY KEY,
-    itemTypeID INT NOT NULL REFERENCES itemConfig(itemConfigID),
-    ownerID INT NOT NULL REFERENCES user(userID)
+    itemTypeID INT NOT NULL REFERENCES itemConfigs(itemConfigID),
+    ownerID INT NOT NULL REFERENCES users(userID)
 );
 
 CREATE TABLE friendships(
     friendshipID SERIAL NOT NULL PRIMARY KEY,
-    requesterUserID INT NOT NULL REFERENCES user(userID),
-    requestedUserID INT NOT NULL REFERENCES user(userID),
+    requesterUserID INT NOT NULL REFERENCES users(userID),
+    requestedUserID INT NOT NULL REFERENCES users(userID),
     accepted BOOLEAN NOT NULL,
     dateSent DATE NOT NULL,
     CONSTRAINT friendshipLink UNIQUE (requesterUserID, requestedUserID)
 );
 
-CREATE TABLE message(
+CREATE TABLE messages(
     messageID SERIAL NOT NULL PRIMARY KEY,
-    senderUserID INT NOT NULL REFERENCES user(userID),
-    recepientUserID INT NOT NULL REFERENCES user(userID),
+    senderUserID INT NOT NULL REFERENCES users(userID),
+    recepientUserID INT NOT NULL REFERENCES users(userID),
     read BOOLEAN NOT NULL,
     dateSent DATE NOT NULL,
     messageText TEXT,
