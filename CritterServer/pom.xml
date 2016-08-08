@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.critters</groupId>
   <artifactId>CritterServer</artifactId>
-  <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <version>0.1-SNAPSHOT</version>
   <name>CritterServer</name>
   <url>http://maven.apache.org</url>
    <dependencies>
