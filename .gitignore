@@ -378,3 +378,5 @@ buildNumber.properties
 
 ## VS 2015 Project Specific exclusions:
 */CritterClient/js/
+CritterServer/resources/hibernate.cfg.xml
+CritterServer/resources/META-INF/persistence.xml
