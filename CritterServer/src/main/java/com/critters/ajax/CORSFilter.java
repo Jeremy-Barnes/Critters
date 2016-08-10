@@ -1,4 +1,4 @@
-package com.critters.com.critters.ajax;
+package com.critters.ajax;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

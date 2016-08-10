@@ -1,4 +1,4 @@
-package com.critters.com.critters.dal;
+package com.critters.dal;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
