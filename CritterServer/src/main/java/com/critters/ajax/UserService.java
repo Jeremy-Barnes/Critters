@@ -1,5 +1,6 @@
 package com.critters.ajax;
 
+import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.User;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -29,7 +30,9 @@ public class UserService extends AjaxService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(JAXBElement<User> jsonUser) throws Exception {
 		User user = jsonUser.getValue();
-		throw new Exception("Not implemented yet"); //TODO this
+		String validator = UserBLL.createUserReturnUnHashedValidator(user);
+		return Response.status(Response.Status.OK).entity(user).build();
+		//throw new Exception("Not implemented yet"); //TODO this
 	}
 
 	@POST
