@@ -17,7 +17,7 @@ public class HibernateUtil {
 	static {
 		try {
 			sessionFactory = new Configuration().configure().buildSessionFactory();
-			entityManagerFactory = Persistence.createEntityManagerFactory("list.nice");
+			entityManagerFactory = Persistence.createEntityManagerFactory("com.critters");
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
