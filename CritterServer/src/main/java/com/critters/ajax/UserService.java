@@ -9,10 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -31,8 +28,12 @@ public class UserService extends AjaxService{
 	public Response createUser(JAXBElement<User> jsonUser) throws Exception {
 		User user = jsonUser.getValue();
 		String validator = UserBLL.createUserReturnUnHashedValidator(user);
-		return Response.status(Response.Status.OK).entity(user).build();
-		//throw new Exception("Not implemented yet"); //TODO this
+
+		httpRequest.getSession().setAttribute("user", user);
+		User copiedUser = super.serializeDeepCopy(user, User.class);
+
+		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
+					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 
 	@POST
@@ -41,7 +42,13 @@ public class UserService extends AjaxService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromLogin(JAXBElement<User> jsonUser) throws Exception {
 		User user = jsonUser.getValue();
-		throw new Exception("Not implemented yet"); //TODO this
+		user = UserBLL.getUser(user.getEmailAddress(), user.getPassword(), true);
+
+		httpRequest.getSession().setAttribute("user", user);
+		User copiedUser = super.serializeDeepCopy(user, User.class);
+
+		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
+					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 
 	@POST

@@ -11,7 +11,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name="friendships")
-//@NamedQuery(name="getFriends", query="select f from friendships f where f.requesterUserID = :userID or f.requestedUserID = userID")
 public class Friendship {
 
 	@Id
@@ -39,8 +38,7 @@ public class Friendship {
 		this.dateSent = dateSent;
 	}
 
-	public Friendship(){
-	}
+	public Friendship(){}
 
 	public int getFriendshipID() {
 		return friendshipID;
