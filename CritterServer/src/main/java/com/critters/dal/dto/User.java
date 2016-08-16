@@ -1,5 +1,6 @@
 package com.critters.dal.dto;
 
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -80,9 +81,7 @@ public class User {
 		this.friendsOf = null;
 	}
 
-	public User(){
-
-	}
+	public User(){}
 
 	public int getUserID() {
 		return userID;
@@ -241,4 +240,10 @@ public class User {
 				friendship.setRequester(new User(friendship.getRequester()));
 			}
 	}
+
+	public void initializeCollections() {
+		Hibernate.initialize(friends);
+		Hibernate.initialize(friendsOf);
+	}
+
 }

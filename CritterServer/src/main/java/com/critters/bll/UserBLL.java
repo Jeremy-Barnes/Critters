@@ -50,7 +50,7 @@ public class UserBLL {
 		entityManager.getTransaction().begin();
 
 		User user = (User) entityManager.createQuery("from User where emailAddress = :email").setParameter("email", email).getSingleResult();
-
+		user.initializeCollections();
 		if(login) {
 			String validator = null;
 			if (checkLogin(user.getPassword(), password, user.getSalt())) {
@@ -61,7 +61,7 @@ public class UserBLL {
 			} else {
 				entityManager.getTransaction().rollback();
 				entityManager.close();
-				user = null;
+				throw new GeneralSecurityException("Could not log in.");
 			}
 			if (validator != null) user.setTokenValidator(validator);
 		} else {

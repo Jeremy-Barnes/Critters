@@ -1,10 +1,12 @@
 package com.critters.ajax;
 
+import com.critters.dal.dto.User;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.NewCookie;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -42,6 +44,12 @@ public class AjaxService {
 		unmarshaller.setProperty(JAXBContextProperties.MEDIA_TYPE, "application/json");
 		T copiedObject = (T)unmarshaller.unmarshal(new StreamSource(new StringReader(sw.toString())), objType).getValue();
 		return copiedObject;
+	}
+
+	protected NewCookie[] createUserCookies(User user){
+		NewCookie longTermCookie = new NewCookie("critters", user.getTokenSelector() + ":" + user.getTokenValidator(), "/", null, null, 60*60*24*30, false ); //sec*min*hours*days
+		NewCookie sessionID = new NewCookie("JSESSIONID", httpRequest.getSession().getId(), "/", null, null, 60*60*3, false ); //used because setting other cookie seems to overwrite Tomcat generated cookie.
+		return new NewCookie[]{longTermCookie, sessionID};
 	}
 }
 
