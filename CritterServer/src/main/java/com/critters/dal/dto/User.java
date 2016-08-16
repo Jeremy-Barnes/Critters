@@ -3,6 +3,7 @@ package com.critters.dal.dto;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,10 +33,17 @@ public class User {
 	private String tokenSelector;
 	private String tokenValidator;
 	private int critterbuxx;
+	@OneToMany
+	@JoinColumn(name="requesteruserid")
+	private List<Friendship> friends;
+	@OneToMany
+	@JoinColumn(name="requesteduserid")
+	private List<Friendship> friendsOf;
+
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friendships1, List<Friendship> friendships2) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -51,8 +59,8 @@ public class User {
 		this.tokenSelector = tokenSelector;
 		this.tokenValidator = tokenValidator;
 		this.critterbuxx = critterbuxx;
-		this.friendships1 = friendships1;
-		this.friendships2 = friendships2;
+		this.friends = friends;
+		this.friendsOf = friendsOf;
 
 	}
 
@@ -68,45 +76,13 @@ public class User {
 		this.country = copyUser.country;
 		this.postcode = copyUser.postcode;
 		this.critterbuxx = copyUser.critterbuxx;
-		this.friendships1 = null;
-		this.friendships2 = null;
+		this.friends = null;
+		this.friendsOf = null;
 	}
 
 	public User(){
 
 	}
-
-	public List<Friendship> getFriendships1() {
-		if(friendships1 != null)
-			for(Friendship friendship: friendships1) {
-				friendship.setRequester(new User(this));
-				friendship.setRequested(new User(friendship.getRequested()));
-			}
-		return friendships1;
-	}
-
-	public void setFriendships1(List<Friendship> friendships) {
-		this.friendships1 = friendships;
-	}
-
-	public List<Friendship> getFriendships2() {
-		if(friendships2 != null)
-			for(Friendship friendship: friendships2) {
-				friendship.setRequested(new User(this));
-				friendship.setRequester(new User(friendship.getRequester()));
-			}
-		return friendships2;
-	}
-
-	public void setFriendships2(List<Friendship> friendships) {
-		this.friendships2 = friendships;
-	}
-
-	@JoinColumn(name="requesteruserid")
-	private List<Friendship> friendships1;
-
-	@JoinColumn(name="requesteduserid")
-	private List<Friendship> friendships2;
 
 	public int getUserID() {
 		return userID;
@@ -226,5 +202,43 @@ public class User {
 
 	public void setCritterbuxx(int critterbuxx) {
 		this.critterbuxx = critterbuxx;
+	}
+
+	public List<Friendship> getFriends() {
+		List<Friendship> frnds = new ArrayList();
+		if(friends != null) {
+			for (Friendship friendship : friends) {
+				friendship.setRequester(new User(this));
+				friendship.setRequested(new User(friendship.getRequested()));
+			}
+			frnds.addAll(friends);
+		}
+		if(friendsOf != null) {
+			for (Friendship friendship : friendsOf) {
+				friendship.setRequested(new User(this));
+				friendship.setRequester(new User(friendship.getRequester()));
+			}
+			frnds.addAll(friendsOf);
+		}
+
+		return frnds;
+	}
+
+	public void setFriends(List<Friendship> friendships) {
+		this.friends = friendships;
+		if(friends != null)
+			for(Friendship friendship: friends) {
+				friendship.setRequester(new User(this));
+				friendship.setRequested(new User(friendship.getRequested()));
+			}
+	}
+
+	public void setFriendsOf(List<Friendship> friendships) {
+		this.friendsOf = friendships;
+		if(friendsOf != null)
+			for(Friendship friendship: friendsOf) {
+				friendship.setRequested(new User(this));
+				friendship.setRequester(new User(friendship.getRequester()));
+			}
 	}
 }
