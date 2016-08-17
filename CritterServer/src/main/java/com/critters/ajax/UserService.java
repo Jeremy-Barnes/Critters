@@ -9,18 +9,29 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.*;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jeremy on 8/7/2016.
  */
 @Path("/users")
 public class UserService extends AjaxService{
+	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+
 	@POST
 	@Path("/createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -31,10 +42,11 @@ public class UserService extends AjaxService{
 
 		httpRequest.getSession().setAttribute("user", user);
 		User copiedUser = super.serializeDeepCopy(user, User.class);
-
 		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
+
+
 
 	@POST
 	@Path("/getUserFromLogin")
@@ -64,7 +76,25 @@ public class UserService extends AjaxService{
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changeUserInformation(FormDataMultiPart form, @Context HttpHeaders header) throws JAXBException, GeneralSecurityException, IOException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
 		User user = (User) httpRequest.getSession().getAttribute("user");
 		throw new IOException("Not implemented yet"); //TODO this
+	}
+
+	@Path("/poll")
+	@POST
+	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+
+		if(loggedInUser != null) {
+			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
+			peers.put(1, asyncResponse);
+		}
+
 	}
 }
