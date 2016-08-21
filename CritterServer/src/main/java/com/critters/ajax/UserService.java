@@ -65,7 +65,17 @@ public class UserService extends AjaxService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(JAXBElement<AuthToken> jsonToken) throws GeneralSecurityException, UnsupportedEncodingException, JAXBException {
 		AuthToken token = jsonToken.getValue();
-		throw new JAXBException("Not implemented yet"); //TODO this
+
+		User user = UserBLL.getUser(token.selector, token.validator);
+		httpRequest.getSession().setAttribute("user", user);
+		User copiedUser = super.serializeDeepCopy(user, User.class);
+
+		return Response.status(Response.Status.OK)
+					   .cookie(createUserCookies(copiedUser))
+					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
+
+
+		//throw new JAXBException("Not implemented yet"); //TODO this
 	}
 
 	@POST
@@ -79,7 +89,10 @@ public class UserService extends AjaxService{
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		throw new IOException("Not implemented yet"); //TODO this
+		user = UserBLL.updateUser(user, loggedInUser);
+		return Response.status(Response.Status.OK).cookie(createUserCookies(user)).entity(UserBLL.wipeSensitiveFields(user)).build();
+
+		//throw new IOException("Not implemented yet"); //TODO this
 	}
 
 	@Path("/poll")
