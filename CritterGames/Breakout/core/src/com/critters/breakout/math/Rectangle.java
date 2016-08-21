@@ -2,12 +2,19 @@ package com.critters.breakout.math;
 
 public class Rectangle {
 
+	public static final int NO_INTERSECTION = 0x00;
+	public static final int HORRIZONTAL = 0x01;
+	public static final int VERTICAL = 0x02;
+
 	/**
 	 * v1 ----- | | ------v2
 	 */
 
 	public Vector2f v1;
 	public Vector2f v2;
+
+	private float width;
+	private float height;
 
 	public Line top;
 	public Line bottom;
@@ -19,8 +26,18 @@ public class Rectangle {
 		this.v2 = v2;
 
 		// Create the lines
-		float width = v2.x - v1.x;
-		float height = v2.y - v1.y;
+		width = v2.x - v1.x;
+		height = v2.y - v1.y;
+
+		top = new Line(v1, v1.add(width, 0));
+		bottom = new Line(v2.add(-width, 0), v2);
+		left = new Line(v1, v1.add(0, height));
+		right = new Line(v2.add(0, -height), v2);
+	}
+
+	public void update(Vector2f v1, Vector2f v2) {
+		this.v1 = v1;
+		this.v2 = v2;
 
 		top = new Line(v1, v1.add(width, 0));
 		bottom = new Line(v2.add(-width, 0), v2);
@@ -34,11 +51,19 @@ public class Rectangle {
 		return false;
 	}
 
-	public boolean intersectsCircle(Circle c) {
+	public int intersectsCircle(Circle c) {
 		/*
-		 * If any of the sided of the rectangle are intersected by the circle or
-		 * the center of the circle is inside the rectangle
+		 * Return the line the circle is intersecting
 		 */
-		return /*intersectsPoint(c.center) ||*/ top.intersectsCircle(c) || bottom.intersectsCircle(c) || left.intersectsCircle(c) || right.intersectsCircle(c);
+		if (top.intersectsCircle(c))
+			return HORRIZONTAL;
+		if (bottom.intersectsCircle(c))
+			return HORRIZONTAL;
+		if (left.intersectsCircle(c))
+			return VERTICAL;
+		if (right.intersectsCircle(c))
+			return VERTICAL;
+
+		return NO_INTERSECTION;
 	}
 }

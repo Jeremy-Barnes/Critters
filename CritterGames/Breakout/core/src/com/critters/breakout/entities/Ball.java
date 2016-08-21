@@ -8,6 +8,9 @@ import com.critters.breakout.math.Vector2f;
 import com.critters.breakout.math.Circle;
 
 import static com.critters.breakout.Level.level;
+import static com.critters.breakout.math.Rectangle.HORRIZONTAL;
+import static com.critters.breakout.math.Rectangle.NO_INTERSECTION;
+import static com.critters.breakout.math.Rectangle.VERTICAL;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,8 +35,20 @@ public class Ball extends Entity {
 	private void checkIntersections() {
 		ArrayList<Collidable> blocks = level.getCollidables();
 		for (Collidable b : blocks) {
-			if (b.getRectangle().intersectsCircle(circle)) {
+					
+			int result = b.getRectangle().intersectsCircle(circle);
+			if (result != NO_INTERSECTION) {
 				b.hit();
+
+				// Bounce
+				if (result == HORRIZONTAL) {
+					vel = vel.mul(1, -1);
+					return;
+				} else if (result == VERTICAL) {
+					vel = vel.mul(-1, 1);
+					return;
+				}
+
 			}
 		}
 	}
@@ -41,7 +56,7 @@ public class Ball extends Entity {
 	public void launch() {
 		Random random = new Random();
 		vel = new Vector2f(random.nextFloat() - 0.5f, random.nextFloat());
-		vel = vel.normal().mul(4);
+		vel = vel.normal().mul(3);
 	}
 
 	@Override

@@ -41,4 +41,8 @@ public class Vector2f {
 		return new Vector2f(x * d, y * d);
 	}
 
+	public Vector2f mul(float dx, float dy) {
+		return new Vector2f(x * dx, y * dy);
+	}
+
 }

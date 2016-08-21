@@ -15,6 +15,9 @@ public class Pad extends Collidable {
 	@Override
 	public void update() {
 		pos.x = Gdx.input.getX() - size.x / 2;
+
+		System.out.println(size.x);
+		rectangle.update(pos, pos.add(size));
 	}
 
 	@Override
@@ -23,6 +26,10 @@ public class Pad extends Collidable {
 		sr.begin(ShapeType.Filled);
 		sr.setColor(0.75f, 0.5f, 0.25f, 1);
 		sr.rect(pos.x, pos.y, size.x, size.y);
+		
+		sr.setColor(0f, 0f, 0f, 1);
+		//System.out.println(rectangle.top.v1.x + " " + rectangle.top.v1.y + " " + rectangle.top.v2.x + " " + rectangle.top.v2.y);
+		//sr.rect(rectangle.top.v1.x, rectangle.top.v1.y, rectangle.top.v2.x, rectangle.top.v2.y);
 		sr.end();
 	}
 

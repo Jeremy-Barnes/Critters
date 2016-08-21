@@ -45,10 +45,12 @@ public class Level {
 		System.out.println(Gdx.graphics.getHeight());
 
 		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
+		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE)));
 		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
 		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
 
 		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
+		
 		ball = new Ball(new Vector2f(316, 100), 8);
 		entities.add(ball);
 
