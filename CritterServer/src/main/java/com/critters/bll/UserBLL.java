@@ -17,6 +17,7 @@ import java.util.UUID;
 public class UserBLL {
 
 	public static String createUserReturnUnHashedValidator(User user) throws GeneralSecurityException, UnsupportedEncodingException {
+		user.setCritterbuxx(500); //TODO: economics
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 
