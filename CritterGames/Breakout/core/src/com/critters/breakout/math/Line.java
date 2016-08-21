@@ -31,14 +31,13 @@ public class Line {
 		// Closest point
 		Vector2f cp = v1.add(direction.mul((float) Math.cos(theta) * distance));
 
+		// Distance from circle center to the line ends
 		Vector2f d1 = c.center.sub(v1);
 		Vector2f d2 = c.center.sub(v2);
 
 		// Calculate the distance from circle center to the closest point on the
 		// line
 		float d = distance * (float) Math.sin(theta);
-		if (isOnTheLine(cp))
-			System.out.println(isOnTheLine(cp));
 		return d < c.radius && (isOnTheLine(cp) || d1.length() < c.radius || d2.length() < c.radius);
 	}
 

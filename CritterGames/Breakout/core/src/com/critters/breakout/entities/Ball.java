@@ -10,6 +10,7 @@ import com.critters.breakout.math.Circle;
 import static com.critters.breakout.Level.level;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Ball extends Entity {
 
@@ -17,27 +18,38 @@ public class Ball extends Entity {
 
 	private Circle circle;
 
+	private Vector2f vel;
+
 	public Ball(Vector2f pos, float radius) {
 		super(pos);
 		this.radius = radius;
 
 		circle = new Circle(pos, radius);
+
+		vel = new Vector2f();
 	}
 
 	private void checkIntersections() {
-		ArrayList<Block> blocks = level.getBlocks();
-		for (Block b : blocks) {
-			if(b.getRectangle().intersectsCircle(circle)){
-				//System.out.println("Intersection!!!");
+		ArrayList<Collidable> blocks = level.getCollidables();
+		for (Collidable b : blocks) {
+			if (b.getRectangle().intersectsCircle(circle)) {
 				b.hit();
 			}
 		}
 	}
 
+	public void launch() {
+		Random random = new Random();
+		vel = new Vector2f(random.nextFloat() - 0.5f, random.nextFloat());
+		vel = vel.normal().mul(4);
+	}
+
 	@Override
 	public void update() {
-		pos.x = Gdx.input.getX();
-		pos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+		// pos.x = Gdx.input.getX();
+		// pos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+		pos = pos.add(vel);
 
 		circle.updateCenter(pos);
 
