@@ -6,10 +6,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
+import static com.critters.breakout.Level.level;
+
 public class Block extends Entity {
 	private Vector2f size;
 
 	private Rectangle rectangle;
+
+	private boolean hit = false;
 
 	public Block(Vector2f pos, Vector2f size) {
 		super(pos);
@@ -20,6 +24,8 @@ public class Block extends Entity {
 
 	@Override
 	public void update() {
+		if (hit)
+			level.removeEntity(this);
 
 	}
 
@@ -34,5 +40,9 @@ public class Block extends Entity {
 
 	public Rectangle getRectangle() {
 		return rectangle;
+	}
+
+	public void hit() {
+		hit = true;
 	}
 }

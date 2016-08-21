@@ -37,7 +37,8 @@ public class Line {
 		// Calculate the distance from circle center to the closest point on the
 		// line
 		float d = distance * (float) Math.sin(theta);
-
+		if (isOnTheLine(cp))
+			System.out.println(isOnTheLine(cp));
 		return d < c.radius && (isOnTheLine(cp) || d1.length() < c.radius || d2.length() < c.radius);
 	}
 

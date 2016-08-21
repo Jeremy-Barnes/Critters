@@ -28,7 +28,8 @@ public class Ball extends Entity {
 		ArrayList<Block> blocks = level.getBlocks();
 		for (Block b : blocks) {
 			if(b.getRectangle().intersectsCircle(circle)){
-				System.out.println("Intersection!!!");
+				//System.out.println("Intersection!!!");
+				b.hit();
 			}
 		}
 	}

@@ -18,11 +18,11 @@ public class Level {
 	public Level() {
 		level = this;
 
-		entities.add(new Ball(new Vector2f(100, 100), 5));
+		entities.add(new Ball(new Vector2f(100, 100), 8));
 
 		for (int x = 0; x < 12; x++) {
 			for (int y = 0; y < 5; y++) {
-				entities.add(new Block(new Vector2f(30 + x * 50, 300 + y * 20), new Vector2f(49, 19)));
+				entities.add(new Block(new Vector2f(30 + x * 50, 300 + y * 20), new Vector2f(48, 18)));
 			}
 		}
 	}
@@ -52,5 +52,9 @@ public class Level {
 				blocks.add((Block) e);
 		}
 		return blocks;
+	}
+
+	public void removeEntity(Entity e) {
+		entities.remove(e);
 	}
 }

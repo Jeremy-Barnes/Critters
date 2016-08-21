@@ -19,7 +19,7 @@ public class Rectangle {
 		this.v2 = v2;
 
 		// Create the lines
-		float width = v2.y - v1.y;
+		float width = v2.x - v1.x;
 		float height = v2.y - v1.y;
 
 		top = new Line(v1, v1.add(width, 0));
@@ -29,7 +29,7 @@ public class Rectangle {
 	}
 
 	private boolean intersectsPoint(Vector2f v) {
-		if (v.x > v1.x && v.x < v2.x && v.y > v1.x && v.y < v2.y)
+		if (v.x > v1.x && v.x < v2.x && v.y > v1.y && v.y < v2.y)
 			return true;
 		return false;
 	}
@@ -39,6 +39,6 @@ public class Rectangle {
 		 * If any of the sided of the rectangle are intersected by the circle or
 		 * the center of the circle is inside the rectangle
 		 */
-		return intersectsPoint(c.center) || top.intersectsCircle(c) || bottom.intersectsCircle(c) || left.intersectsCircle(c) || right.intersectsCircle(c);
+		return /*intersectsPoint(c.center) ||*/ top.intersectsCircle(c) || bottom.intersectsCircle(c) || left.intersectsCircle(c) || right.intersectsCircle(c);
 	}
 }
