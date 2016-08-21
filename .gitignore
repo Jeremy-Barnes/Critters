@@ -429,3 +429,7 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+
+CritterServer/resources/hibernate.cfg.xml
+CritterServer/resources/META-INF/persistence.xml
+
