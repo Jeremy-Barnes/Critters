@@ -32,22 +32,25 @@
     <Content Include="Libraries\knockout-3.3.0.js" />
     <Content Include="Libraries\knockout.mapping-latest.js" />
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
-    <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="Libraries\typings\knockout.mapping\knockout.mapping.d.ts" />
-    <TypeScriptCompile Include="Libraries\typings\knockout\knockout.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Libraries\jquery-2.1.4.min.map" />
+    <Content Include="tsconfig.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="DTOs.ts" />
+    <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
+    <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Libraries\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <TypeScriptCompile Include="Libraries\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="ServiceMethods.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Libraries\jquery-2.1.4.min.map" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
