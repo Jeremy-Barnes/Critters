@@ -71,7 +71,6 @@ public class UserService extends AjaxService{
 		User copiedUser = super.serializeDeepCopy(user, User.class);
 
 		return Response.status(Response.Status.OK)
-					   .cookie(createUserCookies(copiedUser))
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 
 
