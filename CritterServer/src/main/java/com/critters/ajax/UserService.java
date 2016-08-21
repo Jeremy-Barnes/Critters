@@ -70,7 +70,7 @@ public class UserService extends AjaxService{
 
 	@POST
 	@Path("/changeUserInformation")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, GeneralSecurityException, IOException {
 		User user = jsonUser.getValue();
