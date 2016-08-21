@@ -79,7 +79,10 @@ public class UserService extends AjaxService{
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		throw new IOException("Not implemented yet"); //TODO this
+		user = UserBLL.updateUser(user, loggedInUser);
+		return Response.status(Response.Status.OK).cookie(createUserCookies(user)).entity(UserBLL.wipeSensitiveFields(user)).build();
+
+		//throw new IOException("Not implemented yet"); //TODO this
 	}
 
 	@Path("/poll")
