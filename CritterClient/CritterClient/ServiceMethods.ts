@@ -1,5 +1,5 @@
 ﻿class ServiceMethods {
-    static baseURL: string = "http://f999c0d7.ngrok.io/api/critters/";
+    static baseURL: string = "http://c96979c7.ngrok.io/api/critters";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
 
     public static doAjax(functionName: string, functionService: string, parameters: any): JQueryPromise<any> {
