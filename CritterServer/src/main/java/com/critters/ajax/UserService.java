@@ -65,7 +65,17 @@ public class UserService extends AjaxService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(JAXBElement<AuthToken> jsonToken) throws GeneralSecurityException, UnsupportedEncodingException, JAXBException {
 		AuthToken token = jsonToken.getValue();
-		throw new JAXBException("Not implemented yet"); //TODO this
+
+		User user = UserBLL.getUser(token.selector, token.validator);
+		httpRequest.getSession().setAttribute("user", user);
+		User copiedUser = super.serializeDeepCopy(user, User.class);
+
+		return Response.status(Response.Status.OK)
+					   .cookie(createUserCookies(copiedUser))
+					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
+
+
+		//throw new JAXBException("Not implemented yet"); //TODO this
 	}
 
 	@POST
