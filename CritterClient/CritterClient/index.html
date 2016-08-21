@@ -30,12 +30,14 @@
         <input type="text" name="userName" data-bind="value: userName" placeholder="userName" required />
         <input type="password" name="password" data-bind="textInput: password, css: { passwordMismatch: $root.passwordsMatch() == false}" placeholder="password" required />
         <input type="password" name="password" data-bind="textInput: $root.passwordConfirm, css: { passwordMismatch: $root.passwordsMatch() == false}" placeholder="confirm password" required />
+        Birth: <input type="date" name="birthdate" data-bind="value: birthdate" placeholder="mm/dd/yyyy" required />
         <input type="submit" value="Sign Up" data-bind="enable: $root.passwordsMatch" />
     </form>
 
     <form id="account-settings" class="add-gutter" data-bind="submit: submitAccountChanges, with: user">
         <h1>Here's your fucking account info</h1>
         <div>Username: <span data-bind="text: userName"></span></div>
+        <div>Dollars: <span data-bind="text: critterbuxx"></span></div>
         <div class="row">
             <div class="col-md-6"><input type="text" class="form-control" name="firstName" placeholder="first name" data-bind="value: firstName" required /></div>
             <div class="col-md-6"><input type="text" class="form-control" name="lastName" placeholder="last name" data-bind="value: lastName" required /></div>
