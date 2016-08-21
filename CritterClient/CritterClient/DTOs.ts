@@ -24,7 +24,7 @@ class UserModel {
     lastName: KnockoutObservable<string> = ko.observable("");
     emailAddress: KnockoutObservable<string> = ko.observable("");
     password: KnockoutObservable<string> = ko.observable("");
-    birthdate: Date;
+    birthdate: KnockoutObservable<Date> = ko.observable(null);
     salt: KnockoutObservable<string> = ko.observable("");
     city: KnockoutObservable<string> = ko.observable("");
     state: KnockoutObservable<string> = ko.observable("");
