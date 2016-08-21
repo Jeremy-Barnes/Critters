@@ -32,6 +32,7 @@
     }
 
     public static createUser(user: UserModel): JQueryPromise<User> {
+        user.birthdate(new Date(Date.parse(user.birthdate().toString())));
         return ServiceMethods.doAjax("createUser", "users", ko.toJS(user));
     }
 
