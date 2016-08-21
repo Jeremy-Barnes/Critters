@@ -1,19 +1,17 @@
 package com.critters.breakout.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.critters.breakout.math.Vector2f;
-import com.critters.breakout.math.Circle;
-
 import static com.critters.breakout.Level.level;
+import static com.critters.breakout.graphics.Render.sr;
 import static com.critters.breakout.math.Rectangle.HORRIZONTAL;
 import static com.critters.breakout.math.Rectangle.NO_INTERSECTION;
 import static com.critters.breakout.math.Rectangle.VERTICAL;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.breakout.math.Circle;
+import com.critters.breakout.math.Vector2f;
 
 public class Ball extends Entity {
 
@@ -92,11 +90,8 @@ public class Ball extends Entity {
 
 	@Override
 	public void render(SpriteBatch render) {
-		ShapeRenderer sr = new ShapeRenderer();
-		sr.begin(ShapeType.Filled);
 		sr.setColor(0, 1, 0, 1);
 		sr.circle(pos.x, pos.y, radius);
-		sr.end();
 	}
 
 }

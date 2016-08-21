@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
 import com.critters.breakout.entities.Block;
 import com.critters.breakout.entities.Collidable;
@@ -12,6 +13,7 @@ import com.critters.breakout.entities.Pad;
 import com.critters.breakout.entities.Wall;
 import com.critters.breakout.input.Input;
 import com.critters.breakout.math.Vector2f;
+import static com.critters.breakout.graphics.Render.sr;
 
 public class Level {
 
@@ -81,9 +83,13 @@ public class Level {
 	 * Render the level.
 	 */
 	public void render(SpriteBatch render) {
+		sr.begin(ShapeType.Filled);
+
 		for (Entity e : entities) {
 			e.render(render);
 		}
+
+		sr.end();
 	}
 
 	public ArrayList<Collidable> getCollidables() {

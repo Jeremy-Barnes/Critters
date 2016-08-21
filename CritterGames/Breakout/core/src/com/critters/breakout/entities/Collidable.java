@@ -6,8 +6,6 @@ import com.critters.breakout.math.Vector2f;
 
 public abstract class Collidable extends Entity {
 
-	protected static ShapeRenderer sr = new ShapeRenderer();
-
 	protected Vector2f size;
 	protected boolean hit = false;
 

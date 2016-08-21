@@ -1,4 +1,5 @@
 package com.critters.breakout.entities;
+import static com.critters.breakout.graphics.Render.sr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,10 +21,8 @@ public class Pad extends Collidable {
 
 	@Override
 	public void render(SpriteBatch render) {
-		sr.begin(ShapeType.Filled);
 		sr.setColor(0.75f, 0.5f, 0.25f, 1);
 		sr.rect(pos.x, pos.y, size.x, size.y);
-		sr.end();
 	}
 
 }
