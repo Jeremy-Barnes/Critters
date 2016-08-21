@@ -35,15 +35,14 @@ public class UserBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
 		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector").setParameter("selector", selector).getSingleResult();
-		user.initializeCollections();
 
 		if(verifyValidator(validator, user)) {
+			user.initializeCollections();
 			entityManager.close();
-
 			return user;
 		} else {
 			entityManager.close();
-			return null;
+			throw new GeneralSecurityException("Could not log in.");
 		}
 	}
 
