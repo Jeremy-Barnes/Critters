@@ -25,9 +25,12 @@ public class Block extends Collidable {
 
 	@Override
 	public void render(SpriteBatch render) {
-		ShapeRenderer sr = new ShapeRenderer();
 		sr.begin(ShapeType.Filled);
 		sr.setColor(1, 0, 0, 1);
+		if (checked) {
+			sr.setColor(0, 0, 1, 1);
+			checked = false;
+		}
 		sr.rect(pos.x, pos.y, size.x, size.y);
 		sr.end();
 	}

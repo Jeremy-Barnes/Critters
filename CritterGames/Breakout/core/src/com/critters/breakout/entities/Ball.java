@@ -35,14 +35,29 @@ public class Ball extends Entity {
 	private void checkIntersections() {
 		ArrayList<Collidable> blocks = level.getCollidables();
 		for (Collidable b : blocks) {
-					
+			if ((b.pos.x - pos.x) * (b.pos.x - pos.x) > b.size.x * b.size.x * 2)
+				continue;
+
+			if ((b.pos.y - pos.y) * (b.pos.y - pos.y) > b.size.y * b.size.y * 2)
+				continue;
+			b.checked = true;
+
 			int result = b.getRectangle().intersectsCircle(circle);
 			if (result != NO_INTERSECTION) {
 				b.hit();
 
 				// Bounce
 				if (result == HORRIZONTAL) {
-					vel = vel.mul(1, -1);
+
+					if (b instanceof Pad) {
+						float x = (((pos.x - b.pos.x) / b.size.x) - 0.5f);
+						vel = vel.mul(1, -1);
+						vel.x = x * 3;
+						normalVel();
+					} else {
+						vel = vel.mul(1, -1);
+					}
+
 					return;
 				} else if (result == VERTICAL) {
 					vel = vel.mul(-1, 1);
@@ -56,6 +71,10 @@ public class Ball extends Entity {
 	public void launch() {
 		Random random = new Random();
 		vel = new Vector2f(random.nextFloat() - 0.5f, random.nextFloat());
+		vel = vel.normal().mul(3);
+	}
+
+	public void normalVel() {
 		vel = vel.normal().mul(3);
 	}
 

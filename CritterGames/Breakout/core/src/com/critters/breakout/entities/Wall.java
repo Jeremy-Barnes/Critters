@@ -23,7 +23,6 @@ public class Wall extends Collidable {
 
 	@Override
 	public void render(SpriteBatch render) {
-		ShapeRenderer sr = new ShapeRenderer();
 		sr.begin(ShapeType.Filled);
 		sr.setColor(0.5f, 0.5f, 0.5f, 1);
 		sr.rect(pos.x, pos.y, size.x, size.y);
