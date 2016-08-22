@@ -89,7 +89,7 @@ public class UserService extends AjaxService{
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 		user = UserBLL.updateUser(user, loggedInUser);
-		return Response.status(Response.Status.OK).cookie(createUserCookies(user)).entity(UserBLL.wipeSensitiveFields(user)).build();
+		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
 
 		//throw new IOException("Not implemented yet"); //TODO this
 	}
