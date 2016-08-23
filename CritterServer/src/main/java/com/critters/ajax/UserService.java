@@ -8,8 +8,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -17,17 +15,12 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Jeremy on 8/7/2016.
  */
 @Path("/users")
 public class UserService extends AjaxService{
-	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	@POST
 	@Path("/createUser")
@@ -92,17 +85,5 @@ public class UserService extends AjaxService{
 		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
 
 		//throw new IOException("Not implemented yet"); //TODO this
-	}
-
-	@Path("/poll")
-	@POST
-	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
-		if(loggedInUser != null) {
-			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
-			peers.put(1, asyncResponse);
-		}
-
 	}
 }

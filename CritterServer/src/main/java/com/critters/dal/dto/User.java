@@ -2,6 +2,7 @@ package com.critters.dal.dto;
 
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.collection.internal.PersistentBag;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,12 +35,19 @@ public class User {
 	private String tokenSelector;
 	private String tokenValidator;
 	private int critterbuxx;
+
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
 	private List<Friendship> friends;
 	@OneToMany
 	@JoinColumn(name="requesteduserid")
 	private List<Friendship> friendsOf;
+
+
+
+	@OneToMany
+	@JoinColumn(name="ownerid")
+	private List<Item> inventory;
 
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
@@ -205,40 +213,52 @@ public class User {
 
 	public List<Friendship> getFriends() {
 		List<Friendship> frnds = new ArrayList();
-		if(friends != null) {
+		if(friends != null && ((friends instanceof PersistentBag) && ((PersistentBag)friends).wasInitialized())) {
 			for (Friendship friendship : friends) {
 				friendship.setRequester(new User(this));
 				friendship.setRequested(new User(friendship.getRequested()));
 			}
 			frnds.addAll(friends);
+		} else if(friends != null) {
+			frnds.addAll(friends);
 		}
-		if(friendsOf != null) {
+		if(friendsOf != null && ((friendsOf instanceof PersistentBag) && ((PersistentBag)friendsOf).wasInitialized())) {
 			for (Friendship friendship : friendsOf) {
 				friendship.setRequested(new User(this));
 				friendship.setRequester(new User(friendship.getRequester()));
 			}
+			frnds.addAll(friendsOf);
+		} else if(friendsOf != null) {
 			frnds.addAll(friendsOf);
 		}
 
 		return frnds;
 	}
 
+	public List<Item> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(List<Item> inventory) {
+		this.inventory = inventory;
+	}
+
 	public void setFriends(List<Friendship> friendships) {
 		this.friends = friendships;
-		if(friends != null)
-			for(Friendship friendship: friends) {
-				friendship.setRequester(new User(this));
-				friendship.setRequested(new User(friendship.getRequested()));
-			}
+//		if(friends != null)
+//			for(Friendship friendship: friends) {
+//				friendship.setRequester(new User(this));
+//				friendship.setRequested(new User(friendship.getRequested()));
+//			}
 	}
 
 	public void setFriendsOf(List<Friendship> friendships) {
 		this.friendsOf = friendships;
-		if(friendsOf != null)
-			for(Friendship friendship: friendsOf) {
-				friendship.setRequested(new User(this));
-				friendship.setRequester(new User(friendship.getRequester()));
-			}
+//		if(friendsOf != null)
+//			for(Friendship friendship: friendsOf) {
+//				friendship.setRequested(new User(this));
+//				friendship.setRequester(new User(friendship.getRequester()));
+//			}
 	}
 
 	public void initializeCollections() {

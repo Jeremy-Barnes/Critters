@@ -17,6 +17,8 @@
         <property name="connection.password">*******</property>
         <!--<property name="hbm2ddl.auto">validate</property>-->
         <mapping class="com.critters.dal.dto.User" />
+        <mapping class="com.critters.dal.dto.Item" />
+        <mapping class="com.critters.dal.dto.ItemDescription" />
         <!--<mapping class="list.nice.dal.dto.WishListItem"/>-->
         <mapping class="com.critters.dal.dto.Friendship"/>
     </session-factory>
