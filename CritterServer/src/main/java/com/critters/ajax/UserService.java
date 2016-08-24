@@ -36,8 +36,6 @@ public class UserService extends AjaxService{
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 
-
-
 	@POST
 	@Path("/getUserFromLogin")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -49,7 +47,8 @@ public class UserService extends AjaxService{
 		httpRequest.getSession().setAttribute("user", user);
 		User copiedUser = super.serializeDeepCopy(user, User.class);
 
-		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
+		return Response.status(Response.Status.OK)
+					   .cookie(createUserCookies(copiedUser))
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 

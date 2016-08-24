@@ -7,8 +7,12 @@
 
 
         <class>com.critters.dal.dto.User</class>
+        <class>com.critters.dal.dto.Pet</class>
+        <class>com.critters.dal.dto.Pet$PetColor</class>
+        <class>com.critters.dal.dto.Pet$PetSpecies</class>
+
         <class>com.critters.dal.dto.Item</class>
-        <class>com.critters.dal.dto.ItemDescription</class>
+        <class>com.critters.dal.dto.Item$ItemDescription</class>
         <!--<class>com.critters.dal.dto.WishListItem</class>-->
         <class>com.critters.dal.dto.Friendship</class>
         <properties>

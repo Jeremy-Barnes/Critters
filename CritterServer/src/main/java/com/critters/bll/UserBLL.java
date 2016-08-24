@@ -1,7 +1,6 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
-import com.critters.dal.dto.Item;
 import com.critters.dal.dto.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
@@ -67,7 +66,6 @@ public class UserBLL {
 
 		User user = (User) entityManager.createQuery("from User where emailAddress = :email").setParameter("email", email).getSingleResult();
 		user.initializeCollections();
-		Item a = user.getInventory().get(0);
 		if(login) {
 			String validator = null;
 			if (checkLogin(user.getPassword(), password, user.getSalt())) {
