@@ -1,7 +1,7 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 

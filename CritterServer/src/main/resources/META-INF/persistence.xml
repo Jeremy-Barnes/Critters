@@ -6,15 +6,15 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 
-        <class>com.critters.dal.dto.User</class>
-        <class>com.critters.dal.dto.Pet</class>
-        <class>com.critters.dal.dto.Pet$PetColor</class>
-        <class>com.critters.dal.dto.Pet$PetSpecies</class>
+        <class>com.critters.dal.dto.entity.User</class>
+        <class>com.critters.dal.dto.entity.Pet</class>
+        <class>com.critters.dal.dto.entity.Pet$PetColor</class>
+        <class>com.critters.dal.dto.entity.Pet$PetSpecies</class>
 
-        <class>com.critters.dal.dto.Item</class>
-        <class>com.critters.dal.dto.Item$ItemDescription</class>
+        <class>com.critters.dal.dto.entity.Item</class>
+        <class>com.critters.dal.dto.entity.Item$ItemDescription</class>
         <!--<class>com.critters.dal.dto.WishListItem</class>-->
-        <class>com.critters.dal.dto.Friendship</class>
+        <class>com.critters.dal.dto.entity.Friendship</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/critters?autoReconnect=true"/>

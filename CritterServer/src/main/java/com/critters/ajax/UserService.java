@@ -2,7 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
