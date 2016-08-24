@@ -21,6 +21,8 @@ public class Rectangle {
 	public Line left;
 	public Line right;
 
+	public boolean onlyBottom = false;
+
 	public Rectangle(Vector2f v1, Vector2f v2) {
 		this.v1 = v1;
 		this.v2 = v2;
@@ -45,7 +47,7 @@ public class Rectangle {
 		right = new Line(v2.add(0, -height), v2);
 	}
 
-	private boolean intersectsPoint(Vector2f v) {
+	public boolean intersectsPoint(Vector2f v) {
 		if (v.x > v1.x && v.x < v2.x && v.y > v1.y && v.y < v2.y)
 			return true;
 		return false;
@@ -55,9 +57,12 @@ public class Rectangle {
 		/*
 		 * Return the line the circle is intersecting
 		 */
-		if (top.intersectsCircle(c))
-			return HORRIZONTAL;
 		if (bottom.intersectsCircle(c))
+			return HORRIZONTAL;
+		if (onlyBottom)
+			return NO_INTERSECTION;
+
+		if (top.intersectsCircle(c))
 			return HORRIZONTAL;
 		if (left.intersectsCircle(c))
 			return VERTICAL;
@@ -66,4 +71,9 @@ public class Rectangle {
 
 		return NO_INTERSECTION;
 	}
+
+	public Vector2f getCenter() {
+		return v1.add(v2).mul(0.5f);
+	}
+
 }

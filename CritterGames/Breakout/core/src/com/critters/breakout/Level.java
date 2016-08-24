@@ -25,7 +25,10 @@ public class Level {
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private Ball ball;
 
-	private final int WALL_SIZE = 17;
+	public final int LEVEL_WIDTH;
+	public final int LEVEL_HEIGHT;
+
+	public final int WALL_SIZE = 17;
 	private final int OFFSET_X = 20;
 	private final int OFFSET_Y = 260;
 	private final int BLOCK_WIDTH;
@@ -35,6 +38,9 @@ public class Level {
 
 	public Level() {
 		level = this;
+
+		LEVEL_WIDTH = Gdx.graphics.getWidth();
+		LEVEL_HEIGHT = Gdx.graphics.getHeight();
 
 		BLOCK_WIDTH = (Gdx.graphics.getWidth() - OFFSET_X * 2) / BLOCKS_X;
 		BLOCK_HEIGHT = 25;
