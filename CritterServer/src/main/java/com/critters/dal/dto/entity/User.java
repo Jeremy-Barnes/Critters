@@ -1,4 +1,4 @@
-package com.critters.dal.dto;
+package com.critters.dal.dto.entity;
 
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;

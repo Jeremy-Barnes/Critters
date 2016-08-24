@@ -2,7 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
