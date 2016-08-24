@@ -39,6 +39,10 @@ public class Level {
 		BLOCK_WIDTH = (Gdx.graphics.getWidth() - OFFSET_X * 2) / BLOCKS_X;
 		BLOCK_HEIGHT = 25;
 
+		ball = new Ball(new Vector2f(316, 100), 8);
+		entities.add(ball);
+		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
+
 		for (int x = 0; x < BLOCKS_X; x++) {
 			for (int y = 0; y < BLOCKS_Y; y++) {
 				entities.add(new Block(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
@@ -46,15 +50,9 @@ public class Level {
 		}
 
 		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
-		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE)));
-		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
+		// entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE))); /* Bottom debug wall*/
 		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
-
-		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
-
-		ball = new Ball(new Vector2f(316, 100), 8);
-		entities.add(ball);
-
+		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
 	}
 
 	private void updateEntities() {
@@ -69,6 +67,7 @@ public class Level {
 	public void update() {
 		if (!started) {
 			if (Input.ready()) {
+				Input.inputs.remove(0);
 				started = true;
 				ball.launch();
 			}
