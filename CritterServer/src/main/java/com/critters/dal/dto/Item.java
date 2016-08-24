@@ -52,4 +52,46 @@ public class Item {
 		this.description = description;
 	}
 
+
+	@Entity
+	@Table(name="itemconfigs")
+	public static class ItemDescription {
+
+		@Id
+		int itemConfigID;
+		String itemName;
+		String itemDescription;
+
+		public ItemDescription(){}
+
+		public ItemDescription(int itemConfigID, String itemName, String itemDescription) {
+			this.itemConfigID = itemConfigID;
+			this.itemName = itemName;
+			this.itemDescription = itemDescription;
+		}
+
+		public int getItemConfigID() {
+			return itemConfigID;
+		}
+
+		public void setItemConfigID(int itemConfigID) {
+			this.itemConfigID = itemConfigID;
+		}
+
+		public String getItemName() {
+			return itemName;
+		}
+
+		public void setItemName(String itemName) {
+			this.itemName = itemName;
+		}
+
+		public String getItemDescription() {
+			return itemDescription;
+		}
+
+		public void setItemDescription(String itemDescription) {
+			this.itemDescription = itemDescription;
+		}
+	}
 }
