@@ -9,6 +9,7 @@ import static com.critters.breakout.math.Rectangle.VERTICAL;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.math.Circle;
