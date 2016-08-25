@@ -25,6 +25,11 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render() {
+		// Dirty temporary reset feature
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
+			level = new Level();
+		}
+
 		level.update();
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);

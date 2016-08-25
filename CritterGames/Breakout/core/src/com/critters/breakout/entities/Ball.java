@@ -9,6 +9,8 @@ import static com.critters.breakout.math.Rectangle.VERTICAL;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
@@ -16,10 +18,13 @@ import com.critters.breakout.math.Vector2f;
 public class Ball extends Entity {
 
 	private float radius;
-
 	private Circle circle;
 
 	private Vector2f vel;
+
+	// Timers for bounce
+	private int h_time;
+	private int v_time;
 
 	public Ball(Vector2f pos, float radius) {
 		super(pos);
@@ -41,11 +46,13 @@ public class Ball extends Entity {
 			b.checked = true;
 
 			int result = b.getRectangle().intersectsCircle(circle);
+
 			if (result != NO_INTERSECTION) {
 				b.hit();
 
 				// Bounce
-				if (result == HORRIZONTAL) {
+				if (result == HORRIZONTAL && h_time == 0) {
+					h_time = 7;
 
 					if (b instanceof Pad) {
 						float x = (((pos.x - b.pos.x) / b.size.x) - 0.5f);
@@ -57,7 +64,8 @@ public class Ball extends Entity {
 					}
 
 					return;
-				} else if (result == VERTICAL) {
+				} else if (result == VERTICAL && v_time == 0) {
+					v_time = 7;
 					vel = vel.mul(-1, 1);
 					return;
 				}
@@ -78,8 +86,10 @@ public class Ball extends Entity {
 
 	@Override
 	public void update() {
-		// pos.x = Gdx.input.getX();
-		// pos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+		if (h_time > 0)
+			h_time--;
+		if (v_time > 0)
+			v_time--;
 
 		pos = pos.add(vel);
 
