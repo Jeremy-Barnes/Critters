@@ -59,6 +59,9 @@ public class Level {
 		// entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE))); /* Bottom debug wall*/
 		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
 		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
+
+		// Remove all inputs before the start of the game since a new one will start it.
+		Input.inputs.clear();
 	}
 
 	private void updateEntities() {
