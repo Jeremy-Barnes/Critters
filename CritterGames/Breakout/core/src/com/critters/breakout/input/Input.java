@@ -7,6 +7,8 @@ import com.badlogic.gdx.InputProcessor;
 
 public class Input implements InputProcessor {
 
+	private boolean fullscreen = false;
+
 	public static ArrayList<Click> inputs = new ArrayList<Click>();
 
 	public static boolean ready() {
@@ -21,7 +23,17 @@ public class Input implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		return false;
+		if (keycode == com.badlogic.gdx.Input.Keys.F) {
+			if (!fullscreen) {
+				fullscreen = true;
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			} else {
+				fullscreen = false;
+				Gdx.graphics.setWindowedMode(640, 480);
+			}
+		}
+
+		return true;
 	}
 
 	@Override
@@ -31,6 +43,7 @@ public class Input implements InputProcessor {
 
 	@Override
 	public boolean keyTyped(char character) {
+
 		return false;
 	}
 
