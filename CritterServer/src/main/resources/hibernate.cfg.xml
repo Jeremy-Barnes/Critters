@@ -16,8 +16,13 @@
         <property name="connection.username">*******</property>
         <property name="connection.password">*******</property>
         <!--<property name="hbm2ddl.auto">validate</property>-->
-        <mapping class="com.critters.dal.dto.User" />
+        <mapping class="com.critters.dal.dto.entity.User" />
+        <mapping class="com.critters.dal.dto.entity.Pet" />
+        <mapping class="com.critters.dal.dto.entity.Pet$PetColor" />
+        <mapping class="com.critters.dal.dto.entity.Pet$PetSpecies" />
+        <mapping class="com.critters.dal.dto.entity.Item" />
+        <mapping class="com.critters.dal.dto.entity.Item$ItemDescription" />
         <!--<mapping class="list.nice.dal.dto.WishListItem"/>-->
-        <mapping class="com.critters.dal.dto.Friendship"/>
+        <mapping class="com.critters.dal.dto.entity.Friendship"/>
     </session-factory>
 </hibernate-configuration>
