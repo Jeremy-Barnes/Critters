@@ -1,5 +1,6 @@
 package com.critters.ajax;
 
+import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.User;
@@ -23,6 +24,13 @@ import java.util.concurrent.TimeUnit;
 @Path("/meta")
 public class MetaService extends AjaxService {
 	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+
+	@Path("/jobs")
+	@GET
+	@Produces("text/plain")
+	public Response checkJobs(){
+		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
+	}
 
 	@Path("/poll")
 	@POST
