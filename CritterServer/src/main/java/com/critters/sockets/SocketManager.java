@@ -1,6 +1,6 @@
 package com.critters.sockets;
 
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
