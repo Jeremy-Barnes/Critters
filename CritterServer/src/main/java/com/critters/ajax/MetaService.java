@@ -52,4 +52,16 @@ public class MetaService extends AjaxService {
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
 		return Response.status(200).entity(results).build();
 	}
+
+	@GET
+	@Path("/checkPetName/{petName}")
+	public boolean checkPetNameAvailability(@PathParam("petName") String petName) throws Exception {
+		throw new Exception("Not yet implemented"); //todo this
+	}
+
+	@GET
+	@Path("/checkUserName/{userName}")
+	public boolean checkUserNameAvailability(@PathParam("userName") String userName) throws Exception {
+		throw new Exception("Not yet implemented"); //todo this
+	}
 }

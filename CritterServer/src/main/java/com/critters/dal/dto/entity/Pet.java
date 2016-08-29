@@ -16,7 +16,7 @@ public class Pet {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int petID;
 	private String petName;
-	private Boolean sex;
+	private String sex;
 	private int ownerid;
 
 	@ManyToOne
@@ -29,7 +29,7 @@ public class Pet {
 
 	public Pet() {}
 
-	public Pet(String petName, boolean sex, int ownerid) {
+	public Pet(String petName, String sex, int ownerid) {
 		this.petName = petName;
 		this.sex = sex;
 		this.ownerid = ownerid;
@@ -52,10 +52,10 @@ public class Pet {
 	}
 
 	public String getSex() {
-		return sex ? "Male" : sex == null ? "Other" : "Female";
+		return sex;
 	}
 
-	public void setSex(Boolean sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 

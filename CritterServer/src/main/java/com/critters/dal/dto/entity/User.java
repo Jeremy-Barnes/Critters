@@ -49,7 +49,7 @@ public class User {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="ownerid")
-	private List<Pet> zoo;
+	private List<Pet> pets;
 
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
@@ -237,12 +237,12 @@ public class User {
 		return frnds;
 	}
 
-	public List<Pet> getZoo() {
-		return zoo;
+	public List<Pet> getPets() {
+		return pets;
 	}
 
-	public void setZoo(List<Pet> zoo) {
-		this.zoo = zoo;
+	public void setPets(List<Pet> zoo) {
+		this.pets = zoo;
 	}
 
 	public List<Item> getInventory() {
@@ -267,7 +267,7 @@ public class User {
 	public void initializeCollections() {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
-		Hibernate.initialize(zoo);
+		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
 	}
 

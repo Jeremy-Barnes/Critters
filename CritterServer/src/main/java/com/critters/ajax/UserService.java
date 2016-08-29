@@ -1,7 +1,10 @@
 package com.critters.ajax;
 
+import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
+import com.critters.dal.dto.CreateAccountRequest;
+import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
 import javax.ws.rs.Consumes;
@@ -15,6 +18,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 
 /**
  * Created by Jeremy on 8/7/2016.
@@ -26,12 +30,17 @@ public class UserService extends AjaxService{
 	@Path("/createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(JAXBElement<User> jsonUser) throws Exception {
-		User user = jsonUser.getValue();
-		String validator = UserBLL.createUserReturnUnHashedValidator(user);
-
-		httpRequest.getSession().setAttribute("user", user);
-		User copiedUser = super.serializeDeepCopy(user, User.class);
+	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest) throws Exception {
+		CreateAccountRequest request = jsonRequest.getValue();
+		//todo checkName availability
+		//todo checkPetName availability
+		String validator = UserBLL.createUserReturnUnHashedValidator(request.user);
+		Pet pet = PetBLL.createPet(request.pet, request.user);
+		ArrayList<Pet> pets = new ArrayList<Pet>();
+		pets.add(pet);
+		request.user.setPets(pets);
+		httpRequest.getSession().setAttribute("user", request.user);
+		User copiedUser = super.serializeDeepCopy(request.user, User.class);
 		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
@@ -64,9 +73,6 @@ public class UserService extends AjaxService{
 
 		return Response.status(Response.Status.OK)
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
-
-
-		//throw new JAXBException("Not implemented yet"); //TODO this
 	}
 
 	@POST
@@ -82,7 +88,5 @@ public class UserService extends AjaxService{
 		}
 		user = UserBLL.updateUser(user, loggedInUser);
 		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
-
-		//throw new IOException("Not implemented yet"); //TODO this
 	}
 }

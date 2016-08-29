@@ -31,10 +31,11 @@ CREATE TABLE petColorConfigs(
 CREATE TABLE pets(
     petID SERIAL NOT NULL PRIMARY KEY,
     petName VARCHAR(24) NOT NULL,
-    sex BOOLEAN NULL,
+    sex VARCHAR(8) NOT NULL,
     colorID INT NOT NULL REFERENCES petColorConfigs(petColorConfigID),
     ownerID INT NOT NULL REFERENCES users(userID),
-    speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID)
+    speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID),
+    CHECK (sex IN ('male','female','other'))
 );
 
 CREATE TABLE itemConfigs(
