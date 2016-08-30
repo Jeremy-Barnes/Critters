@@ -19,6 +19,15 @@ In addition to doing normal work, consider helping to keep things moving and tid
     
     - Issues should represent discrete units of work: "Make the website" is not a unit of work, "implement user account creation" is. If you have an issue with a dependency on another issue, link it.
     
+**Flags**
+- Art/Code/Design should be obvious.
+- "help wanted" is for work in progress that need questions answered
+- "In Progress" is for issues that are actively being developed
+- "question" is for an idea for a feature/enhancement/change that hasn't been agreed upon yet, or for clarifying understanding of something not tied to a specific issue. These are for discussion.
+- "bug" is for something (art, code or design) that you feel is incorrect and needs fixing.
+- "feature" is for a thing that needs to be implemented that totally does not exist. (Creating a game)
+- "enhancement" is for modifying a thing that does exist. (Adding behavior to a game)
+    
 ### Asset Sharing (GDrive)
 
 All our art assets are shared on Google Drive. If you need to talk about some non-code work, put it there and use the shareable URL to link it where necessary.
