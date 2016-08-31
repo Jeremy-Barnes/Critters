@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
 import com.critters.breakout.entities.Block;
+import com.critters.breakout.entities.BlockMulti;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.Entity;
 import com.critters.breakout.entities.Pad;
@@ -51,7 +52,7 @@ public class Level {
 
 		for (int x = 0; x < BLOCKS_X; x++) {
 			for (int y = 0; y < BLOCKS_Y; y++) {
-				entities.add(new Block(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+				entities.add(new BlockMulti(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2), y + 1));
 			}
 		}
 
@@ -82,9 +83,7 @@ public class Level {
 			}
 			return;
 		}
-
 		updateEntities();
-
 	}
 
 	/**
