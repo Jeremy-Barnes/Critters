@@ -1,5 +1,6 @@
 package com.critters.breakout.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -9,33 +10,31 @@ import com.critters.breakout.math.Vector2f;
 import static com.critters.breakout.Level.level;
 import static com.critters.breakout.graphics.Render.sr;
 
-public class Block extends Collidable {
+public abstract class Block extends Collidable {
+
+	protected Color color;
 
 	public Block(Vector2f pos, Vector2f size) {
 		super(pos, size);
 		this.size = size;
 
 		rectangle = new Rectangle(pos, pos.add(size));
+
+		color = new Color(1, 0, 0, 1);
 	}
 
 	@Override
-	public void update() {
-		if (hit)
-			level.removeEntity(this);
-	}
+	public abstract void update();
 
 	@Override
 	public void render(SpriteBatch render) {
-		sr.setColor(1, 0, 0, 1);
-		if (checked) {
-			sr.setColor(0, 0, 1, 1);
-			checked = false;
-		}
+		sr.setColor(color);
+		/*
+		 * Debug code for ball proximity if (checked) { sr.setColor(0, 0, 1, 1); checked = false; }
+		 */
 		sr.rect(pos.x, pos.y, size.x, size.y);
 	}
 
 	@Override
-	public void hit() {
-		hit = true;
-	}
+	public abstract void hit();
 }

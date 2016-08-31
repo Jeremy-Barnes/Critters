@@ -22,7 +22,6 @@ public class BlockMulti extends Block {
 
 	@Override
 	public void hit() {
-		super.hit();
 		numberOfHits++;
 	}
 
