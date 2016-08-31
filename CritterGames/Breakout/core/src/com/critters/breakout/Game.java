@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.graphics.SpriteLoader;
 import com.critters.breakout.input.Input;
 import com.critters.breakout.level.Level;
+import com.critters.breakout.level.Level.State;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch render;
@@ -23,6 +24,19 @@ public class Game extends ApplicationAdapter {
 		level = new Level();
 	}
 
+	public void update() {
+		level.update();
+
+		if (level.state == State.WON) {
+			level = new Level();
+		}
+
+		if (level.state == State.LOST) {
+			level = new Level();
+		}
+
+	}
+
 	@Override
 	public void render() {
 		// Dirty temporary reset feature
@@ -30,7 +44,7 @@ public class Game extends ApplicationAdapter {
 			level = new Level();
 		}
 
-		level.update();
+		update();
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
