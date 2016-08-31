@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.critters.breakout.math.Vector2f;
 
 /**
- * Block void is a special type of block that cannot be destroyed.
+ * Block Indestructible is a special type of block that cannot be destroyed.
  */
 public class BlockIndestructible extends Block {
 

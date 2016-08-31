@@ -5,9 +5,12 @@ import static com.critters.breakout.graphics.Render.sr;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
+import com.critters.breakout.entities.Block;
 import com.critters.breakout.entities.BlockIndestructible;
 import com.critters.breakout.entities.BlockVoid;
 import com.critters.breakout.entities.Collidable;
@@ -19,10 +22,14 @@ import com.critters.breakout.math.Vector2f;
 
 public class Level {
 
+	public enum State {
+		NOT_STARTED, PLAY, WON, LOST;
+	}
+
 	// Dirty work around
 	public static Level level;
 
-	private boolean started = false;
+	public State state;
 
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private Ball ball;
@@ -36,6 +43,7 @@ public class Level {
 
 	public Level() {
 		level = this;
+		state = State.NOT_STARTED;
 
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
@@ -59,6 +67,24 @@ public class Level {
 		Input.inputs.clear();
 	}
 
+	/**
+	 * Check the state of the level, it can either have been won or lost.
+	 */
+	private void checkState() {
+		if (ball.pos.y < 0) {
+			// The game has been lost
+			state = State.LOST;
+		}
+
+		if (getBlocks().size() == 0) {
+			// The game has been won
+			state = State.WON;
+		}
+	}
+
+	/**
+	 * Update all the entities
+	 */
 	private void updateEntities() {
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
@@ -69,15 +95,18 @@ public class Level {
 	 * Update all the entities and process input
 	 */
 	public void update() {
-		if (!started) {
+		if (state == State.NOT_STARTED) {
 			if (Input.ready()) {
 				Input.inputs.remove(0);
-				started = true;
+				state = State.PLAY;
 				ball.launch();
 			}
 			return;
 		}
 		updateEntities();
+
+		// Check winning or losing
+		checkState();
 	}
 
 	/**
@@ -98,6 +127,15 @@ public class Level {
 		for (Entity e : entities) {
 			if (e instanceof Collidable)
 				blocks.add((Collidable) e);
+		}
+		return blocks;
+	}
+
+	public ArrayList<Block> getBlocks() {
+		ArrayList<Block> blocks = new ArrayList<Block>();
+		for (Entity e : entities) {
+			if (e instanceof Block)
+				blocks.add((Block) e);
 		}
 		return blocks;
 	}
