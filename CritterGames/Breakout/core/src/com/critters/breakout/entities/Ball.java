@@ -1,6 +1,6 @@
 package com.critters.breakout.entities;
 
-import static com.critters.breakout.Level.level;
+import static com.critters.breakout.level.Level.level;
 import static com.critters.breakout.graphics.Render.sr;
 import static com.critters.breakout.math.Rectangle.HORRIZONTAL;
 import static com.critters.breakout.math.Rectangle.NO_INTERSECTION;
@@ -9,7 +9,6 @@ import static com.critters.breakout.math.Rectangle.VERTICAL;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
@@ -55,7 +54,7 @@ public class Ball extends Entity {
 
 				// Bounce
 				if (result == HORRIZONTAL && h_time == 0) {
-					h_time = 7;
+					h_time = 3;
 
 					if (b instanceof Pad) {
 						float x = (((pos.x - b.pos.x) / b.size.x) - 0.5f);
@@ -68,7 +67,7 @@ public class Ball extends Entity {
 
 					return;
 				} else if (result == VERTICAL && v_time == 0) {
-					v_time = 7;
+					v_time = 3;
 					vel = vel.mul(-1, 1);
 					return;
 				}

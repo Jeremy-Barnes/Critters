@@ -1,4 +1,4 @@
-package com.critters.breakout;
+package com.critters.breakout.level;
 
 import static com.critters.breakout.graphics.Render.sr;
 
@@ -31,12 +31,8 @@ public class Level {
 	public final int LEVEL_HEIGHT;
 
 	public final int WALL_SIZE = 17;
-	private final int OFFSET_X = 20;
-	private final int OFFSET_Y = 260;
-	private final int BLOCK_WIDTH;
-	private final int BLOCK_HEIGHT;
-	private final int BLOCKS_X = 10;
-	private final int BLOCKS_Y = 5;
+
+	private final Pattern pattern;
 
 	public Level() {
 		level = this;
@@ -44,19 +40,16 @@ public class Level {
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
 
-		BLOCK_WIDTH = (Gdx.graphics.getWidth() - OFFSET_X * 2) / BLOCKS_X;
-		BLOCK_HEIGHT = 25;
-
+		// Add the ball and the paddle
 		ball = new Ball(new Vector2f(316, 100), 8);
 		entities.add(ball);
 		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
 
-		for (int x = 0; x < BLOCKS_X; x++) {
-			for (int y = 0; y < BLOCKS_Y; y++) {
-				entities.add(new BlockVoid(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
-			}
-		}
+		// Create the level
+		pattern = Pattern.getRandom();
+		Pattern.generateLevel(entities, pattern);
 
+		// Add the level walls
 		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
 		// entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE))); /* Bottom debug wall*/
 		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));

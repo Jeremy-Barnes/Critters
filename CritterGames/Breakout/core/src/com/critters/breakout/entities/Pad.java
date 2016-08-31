@@ -1,14 +1,14 @@
 package com.critters.breakout.entities;
 
 import static com.critters.breakout.graphics.Render.sr;
-import static com.critters.breakout.Level.level;
+import static com.critters.breakout.level.Level.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.critters.breakout.Level;
+import com.critters.breakout.level.Level;
 import com.critters.breakout.math.Vector2f;
 
 public class Pad extends Collidable {

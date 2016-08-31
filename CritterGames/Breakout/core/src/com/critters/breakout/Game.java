@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.graphics.SpriteLoader;
 import com.critters.breakout.input.Input;
+import com.critters.breakout.level.Level;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch render;
