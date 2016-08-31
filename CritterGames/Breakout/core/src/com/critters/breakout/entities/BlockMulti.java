@@ -4,6 +4,9 @@ import static com.critters.breakout.Level.level;
 
 import com.critters.breakout.math.Vector2f;
 
+/**
+ * Block multi is a special type of block that takes multiple hits to be destroyed
+ */
 public class BlockMulti extends Block {
 
 	protected int numberOfHits;
