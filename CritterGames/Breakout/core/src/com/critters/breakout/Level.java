@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
 import com.critters.breakout.entities.BlockIndestructible;
+import com.critters.breakout.entities.BlockVoid;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.Entity;
 import com.critters.breakout.entities.Pad;
@@ -52,7 +53,7 @@ public class Level {
 
 		for (int x = 0; x < BLOCKS_X; x++) {
 			for (int y = 0; y < BLOCKS_Y; y++) {
-				entities.add(new BlockIndestructible(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+				entities.add(new BlockVoid(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
 			}
 		}
 
