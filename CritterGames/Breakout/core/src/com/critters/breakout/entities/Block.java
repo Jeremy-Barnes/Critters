@@ -1,14 +1,11 @@
 package com.critters.breakout.entities;
 
+import static com.critters.breakout.graphics.Render.sr;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
-
-import static com.critters.breakout.Level.level;
-import static com.critters.breakout.graphics.Render.sr;
 
 public abstract class Block extends Collidable {
 
