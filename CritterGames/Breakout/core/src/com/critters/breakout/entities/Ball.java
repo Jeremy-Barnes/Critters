@@ -76,7 +76,7 @@ public class Ball extends Entity {
 
 	public void launch() {
 		Random random = new Random();
-		vel = new Vector2f(random.nextFloat() - 0.5f, random.nextFloat());
+		vel = new Vector2f(random.nextFloat() - 0.5f, 1);
 		vel = vel.normal().mul(3);
 	}
 
