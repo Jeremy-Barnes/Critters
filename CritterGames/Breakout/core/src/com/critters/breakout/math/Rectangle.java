@@ -6,10 +6,6 @@ public class Rectangle {
 	public static final int HORRIZONTAL = 0x01;
 	public static final int VERTICAL = 0x02;
 
-	/**
-	 * v1 ----- | | ------v2
-	 */
-
 	public Vector2f v1;
 	public Vector2f v2;
 
