@@ -1,7 +1,7 @@
 package com.critters.breakout.entities;
 
-import static com.critters.breakout.level.Level.level;
 import static com.critters.breakout.graphics.Render.sr;
+import static com.critters.breakout.level.Level.level;
 import static com.critters.breakout.math.Rectangle.HORRIZONTAL;
 import static com.critters.breakout.math.Rectangle.NO_INTERSECTION;
 import static com.critters.breakout.math.Rectangle.VERTICAL;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.breakout.entities.blocks.Block;
+import com.critters.breakout.entities.blocks.BlockVoid;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
 

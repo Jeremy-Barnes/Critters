@@ -1,9 +1,10 @@
-package com.critters.breakout.entities;
+package com.critters.breakout.entities.blocks;
 
 import static com.critters.breakout.graphics.Render.sr;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
