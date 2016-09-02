@@ -25,4 +25,5 @@ public abstract class Collidable extends Entity {
 	public Rectangle getRectangle() {
 		return rectangle;
 	}
+
 }

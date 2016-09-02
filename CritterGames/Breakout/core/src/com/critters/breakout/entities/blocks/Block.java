@@ -2,13 +2,18 @@ package com.critters.breakout.entities.blocks;
 
 import static com.critters.breakout.graphics.Render.sr;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.Collidable;
+import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
 public abstract class Block extends Collidable {
+
+	protected ArrayList<Powerup> powerups = new ArrayList<Powerup>();
 
 	protected Color color;
 
@@ -19,6 +24,8 @@ public abstract class Block extends Collidable {
 		rectangle = new Rectangle(pos, pos.add(size));
 
 		color = new Color(1, 0, 0, 1);
+
+		powerups.add(new Powerup(rectangle.getCenter()));
 	}
 
 	@Override

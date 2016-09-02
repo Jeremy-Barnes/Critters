@@ -3,6 +3,7 @@ package com.critters.breakout.entities.blocks;
 import static com.critters.breakout.level.Level.level;
 
 import com.badlogic.gdx.graphics.Color;
+import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.math.Vector2f;
 
 /**
@@ -30,8 +31,13 @@ public class BlockMulti extends Block {
 
 	@Override
 	public void update() {
-		if (numberOfHits == HITS_NEEDED)
+		if (numberOfHits == HITS_NEEDED) {
+			// Remove this block and spawn powerups
 			level.removeEntity(this);
+			
+			for(Powerup p : powerups)
+				level.addEntity(p);
+		}
 	}
 
 	@Override
