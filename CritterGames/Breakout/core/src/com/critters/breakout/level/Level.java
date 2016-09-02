@@ -143,6 +143,14 @@ public class Level {
 		sr.end();
 	}
 
+	public void addEntity(Entity e) {
+		entities.add(e);
+	}
+
+	public void removeEntity(Entity e) {
+		entities.remove(e);
+	}
+
 	public ArrayList<Collidable> getCollidables() {
 		ArrayList<Collidable> blocks = new ArrayList<Collidable>();
 		for (Entity e : entities) {
@@ -161,7 +169,4 @@ public class Level {
 		return blocks;
 	}
 
-	public void removeEntity(Entity e) {
-		entities.remove(e);
-	}
 }
