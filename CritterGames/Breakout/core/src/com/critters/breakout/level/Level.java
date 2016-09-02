@@ -17,6 +17,8 @@ import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.Entity;
 import com.critters.breakout.entities.Pad;
 import com.critters.breakout.entities.Wall;
+import com.critters.breakout.entities.ui.ScoreDisplay;
+import com.critters.breakout.entities.ui.UIElement;
 import com.critters.breakout.input.Input;
 import com.critters.breakout.math.Vector2f;
 
@@ -29,8 +31,11 @@ public class Level {
 	// Dirty work around
 	public static Level level;
 
+	public int score;
+
 	public State state;
 
+	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private Ball ball;
 
@@ -63,6 +68,8 @@ public class Level {
 		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
 		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
 
+		uiElements.add(new ScoreDisplay());
+
 		// Remove all inputs before the start of the game since a new one will start it.
 		Input.inputs.clear();
 	}
@@ -89,6 +96,11 @@ public class Level {
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update();
 		}
+
+		for (int i = 0; i < uiElements.size(); i++) {
+			uiElements.get(i).update();
+		}
+
 	}
 
 	/**
@@ -118,6 +130,16 @@ public class Level {
 		for (Entity e : entities) {
 			e.render(render);
 		}
+
+		for (UIElement e : uiElements) {
+			e.render(render);
+		}
+
+		/*
+		 * I have absolutely no idea why this is needed, but it doesn't render the score without it, when putting the same code used to render the score inside this render method
+		 * does render it.
+		 */
+		render.flush();
 
 		sr.end();
 	}

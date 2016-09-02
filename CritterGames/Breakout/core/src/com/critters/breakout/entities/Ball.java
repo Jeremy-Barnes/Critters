@@ -47,6 +47,7 @@ public class Ball extends Entity {
 
 			if (result != NO_INTERSECTION) {
 				b.hit();
+				hitBlock(b);
 
 				if (b instanceof BlockVoid) {
 					continue;
@@ -74,6 +75,17 @@ public class Ball extends Entity {
 
 			}
 		}
+	}
+
+	/**
+	 * Method that gets triggered when the ball collides with a collidable. Increases the score.
+	 * 
+	 * @param b
+	 *            the collidable that was hit
+	 */
+	private void hitBlock(Collidable b) {
+		if (b instanceof Block)
+			level.score++;
 	}
 
 	public void launch() {
