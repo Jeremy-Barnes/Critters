@@ -1,5 +1,6 @@
 package com.critters.breakout.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -24,7 +25,7 @@ public class Wall extends Collidable {
 
 	@Override
 	public void render(SpriteBatch render) {
-		sr.setColor(0.5f, 0.5f, 0.5f, 1);
+		sr.setColor(new Color(0x2C3E50ff));
 		sr.rect(pos.x, pos.y, size.x, size.y);
 	}
 
