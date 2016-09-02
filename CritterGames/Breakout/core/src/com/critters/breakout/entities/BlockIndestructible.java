@@ -11,7 +11,7 @@ public class BlockIndestructible extends Block {
 	public BlockIndestructible(Vector2f pos, Vector2f size) {
 		super(pos, size);
 
-		color = new Color(0.3f, 0.3f, 0.3f, 1);
+		color = new Color(0x2C3E50);
 	}
 
 	@Override
