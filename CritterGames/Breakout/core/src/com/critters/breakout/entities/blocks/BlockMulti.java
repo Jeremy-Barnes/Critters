@@ -1,4 +1,4 @@
-package com.critters.breakout.entities;
+package com.critters.breakout.entities.blocks;
 
 import static com.critters.breakout.level.Level.level;
 

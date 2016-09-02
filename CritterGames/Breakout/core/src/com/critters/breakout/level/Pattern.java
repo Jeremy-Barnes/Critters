@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.critters.breakout.entities.BlockIndestructible;
-import com.critters.breakout.entities.BlockMulti;
-import com.critters.breakout.entities.BlockVoid;
 import com.critters.breakout.entities.Entity;
+import com.critters.breakout.entities.blocks.BlockIndestructible;
+import com.critters.breakout.entities.blocks.BlockMulti;
+import com.critters.breakout.entities.blocks.BlockVoid;
 import com.critters.breakout.math.Vector2f;
 
 public enum Pattern {

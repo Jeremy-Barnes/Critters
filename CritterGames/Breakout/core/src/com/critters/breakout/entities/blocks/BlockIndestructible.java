@@ -1,4 +1,4 @@
-package com.critters.breakout.entities;
+package com.critters.breakout.entities.blocks;
 
 import com.badlogic.gdx.graphics.Color;
 import com.critters.breakout.math.Vector2f;

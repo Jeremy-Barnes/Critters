@@ -5,18 +5,15 @@ import static com.critters.breakout.graphics.Render.sr;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
-import com.critters.breakout.entities.Block;
-import com.critters.breakout.entities.BlockIndestructible;
-import com.critters.breakout.entities.BlockVoid;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.Entity;
 import com.critters.breakout.entities.Pad;
 import com.critters.breakout.entities.Wall;
+import com.critters.breakout.entities.blocks.Block;
+import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.entities.ui.ScoreDisplay;
 import com.critters.breakout.entities.ui.UIElement;
 import com.critters.breakout.input.Input;
@@ -69,6 +66,8 @@ public class Level {
 		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
 
 		uiElements.add(new ScoreDisplay());
+
+		entities.add(new Powerup(new Vector2f(100, 100)));
 
 		// Remove all inputs before the start of the game since a new one will start it.
 		Input.inputs.clear();
