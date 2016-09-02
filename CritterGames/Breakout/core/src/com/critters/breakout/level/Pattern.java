@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.critters.breakout.entities.BlockIndestructible;
 import com.critters.breakout.entities.BlockMulti;
 import com.critters.breakout.entities.BlockVoid;
 import com.critters.breakout.entities.Entity;
@@ -18,6 +19,9 @@ public enum Pattern {
 	private static final List<Pattern> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	private static final int SIZE = VALUES.size();
 	private static final Random RANDOM = new Random();
+
+	private static final float INDESTRUTIBLE_RATE = 0.1f;
+	private static final float VOID_RATE = 0.1f;
 
 	public static Pattern getRandom() {
 		return VALUES.get(RANDOM.nextInt(SIZE));
@@ -37,7 +41,7 @@ public enum Pattern {
 		case WALL:
 			for (int x = 0; x < BLOCKS_X; x++) {
 				for (int y = 0; y < BLOCKS_Y; y++) {
-					entities.add(new BlockMulti(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+					spawnBlock(entities, new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2));
 				}
 			}
 			break;
@@ -46,7 +50,7 @@ public enum Pattern {
 			for (int x = 0; x < BLOCKS_X; x++) {
 				for (int y = 0; y < BLOCKS_Y; y++) {
 					if ((x + y) % 2 == 0)
-						entities.add(new BlockMulti(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+						spawnBlock(entities, new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2));
 				}
 			}
 			break;
@@ -55,7 +59,7 @@ public enum Pattern {
 			for (int x = 0; x < BLOCKS_X; x++) {
 				for (int y = 0; y < BLOCKS_Y; y++) {
 					if (x % 2 == 0)
-						entities.add(new BlockMulti(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+						spawnBlock(entities, new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2));
 				}
 			}
 			break;
@@ -68,7 +72,7 @@ public enum Pattern {
 						spawn = ((x > 2) && (x < 6));
 
 					if (spawn)
-						entities.add(new BlockMulti(new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2)));
+						spawnBlock(entities, new Vector2f(OFFSET_X + x * BLOCK_WIDTH, OFFSET_Y + y * BLOCK_HEIGHT), new Vector2f(BLOCK_WIDTH - 2, BLOCK_HEIGHT - 2));
 				}
 			}
 			break;
@@ -76,6 +80,29 @@ public enum Pattern {
 			break;
 		}
 
+	}
+
+	private static void spawnBlock(ArrayList<Entity> entities, Vector2f pos, Vector2f size) {
+
+		// Select type
+		float type = RANDOM.nextFloat();
+		if (type < INDESTRUTIBLE_RATE) {
+			entities.add(new BlockIndestructible(pos, size));
+			return;
+		}
+
+		type = RANDOM.nextFloat();
+		if (type < VOID_RATE) {
+			entities.add(new BlockVoid(pos, size));
+			return;
+		}
+
+		// Otherwise a normal one
+		int hits = RANDOM.nextInt(7) + RANDOM.nextInt(7) - 7;
+		if (hits < 1)
+			hits = 1;
+
+		entities.add(new BlockMulti(pos, size, hits));
 	}
 
 }

@@ -10,7 +10,7 @@ import com.critters.breakout.math.Vector2f;
  */
 public class BlockMulti extends Block {
 
-	protected Color[] colors = { new Color(0xE74C3Cff), new Color(0xE67E22ff), new Color(0xE74C3Cff), new Color(0x2ECC71ff), new Color(0x3498DBff), new Color(0xAF7AC4ff),
+	protected Color[] colors = { new Color(0xE74C3Cff), new Color(0xE67E22ff), new Color(0xF1C40Fff), new Color(0x2ECC71ff), new Color(0x3498DBff), new Color(0xAF7AC4ff),
 			new Color(0x8E44ADff) };
 
 	protected int numberOfHits;
