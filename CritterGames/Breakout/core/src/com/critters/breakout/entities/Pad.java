@@ -3,11 +3,15 @@ package com.critters.breakout.entities;
 import static com.critters.breakout.graphics.Render.sr;
 import static com.critters.breakout.level.Level.level;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.critters.breakout.entities.powerup.Powerup;
+import com.critters.breakout.entities.powerup.PowerupBigPaddle;
 import com.critters.breakout.level.Level;
 import com.critters.breakout.math.Vector2f;
 
@@ -20,6 +24,7 @@ public class Pad extends Collidable {
 	// Movement of the pad
 	private float goalX;
 	private final float MAX_VEL = 5;
+	private final float DEFAULT_SIZE;
 
 	private InputMode mode;
 
@@ -29,6 +34,7 @@ public class Pad extends Collidable {
 
 		mode = InputMode.KEYBOARD;
 		goalX = pos.x;
+		DEFAULT_SIZE = size.x;
 	}
 
 	private void processInput() {
@@ -55,6 +61,23 @@ public class Pad extends Collidable {
 		}
 	}
 
+	private void checkPowerups() {
+		ArrayList<Powerup> powerups = level.getPowerups();
+		for (Powerup p : powerups) {
+			if (rectangle.intersectsRect(p.rect)) {
+				p.pickUp();
+			}
+		}
+	}
+
+	private void checkActivePowerups() {
+		if (Powerup.exists(PowerupBigPaddle.class)) {
+			size.x = DEFAULT_SIZE + 50;
+		} else {
+			size.x = DEFAULT_SIZE;
+		}
+	}
+
 	@Override
 	public void update() {
 		processInput();
@@ -66,6 +89,9 @@ public class Pad extends Collidable {
 		} else {
 			pos.x += (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
 		}
+
+		// Update the size with the active effects
+		checkActivePowerups();
 
 		// Position limitation
 		if (pos.x < level.WALL_SIZE)
@@ -81,6 +107,9 @@ public class Pad extends Collidable {
 
 		// Collision update
 		rectangle.update(pos, pos.add(size));
+
+		// Check for intersecting of entity powerups
+		checkPowerups();
 	}
 
 	@Override
