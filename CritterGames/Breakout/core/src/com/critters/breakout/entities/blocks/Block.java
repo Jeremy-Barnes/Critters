@@ -1,6 +1,7 @@
 package com.critters.breakout.entities.blocks;
 
 import static com.critters.breakout.graphics.Render.sr;
+import static com.critters.breakout.level.Level.random;
 
 import java.util.ArrayList;
 
@@ -8,6 +9,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.powerup.Powerup;
+import com.critters.breakout.entities.powerup.PowerupBigPaddle;
+import com.critters.breakout.entities.powerup.PowerupFireBall;
+import com.critters.breakout.entities.powerup.PowerupSlowBall;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
@@ -25,7 +29,25 @@ public abstract class Block extends Collidable {
 
 		color = new Color(1, 0, 0, 1);
 
-		powerups.add(new Powerup(rectangle.getCenter()));
+		if (random.nextInt(2) == 0)
+			addRandomPowerup();
+	}
+
+	private void addRandomPowerup() {
+		int type = random.nextInt(3);
+		switch (type) {
+		case 0:
+			powerups.add(new PowerupBigPaddle(rectangle.getCenter()));
+			break;
+		case 1:
+			powerups.add(new PowerupFireBall(rectangle.getCenter()));
+			break;
+		case 2:
+			powerups.add(new PowerupSlowBall(rectangle.getCenter()));
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
