@@ -15,6 +15,7 @@ import com.critters.breakout.entities.Pad;
 import com.critters.breakout.entities.Wall;
 import com.critters.breakout.entities.blocks.Block;
 import com.critters.breakout.entities.powerup.Powerup;
+import com.critters.breakout.entities.powerup.PowerupBigPaddle;
 import com.critters.breakout.entities.ui.ScoreDisplay;
 import com.critters.breakout.entities.ui.UIElement;
 import com.critters.breakout.input.Input;
@@ -37,6 +38,7 @@ public class Level {
 
 	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private ArrayList<Powerup> powerups = new ArrayList<Powerup>();
 	private Ball ball;
 
 	public final int LEVEL_WIDTH;
@@ -70,8 +72,6 @@ public class Level {
 
 		uiElements.add(new ScoreDisplay());
 
-		entities.add(new Powerup(new Vector2f(100, 100)));
-
 		// Remove all inputs before the start of the game since a new one will start it.
 		Input.inputs.clear();
 	}
@@ -103,6 +103,9 @@ public class Level {
 			uiElements.get(i).update();
 		}
 
+		for (int i = 0; i < powerups.size(); i++) {
+			powerups.get(i).update();
+		}
 	}
 
 	/**
@@ -154,6 +157,14 @@ public class Level {
 		entities.remove(e);
 	}
 
+	public void addPowerup(Powerup powerup) {
+		powerups.add(powerup);
+	}
+
+	public void removePowerup(Powerup powerup) {
+		powerups.remove(powerup);
+	}
+
 	public ArrayList<Collidable> getCollidables() {
 		ArrayList<Collidable> blocks = new ArrayList<Collidable>();
 		for (Entity e : entities) {
@@ -172,6 +183,9 @@ public class Level {
 		return blocks;
 	}
 
+	/**
+	 * @return powerups in Entity form
+	 */
 	public ArrayList<Powerup> getPowerups() {
 		ArrayList<Powerup> p = new ArrayList<Powerup>();
 		for (Entity e : entities) {
@@ -179,6 +193,10 @@ public class Level {
 				p.add((Powerup) e);
 		}
 		return p;
+	}
+
+	public ArrayList<Powerup> getActivePowerups() {
+		return powerups;
 	}
 
 }
