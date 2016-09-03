@@ -11,6 +11,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.blocks.Block;
+import com.critters.breakout.entities.blocks.BlockIndestructible;
 import com.critters.breakout.entities.blocks.BlockVoid;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
@@ -86,7 +87,7 @@ public class Ball extends Entity {
 	 *            the collidable that was hit
 	 */
 	private void hitBlock(Collidable b) {
-		if (b instanceof Block)
+		if (b instanceof Block && !(b instanceof BlockIndestructible))
 			level.score++;
 	}
 

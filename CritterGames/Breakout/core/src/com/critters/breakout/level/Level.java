@@ -3,6 +3,7 @@ package com.critters.breakout.level;
 import static com.critters.breakout.graphics.Render.sr;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,6 +25,8 @@ public class Level {
 	public enum State {
 		NOT_STARTED, PLAY, WON, LOST;
 	}
+
+	public static final Random random = new Random();
 
 	// Dirty work around
 	public static Level level;
@@ -167,6 +170,15 @@ public class Level {
 				blocks.add((Block) e);
 		}
 		return blocks;
+	}
+
+	public ArrayList<Powerup> getPowerups() {
+		ArrayList<Powerup> p = new ArrayList<Powerup>();
+		for (Entity e : entities) {
+			if (e instanceof Powerup)
+				p.add((Powerup) e);
+		}
+		return p;
 	}
 
 }
