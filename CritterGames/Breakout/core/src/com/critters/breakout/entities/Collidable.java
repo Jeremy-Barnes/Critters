@@ -1,6 +1,5 @@
 package com.critters.breakout.entities;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
@@ -24,6 +23,10 @@ public abstract class Collidable extends Entity {
 
 	public Rectangle getRectangle() {
 		return rectangle;
+	}
+
+	public void destroy() {
+		hit();
 	}
 
 }

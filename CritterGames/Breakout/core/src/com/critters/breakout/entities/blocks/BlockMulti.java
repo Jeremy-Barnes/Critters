@@ -34,8 +34,8 @@ public class BlockMulti extends Block {
 		if (numberOfHits == HITS_NEEDED) {
 			// Remove this block and spawn powerups
 			level.removeEntity(this);
-			
-			for(Powerup p : powerups)
+
+			for (Powerup p : powerups)
 				level.addEntity(p);
 		}
 	}
@@ -47,6 +47,21 @@ public class BlockMulti extends Block {
 		// Switch the color
 		if ((HITS_NEEDED - numberOfHits) > 0)
 			color = colors[(HITS_NEEDED - numberOfHits) - 1];
+	}
+
+	@Override
+	/**
+	 * With fireball effect blocks can be straight up destroyed
+	 */
+	public void destroy() {
+		numberOfHits = HITS_NEEDED;
+	}
+
+	/**
+	 * Return the number of hits needed left for this block to get destroyed
+	 */
+	public int hitsLeft() {
+		return HITS_NEEDED - numberOfHits;
 	}
 
 }

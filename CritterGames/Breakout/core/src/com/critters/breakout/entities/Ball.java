@@ -12,9 +12,11 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.blocks.Block;
 import com.critters.breakout.entities.blocks.BlockIndestructible;
+import com.critters.breakout.entities.blocks.BlockMulti;
 import com.critters.breakout.entities.blocks.BlockVoid;
 import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.entities.powerup.PowerupBigPaddle;
+import com.critters.breakout.entities.powerup.PowerupFireBall;
 import com.critters.breakout.entities.powerup.PowerupSlowBall;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
@@ -25,8 +27,10 @@ public class Ball extends Entity {
 	private Circle circle;
 
 	private Vector2f vel;
-	private final float MAX_VEL_DEFAULT = 3;
+	private final float MAX_VEL_DEFAULT = 4;
 	private float maxVel;
+
+	private boolean fireBall = false;
 
 	// Timers for bounce
 	private int h_time;
@@ -45,12 +49,23 @@ public class Ball extends Entity {
 
 	private void checkActivePowerups() {
 		if (Powerup.exists(PowerupSlowBall.class)) {
-			maxVel = MAX_VEL_DEFAULT - 1;
+			maxVel = MAX_VEL_DEFAULT * .5f;
 		} else {
 			maxVel = MAX_VEL_DEFAULT;
 		}
+
+		if (Powerup.exists(PowerupFireBall.class)) {
+			fireBall = true;
+		} else {
+			fireBall = false;
+		}
 	}
 
+	/**
+	 * Checks if the ball is intersecting anything and bounces in the correct direction.
+	 * 
+	 * Also makes sure not to bounce if fireball is active or it's passing through a block
+	 */
 	private void checkIntersections() {
 		ArrayList<Collidable> blocks = level.getCollidables();
 		for (Collidable b : blocks) {
@@ -64,12 +79,20 @@ public class Ball extends Entity {
 			int result = b.getRectangle().intersectsCircle(circle);
 
 			if (result != NO_INTERSECTION) {
-				b.hit();
-				hitBlock(b);
 
-				if (b instanceof BlockVoid) {
-					continue;
+				// Destroy the block if it's a void block or if fireball is active
+				if (b instanceof BlockVoid || fireBall) {
+					b.destroy();
+					destroyBlock(b);
+				} else {
+					// Else just hit the block
+					b.hit();
+					hitBlock(b);
 				}
+
+				// If fireball active and blockmulti was hit, don't bounce. Also don't bounce on void blocks
+				if ((b instanceof BlockMulti && fireBall) || b instanceof BlockVoid)
+					continue;
 
 				// Bounce
 				if (result == HORRIZONTAL && h_time == 0) {
@@ -104,6 +127,17 @@ public class Ball extends Entity {
 	private void hitBlock(Collidable b) {
 		if (b instanceof Block && !(b instanceof BlockIndestructible))
 			level.score++;
+	}
+
+	/**
+	 * Method that gets triggered when the ball collides with a collidable AND fireball effect is active.
+	 * 
+	 * @param b
+	 *            the collidable that is to be destroyed
+	 */
+	private void destroyBlock(Collidable b) {
+		if (b instanceof BlockMulti)
+			level.score = ((BlockMulti) b).hitsLeft();
 	}
 
 	/**
