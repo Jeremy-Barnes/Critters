@@ -49,7 +49,8 @@ public class Ball extends Entity {
 
 	private void checkActivePowerups() {
 		if (Powerup.exists(PowerupSlowBall.class)) {
-			maxVel = MAX_VEL_DEFAULT * .5f;
+			int count = Powerup.count(PowerupSlowBall.class);
+			maxVel = MAX_VEL_DEFAULT * (float) Math.pow(0.5f, count);
 		} else {
 			maxVel = MAX_VEL_DEFAULT;
 		}
@@ -82,8 +83,8 @@ public class Ball extends Entity {
 
 				// Destroy the block if it's a void block or if fireball is active
 				if (b instanceof BlockVoid || fireBall) {
-					b.destroy();
 					destroyBlock(b);
+					b.destroy();
 				} else {
 					// Else just hit the block
 					b.hit();
@@ -137,7 +138,7 @@ public class Ball extends Entity {
 	 */
 	private void destroyBlock(Collidable b) {
 		if (b instanceof BlockMulti)
-			level.score = ((BlockMulti) b).hitsLeft();
+			level.score += ((BlockMulti) b).hitsLeft();
 	}
 
 	/**

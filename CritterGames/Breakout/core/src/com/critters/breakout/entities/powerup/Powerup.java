@@ -70,6 +70,9 @@ public class Powerup extends Entity {
 		sr.triangle(pos.x - 7.5f, pos.y - +6.5f, pos.x + 7.5f, pos.y - +6.5f, pos.x, pos.y + 6.5f);
 	}
 
+	/**
+	 * Check if the given powerup is currently active
+	 */
 	public static boolean exists(Class<? extends Powerup> someClass) {
 		ArrayList<Powerup> powerups = level.getActivePowerups();
 		for (Powerup p : powerups) {
@@ -78,5 +81,19 @@ public class Powerup extends Entity {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Check how many of the given powerup are active
+	 */
+	public static int count(Class<? extends Powerup> someClass) {
+		ArrayList<Powerup> powerups = level.getActivePowerups();
+		int count = 0;
+		for (Powerup p : powerups) {
+			if (p.getClass() == someClass) {
+				count++;
+			}
+		}
+		return count;
 	}
 }

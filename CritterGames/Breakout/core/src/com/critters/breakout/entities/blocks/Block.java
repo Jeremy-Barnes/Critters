@@ -30,7 +30,7 @@ public abstract class Block extends Collidable {
 
 		color = new Color(1, 0, 0, 1);
 
-		if (random.nextInt(1) == 0)
+		if (random.nextInt(6) == 0)
 			addRandomPowerup();
 	}
 
