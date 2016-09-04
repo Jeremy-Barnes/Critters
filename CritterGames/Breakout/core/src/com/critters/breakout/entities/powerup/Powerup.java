@@ -37,7 +37,7 @@ public class Powerup extends Entity {
 	 * Method called from paddle when it intersects the powerup. Move the object into the active powerups group.
 	 */
 	public void pickUp() {
-		pickedUp = false;
+		pickedUp = true;
 		level.removeEntity(this);
 		level.addPowerup(this);
 	}
