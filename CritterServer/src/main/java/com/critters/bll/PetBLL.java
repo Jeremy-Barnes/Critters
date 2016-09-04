@@ -53,6 +53,11 @@ public class PetBLL {
 		return options;
 	}
 
+	public static void abandonPet(Pet pet){
+		pet.setIsAbandoned(true);
+		updatePet(pet);
+	}
+
 	public static boolean isPetNameValid(String petName){
 		boolean valid = true;
 		valid = (petName != null && !petName.isEmpty()); //todo: content filter

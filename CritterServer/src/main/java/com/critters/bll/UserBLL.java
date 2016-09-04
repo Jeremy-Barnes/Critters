@@ -1,6 +1,7 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
@@ -110,11 +111,19 @@ public class UserBLL {
 		sessionUser.setCity(changeUser.getCity());
 		sessionUser.setState(changeUser.getState());
 		sessionUser.setCountry(changeUser.getCountry());
-
+		sessionUser.setIsActive(changeUser.getIsActive());
 		entityManager.merge(sessionUser);
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		return changeUser;
+	}
+
+	public static void deleteUser(User user) throws GeneralSecurityException, UnsupportedEncodingException, InvalidPropertyException {
+		updateUser(user, user);
+		user.setIsActive(false);
+		for(Pet pet : user.getPets()) {
+			PetBLL.abandonPet(pet);
+		}
 	}
 
 	public static User wipeSensitiveFields(User user) {
