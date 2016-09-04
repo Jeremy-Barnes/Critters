@@ -13,6 +13,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.blocks.Block;
 import com.critters.breakout.entities.blocks.BlockIndestructible;
 import com.critters.breakout.entities.blocks.BlockVoid;
+import com.critters.breakout.entities.powerup.Powerup;
+import com.critters.breakout.entities.powerup.PowerupBigPaddle;
+import com.critters.breakout.entities.powerup.PowerupSlowBall;
 import com.critters.breakout.math.Circle;
 import com.critters.breakout.math.Vector2f;
 
@@ -22,6 +25,8 @@ public class Ball extends Entity {
 	private Circle circle;
 
 	private Vector2f vel;
+	private final float MAX_VEL_DEFAULT = 3;
+	private float maxVel;
 
 	// Timers for bounce
 	private int h_time;
@@ -34,6 +39,16 @@ public class Ball extends Entity {
 		circle = new Circle(pos, radius);
 
 		vel = new Vector2f();
+
+		maxVel = MAX_VEL_DEFAULT;
+	}
+
+	private void checkActivePowerups() {
+		if (Powerup.exists(PowerupSlowBall.class)) {
+			maxVel = MAX_VEL_DEFAULT - 1;
+		} else {
+			maxVel = MAX_VEL_DEFAULT;
+		}
 	}
 
 	private void checkIntersections() {
@@ -91,14 +106,17 @@ public class Ball extends Entity {
 			level.score++;
 	}
 
+	/**
+	 * Method gets called with first click on the screen. The ball launches in a random direction from the start position
+	 */
 	public void launch() {
 		Random random = new Random();
 		vel = new Vector2f(random.nextFloat() - 0.5f, 1);
-		vel = vel.normal().mul(3);
+		normalVel();
 	}
 
 	public void normalVel() {
-		vel = vel.normal().mul(3);
+		vel = vel.normal().mul(maxVel);
 	}
 
 	@Override
@@ -107,6 +125,9 @@ public class Ball extends Entity {
 			h_time--;
 		if (v_time > 0)
 			v_time--;
+
+		// Check for active powerups
+		checkActivePowerups();
 
 		pos = pos.add(vel);
 
