@@ -20,6 +20,7 @@ public abstract class Block extends Collidable {
 	protected ArrayList<Powerup> powerups = new ArrayList<Powerup>();
 
 	protected Color color;
+	protected boolean destructible = true;
 
 	public Block(Vector2f pos, Vector2f size) {
 		super(pos, size);
@@ -64,4 +65,17 @@ public abstract class Block extends Collidable {
 
 	@Override
 	public abstract void hit();
+
+	@Override
+	public abstract void destroy();
+
+	public Class<? extends Block> getType() {
+		if (this.getClass() == BlockMulti.class)
+			return BlockMulti.class;
+		if (this.getClass() == BlockVoid.class)
+			return BlockVoid.class;
+		if (this.getClass() == BlockIndestructible.class)
+			return BlockIndestructible.class;
+		return null;
+	}
 }
