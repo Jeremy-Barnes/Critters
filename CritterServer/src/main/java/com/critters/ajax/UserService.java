@@ -7,6 +7,7 @@ import com.critters.dal.dto.CreateAccountRequest;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
+import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -86,7 +87,11 @@ public class UserService extends AjaxService{
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		user = UserBLL.updateUser(user, loggedInUser);
+		try {
+			user = UserBLL.updateUser(user, loggedInUser);
+		} catch(InvalidPropertyException e){
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
 	}
 }

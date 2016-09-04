@@ -6,6 +6,7 @@ import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
 import javax.persistence.EntityManager;
+import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -86,7 +87,7 @@ public class UserBLL {
 		return user;
 	}
 
-	public static User updateUser(User changeUser, User sessionUser) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static User updateUser(User changeUser, User sessionUser) throws GeneralSecurityException, UnsupportedEncodingException, InvalidPropertyException {
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
@@ -99,8 +100,11 @@ public class UserBLL {
 		sessionUser.setFirstName(changeUser.getFirstName());
 		sessionUser.setLastName(changeUser.getLastName());
 		sessionUser.setPostcode(changeUser.getPostcode());
-		sessionUser.setEmailAddress(changeUser.getEmailAddress());
-		sessionUser.setEmailAddress(changeUser.getEmailAddress());
+		if(changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
+			sessionUser.setEmailAddress(changeUser.getEmailAddress());
+		} else if(changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
+		 	throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
+		}
 		sessionUser.setCity(changeUser.getCity());
 		sessionUser.setState(changeUser.getState());
 		sessionUser.setCountry(changeUser.getCountry());
