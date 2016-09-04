@@ -35,6 +35,7 @@ public class User {
 	private String tokenSelector;
 	private String tokenValidator;
 	private int critterbuxx;
+	private boolean isActive;
 
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
@@ -54,7 +55,7 @@ public class User {
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -72,7 +73,7 @@ public class User {
 		this.critterbuxx = critterbuxx;
 		this.friends = friends;
 		this.friendsOf = friendsOf;
-
+		this.isActive = isActive;
 	}
 
 	public User(User copyUser) {
@@ -89,6 +90,7 @@ public class User {
 		this.critterbuxx = copyUser.critterbuxx;
 		this.friends = null;
 		this.friendsOf = null;
+		this.isActive = copyUser.isActive;
 	}
 
 	public User(){}
@@ -211,6 +213,14 @@ public class User {
 
 	public void setCritterbuxx(int critterbuxx) {
 		this.critterbuxx = critterbuxx;
+	}
+
+	public boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	public List<Friendship> getFriends() {
