@@ -126,6 +126,35 @@ public class UserBLL {
 		return user;
 	}
 
+	public static boolean isUserNameValid(String userName){
+
+		boolean valid = true;
+		valid = (userName != null && !userName.isEmpty()); //todo: content filter
+		if(valid) {
+			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+			valid = !(boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from users where userName = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+											.setParameter(1, userName)
+											.getSingleResult();
+			entityManager.close();
+		}
+
+		return valid;
+	}
+
+	public static boolean isEmailAddressValid(String email){
+
+		boolean valid = true;
+		valid = (email != null && !email.isEmpty()); //todo: content filter
+		if(valid) {
+			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+			valid = !(boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from users where email = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+											.setParameter(1, email)
+											.getSingleResult();
+			entityManager.close();
+		}
+		return valid;
+	}
+
 	/***************** SECURITY STUFF **********************/
 	private static void hashAndSaltPassword(User user) throws GeneralSecurityException, UnsupportedEncodingException {
 		byte[] saltByte = new byte[16];
