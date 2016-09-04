@@ -72,7 +72,8 @@ public class Pad extends Collidable {
 
 	private void checkActivePowerups() {
 		if (Powerup.exists(PowerupBigPaddle.class)) {
-			size.x = DEFAULT_SIZE + 50;
+			int count = Powerup.count(PowerupBigPaddle.class);
+			size.x = DEFAULT_SIZE * (int) Math.pow(2, count);
 		} else {
 			size.x = DEFAULT_SIZE;
 		}
