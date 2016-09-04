@@ -103,6 +103,8 @@ public class UserBLL {
 		if(changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
 			sessionUser.setEmailAddress(changeUser.getEmailAddress());
 		} else if(changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
+			entityManager.getTransaction().rollback();
+			entityManager.close();
 		 	throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
 		}
 		sessionUser.setCity(changeUser.getCity());
