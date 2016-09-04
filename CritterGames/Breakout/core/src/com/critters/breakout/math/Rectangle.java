@@ -6,10 +6,6 @@ public class Rectangle {
 	public static final int HORRIZONTAL = 0x01;
 	public static final int VERTICAL = 0x02;
 
-	/**
-	 * v1 ----- | | ------v2
-	 */
-
 	public Vector2f v1;
 	public Vector2f v2;
 
@@ -41,6 +37,9 @@ public class Rectangle {
 		this.v1 = v1;
 		this.v2 = v2;
 
+		width = v2.x - v1.x;
+		height = v2.y - v1.y;
+
 		top = new Line(v1, v1.add(width, 0));
 		bottom = new Line(v2.add(-width, 0), v2);
 		left = new Line(v1, v1.add(0, height));
@@ -51,6 +50,10 @@ public class Rectangle {
 		if (v.x > v1.x && v.x < v2.x && v.y > v1.y && v.y < v2.y)
 			return true;
 		return false;
+	}
+
+	public boolean intersectsRect(Rectangle r) {
+		return (v1.x < r.v2.x && v2.x > r.v1.x && v1.y < r.v2.y && v2.y > r.v1.y);
 	}
 
 	public int intersectsCircle(Circle c) {
