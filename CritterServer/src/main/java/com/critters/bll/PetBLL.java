@@ -53,4 +53,17 @@ public class PetBLL {
 		return options;
 	}
 
+	public static boolean isPetNameValid(String petName){
+		boolean valid = true;
+		valid = (petName != null && !petName.isEmpty()); //todo: content filter
+		if(valid) {
+			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+			valid = (boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from pets where petName = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+													.setParameter(1, petName)
+													.getSingleResult();
+			entityManager.close();
+		}
+		return valid;
+	}
+
 }

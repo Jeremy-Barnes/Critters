@@ -33,8 +33,26 @@ public class UserService extends AjaxService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest) throws Exception {
 		CreateAccountRequest request = jsonRequest.getValue();
-		//todo checkName availability
-		//todo checkPetName availability
+
+		boolean emailAvailable = true;
+		boolean userNameAvailable = true;
+		boolean petAvailable = true;
+
+		emailAvailable = UserBLL.isEmailAddressValid(request.user.getEmailAddress());
+		if (emailAvailable) {
+			userNameAvailable = UserBLL.isUserNameValid(request.user.getUserName());
+			if (userNameAvailable) {
+				petAvailable = PetBLL.isPetNameValid(request.pet.getPetName());
+			}
+		}
+
+		if(!emailAvailable || !userNameAvailable || !petAvailable){
+			String propertyMessage = !emailAvailable  ? "email address is already tied to an account!" :
+					!userNameAvailable ? "user name is not available! Try a different one." :
+							"pet name is not available! Try a different one.";
+			return Response.status(Response.Status.CONFLICT).entity("Sorry! This " + propertyMessage).build();
+		}
+
 		String validator = UserBLL.createUserReturnUnHashedValidator(request.user);
 		Pet pet = PetBLL.createPet(request.pet, request.user);
 		ArrayList<Pet> pets = new ArrayList<Pet>();
