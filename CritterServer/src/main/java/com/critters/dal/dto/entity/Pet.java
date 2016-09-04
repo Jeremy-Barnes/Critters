@@ -18,6 +18,8 @@ public class Pet {
 	private String petName;
 	private String sex;
 	private int ownerid;
+	private boolean isAbandoned;
+
 
 	@ManyToOne
 	@JoinColumn(name="colorid", updatable = false)
@@ -29,10 +31,11 @@ public class Pet {
 
 	public Pet() {}
 
-	public Pet(String petName, String sex, int ownerid) {
+	public Pet(String petName, String sex, int ownerid, boolean isAbandoned) {
 		this.petName = petName;
 		this.sex = sex;
 		this.ownerid = ownerid;
+		this.isAbandoned = isAbandoned;
 	}
 
 	public int getPetID() {
@@ -81,6 +84,14 @@ public class Pet {
 
 	public void setPetSpecies(PetSpecies petSpecies) {
 		this.petSpecies = petSpecies;
+	}
+
+	public boolean getIsAbandoned() {
+		return isAbandoned;
+	}
+
+	public void setIsAbandoned(boolean isAbandoned) {
+		this.isAbandoned = isAbandoned;
 	}
 
 	@Entity
