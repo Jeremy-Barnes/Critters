@@ -14,7 +14,7 @@ CREATE TABLE users(
     tokenSelector VARCHAR,
     tokenValidator VARCHAR,
     critterbuxx INT NOT NULL,
-    isActive bit not null default '1',
+    isActive boolean not null default 't',
     CONSTRAINT uk_username UNIQUE (userName),
     CONSTRAINT uk_email UNIQUE (emailAddress)
 );
@@ -36,7 +36,7 @@ CREATE TABLE pets(
     colorID INT NOT NULL REFERENCES petColorConfigs(petColorConfigID),
     ownerID INT NOT NULL REFERENCES users(userID),
     speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID),
-    isAbandoned bit not null default '0',
+    isAbandoned boolean not null default 'f',
     CHECK (sex IN ('male','female','other'))
 );
 

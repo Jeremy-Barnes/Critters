@@ -98,7 +98,7 @@ public class UserService extends AjaxService{
 	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, GeneralSecurityException, IOException {
 		User user = jsonUser.getValue();
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
+		user.setIsActive(true);
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
@@ -113,8 +113,7 @@ public class UserService extends AjaxService{
 	@DELETE
 	@Path("/deleteUser")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteUserAccount(JAXBElement<User> jsonUser) throws JAXBException, GeneralSecurityException, IOException,  InvalidPropertyException {
-		User user = jsonUser.getValue();
+	public Response deleteUserAccount() throws JAXBException, GeneralSecurityException, IOException,  InvalidPropertyException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 
 		if(loggedInUser == null) {

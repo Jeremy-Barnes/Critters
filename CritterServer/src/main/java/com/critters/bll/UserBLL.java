@@ -93,7 +93,7 @@ public class UserBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 
-		if(changeUser.getPassword() != null && !changeUser.getPassword().isEmpty()) {
+		if(changeUser.getPassword() != null && !changeUser.getPassword().isEmpty() && !changeUser.getPassword().equals(sessionUser.getPassword())) {
 			hashAndSaltPassword(changeUser);
 			sessionUser.setPassword(changeUser.getPassword());
 			sessionUser.setSalt(changeUser.getSalt());
@@ -119,8 +119,8 @@ public class UserBLL {
 	}
 
 	public static void deleteUser(User user) throws GeneralSecurityException, UnsupportedEncodingException, InvalidPropertyException {
-		updateUser(user, user);
 		user.setIsActive(false);
+		updateUser(user, user);
 		for(Pet pet : user.getPets()) {
 			PetBLL.abandonPet(pet);
 		}
