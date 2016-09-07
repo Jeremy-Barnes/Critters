@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Player extends Collidable {
@@ -52,6 +53,11 @@ public class Player extends Collidable {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
 				goalX -= MAX_VEL;
 			break;
+		}
+
+		// Shoot if there was a click
+		if (Gdx.input.justTouched()) {
+			level.addEntity(new Projectile(new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
 		}
 	}
 
