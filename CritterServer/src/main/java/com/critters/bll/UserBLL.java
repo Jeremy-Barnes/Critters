@@ -7,6 +7,7 @@ import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -32,97 +33,111 @@ public class UserBLL {
 		return users;
 	}
 
-	public static String createUserReturnUnHashedValidator(User user) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static String createUserReturnUnHashedValidator(User user) throws UnsupportedEncodingException {
 		user.setCritterbuxx(500); //TODO: economics
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
-
-		hashAndSaltPassword(user);
-		String validatorUnHashed = createSelectorAndHashValidator(user);
-
-		entityManager.persist(user);
-
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		return validatorUnHashed;
-	}
-
-	public static User getUser(String selector, String validator) throws GeneralSecurityException, UnsupportedEncodingException {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-
-		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
-
-		if(verifyValidator(validator, user)) {
-			user.initializeCollections();
-			entityManager.close();
-			return user;
-		} else {
-			entityManager.close();
-			throw new GeneralSecurityException("Could not log in.");
-		}
-	}
-
-	public static User getUser(String email, String password, boolean login) throws GeneralSecurityException, UnsupportedEncodingException {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-
-		User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
-		user.initializeCollections();
-		if(login) {
-			String validator = null;
-			if (checkLogin(user.getPassword(), password, user.getSalt())) {
-				validator = createSelectorAndHashValidator(user);
-
-				entityManager.getTransaction().commit();
-				entityManager.close();
-			} else {
-				entityManager.getTransaction().rollback();
-				entityManager.close();
-				throw new GeneralSecurityException("Could not log in.");
-			}
-			if (validator != null) user.setTokenValidator(validator);
-		} else {
-			entityManager.close();
-			user = wipeSensitiveFields(user);
-		}
-		return user;
-	}
-
-	public static User updateUser(User changeUser, User sessionUser) throws GeneralSecurityException, UnsupportedEncodingException, InvalidPropertyException {
-
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-
-		if(changeUser.getPassword() != null && !changeUser.getPassword().isEmpty() && !changeUser.getPassword().equals(sessionUser.getPassword())) {
-			hashAndSaltPassword(changeUser);
-			sessionUser.setPassword(changeUser.getPassword());
-			sessionUser.setSalt(changeUser.getSalt());
-		}
-		sessionUser.setFirstName(changeUser.getFirstName());
-		sessionUser.setLastName(changeUser.getLastName());
-		sessionUser.setPostcode(changeUser.getPostcode());
-		if(changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
-			sessionUser.setEmailAddress(changeUser.getEmailAddress());
-		} else if(changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
+		try {
+			hashAndSaltPassword(user);
+			String validatorUnHashed = createSelectorAndHashValidator(user);
+			entityManager.persist(user);
+			entityManager.getTransaction().commit();
+			return validatorUnHashed;
+		} catch(Exception e) {
 			entityManager.getTransaction().rollback();
+			throw e;
+		} finally {
 			entityManager.close();
-		 	throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
 		}
-		sessionUser.setCity(changeUser.getCity());
-		sessionUser.setState(changeUser.getState());
-		sessionUser.setCountry(changeUser.getCountry());
-		sessionUser.setIsActive(changeUser.getIsActive());
-		entityManager.merge(sessionUser);
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		return changeUser;
 	}
 
-	public static void deleteUser(User user) throws GeneralSecurityException, UnsupportedEncodingException, InvalidPropertyException {
-		user.setIsActive(false);
-		updateUser(user, user);
-		for(Pet pet : user.getPets()) {
-			PetBLL.abandonPet(pet);
+	public static User getUser(String selector, String validator) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			User user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
+
+			if (verifyValidator(validator, user)) {
+				user.initializeCollections();
+				return user;
+			} else {
+				return null;
+			}
+		} catch(PersistenceException ex) {
+			return null;
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static User getUser(String email, String password, boolean login) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+
+		try {
+			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+			user.initializeCollections();
+			if (login) {
+				entityManager.getTransaction().begin();
+				String validator = null;
+				if (checkLogin(user.getPassword(), password, user.getSalt())) {
+					validator = createSelectorAndHashValidator(user);
+					entityManager.getTransaction().commit();
+				} else {
+					entityManager.getTransaction().rollback();
+					return null;
+				}
+				if (validator != null) user.setTokenValidator(validator);
+			} else {
+				user = wipeSensitiveFields(user);
+			}
+			return user;
+		} catch (PersistenceException ex) {
+			return null; //no user found
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
+
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+
+			if (changeUser.getPassword() != null && !changeUser.getPassword().isEmpty() && !changeUser.getPassword().equals(sessionUser.getPassword())) {
+				hashAndSaltPassword(changeUser);
+				sessionUser.setPassword(changeUser.getPassword());
+				sessionUser.setSalt(changeUser.getSalt());
+			}
+			sessionUser.setFirstName(changeUser.getFirstName());
+			sessionUser.setLastName(changeUser.getLastName());
+			sessionUser.setPostcode(changeUser.getPostcode());
+			if (changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
+				sessionUser.setEmailAddress(changeUser.getEmailAddress());
+			} else if (changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
+				entityManager.getTransaction().rollback();
+				throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
+			}
+			sessionUser.setCity(changeUser.getCity());
+			sessionUser.setState(changeUser.getState());
+			sessionUser.setCountry(changeUser.getCountry());
+			sessionUser.setIsActive(changeUser.getIsActive());
+			entityManager.merge(sessionUser);
+			entityManager.getTransaction().commit();
+			return changeUser;
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static void deleteUser(User user) throws InvalidPropertyException {
+		try {
+			user.setIsActive(false);
+			updateUser(user, user);
+			for (Pet pet : user.getPets()) {
+				PetBLL.abandonPet(pet);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -165,39 +180,65 @@ public class UserBLL {
 	}
 
 	/***************** SECURITY STUFF **********************/
-	private static void hashAndSaltPassword(User user) throws GeneralSecurityException, UnsupportedEncodingException {
-		byte[] saltByte = new byte[16];
-		SecureRandom.getInstance("SHA1PRNG").nextBytes(saltByte);
-		String saltStr = new String(Base64.encode(saltByte));
+	private static void hashAndSaltPassword(User user) throws UnsupportedEncodingException {
+		try {
+			byte[] saltByte = new byte[16];
+			SecureRandom.getInstance("SHA1PRNG").nextBytes(saltByte);
+			String saltStr = new String(Base64.encode(saltByte));
 
-		byte[] hashByte = SCrypt.scrypt(user.getPassword().getBytes("UTF-8"), saltStr.getBytes("UTF-8"), 16384, 8, 1, 64);
-		String hashStr = new String(Base64.encode(hashByte));
+			byte[] hashByte = SCrypt.scrypt(user.getPassword().getBytes("UTF-8"), saltStr.getBytes("UTF-8"), 16384, 8, 1, 64);
+			String hashStr = new String(Base64.encode(hashByte));
 
-		user.setPassword(hashStr);
-		user.setSalt(saltStr);
+			user.setPassword(hashStr);
+			user.setSalt(saltStr);
+		} catch (GeneralSecurityException ex) {
+			ex.printStackTrace();
+			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
+		}
 	}
 
-	private static String createSelectorAndHashValidator(User user) throws GeneralSecurityException, UnsupportedEncodingException {
-		byte[] validatorByte = new byte[16];
-		SecureRandom.getInstance("SHA1PRNG").nextBytes(validatorByte);
-		String validatorStr = new String(Base64.encode(validatorByte)); //Get in UTF
-		byte[] hashedValidatorByte = SCrypt.scrypt(validatorStr.getBytes("UTF-8"), validatorStr.getBytes("UTF-8"), 16384, 8, 1, 64);
+	private static String createSelectorAndHashValidator(User user) {
+		String validatorStr = null;
+		try {
+			byte[] validatorByte = new byte[16];
+			SecureRandom.getInstance("SHA1PRNG").nextBytes(validatorByte);
+			validatorStr = new String(Base64.encode(validatorByte)); //Get in UTF
+			byte[] hashedValidatorByte = SCrypt.scrypt(validatorStr.getBytes("UTF-8"), validatorStr.getBytes("UTF-8"), 16384, 8, 1, 64);
 
-		user.setTokenSelector(UUID.randomUUID().toString());
-		user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
-		String uuid = UUID.randomUUID().toString();
+			user.setTokenSelector(UUID.randomUUID().toString());
+			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
+		} catch (GeneralSecurityException ex) {
+			ex.printStackTrace();
+			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
+		} catch (UnsupportedEncodingException ex) {ex.printStackTrace();} //shouldn't ever happen
 		return validatorStr;
 	}
 
-	protected static boolean verifyValidator(String suppliedValidator, User dbUser) throws GeneralSecurityException, UnsupportedEncodingException {
-		byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
-		String hashedCookieValidator = new String(Base64.encode(hashByte));
+	protected static boolean verifyValidator(String suppliedValidator, User dbUser) {
+		String hashedCookieValidator = null;
+		try {
+			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
+			hashedCookieValidator = new String(Base64.encode(hashByte));
+		} catch (GeneralSecurityException ex) {
+			ex.printStackTrace();
+			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
+		} catch (UnsupportedEncodingException ex) {
+			return false;
+		}
 		return hashedCookieValidator.equals(dbUser.getTokenValidator());
 	}
 
-	private static boolean checkLogin(String dbPasswordHash, String suppliedPassword, String suppliedSalt) throws GeneralSecurityException, UnsupportedEncodingException {
-		byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
-		String hashStrConfirm = new String(Base64.encode(hashByte));
+	private static boolean checkLogin(String dbPasswordHash, String suppliedPassword, String suppliedSalt) {
+		String hashStrConfirm = null;
+		try {
+			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
+			hashStrConfirm = new String(Base64.encode(hashByte));
+		} catch (GeneralSecurityException ex) {
+			ex.printStackTrace();
+			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
+		} catch (UnsupportedEncodingException ex) {
+			return false;
+		}
 		return hashStrConfirm.equals(dbPasswordHash);
 	}
 }
