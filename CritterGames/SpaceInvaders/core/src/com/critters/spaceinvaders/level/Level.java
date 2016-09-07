@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.Entity;
+import com.critters.spaceinvaders.entities.mobs.Alien;
 import com.critters.spaceinvaders.entities.mobs.Player;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.ui.UIElement;
@@ -46,6 +47,13 @@ public class Level {
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
 
 		addEntity(new Player(new Vector2f(50, 25), new Vector2f(50, 25)));
+
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 4; y++) {
+				addEntity(new Alien(new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+			}
+
+		}
 
 		// uiElements.add(new ScoreDisplay());
 
