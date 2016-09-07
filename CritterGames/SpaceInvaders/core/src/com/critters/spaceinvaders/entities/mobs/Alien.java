@@ -13,7 +13,7 @@ public class Alien extends Enemy {
 
 	@Override
 	public void update() {
-
+		rectangle.update(pos, pos.add(size));
 	}
 
 	@Override
