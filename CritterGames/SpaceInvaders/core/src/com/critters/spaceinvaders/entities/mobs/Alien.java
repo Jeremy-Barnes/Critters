@@ -3,12 +3,13 @@ package com.critters.spaceinvaders.entities.mobs;
 import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Alien extends Enemy {
 
-	public Alien(Vector2f pos, Vector2f size) {
-		super(pos, size);
+	public Alien(Level level, Vector2f pos, Vector2f size) {
+		super(level, pos, size);
 	}
 
 	@Override

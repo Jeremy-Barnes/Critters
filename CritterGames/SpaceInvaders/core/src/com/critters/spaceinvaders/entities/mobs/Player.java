@@ -1,13 +1,13 @@
 package com.critters.spaceinvaders.entities.mobs;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
-import static com.critters.spaceinvaders.level.Level.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Player extends Collidable {
@@ -23,8 +23,8 @@ public class Player extends Collidable {
 
 	private InputMode mode;
 
-	public Player(Vector2f pos, Vector2f size) {
-		super(pos, size);
+	public Player(Level level, Vector2f pos, Vector2f size) {
+		super(level, pos, size);
 		rectangle.onlyBottom = true;
 
 		mode = InputMode.KEYBOARD;
@@ -57,7 +57,7 @@ public class Player extends Collidable {
 
 		// Shoot if there was a click
 		if (Gdx.input.justTouched()) {
-			level.addEntity(new Projectile(this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
+			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
 		}
 	}
 

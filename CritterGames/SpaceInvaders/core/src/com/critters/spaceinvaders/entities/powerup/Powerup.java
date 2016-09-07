@@ -1,17 +1,15 @@
 package com.critters.spaceinvaders.entities.powerup;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
-import static com.critters.spaceinvaders.level.Level.level;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Entity;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Rectangle;
 import com.critters.spaceinvaders.math.Vector2f;
-
-
 
 public class Powerup extends Entity {
 
@@ -26,8 +24,8 @@ public class Powerup extends Entity {
 
 	public Rectangle rect;
 
-	public Powerup(Vector2f pos, int length) {
-		super(pos);
+	public Powerup(Level level, Vector2f pos, int length) {
+		super(level, pos);
 		color = new Color(0xff00ffff);
 
 		LENGTH = length;
@@ -75,7 +73,7 @@ public class Powerup extends Entity {
 	/**
 	 * Check if the given powerup is currently active
 	 */
-	public static boolean exists(Class<? extends Powerup> someClass) {
+	public static boolean exists(Level level, Class<? extends Powerup> someClass) {
 		ArrayList<Powerup> powerups = level.getActivePowerups();
 		for (Powerup p : powerups) {
 			if (p.getClass() == someClass) {
@@ -88,7 +86,7 @@ public class Powerup extends Entity {
 	/**
 	 * Check how many of the given powerup are active
 	 */
-	public static int count(Class<? extends Powerup> someClass) {
+	public static int count(Level level, Class<? extends Powerup> someClass) {
 		ArrayList<Powerup> powerups = level.getActivePowerups();
 		int count = 0;
 		for (Powerup p : powerups) {

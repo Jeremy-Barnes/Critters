@@ -1,9 +1,9 @@
 package com.critters.spaceinvaders.entities;
 
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Rectangle;
 import com.critters.spaceinvaders.math.Vector2f;
-import static com.critters.spaceinvaders.level.Level.level;
 
 public abstract class Collidable extends Entity {
 
@@ -13,8 +13,8 @@ public abstract class Collidable extends Entity {
 	protected Rectangle rectangle;
 	public boolean checked;
 
-	public Collidable(Vector2f pos, Vector2f size) {
-		super(pos);
+	public Collidable(Level level, Vector2f pos, Vector2f size) {
+		super(level, pos);
 		this.size = size;
 		rectangle = new Rectangle(pos, pos.add(size));
 	}
