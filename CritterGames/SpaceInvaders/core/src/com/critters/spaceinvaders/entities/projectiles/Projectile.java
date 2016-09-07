@@ -1,13 +1,13 @@
 package com.critters.spaceinvaders.entities.projectiles;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
-import static com.critters.spaceinvaders.level.Level.level;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.Entity;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Projectile extends Collidable {
@@ -16,8 +16,8 @@ public class Projectile extends Collidable {
 
 	protected Vector2f vel;
 
-	public Projectile(Entity owner, Vector2f pos, Vector2f size, Vector2f vel) {
-		super(pos, size);
+	public Projectile(Level level, Entity owner, Vector2f pos, Vector2f size, Vector2f vel) {
+		super(level, pos, size);
 		this.vel = vel;
 		this.owner = owner;
 	}

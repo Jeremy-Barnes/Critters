@@ -25,9 +25,6 @@ public class Level {
 
 	public static final Random random = new Random();
 
-	// Dirty work around
-	public static Level level;
-
 	public int score;
 
 	public State state;
@@ -40,17 +37,16 @@ public class Level {
 	public final int LEVEL_HEIGHT;
 
 	public Level() {
-		level = this;
 		state = State.NOT_STARTED;
 
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
 
-		addEntity(new Player(new Vector2f(50, 25), new Vector2f(50, 25)));
+		addEntity(new Player(this, new Vector2f(50, 25), new Vector2f(50, 25)));
 
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 4; y++) {
-				addEntity(new Alien(new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
 			}
 
 		}

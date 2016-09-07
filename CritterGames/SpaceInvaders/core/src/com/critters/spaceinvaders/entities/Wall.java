@@ -4,12 +4,13 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Wall extends Collidable {
 
-	public Wall(Vector2f pos, Vector2f size) {
-		super(pos, size);
+	public Wall(Level level, Vector2f pos, Vector2f size) {
+		super(level, pos, size);
 	}
 
 	@Override
