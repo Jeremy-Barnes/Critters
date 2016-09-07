@@ -15,7 +15,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +27,7 @@ public class UserService extends AjaxService{
 	@Path("/createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest) throws Exception {
+	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest)  throws UnsupportedEncodingException, JAXBException {
 		CreateAccountRequest request = jsonRequest.getValue();
 
 		boolean emailAvailable = true;
@@ -65,7 +64,7 @@ public class UserService extends AjaxService{
 	@Path("/getUserFromLogin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserFromLogin(JAXBElement<User> jsonUser) throws Exception {
+	public Response getUserFromLogin(JAXBElement<User> jsonUser) throws JAXBException {
 		User user = jsonUser.getValue();
 		user = UserBLL.getUser(user.getEmailAddress(), user.getPassword(), true);
 
@@ -80,7 +79,7 @@ public class UserService extends AjaxService{
 	@POST
 	@Path("/getUserFromToken")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getUserFromToken(JAXBElement<AuthToken> jsonToken) throws GeneralSecurityException, UnsupportedEncodingException, JAXBException {
+	public Response getUserFromToken(JAXBElement<AuthToken> jsonToken) throws UnsupportedEncodingException, JAXBException {
 		AuthToken token = jsonToken.getValue();
 
 		User user = UserBLL.getUser(token.selector, token.validator);
@@ -95,7 +94,7 @@ public class UserService extends AjaxService{
 	@Path("/changeUserInformation")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, GeneralSecurityException, IOException {
+	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, IOException {
 		User user = jsonUser.getValue();
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		user.setIsActive(true);
@@ -113,7 +112,7 @@ public class UserService extends AjaxService{
 	@DELETE
 	@Path("/deleteUser")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteUserAccount() throws JAXBException, GeneralSecurityException, IOException,  InvalidPropertyException {
+	public Response deleteUserAccount() throws JAXBException, IOException,  InvalidPropertyException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 
 		if(loggedInUser == null) {
@@ -123,4 +122,26 @@ public class UserService extends AjaxService{
 		}
 		return null;
 	}
+
+	@POST
+	@Path("/addPet")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addPetToAccount(JAXBElement<Pet> jsonPet) throws JAXBException, IOException {
+		Pet pet = jsonPet.getValue();
+		boolean petAvailable = PetBLL.isPetNameValid(pet.getPetName());
+		if(!petAvailable){
+			return Response.status(Response.Status.CONFLICT).entity("Sorry! This pet name is not available! Try a different one.").build();
+		}
+
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		pet.setIsAbandoned(false);
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+		pet = PetBLL.createPet(pet, loggedInUser);
+		return Response.status(Response.Status.OK).entity(pet).build();
+	}
+
+
 }
