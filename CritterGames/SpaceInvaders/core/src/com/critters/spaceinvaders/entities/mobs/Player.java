@@ -57,7 +57,7 @@ public class Player extends Collidable {
 
 		// Shoot if there was a click
 		if (Gdx.input.justTouched()) {
-			level.addEntity(new Projectile(new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
+			level.addEntity(new Projectile(this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
 		}
 	}
 

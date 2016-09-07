@@ -1,7 +1,9 @@
 package com.critters.spaceinvaders.entities;
 
+import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.math.Rectangle;
 import com.critters.spaceinvaders.math.Vector2f;
+import static com.critters.spaceinvaders.level.Level.level;
 
 public abstract class Collidable extends Entity {
 
@@ -17,16 +19,18 @@ public abstract class Collidable extends Entity {
 		rectangle = new Rectangle(pos, pos.add(size));
 	}
 
-	public void hit() {
+	public void hit(Projectile projectile) {
 		hit = true;
+		level.removeEntity(this);
+		level.removeEntity(projectile);
 	}
 
 	public Rectangle getRectangle() {
 		return rectangle;
 	}
 
-	public void destroy() {
-		hit();
+	public void destroy(Projectile projectile) {
+		hit(projectile);
 	}
 
 }

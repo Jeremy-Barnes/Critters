@@ -1,23 +1,45 @@
 package com.critters.spaceinvaders.entities.projectiles;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
+import static com.critters.spaceinvaders.level.Level.level;
+
+import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.Entity;
 import com.critters.spaceinvaders.math.Vector2f;
 
 public class Projectile extends Collidable {
 
+	protected Entity owner;
+
 	protected Vector2f vel;
 
-	public Projectile(Vector2f pos, Vector2f size, Vector2f vel) {
+	public Projectile(Entity owner, Vector2f pos, Vector2f size, Vector2f vel) {
 		super(pos, size);
 		this.vel = vel;
+		this.owner = owner;
+	}
+
+	protected void checkCollisions() {
+		ArrayList<Collidable> collidables = level.getCollidables();
+
+		for (Collidable c : collidables) {
+			if (c.getRectangle().intersectsRect(this.rectangle) && c != owner && c != this) {
+				c.hit(this);
+			}
+		}
 	}
 
 	@Override
 	public void update() {
 		pos = pos.add(vel);
+
+		rectangle.update(pos, pos.add(size));
+
+		// Check if it hit anything
+		checkCollisions();
 	}
 
 	@Override

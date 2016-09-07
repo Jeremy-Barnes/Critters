@@ -13,11 +13,6 @@ public class Wall extends Collidable {
 	}
 
 	@Override
-	public void hit() {
-
-	}
-
-	@Override
 	public void update() {
 
 	}
