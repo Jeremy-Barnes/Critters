@@ -22,7 +22,7 @@ public class UserBLL {
 	public static List<User> searchUsers(String searchString){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<User> users = entityManager
-				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm")
+				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm and isActive = true")
 				.setParameter("searchTerm", '%' + searchString + '%')
 				.getResultList();
 		entityManager.close();
@@ -50,7 +50,7 @@ public class UserBLL {
 	public static User getUser(String selector, String validator) throws GeneralSecurityException, UnsupportedEncodingException {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
-		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector").setParameter("selector", selector).getSingleResult();
+		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
 
 		if(verifyValidator(validator, user)) {
 			user.initializeCollections();
@@ -66,7 +66,7 @@ public class UserBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 
-		User user = (User) entityManager.createQuery("from User where emailAddress = :email").setParameter("email", email).getSingleResult();
+		User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
 		user.initializeCollections();
 		if(login) {
 			String validator = null;
