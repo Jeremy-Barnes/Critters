@@ -379,6 +379,8 @@ buildNumber.properties
 ## VS 2015 Project Specific exclusions:
 */CritterClient/app/*.js
 */CritterClient/app/*.js.map
+*/CritterClient/app/*/*.js
+*/CritterClient/app/*/*.js.map
 
 .metadata
 bin/
