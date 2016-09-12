@@ -11,6 +11,10 @@ public class Alien extends Enemy {
 	public Alien(Level level, Vector2f pos, Vector2f size) {
 		super(level, pos, size);
 	}
+	
+	public Alien(Level level, Vector2f pos, Vector2f size, int hp) {
+		super(level, pos, size, hp);
+	}
 
 	@Override
 	public void update() {
