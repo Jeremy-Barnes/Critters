@@ -9,9 +9,9 @@ import com.critters.spaceinvaders.math.Vector2f;
 public class Alien extends Enemy {
 
 	public Alien(Level level, Vector2f pos, Vector2f size) {
-		super(level, pos, size);
+		this(level, pos, size, 1);
 	}
-	
+
 	public Alien(Level level, Vector2f pos, Vector2f size, int hp) {
 		super(level, pos, size, hp);
 	}

@@ -23,6 +23,10 @@ public class Powerup extends Entity {
 	public boolean ended = false;
 
 	public Rectangle rect;
+	
+	public Powerup(Level level, Vector2f pos) {
+		this(level, pos, 10000);
+	}
 
 	public Powerup(Level level, Vector2f pos, int length) {
 		super(level, pos);

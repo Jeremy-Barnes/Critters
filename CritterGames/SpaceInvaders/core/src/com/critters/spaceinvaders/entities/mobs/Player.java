@@ -2,10 +2,13 @@ package com.critters.spaceinvaders.entities.mobs;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -62,9 +65,13 @@ public class Player extends Collidable {
 	}
 
 	private void checkPowerups() {
-		/*
-		 * ArrayList<Powerup> powerups = level.getPowerups(); for (Powerup p : powerups) { if (rectangle.intersectsRect(p.rect)) { p.pickUp(); } }
-		 */
+		ArrayList<Powerup> powerups = level.getPowerups();
+		for (Powerup p : powerups) {
+			if (rectangle.intersectsRect(p.rect)) {
+				p.pickUp();
+			}
+		}
+
 	}
 
 	private void checkActivePowerups() {
