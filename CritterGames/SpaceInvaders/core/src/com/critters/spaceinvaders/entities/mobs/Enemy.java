@@ -39,7 +39,6 @@ public abstract class Enemy extends Collidable {
 		case 1:
 			powerups.add(new PowerupLife(level, rectangle.getCenter()));
 			break;
-
 		default:
 			break;
 		}
@@ -55,6 +54,18 @@ public abstract class Enemy extends Collidable {
 			for (Powerup p : powerups)
 				level.addEntity(p);
 		}
+	}
+
+	/**
+	 * @return get the first powerup of a certain type
+	 */
+	public static boolean exists(Level level, Class<? extends Enemy> eClass) {
+		ArrayList<Collidable> enemies = level.getCollidables();
+		for (Collidable e : enemies) {
+			if (eClass.isAssignableFrom(e.getClass()))
+				return true;
+		}
+		return false;
 	}
 
 }

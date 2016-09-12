@@ -9,6 +9,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
+import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
+import com.critters.spaceinvaders.entities.powerup.PowerupLife;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -86,7 +88,20 @@ public class Player extends Collidable {
 	}
 
 	protected void checkActivePowerups() {
-
+		if(Powerup.exists(level, PowerupLife.class)){
+			healthPoints++;
+			
+			// Remove the powerup that was used to give hp
+			level.getPowerup(PowerupLife.class).deactivate();;
+		}
+		
+		if(Powerup.exists(level, PowerupLaser.class)){
+			
+			// TODO Activate laser
+			
+			// Remove the powerup that was used to give hp
+			level.getPowerup(PowerupLaser.class).deactivate();
+		}
 	}
 
 	@Override
