@@ -23,7 +23,7 @@ public class Powerup extends Entity {
 	public boolean ended = false;
 
 	public Rectangle rect;
-	
+
 	public Powerup(Level level, Vector2f pos) {
 		this(level, pos, 10000);
 	}
@@ -72,6 +72,13 @@ public class Powerup extends Entity {
 
 		sr.setColor(color);
 		sr.triangle(pos.x - 7.5f, pos.y - +6.5f, pos.x + 7.5f, pos.y - +6.5f, pos.x, pos.y + 6.5f);
+	}
+
+	/**
+	 * Deactivate the powerup, useful mostly for powerups that don't have a time limit, but have, say, a number of uses.
+	 */
+	public void deactivate() {
+		level.removePowerup(this);
 	}
 
 	/**

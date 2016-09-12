@@ -53,7 +53,7 @@ public class Level {
 		}
 		
 		for (int x = 0; x < 4; x++) {
-				addEntity(new Shield(this, new Vector2f(x * 150 + 50,  75), new Vector2f(75, 20)));
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50,  95), new Vector2f(75, 20)));
 
 		}
 
