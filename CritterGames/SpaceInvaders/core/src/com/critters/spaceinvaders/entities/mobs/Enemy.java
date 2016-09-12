@@ -7,14 +7,24 @@ import com.critters.spaceinvaders.math.Vector2f;
 
 public abstract class Enemy extends Collidable {
 
+	protected int hitPoints;
+
 	public Enemy(Level level, Vector2f pos, Vector2f size) {
-		super(level, pos, size);
+		this(level, pos, size, 1);
 	}
-	
+
+	public Enemy(Level level, Vector2f pos, Vector2f size, int hp) {
+		super(level, pos, size);
+		hitPoints = hp;
+	}
+
 	@Override
 	public void hit(Projectile projectile) {
 		super.hit(projectile);
-		level.removeEntity(this);
+
+		if (hitCount >= hitPoints) {
+			level.removeEntity(this);
+		}
 	}
 
 }

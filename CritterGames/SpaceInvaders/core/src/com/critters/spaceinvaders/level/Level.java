@@ -47,7 +47,7 @@ public class Level {
 
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 4; y++) {
-				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40), 2));
 			}
 
 		}
