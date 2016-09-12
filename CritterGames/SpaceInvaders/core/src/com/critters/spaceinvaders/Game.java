@@ -9,7 +9,6 @@ import com.critters.spaceinvaders.input.Input;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.level.Level.State;
 
-
 public class Game extends ApplicationAdapter {
 	SpriteBatch render;
 

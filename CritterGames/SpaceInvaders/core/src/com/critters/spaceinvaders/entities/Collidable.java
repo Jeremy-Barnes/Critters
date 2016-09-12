@@ -9,6 +9,7 @@ public abstract class Collidable extends Entity {
 
 	protected Vector2f size;
 	protected boolean hit = false;
+	protected int hitCount = 0;
 
 	protected Rectangle rectangle;
 	public boolean checked;
@@ -21,7 +22,8 @@ public abstract class Collidable extends Entity {
 
 	public void hit(Projectile projectile) {
 		hit = true;
-		level.removeEntity(this);
+		hitCount++;
+		
 		level.removeEntity(projectile);
 	}
 

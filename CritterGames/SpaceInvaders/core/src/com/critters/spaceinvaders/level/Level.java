@@ -12,6 +12,7 @@ import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.Entity;
 import com.critters.spaceinvaders.entities.mobs.Alien;
 import com.critters.spaceinvaders.entities.mobs.Player;
+import com.critters.spaceinvaders.entities.obstacles.Shield;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.ui.UIElement;
 import com.critters.spaceinvaders.input.Input;
@@ -48,6 +49,11 @@ public class Level {
 			for (int y = 0; y < 4; y++) {
 				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
 			}
+
+		}
+		
+		for (int x = 0; x < 4; x++) {
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50,  75), new Vector2f(75, 20)));
 
 		}
 
