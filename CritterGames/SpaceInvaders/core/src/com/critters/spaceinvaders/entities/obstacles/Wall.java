@@ -1,9 +1,10 @@
-package com.critters.spaceinvaders.entities;
+package com.critters.spaceinvaders.entities.obstacles;
 
 import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
 
