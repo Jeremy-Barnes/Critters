@@ -20,11 +20,13 @@ public class Player extends Collidable {
 	}
 
 	// Movement of the pad
-	private float goalX;
-	private final float MAX_VEL = 5;
-	private final float DEFAULT_SIZE;
+	protected float goalX;
+	protected final float MAX_VEL = 5;
+	protected final float DEFAULT_SIZE;
 
-	private InputMode mode;
+	protected InputMode mode;
+
+	protected int healthPoints = 5;
 
 	public Player(Level level, Vector2f pos, Vector2f size) {
 		super(level, pos, size);
@@ -35,7 +37,7 @@ public class Player extends Collidable {
 		DEFAULT_SIZE = size.x;
 	}
 
-	private void processInput() {
+	protected void processInput() {
 
 		// Switching between modes
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
@@ -64,7 +66,7 @@ public class Player extends Collidable {
 		}
 	}
 
-	private void checkPowerups() {
+	protected void checkPowerups() {
 		ArrayList<Powerup> powerups = level.getPowerups();
 		for (Powerup p : powerups) {
 			if (rectangle.intersectsRect(p.rect)) {
@@ -74,7 +76,16 @@ public class Player extends Collidable {
 
 	}
 
-	private void checkActivePowerups() {
+	@Override
+	public void hit(Projectile projectile) {
+		healthPoints--;
+
+		if (healthPoints <= 0) {
+			// You lose - too bad
+		}
+	}
+
+	protected void checkActivePowerups() {
 
 	}
 
@@ -116,6 +127,11 @@ public class Player extends Collidable {
 	public void render(SpriteBatch render) {
 		sr.setColor(0.75f, 0.25f, 0.25f, 1);
 		sr.rect(pos.x, pos.y, size.x, size.y);
+
+		sr.setColor(0.75f, 0f, 0f, 1);
+		for (int i = 0; i < healthPoints; i++) {
+			sr.rect(i * 12 + 10, 10, 10, 10);
+		}
 	}
 
 }
