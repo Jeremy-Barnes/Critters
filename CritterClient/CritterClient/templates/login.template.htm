@@ -1,10 +1,19 @@
-﻿<div id="log-in">
-    <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
-        <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
-        <input type="password" name="password" data-bind="textInput: user.password" placeholder="password" required />
-        <button type="submit">Login</button>
+﻿<div id="log-in" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                <h1 class="text-center">Log In</h1>
+            </div>
+            <form class="modal-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+                <input type="password" name="password" [(ngModel)]="user.password" placeholder="password" required />
+                <button type="submit">Login</button>
+            </form>
 
-    </form>
+            <div class="modal-footer">
+                <p class="text-center">Don't have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#sign-up">Sign Up.</a></p>
+            </div>
+        </div>
+    </div>
 </div>
-
-<acct [user]="this.user"></acct>

@@ -1,6 +1,6 @@
-﻿<form>
+﻿<form (ngSubmit)="onSubmit()" #accountUpdateForm="ngForm">
     <h1>Sign Up, Dumb-Dumb</h1>
-    <input type="email" name="emailAddress" class="passwordMismatch" placeholder="email address" [(ngModel)]="user.email" required />
+    <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
     <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
     <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
     <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />

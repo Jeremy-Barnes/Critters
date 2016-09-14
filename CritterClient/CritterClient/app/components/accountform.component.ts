@@ -1,5 +1,6 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../dtos'
+import {Application} from "../appservice"
 
 @Component({
     selector: 'acct',
@@ -7,11 +8,14 @@ import { User } from '../dtos'
 })
 
 export class AccountFormComponent {
-    @Input()
     user: User;
-
-    ngOnInit() {}
-
-
     confirmPassword: string;
+
+    ngOnInit() { this.user = Application.user }
+
+    onSubmit() {
+        return false;
+    }
+
+    
 }
