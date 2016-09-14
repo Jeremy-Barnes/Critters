@@ -10,33 +10,16 @@ import {Application} from "../appservice"
 
 export class LoginComponent {
     user: User;
-
-    confirmPassword: string = "this is the logincomponent";
+    confirmPassword: string;;
 
     ngOnInit() { this.user = Application.user }
 
-    onSubmit(loginForm: any, $event: any) {
+    onSubmit() {
         var self = this;
-        ServiceMethods.logIn(this.user).fail((u: User) => {
-        //self.user = u;
-            self.user = {
-                userID: 1,
-                birthdate: null,
-                city: 'Chicago',
-                country: 'USA!',
-                critterbuxx: 100,
-                emailAddress: "",
-                friends: null,
-                lastName: "",
-                password: "",
-                postcode: "",
-                salt: "",
-                state: "",
-                tokenSelector: "",
-                tokenValidator: "",
-                userName: "testest",
-                firstName: 'fuckFace'
-            }
+        ServiceMethods.logIn(this.user).then((u: User) => {
+            self.user = u;
+        }).fail((error: JQueryXHR) => {
+            alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });
         return false;
     }

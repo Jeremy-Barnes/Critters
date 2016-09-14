@@ -2,7 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 
-//import { AppComponent }   from './components/app.component';
+import { AppComponent }   from './components/app.component';
 import { LoginComponent }   from './components/login.component';
 import { AccountFormComponent }   from './components/accountform.component';
 
@@ -11,7 +11,7 @@ import { AccountFormComponent }   from './components/accountform.component';
         BrowserModule,
         FormsModule
     ],
-    declarations: [LoginComponent, AccountFormComponent],
-    bootstrap: [LoginComponent]
+    declarations: [LoginComponent, AccountFormComponent, AppComponent],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

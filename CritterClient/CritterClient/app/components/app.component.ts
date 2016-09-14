@@ -1,12 +1,18 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../dtos'
-import {ServiceMethods} from "../servicemethods"
+import {Application} from "../appservice"
 
 @Component({
-    selector: 'my-app',
-    template: '<h1>My First Angular 2 App {{seluser.userName}} <acct [user]="seluser"></acct-form></h1>'
-    
+    selector: 'viewport',
+    templateUrl: "../../templates/app.template.htm"
 })
+
 export class AppComponent {
-    
+    user: User;
+
+    ngOnInit() { this.user = Application.user }
+
+    summonLogin() {
+    }
+
 }
