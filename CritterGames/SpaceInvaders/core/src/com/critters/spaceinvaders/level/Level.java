@@ -76,7 +76,7 @@ public class Level {
 			state = State.LOST;
 		}
 
-		if (!Enemy.exists(this, Enemy.class)) {
+		if (!Enemy.areAnyLeft(this)) {
 			// The game has been won
 			state = State.WON;
 		}
