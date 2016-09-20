@@ -47,7 +47,7 @@ public class Level {
 
 	public final int WALL_SIZE = 17;
 
-	private final Pattern pattern;
+	// private final Pattern pattern;
 
 	public Level(int score) {
 		level = this;
@@ -65,8 +65,9 @@ public class Level {
 		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
 
 		// Create the level
-		pattern = Pattern.getRandom();
-		Pattern.generateLevel(entities, pattern);
+		LevelLoader.loadLevel(this);
+		// pattern = Pattern.getRandom();
+		// Pattern.generateLevel(entities, pattern);
 
 		// Add the level walls
 		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
@@ -212,6 +213,10 @@ public class Level {
 			}
 		}
 		return count;
+	}
+
+	public ArrayList<Entity> getEntities() {
+		return entities;
 	}
 
 }
