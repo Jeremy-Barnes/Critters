@@ -56,13 +56,10 @@ public abstract class Enemy extends Collidable {
 		}
 	}
 
-	/**
-	 * @return get the first powerup of a certain type
-	 */
-	public static boolean exists(Level level, Class<? extends Enemy> eClass) {
+	public static boolean areAnyLeft(Level level) {
 		ArrayList<Collidable> enemies = level.getCollidables();
 		for (Collidable e : enemies) {
-			if (eClass.isAssignableFrom(e.getClass()))
+			if (e instanceof Enemy)
 				return true;
 		}
 		return false;
