@@ -14,6 +14,7 @@ import com.critters.breakout.entities.Entity;
 import com.critters.breakout.entities.Pad;
 import com.critters.breakout.entities.Wall;
 import com.critters.breakout.entities.blocks.Block;
+import com.critters.breakout.entities.blocks.BlockMulti;
 import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.entities.powerup.PowerupBigPaddle;
 import com.critters.breakout.entities.ui.ScoreDisplay;
@@ -85,7 +86,7 @@ public class Level {
 			state = State.LOST;
 		}
 
-		if (getBlocks().size() == 0) {
+		if (getDestructableBlocksCount() == 0) {
 			// The game has been won
 			state = State.WON;
 		}
@@ -197,6 +198,17 @@ public class Level {
 
 	public ArrayList<Powerup> getActivePowerups() {
 		return powerups;
+	}
+
+	private int getDestructableBlocksCount() {
+		int count = 0;
+		ArrayList<Block> blocks = getBlocks();
+		for (Block b : blocks) {
+			if (b instanceof BlockMulti) {
+				count += ((BlockMulti) b).hitsLeft();
+			}
+		}
+		return count;
 	}
 
 }
