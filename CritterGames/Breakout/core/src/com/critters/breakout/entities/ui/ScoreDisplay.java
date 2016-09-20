@@ -11,8 +11,9 @@ public class ScoreDisplay extends UIElement {
 	int score = 0;
 	private BitmapFont font = new BitmapFont();
 
-	public ScoreDisplay() {
+	public ScoreDisplay(int score) {
 		font.setColor(Color.BLACK);
+		this.score = score;
 	}
 
 	@Override
