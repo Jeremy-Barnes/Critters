@@ -24,30 +24,42 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="index.html" />
+    <Content Include="systemjs.config.js" />
     <None Include="Libraries\jquery-2.1.4.intellisense.js" />
     <Content Include="Libraries\jquery-2.1.4.js" />
     <Content Include="Libraries\jquery-2.1.4.min.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
-    <Content Include="Libraries\knockout-3.3.0.js" />
-    <Content Include="Libraries\knockout.mapping-latest.js" />
-    <Content Include="web.config" />
+    <Content Include="package.json" />
+    <Content Include="templates\accountcreate-petcreate.template.htm" />
+    <Content Include="templates\accountcreate-userdetail.template.htm" />
+    <Content Include="templates\accountcreate-basicinfo.template.htm" />
+    <Content Include="templates\accountform.template.htm" />
+    <Content Include="templates\app.template.htm" />
+    <Content Include="templates\login.template.htm" />
     <Content Include="tsconfig.json" />
+    <Content Include="typings.json" />
+    <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="DTOs.ts" />
+    <TypeScriptCompile Include="app\app.routing.ts" />
+    <TypeScriptCompile Include="app\appservice.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-userdetail.component.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-basicinfo.component.ts" />
+    <TypeScriptCompile Include="app\components\login.component.ts" />
+    <TypeScriptCompile Include="app\components\accountform.component.ts" />
+    <TypeScriptCompile Include="app\components\app.component.ts" />
+    <TypeScriptCompile Include="app\app.module.ts" />
+    <TypeScriptCompile Include="app\main.ts" />
+    <TypeScriptCompile Include="app\dtos.ts" />
+    <TypeScriptCompile Include="app\servicemethods.ts" />
     <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="Libraries\typings\knockout.mapping\knockout.mapping.d.ts" />
-    <TypeScriptCompile Include="Libraries\typings\knockout\knockout.d.ts" />
-    <TypeScriptCompile Include="ServiceMethods.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\jquery-2.1.4.min.map" />
@@ -86,10 +98,13 @@
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptModuleKind>System</TypeScriptModuleKind>
     <TypeScriptOutFile />
-    <TypeScriptOutDir>js</TypeScriptOutDir>
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptOutDir>
+    </TypeScriptOutDir>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptEmitDecoratorMetadata>True</TypeScriptEmitDecoratorMetadata>
+    <TypeScriptExperimentalDecorators>True</TypeScriptExperimentalDecorators>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />

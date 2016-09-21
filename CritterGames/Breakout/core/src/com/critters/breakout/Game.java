@@ -37,6 +37,19 @@ public class Game extends ApplicationAdapter {
 
 	}
 
+	public void update() {
+		level.update();
+
+		if (level.state == State.WON) {
+			level = new Level();
+		}
+
+		if (level.state == State.LOST) {
+			level = new Level();
+		}
+
+	}
+
 	@Override
 	public void render() {
 		// Dirty temporary reset feature
