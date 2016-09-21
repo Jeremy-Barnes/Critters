@@ -3,7 +3,7 @@
 import {User} from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://c96979c7.ngrok.io/api/critters";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://c96979c7.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
 
     private static doAjax(functionName: string, functionService: string, parameters: any): JQueryPromise<any> {
