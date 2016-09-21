@@ -9,6 +9,7 @@ import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -16,6 +17,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
 
 /**
  * Created by Jeremy on 8/7/2016.
@@ -142,6 +144,5 @@ public class UserService extends AjaxService{
 		pet = PetBLL.createPet(pet, loggedInUser);
 		return Response.status(Response.Status.OK).entity(pet).build();
 	}
-
 
 }

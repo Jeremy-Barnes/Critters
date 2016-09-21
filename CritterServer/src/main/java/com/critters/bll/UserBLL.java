@@ -94,6 +94,7 @@ public class UserBLL {
 			return null; //no user found
 		} finally {
 			entityManager.close();
+			user = wipeSensitiveFields(user);
 		}
 	}
 
