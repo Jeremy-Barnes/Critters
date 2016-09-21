@@ -2,7 +2,10 @@
     <!--TODO put some fuckin nav bars here-->
     <nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: lightskyblue"> 
         <div class="container">
-            CRITTER <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+            CRITTER 
+            <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+            <a routerLink="/signUp">Sign Up!</a>
+
         </div>
 </nav> 
 
@@ -10,3 +13,4 @@
 </div>
 
 <login></login>
+<router-outlet>
