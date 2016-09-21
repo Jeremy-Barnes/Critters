@@ -1,6 +1,6 @@
-package com.critters.breakout.level;
+package com.critters.spaceinvaders.level;
 
-import static com.critters.breakout.graphics.Render.sr;
+import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -8,19 +8,17 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.critters.breakout.entities.Ball;
-import com.critters.breakout.entities.Collidable;
-import com.critters.breakout.entities.Entity;
-import com.critters.breakout.entities.Pad;
-import com.critters.breakout.entities.Wall;
-import com.critters.breakout.entities.blocks.Block;
-import com.critters.breakout.entities.blocks.BlockMulti;
-import com.critters.breakout.entities.powerup.Powerup;
-import com.critters.breakout.entities.powerup.PowerupBigPaddle;
-import com.critters.breakout.entities.ui.ScoreDisplay;
-import com.critters.breakout.entities.ui.UIElement;
-import com.critters.breakout.input.Input;
-import com.critters.breakout.math.Vector2f;
+import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.Entity;
+import com.critters.spaceinvaders.entities.mobs.Alien;
+import com.critters.spaceinvaders.entities.mobs.Enemy;
+import com.critters.spaceinvaders.entities.mobs.Player;
+import com.critters.spaceinvaders.entities.obstacles.Shield;
+import com.critters.spaceinvaders.entities.powerup.Powerup;
+import com.critters.spaceinvaders.entities.powerup.PowerupLife;
+import com.critters.spaceinvaders.entities.ui.UIElement;
+import com.critters.spaceinvaders.input.Input;
+import com.critters.spaceinvaders.math.Vector2f;
 
 public class Level {
 
@@ -30,9 +28,6 @@ public class Level {
 
 	public static final Random random = new Random();
 
-	// Dirty work around
-	public static Level level;
-
 	public int score;
 
 	public State state;
@@ -40,42 +35,33 @@ public class Level {
 	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Powerup> powerups = new ArrayList<Powerup>();
-	private Ball ball;
+	private Player player;
 
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
-	public final int WALL_SIZE = 17;
-
-	// private final Pattern pattern;
-
-	public Level(int score) {
-		level = this;
+	public Level() {
 		state = State.NOT_STARTED;
-
-		// Start with the score from the previous level
-		this.score = score;
 
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
 
-		// Add the ball and the paddle
-		ball = new Ball(new Vector2f(316, 100), 8);
-		entities.add(ball);
-		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
+		player = new Player(this, new Vector2f(50, 25), new Vector2f(50, 25));
+		addEntity(player);
 
-		// Create the level
-		LevelLoader.loadLevel(this);
-		// pattern = Pattern.getRandom();
-		// Pattern.generateLevel(entities, pattern);
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 4; y++) {
+				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+			}
 
-		// Add the level walls
-		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
-		// entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640, WALL_SIZE))); /* Bottom debug wall*/
-		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
-		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
+		}
 
-		uiElements.add(new ScoreDisplay(score));
+		for (int x = 0; x < 4; x++) {
+			addEntity(new Shield(this, new Vector2f(x * 150 + 50, 95), new Vector2f(75, 20)));
+
+		}
+
+		// uiElements.add(new ScoreDisplay());
 
 		// Remove all inputs before the start of the game since a new one will start it.
 		Input.inputs.clear();
@@ -85,12 +71,12 @@ public class Level {
 	 * Check the state of the level, it can either have been won or lost.
 	 */
 	private void checkState() {
-		if (ball.pos.y < 0) {
+		if (!entities.contains(player)) {
 			// The game has been lost
 			state = State.LOST;
 		}
 
-		if (getDestructableBlocksCount() == 0) {
+		if (!Enemy.areAnyLeft(this)) {
 			// The game has been won
 			state = State.WON;
 		}
@@ -121,7 +107,8 @@ public class Level {
 			if (Input.ready()) {
 				Input.inputs.remove(0);
 				state = State.PLAY;
-				ball.launch();
+
+				// TODO START GAME
 			}
 			return;
 		}
@@ -170,20 +157,14 @@ public class Level {
 		powerups.remove(powerup);
 	}
 
+	/**
+	 * @return collidables
+	 */
 	public ArrayList<Collidable> getCollidables() {
 		ArrayList<Collidable> blocks = new ArrayList<Collidable>();
 		for (Entity e : entities) {
 			if (e instanceof Collidable)
 				blocks.add((Collidable) e);
-		}
-		return blocks;
-	}
-
-	public ArrayList<Block> getBlocks() {
-		ArrayList<Block> blocks = new ArrayList<Block>();
-		for (Entity e : entities) {
-			if (e instanceof Block)
-				blocks.add((Block) e);
 		}
 		return blocks;
 	}
@@ -200,23 +181,22 @@ public class Level {
 		return p;
 	}
 
+	/**
+	 * @return powerups that are active
+	 */
 	public ArrayList<Powerup> getActivePowerups() {
 		return powerups;
 	}
 
-	private int getDestructableBlocksCount() {
-		int count = 0;
-		ArrayList<Block> blocks = getBlocks();
-		for (Block b : blocks) {
-			if (b instanceof BlockMulti) {
-				count += ((BlockMulti) b).hitsLeft();
-			}
+	/**
+	 * @return get the first powerup of a certain type
+	 */
+	public Powerup getPowerup(Class<? extends Powerup> pClass) {
+		for (Powerup p : powerups) {
+			if (p.getClass() == pClass)
+				return p;
 		}
-		return count;
-	}
-
-	public ArrayList<Entity> getEntities() {
-		return entities;
+		return null;
 	}
 
 }
