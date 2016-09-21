@@ -3,6 +3,7 @@ package com.critters.dal.dto.entity;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
+
 import org.hibernate.collection.internal.PersistentBag;
 
 import javax.persistence.*;
@@ -54,6 +55,7 @@ public class User {
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="ownerid")
 	private List<Pet> pets;
+
 
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
