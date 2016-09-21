@@ -1,13 +1,13 @@
-package com.critters.breakout;
+package com.critters.spaceinvaders;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.critters.breakout.graphics.SpriteLoader;
-import com.critters.breakout.input.Input;
-import com.critters.breakout.level.Level;
-import com.critters.breakout.level.Level.State;
+import com.critters.spaceinvaders.graphics.SpriteLoader;
+import com.critters.spaceinvaders.input.Input;
+import com.critters.spaceinvaders.level.Level;
+import com.critters.spaceinvaders.level.Level.State;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch render;
@@ -21,20 +21,7 @@ public class Game extends ApplicationAdapter {
 		render = new SpriteBatch();
 		SpriteLoader.loadSprites();
 
-		level = new Level(0);
-	}
-
-	public void update() {
-		level.update();
-
-		if (level.state == State.WON) {
-			level = new Level(level.score);
-		}
-
-		if (level.state == State.LOST) {
-			level = new Level(level.score);
-		}
-
+		level = new Level();
 	}
 
 	public void update() {
@@ -54,12 +41,12 @@ public class Game extends ApplicationAdapter {
 	public void render() {
 		// Dirty temporary reset feature
 		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-			level = new Level(level.score);
+			level = new Level();
 		}
 
 		update();
 
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		render.begin();
 
