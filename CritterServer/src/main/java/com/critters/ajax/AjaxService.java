@@ -1,6 +1,6 @@
 package com.critters.ajax;
 
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 import com.critters.sockets.SocketManager;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 

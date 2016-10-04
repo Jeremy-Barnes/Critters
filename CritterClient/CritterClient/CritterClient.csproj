@@ -31,6 +31,9 @@
     <Content Include="Libraries\jquery-ui-1.11.4.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
+    <Content Include="templates\accountcreate-petcreate.template.htm" />
+    <Content Include="templates\accountcreate-userdetail.template.htm" />
+    <Content Include="templates\accountcreate-basicinfo.template.htm" />
     <Content Include="templates\accountform.template.htm" />
     <Content Include="templates\app.template.htm" />
     <Content Include="templates\login.template.htm" />
@@ -43,7 +46,11 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+    <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-userdetail.component.ts" />
+    <TypeScriptCompile Include="app\components\accountcreate-basicinfo.component.ts" />
     <TypeScriptCompile Include="app\components\login.component.ts" />
     <TypeScriptCompile Include="app\components\accountform.component.ts" />
     <TypeScriptCompile Include="app\components\app.component.ts" />
