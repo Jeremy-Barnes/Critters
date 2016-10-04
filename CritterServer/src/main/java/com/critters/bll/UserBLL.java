@@ -1,7 +1,7 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
-import com.critters.dal.dto.User;
+import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
@@ -9,12 +9,26 @@ import javax.persistence.EntityManager;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Jeremy on 8/9/2016.
  */
 public class UserBLL {
+
+	public static List<User> searchUsers(String searchString){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		List<User> users = entityManager
+				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm")
+				.setParameter("searchTerm", '%' + searchString + '%')
+				.getResultList();
+		entityManager.close();
+		for(User user : users) {
+			wipeSensitiveFields(user);
+		}
+		return users;
+	}
 
 	public static String createUserReturnUnHashedValidator(User user) throws GeneralSecurityException, UnsupportedEncodingException {
 		user.setCritterbuxx(500); //TODO: economics
@@ -37,12 +51,12 @@ public class UserBLL {
 		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector").setParameter("selector", selector).getSingleResult();
 
 		if(verifyValidator(validator, user)) {
+			user.initializeCollections();
 			entityManager.close();
-
 			return user;
 		} else {
 			entityManager.close();
-			return null;
+			throw new GeneralSecurityException("Could not log in.");
 		}
 	}
 
@@ -66,8 +80,8 @@ public class UserBLL {
 			}
 			if (validator != null) user.setTokenValidator(validator);
 		} else {
-			user = wipeSensitiveFields(user);
 			entityManager.close();
+			user = wipeSensitiveFields(user);
 		}
 		return user;
 	}

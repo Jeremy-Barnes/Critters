@@ -24,3 +24,29 @@ export class Friendship {
     accepted: boolean;
 }
 
+export class Pet {
+    petID: number;
+    petName: string;
+    sex: string;
+    ownerID: number;
+    isAbandoned: boolean;
+
+    petColor: PetColor;
+    petSpecies: PetSpecies;
+}
+
+export class PetSpecies {
+    petSpeciesConfigID: number;
+    petTypeName: string;
+}
+
+export class PetColor {
+    petColorConfigID: number;
+    petColorName: string;
+}
+
+export class CreateAccountRequest {
+    user: User;
+    pet: Pet;
+}
+
