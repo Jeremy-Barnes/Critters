@@ -51,7 +51,7 @@ public class Level {
 
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 4; y++) {
-				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40), y, x));
 			}
 
 		}
@@ -63,7 +63,8 @@ public class Level {
 
 		// uiElements.add(new ScoreDisplay());
 
-		// Remove all inputs before the start of the game since a new one will start it.
+		// Remove all inputs before the start of the game since a new one will
+		// start it.
 		Input.inputs.clear();
 	}
 
@@ -133,8 +134,9 @@ public class Level {
 		}
 
 		/*
-		 * I have absolutely no idea why this is needed, but it doesn't render the score without it, when putting the same code used to render the score inside this render method
-		 * does render it.
+		 * I have absolutely no idea why this is needed, but it doesn't render
+		 * the score without it, when putting the same code used to render the
+		 * score inside this render method does render it.
 		 */
 		render.flush();
 
@@ -197,6 +199,19 @@ public class Level {
 				return p;
 		}
 		return null;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public ArrayList<Alien> getAliensInColumn(int column) {
+		ArrayList<Alien> aliens = new ArrayList<Alien>();
+		for (Entity e : entities)
+			if (e instanceof Alien)
+				if (((Alien) e).column == column)
+					aliens.add((Alien) e);
+		return aliens;
 	}
 
 }

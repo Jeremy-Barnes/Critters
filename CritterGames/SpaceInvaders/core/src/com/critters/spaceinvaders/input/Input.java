@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.critters.spaceinvaders.graphics.Render;
 
 public class Input implements InputProcessor {
 
@@ -17,7 +18,17 @@ public class Input implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		inputs.add(new Click(screenX, Gdx.graphics.getHeight() - screenY, button));
+
+		float xRatio = Gdx.graphics.getWidth() / 640f;
+		float yRatio = Gdx.graphics.getHeight() / 480f;
+
+		int x = (int) ((screenX) / xRatio);
+		int y = (int) ((Gdx.graphics.getHeight() - screenY) / yRatio);
+
+		System.out.println(x + " " + y);
+		//System.out.println(xRatio + " " + screenY);
+
+		inputs.add(new Click(x, y, button));
 		return false;
 	}
 
@@ -31,6 +42,10 @@ public class Input implements InputProcessor {
 				fullscreen = false;
 				Gdx.graphics.setWindowedMode(640, 480);
 			}
+		}
+
+		if (keycode == com.badlogic.gdx.Input.Keys.ESCAPE) {
+			System.exit(0);
 		}
 
 		return true;
