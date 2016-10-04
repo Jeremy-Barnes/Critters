@@ -21,5 +21,6 @@ import { AccountCreateDetailsComponent }   from './components/accountcreate-user
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
+
 })
 export class AppModule { }
