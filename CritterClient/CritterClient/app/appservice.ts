@@ -12,7 +12,14 @@ export class Application {
         alert("FIX ME APPSERVICE.TS")//ServiceMethods.createUser(createRequest);
     }
 
-    public static getPetOptions(user: User) {
+    public static getPetSpecies(user: User) {
         alert("FIX ME APPSERVICE.TS")//ServiceMethods.getPetOptions(createRequest);
+        return [{ petSpeciesConfigID: 0, petTypeName: "dog" }, { petSpeciesConfigID: 1, petTypeName: "cat" }, { petSpeciesConfigID: 2, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data
+    }
+
+    public static getPetColors(user: User) {
+        alert("FIX ME APPSERVICE.TS")//ServiceMethods.getPetOptions(createRequest);
+        return [{ petColorConfigID: 0, petColorName: "blue" }, { petColorConfigID: 1, petColorName: "red" }, { petColorConfigID: 2, petColorName: "octarine" }]; //todo replace with server call, this is test data
+
     }
 }

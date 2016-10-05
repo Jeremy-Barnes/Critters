@@ -1,8 +1,9 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { User } from '../dtos'
+import { User, PetColor, PetSpecies, Pet } from '../dtos'
 import {Application} from "../appservice"
+import { FormGroup }        from '@angular/forms';
 
 
 @Component({
@@ -12,13 +13,16 @@ import {Application} from "../appservice"
 export class AccountCreatePetComponent implements OnInit {
     user: User;
     confirmPassword: string;
-
+    colors: PetColor[];
+    species: PetSpecies[];
+    activeColor: string = "";
     constructor(private router: Router) { }
 
     ngOnInit() {
         this.user = Application.user;
         if (this.userIsValid()) {
-            Application.getPetOptions(null);
+            this.species = Application.getPetSpecies(null);
+            this.colors = Application.getPetColors(null);
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
@@ -26,6 +30,7 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     onSubmit() {
+        this.activeColor = "_octarine";
         return false;
     }
 
