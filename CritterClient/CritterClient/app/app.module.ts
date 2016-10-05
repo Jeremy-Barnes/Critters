@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { ReactiveFormsModule }          from '@angular/forms';
 
 import { Routing } from './app.routing'
 import { AppComponent }   from './components/app.component';
