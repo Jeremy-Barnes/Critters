@@ -1,6 +1,6 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User} from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest} from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://c96979c7.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -35,9 +35,9 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getUserFromToken", "users", { selector: selector, validator: validator });
     }
 
-    public static createUser(user: User): JQueryPromise<User> {
-        user.birthdate = new Date(Date.parse(user.birthdate.toString()));
-        return ServiceMethods.doAjax("createUser", "users", user);
+    public static createUser(userCreateRequest: CreateAccountRequest): JQueryPromise<User> {
+        userCreateRequest.user.birthdate = new Date(Date.parse(userCreateRequest.user.birthdate.toString()));
+        return ServiceMethods.doAjax("createUser", "users", userCreateRequest);
     }
 
     public static changeUserInformation(user: User): JQueryPromise<User> {
