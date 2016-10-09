@@ -51,14 +51,16 @@ public class Level {
 
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 4; y++) {
-				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40), y, x));
+				addEntity(new Alien(this, new Vector2f(x * 50 + 20, y * 50 + 250), new Vector2f(40, 40), y, x));
 			}
 
 		}
 
 		for (int x = 0; x < 4; x++) {
-			addEntity(new Shield(this, new Vector2f(x * 150 + 50, 95), new Vector2f(75, 20)));
-
+			for (int i = 0; i < 4; i++) {
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 97), new Vector2f(77 / 4, 13)));
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 85), new Vector2f(77 / 4, 13)));
+			}
 		}
 
 		// uiElements.add(new ScoreDisplay());

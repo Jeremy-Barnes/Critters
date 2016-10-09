@@ -26,6 +26,9 @@ public class Player extends Collidable {
 	protected final float MAX_VEL = 5;
 	protected final float DEFAULT_SIZE;
 
+	protected int SHOOT_TIME = 20;
+	protected int currentShootTime = 0;
+
 	protected InputMode mode;
 
 	protected int healthPoints = 5;
@@ -66,9 +69,11 @@ public class Player extends Collidable {
 		}
 
 		// Shoot if there was a click
-		if (Gdx.input.justTouched()) {
+		if (Gdx.input.justTouched() && currentShootTime <= 0) {
 			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
 					new Vector2f(0, 3)));
+
+			currentShootTime = SHOOT_TIME;
 		}
 	}
 
@@ -122,6 +127,9 @@ public class Player extends Collidable {
 		} else {
 			pos.x += (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
 		}
+
+		// Shoot timer
+		currentShootTime--;
 
 		// Update the size with the active effects
 		checkActivePowerups();

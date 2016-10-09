@@ -15,6 +15,13 @@ public class Alien extends Enemy {
 	private static Random random = new Random();
 	private int cooldown;
 
+	private float originX;
+	private float maxOffset = 100;
+	private final int STEPS = 10;
+	private final int STEPS_TIME = 10;
+	private int currentStepsTime = 0;
+	private boolean right = true;
+
 	public int row;
 	public int column;
 
@@ -24,6 +31,8 @@ public class Alien extends Enemy {
 		this(level, pos, size, row, column, 1);
 		this.row = row;
 		this.column = column;
+
+		originX = pos.x;
 	}
 
 	public Alien(Level level, Vector2f pos, Vector2f size, int row, int column, int hp) {
@@ -31,7 +40,6 @@ public class Alien extends Enemy {
 	}
 
 	private void updateShoot() {
-
 		// Only the lowest alien it it's column can shoot
 		ArrayList<Alien> aliens = level.getAliensInColumn(column);
 		boolean lowest = true;
@@ -54,11 +62,34 @@ public class Alien extends Enemy {
 		}
 	}
 
+	private void updatePosition() {
+		currentStepsTime++;
+		if (currentStepsTime >= STEPS_TIME) {
+			currentStepsTime = 0;
+
+			float step = maxOffset / STEPS;
+			if (!right)
+				step = -step;
+
+			pos.x += step;
+
+			if ((right && pos.x >= originX + maxOffset) || (!right && pos.x <= originX)) {
+				right = !right;
+				
+				// Switch direction and move down
+				pos.y -= 10;
+			}
+
+		}
+	}
+
 	@Override
 	public void update() {
 		rectangle.update(pos, pos.add(size));
 
 		updateShoot();
+
+		updatePosition();
 	}
 
 	@Override
