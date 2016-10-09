@@ -1,10 +1,10 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { FormGroup }        from '@angular/forms';
 
 import { User, PetColor, PetSpecies, Pet } from '../dtos'
 import {Application} from "../appservice"
-import { FormGroup }        from '@angular/forms';
+
 
 
 @Component({
@@ -16,8 +16,12 @@ export class AccountCreatePetComponent implements OnInit {
     confirmPassword: string;
     colors: PetColor[];
     species: PetSpecies[];
+
     activeColor: string = "";
     activeColorObject: PetColor = null;
+    activeSpecies: PetSpecies = null;
+    petAndColorSelected: boolean = false;
+    petName: string = "";
 
     constructor(private router: Router) { }
 
@@ -33,13 +37,33 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     onSubmit() {
+        alert("Successful account creation");
+
+        var self = this;
+        var pet = new Pet();
+        pet.petName = this.petName;
+        pet.petColor = this.activeColorObject;
+        pet.petSpecies = this.activeSpecies
+        Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
+            Application.user = u;
+            let link = ['/'];
+            self.router.navigate(link);
+        }).fail((error: JQueryXHR) => {
+            alert("Error text received from server (do something with this later): \n\n" + error.responseText)
+        });
+
         return false;
     }
 
     onChange(color: PetColor) {
         this.activeColor = "_" + this.activeColorObject.petColorName;
+        if (this.activeSpecies != null) this.petAndColorSelected = true;
     }
 
+    onPetSelect(pet: PetSpecies) {
+        this.activeSpecies = pet;
+        if (this.activeColor != null) this.petAndColorSelected = true;
+    }
 
     private userIsValid(): boolean {
         return <boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
