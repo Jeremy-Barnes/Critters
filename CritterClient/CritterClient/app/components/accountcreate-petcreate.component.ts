@@ -1,6 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+
 import { User, PetColor, PetSpecies, Pet } from '../dtos'
 import {Application} from "../appservice"
 import { FormGroup }        from '@angular/forms';
@@ -16,6 +17,8 @@ export class AccountCreatePetComponent implements OnInit {
     colors: PetColor[];
     species: PetSpecies[];
     activeColor: string = "";
+    activeColorObject: PetColor = null;
+
     constructor(private router: Router) { }
 
     ngOnInit() {
@@ -33,8 +36,8 @@ export class AccountCreatePetComponent implements OnInit {
         return false;
     }
 
-    onChange(color : string) {
-        this.activeColor = "_" + color;
+    onChange(color: PetColor) {
+        this.activeColor = "_" + this.activeColorObject.petColorName;
     }
 
 
