@@ -25,9 +25,6 @@ public class Input implements InputProcessor {
 		int x = (int) ((screenX) / xRatio);
 		int y = (int) ((Gdx.graphics.getHeight() - screenY) / yRatio);
 
-		System.out.println(x + " " + y);
-		//System.out.println(xRatio + " " + screenY);
-
 		inputs.add(new Click(x, y, button));
 		return false;
 	}
