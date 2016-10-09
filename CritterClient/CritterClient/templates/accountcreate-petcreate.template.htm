@@ -1,10 +1,16 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
     <h1>Make A Pet, Dumbo</h1>
-    <div *ngFor="let specie of species"> <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" />
+    <div *ngFor="let specie of species"> 
+        Species: {{specie.petTypeName}} <br /> 
+        <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
         <select name="colorselect" [(ngModel)]="activeColorObject" (ngModelChange)="onChange($event)">
             <option *ngFor="let color of colors" [ngValue]="color" >{{color.petColorName}}</option>
         </select>
+        <input type="button" value="This one!" (click)="onPetSelect(specie)"/>
+        <br /> <br />
     </div>
-
-    <input type="submit" value="Sign Up"/>
+    Enter your pet's Name: 
+    <input type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
+    <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
+    <input [disabled]="!petAndColorSelected" type="submit" value="Sign Up"/>
 </form>
