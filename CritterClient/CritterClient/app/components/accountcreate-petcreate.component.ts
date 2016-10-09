@@ -30,9 +30,13 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     onSubmit() {
-        this.activeColor = "_octarine";
         return false;
     }
+
+    onChange(color : string) {
+        this.activeColor = "_" + color;
+    }
+
 
     private userIsValid(): boolean {
         return <boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
