@@ -157,7 +157,7 @@ public class UserBLL {
 		valid = (userName != null && !userName.isEmpty()); //todo: content filter
 		if(valid) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = !(boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from users where userName = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from users where userName = ?1)")
 											.setParameter(1, userName)
 											.getSingleResult();
 			entityManager.close();
@@ -172,7 +172,7 @@ public class UserBLL {
 		valid = (email != null && !email.isEmpty()); //todo: content filter
 		if(valid) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = !(boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from users where email = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from users where emailAddress = ?1)")
 											.setParameter(1, email)
 											.getSingleResult();
 			entityManager.close();
