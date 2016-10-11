@@ -29,7 +29,6 @@ public class HibernateUtil {
 	}
 
 	public static EntityManagerFactory getEntityManagerFactory() {
-
 		return entityManagerFactory;
 	}
 }

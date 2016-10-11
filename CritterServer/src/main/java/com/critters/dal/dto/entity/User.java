@@ -1,10 +1,14 @@
 package com.critters.dal.dto.entity;
 
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
+
 import org.hibernate.collection.internal.PersistentBag;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +39,7 @@ public class User {
 	private String tokenSelector;
 	private String tokenValidator;
 	private int critterbuxx;
+	private boolean isActive;
 
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
@@ -49,12 +54,13 @@ public class User {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="ownerid")
-	private List<Pet> zoo;
+	private List<Pet> pets;
+
 
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -72,7 +78,7 @@ public class User {
 		this.critterbuxx = critterbuxx;
 		this.friends = friends;
 		this.friendsOf = friendsOf;
-
+		this.isActive = isActive;
 	}
 
 	public User(User copyUser) {
@@ -89,6 +95,7 @@ public class User {
 		this.critterbuxx = copyUser.critterbuxx;
 		this.friends = null;
 		this.friendsOf = null;
+		this.isActive = copyUser.isActive;
 	}
 
 	public User(){}
@@ -213,6 +220,14 @@ public class User {
 		this.critterbuxx = critterbuxx;
 	}
 
+	public boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public List<Friendship> getFriends() {
 		List<Friendship> frnds = new ArrayList();
 		if(friends != null && ((friends instanceof PersistentBag) ? ((PersistentBag)friends).wasInitialized() : true)) {
@@ -237,12 +252,12 @@ public class User {
 		return frnds;
 	}
 
-	public List<Pet> getZoo() {
-		return zoo;
+	public List<Pet> getPets() {
+		return pets;
 	}
 
-	public void setZoo(List<Pet> zoo) {
-		this.zoo = zoo;
+	public void setPets(List<Pet> zoo) {
+		this.pets = zoo;
 	}
 
 	public List<Item> getInventory() {
@@ -267,7 +282,7 @@ public class User {
 	public void initializeCollections() {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
-		Hibernate.initialize(zoo);
+		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
 	}
 
