@@ -15,7 +15,6 @@ import com.critters.spaceinvaders.entities.mobs.Enemy;
 import com.critters.spaceinvaders.entities.mobs.Player;
 import com.critters.spaceinvaders.entities.obstacles.Shield;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
-import com.critters.spaceinvaders.entities.powerup.PowerupLife;
 import com.critters.spaceinvaders.entities.ui.UIElement;
 import com.critters.spaceinvaders.input.Input;
 import com.critters.spaceinvaders.math.Vector2f;
