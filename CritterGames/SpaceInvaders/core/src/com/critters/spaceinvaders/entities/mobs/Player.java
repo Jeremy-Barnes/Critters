@@ -32,7 +32,7 @@ public class Player extends Collidable {
 
 	protected InputMode mode;
 
-	protected int laserShots = 0;
+	protected int laserShots = 50;
 
 	protected int healthPoints = 5;
 

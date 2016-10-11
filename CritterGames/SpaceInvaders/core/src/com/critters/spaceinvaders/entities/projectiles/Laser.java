@@ -1,7 +1,10 @@
 package com.critters.spaceinvaders.entities.projectiles;
 
+import static com.critters.spaceinvaders.graphics.Render.sr;
+
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.Entity;
@@ -43,7 +46,8 @@ public class Laser extends Projectile {
 
 	@Override
 	public void render(SpriteBatch render) {
-		render.setColor(0.75f, 0.25f, 0.25f, 1);
-		super.render(render);
+		sr.setColor(0.15f, 0.15f, 0.80f, 1);
+		sr.rect(pos.x, pos.y, size.x, size.y);
 	}
+	
 }

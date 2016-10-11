@@ -34,10 +34,10 @@ public abstract class Enemy extends Collidable {
 		int type = random.nextInt(3);
 		switch (type) {
 		case 0:
-			powerups.add(new PowerupLaser(level, rectangle.getCenter()));
+			powerups.add(new PowerupLaser(level, pos.add(size.mul(0.5f))));
 			break;
 		case 1:
-			powerups.add(new PowerupLife(level, rectangle.getCenter()));
+			powerups.add(new PowerupLife(level, pos));
 			break;
 		default:
 			break;
