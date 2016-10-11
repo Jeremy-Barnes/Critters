@@ -22,6 +22,7 @@ export class AccountCreatePetComponent implements OnInit {
     activeSpecies: PetSpecies = null;
     petAndColorSelected: boolean = false;
     petName: string = "";
+    activeSex: string = "";
 
     constructor(private router: Router) { }
 
@@ -43,7 +44,8 @@ export class AccountCreatePetComponent implements OnInit {
         var pet = new Pet();
         pet.petName = this.petName;
         pet.petColor = this.activeColorObject;
-        pet.petSpecies = this.activeSpecies
+        pet.petSpecies = this.activeSpecies;
+        pet.sex = this.activeSex;
         Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
             Application.user = u;
             let link = ['/'];
