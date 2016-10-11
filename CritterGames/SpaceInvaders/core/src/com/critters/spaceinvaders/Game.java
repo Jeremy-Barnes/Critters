@@ -1,5 +1,7 @@
 package com.critters.spaceinvaders;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,18 +23,18 @@ public class Game extends ApplicationAdapter {
 		render = new SpriteBatch();
 		SpriteLoader.loadSprites();
 
-		level = new Level();
+		level = new Level(null);
 	}
 
 	public void update() {
 		level.update();
 
 		if (level.state == State.WON) {
-			level = new Level();
+			level = new Level(level.getShields());
 		}
 
 		if (level.state == State.LOST) {
-			level = new Level();
+			level = new Level(level.getShields());
 		}
 
 	}
@@ -41,7 +43,7 @@ public class Game extends ApplicationAdapter {
 	public void render() {
 		// Dirty temporary reset feature
 		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-			level = new Level();
+			level = new Level(null);
 		}
 
 		update();
