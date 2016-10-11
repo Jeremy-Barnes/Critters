@@ -30,6 +30,8 @@ public class Projectile extends Collidable {
 				c.hit(this);
 				
 				level.removeEntity(this);
+				
+				break;
 			}
 		}
 	}
