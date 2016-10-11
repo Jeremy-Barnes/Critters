@@ -26,6 +26,9 @@ public class Player extends Collidable {
 	protected final float MAX_VEL = 5;
 	protected final float DEFAULT_SIZE;
 
+	protected int SHOOT_TIME = 20;
+	protected int currentShootTime = 0;
+
 	protected InputMode mode;
 
 	protected int healthPoints = 5;
@@ -45,13 +48,16 @@ public class Player extends Collidable {
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			mode = InputMode.POINTER;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+				|| Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
 			mode = InputMode.KEYBOARD;
 		}
 
 		switch (mode) {
 		case POINTER:
-			goalX = Gdx.input.getX() - size.x / 2;
+			float xRatio = Gdx.graphics.getWidth() / 640f;
+
+			goalX = Gdx.input.getX() / xRatio - size.x / 2;
 			break;
 
 		case KEYBOARD:
@@ -63,8 +69,11 @@ public class Player extends Collidable {
 		}
 
 		// Shoot if there was a click
-		if (Gdx.input.justTouched()) {
-			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15), new Vector2f(0, 3)));
+		if (Gdx.input.justTouched() && currentShootTime <= 0) {
+			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
+					new Vector2f(0, 3)));
+
+			currentShootTime = SHOOT_TIME;
 		}
 	}
 
@@ -80,25 +89,28 @@ public class Player extends Collidable {
 
 	@Override
 	public void hit(Projectile projectile) {
+		System.out.println(healthPoints);
 		healthPoints--;
 
 		if (healthPoints <= 0) {
 			// You lose - too bad
+			level.removeEntity(this);
 		}
 	}
 
 	protected void checkActivePowerups() {
-		if(Powerup.exists(level, PowerupLife.class)){
+		if (Powerup.exists(level, PowerupLife.class)) {
 			healthPoints++;
-			
+
 			// Remove the powerup that was used to give hp
-			level.getPowerup(PowerupLife.class).deactivate();;
+			level.getPowerup(PowerupLife.class).deactivate();
+			;
 		}
-		
-		if(Powerup.exists(level, PowerupLaser.class)){
-			
+
+		if (Powerup.exists(level, PowerupLaser.class)) {
+
 			// TODO Activate laser
-			
+
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLaser.class).deactivate();
 		}
@@ -115,6 +127,9 @@ public class Player extends Collidable {
 		} else {
 			pos.x += (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
 		}
+
+		// Shoot timer
+		currentShootTime--;
 
 		// Update the size with the active effects
 		checkActivePowerups();

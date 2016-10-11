@@ -24,6 +24,7 @@ public class Game extends ApplicationAdapter {
 		level = new Level(0);
 	}
 
+
 	public void update() {
 		level.update();
 
@@ -32,20 +33,7 @@ public class Game extends ApplicationAdapter {
 		}
 
 		if (level.state == State.LOST) {
-			level = new Level(level.score);
-		}
-
-	}
-
-	public void update() {
-		level.update();
-
-		if (level.state == State.WON) {
-			level = new Level();
-		}
-
-		if (level.state == State.LOST) {
-			level = new Level();
+			level = new Level(0);
 		}
 
 	}

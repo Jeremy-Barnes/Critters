@@ -28,6 +28,10 @@ public class Projectile extends Collidable {
 		for (Collidable c : collidables) {
 			if (c.getRectangle().intersectsRect(this.rectangle) && c != owner && c != this) {
 				c.hit(this);
+				
+				level.removeEntity(this);
+				
+				break;
 			}
 		}
 	}
