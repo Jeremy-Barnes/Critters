@@ -14,6 +14,11 @@ import com.critters.breakout.entities.blocks.BlockVoid;
 import com.critters.breakout.math.Vector2f;
 
 public enum Pattern {
+
+	/**
+	 * This class should not be in use anymore. Old code
+	 */
+
 	WALL, MESH, COLUMNS, CENTER;
 
 	private static final List<Pattern> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
