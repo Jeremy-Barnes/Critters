@@ -23,18 +23,18 @@ public class Game extends ApplicationAdapter {
 		render = new SpriteBatch();
 		SpriteLoader.loadSprites();
 
-		level = new Level(null);
+		level = new Level(null, 0);
 	}
 
 	public void update() {
 		level.update();
 
 		if (level.state == State.WON) {
-			level = new Level(level.getShields());
+			level = new Level(level.getShields(), level.score);
 		}
 
-		if (level.state == State.LOST) {
-			level = new Level(level.getShields());
+		if (level.state == State.LOST && Gdx.input.justTouched()) {
+			level = new Level(null, 0);
 		}
 
 	}
@@ -43,7 +43,7 @@ public class Game extends ApplicationAdapter {
 	public void render() {
 		// Dirty temporary reset feature
 		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-			level = new Level(null);
+			level = new Level(null, 0);
 		}
 
 		update();

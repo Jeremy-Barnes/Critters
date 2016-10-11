@@ -15,6 +15,8 @@ import com.critters.spaceinvaders.entities.mobs.Enemy;
 import com.critters.spaceinvaders.entities.mobs.Player;
 import com.critters.spaceinvaders.entities.obstacles.Shield;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
+import com.critters.spaceinvaders.entities.ui.GameOverDisplay;
+import com.critters.spaceinvaders.entities.ui.ScoreDisplay;
 import com.critters.spaceinvaders.entities.ui.UIElement;
 import com.critters.spaceinvaders.input.Input;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -39,8 +41,10 @@ public class Level {
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
-	public Level(ArrayList<Shield> shields) {
+	public Level(ArrayList<Shield> shields, int score) {
 		state = State.NOT_STARTED;
+
+		this.score = score;
 
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
 		LEVEL_HEIGHT = Gdx.graphics.getHeight();
@@ -69,7 +73,10 @@ public class Level {
 				entities.add(s);
 		}
 
-		// uiElements.add(new ScoreDisplay());
+		uiElements.add(new ScoreDisplay(this, score));
+		GameOverDisplay gameOver = new GameOverDisplay(this);
+		gameOver.setVisible(false);
+		uiElements.add(gameOver);
 
 		// Remove all inputs before the start of the game since a new one will
 		// start it.
@@ -95,12 +102,17 @@ public class Level {
 	 * Update all the entities
 	 */
 	private void updateEntities() {
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).update();
-		}
 
 		for (int i = 0; i < uiElements.size(); i++) {
 			uiElements.get(i).update();
+		}
+
+		// Do not update entities if the game has already ended
+		if (state == State.LOST)
+			return;
+
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).update();
 		}
 
 		for (int i = 0; i < powerups.size(); i++) {
@@ -116,8 +128,6 @@ public class Level {
 			if (Input.ready()) {
 				Input.inputs.remove(0);
 				state = State.PLAY;
-
-				// TODO START GAME
 			}
 			return;
 		}
@@ -152,7 +162,7 @@ public class Level {
 	}
 
 	public void addEntity(Entity e) {
-		entities.add(e);
+		entities.add(0, e);
 	}
 
 	public void removeEntity(Entity e) {
@@ -227,7 +237,7 @@ public class Level {
 		for (Entity e : entities)
 			if (e instanceof Shield)
 				shields.add((Shield) e);
-		
+
 		return shields;
 	}
 
