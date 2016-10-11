@@ -15,7 +15,6 @@ import com.critters.spaceinvaders.entities.mobs.Enemy;
 import com.critters.spaceinvaders.entities.mobs.Player;
 import com.critters.spaceinvaders.entities.obstacles.Shield;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
-import com.critters.spaceinvaders.entities.powerup.PowerupLife;
 import com.critters.spaceinvaders.entities.ui.UIElement;
 import com.critters.spaceinvaders.input.Input;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -51,19 +50,22 @@ public class Level {
 
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 4; y++) {
-				addEntity(new Alien(this, new Vector2f(x * 50 + 50, y * 50 + 250), new Vector2f(40, 40)));
+				addEntity(new Alien(this, new Vector2f(x * 50 + 20, y * 50 + 250), new Vector2f(40, 40), y, x));
 			}
 
 		}
 
 		for (int x = 0; x < 4; x++) {
-			addEntity(new Shield(this, new Vector2f(x * 150 + 50, 95), new Vector2f(75, 20)));
-
+			for (int i = 0; i < 4; i++) {
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 97), new Vector2f(77 / 4, 13)));
+				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 85), new Vector2f(77 / 4, 13)));
+			}
 		}
 
 		// uiElements.add(new ScoreDisplay());
 
-		// Remove all inputs before the start of the game since a new one will start it.
+		// Remove all inputs before the start of the game since a new one will
+		// start it.
 		Input.inputs.clear();
 	}
 
@@ -133,8 +135,9 @@ public class Level {
 		}
 
 		/*
-		 * I have absolutely no idea why this is needed, but it doesn't render the score without it, when putting the same code used to render the score inside this render method
-		 * does render it.
+		 * I have absolutely no idea why this is needed, but it doesn't render
+		 * the score without it, when putting the same code used to render the
+		 * score inside this render method does render it.
 		 */
 		render.flush();
 
@@ -197,6 +200,19 @@ public class Level {
 				return p;
 		}
 		return null;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public ArrayList<Alien> getAliensInColumn(int column) {
+		ArrayList<Alien> aliens = new ArrayList<Alien>();
+		for (Entity e : entities)
+			if (e instanceof Alien)
+				if (((Alien) e).column == column)
+					aliens.add((Alien) e);
+		return aliens;
 	}
 
 }
