@@ -44,6 +44,7 @@ public class User {
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
 	private List<Friendship> friends;
+
 	@OneToMany
 	@JoinColumn(name="requesteduserid")
 	private List<Friendship> friendsOf;
