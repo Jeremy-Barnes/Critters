@@ -46,6 +46,7 @@ export class AccountCreatePetComponent implements OnInit {
         pet.petColor = this.activeColorObject;
         pet.petSpecies = this.activeSpecies;
         pet.sex = this.activeSex;
+
         Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
             Application.user = u;
             let link = ['/'];

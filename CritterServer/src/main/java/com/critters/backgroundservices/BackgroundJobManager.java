@@ -14,7 +14,8 @@ public class BackgroundJobManager {
 	@Schedule(hour="*", minute="*", second="*/10", persistent=true)
 	public void someQuarterlyJob() {
 		jobs++;
-		System.out.println("JOB JOB JOB");
+		System.out.println("JOB JAERB JEOREARB");
+
 	}
 
 }
