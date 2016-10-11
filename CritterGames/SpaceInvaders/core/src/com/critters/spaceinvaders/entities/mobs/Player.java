@@ -69,7 +69,8 @@ public class Player extends Collidable {
 		}
 
 		// Shoot if there was a click
-		if (Gdx.input.justTouched() && currentShootTime <= 0) {
+		boolean input = Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
+		if (input && currentShootTime <= 0) {
 			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
 					new Vector2f(0, 3)));
 
@@ -89,7 +90,6 @@ public class Player extends Collidable {
 
 	@Override
 	public void hit(Projectile projectile) {
-		System.out.println(healthPoints);
 		healthPoints--;
 
 		if (healthPoints <= 0) {

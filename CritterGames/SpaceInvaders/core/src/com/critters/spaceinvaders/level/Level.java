@@ -39,7 +39,7 @@ public class Level {
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
-	public Level() {
+	public Level(ArrayList<Shield> shields) {
 		state = State.NOT_STARTED;
 
 		LEVEL_WIDTH = Gdx.graphics.getWidth();
@@ -55,11 +55,18 @@ public class Level {
 
 		}
 
-		for (int x = 0; x < 4; x++) {
-			for (int i = 0; i < 4; i++) {
-				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 97), new Vector2f(77 / 4, 13)));
-				addEntity(new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 85), new Vector2f(77 / 4, 13)));
+		if (shields == null) // If this is the first level, generate the shields
+			for (int x = 0; x < 4; x++) {
+				for (int i = 0; i < 4; i++) {
+					addEntity(
+							new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 97), new Vector2f(77 / 4, 13)));
+					addEntity(
+							new Shield(this, new Vector2f(x * 150 + 50 + (75f / 4) * i, 85), new Vector2f(77 / 4, 13)));
+				}
 			}
+		else {
+			for (Shield s : shields)
+				entities.add(s);
 		}
 
 		// uiElements.add(new ScoreDisplay());
@@ -213,6 +220,15 @@ public class Level {
 				if (((Alien) e).column == column)
 					aliens.add((Alien) e);
 		return aliens;
+	}
+
+	public ArrayList<Shield> getShields() {
+		ArrayList<Shield> shields = new ArrayList<Shield>();
+		for (Entity e : entities)
+			if (e instanceof Shield)
+				shields.add((Shield) e);
+		
+		return shields;
 	}
 
 }
