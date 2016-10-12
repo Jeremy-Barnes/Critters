@@ -1,6 +1,7 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
+import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.User;
@@ -51,5 +52,23 @@ public class MetaService extends AjaxService {
 		results.users = UserBLL.searchUsers(searchStr).toArray(new User[0]);
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
 		return Response.status(200).entity(results).build();
+	}
+
+	@GET
+	@Path("/checkPetName/{petName}")
+	public boolean checkPetNameAvailability(@PathParam("petName") String petName) {
+		return PetBLL.isPetNameValid(petName);
+	}
+
+	@GET
+	@Path("/checkUserName/{userName}")
+	public boolean checkUserNameAvailability(@PathParam("userName") String userName) {
+		return UserBLL.isUserNameValid(userName);
+	}
+
+	@GET
+	@Path("/checkEmail/{email}")
+	public boolean checkEmailAvailability(@PathParam("email") String email) {
+		return UserBLL.isEmailAddressValid(email);
 	}
 }
