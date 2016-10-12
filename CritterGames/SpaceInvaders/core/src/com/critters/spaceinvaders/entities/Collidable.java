@@ -24,7 +24,7 @@ public abstract class Collidable extends Entity {
 		hit = true;
 		hitCount++;
 		
-		level.removeEntity(projectile);
+		//level.removeEntity(projectile);
 	}
 
 	public Rectangle getRectangle() {
