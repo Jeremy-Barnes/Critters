@@ -24,7 +24,6 @@ public class Game extends ApplicationAdapter {
 		level = new Level(0);
 	}
 
-
 	public void update() {
 		level.update();
 
@@ -32,7 +31,7 @@ public class Game extends ApplicationAdapter {
 			level = new Level(level.score);
 		}
 
-		if (level.state == State.LOST) {
+		if (level.state == State.LOST && Gdx.input.justTouched()) {
 			level = new Level(0);
 		}
 
