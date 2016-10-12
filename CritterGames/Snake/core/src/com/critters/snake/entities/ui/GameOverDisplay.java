@@ -21,7 +21,7 @@ public class GameOverDisplay extends ScoreDisplay {
 
 	@Override
 	public void renderIfVisible(Render render) {
-		render.drawText(font, "Game Over", 90, 55);
+		render.drawText(font, "Game Over", 90, 95);
 	}
 
 }

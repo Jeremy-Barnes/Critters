@@ -42,12 +42,16 @@ public class Render {
 	 * 
 	 */
 	public void drawRect(Vector2f v0, Vector2f size, Color color) {
+		drawRect(v0.x, v0.y, size.x, size.y, color);
+	}
+
+	public void drawRect(float x, float y, float w, float h, Color color) {
 		shapeRenderer.begin(ShapeType.Filled);
 
 		shapeRenderer.setColor(color);
-		shapeRenderer.translate(v0.y, v0.y, 0);
-		shapeRenderer.rect(-size.x / 2, -size.y / 2, size.x, size.y);
-		shapeRenderer.translate(-v0.y, -v0.y, 0);
+		shapeRenderer.translate(x, y, 0);
+		shapeRenderer.rect(0, 0, w, h);
+		shapeRenderer.translate(-x, -y, 0);
 
 		shapeRenderer.end();
 

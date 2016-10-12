@@ -23,7 +23,7 @@ public class ScoreDisplay extends UIElement {
 
 	@Override
 	public void renderIfVisible(Render render) {
-		render.drawText(font, "Score: " + score, 100, 40);
+		render.drawText(font, "Score: " + score, 100, 80);
 	}
 
 }
