@@ -23,6 +23,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="img\cat_blue.png" />
+    <Content Include="img\cat_octarine.png" />
+    <Content Include="img\cat_red.png" />
+    <Content Include="img\horrible clion.png" />
+    <Content Include="img\dog.png" />
+    <Content Include="img\dog_octarine.png" />
+    <Content Include="img\dog_red.png" />
+    <Content Include="img\dog_blue.png" />
+    <Content Include="img\cat.png" />
+    <Content Include="img\horrible clion_blue.png" />
+    <Content Include="img\horrible clion_octarine.png" />
+    <Content Include="img\horrible clion_red.png" />
     <Content Include="index.html" />
     <Content Include="systemjs.config.js" />
     <None Include="Libraries\jquery-2.1.4.intellisense.js" />
