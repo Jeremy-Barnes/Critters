@@ -11,7 +11,6 @@ import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
 import com.critters.spaceinvaders.entities.powerup.PowerupLife;
-import com.critters.spaceinvaders.entities.projectiles.Laser;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -31,8 +30,6 @@ public class Player extends Collidable {
 	protected int currentShootTime = 0;
 
 	protected InputMode mode;
-
-	protected int laserShots = 50;
 
 	protected int healthPoints = 5;
 
@@ -72,16 +69,10 @@ public class Player extends Collidable {
 		}
 
 		// Shoot if there was a click
-		boolean input = Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
-		if (input && currentShootTime <= 0) {
-			if (laserShots <= 0)
-				level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
-						new Vector2f(0, 3)));
-			else {
-				laserShots--;
-				level.addEntity(new Laser(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(2, 3000),
-						new Vector2f()));
-			}
+		if (Gdx.input.justTouched() && currentShootTime <= 0) {
+			level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
+					new Vector2f(0, 3)));
+
 			currentShootTime = SHOOT_TIME;
 		}
 	}
@@ -98,6 +89,7 @@ public class Player extends Collidable {
 
 	@Override
 	public void hit(Projectile projectile) {
+		System.out.println(healthPoints);
 		healthPoints--;
 
 		if (healthPoints <= 0) {
@@ -112,10 +104,13 @@ public class Player extends Collidable {
 
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLife.class).deactivate();
+			;
 		}
 
 		if (Powerup.exists(level, PowerupLaser.class)) {
-			laserShots = 2;
+
+			// TODO Activate laser
+
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLaser.class).deactivate();
 		}

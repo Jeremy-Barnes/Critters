@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.entities.projectiles.ProjectileEnemy;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -38,12 +37,6 @@ public class Alien extends Enemy {
 
 	public Alien(Level level, Vector2f pos, Vector2f size, int row, int column, int hp) {
 		super(level, pos, size, hp);
-	}
-
-	@Override
-	public void hit(Projectile projectile) {
-		super.hit(projectile);
-		level.score++;
 	}
 
 	private void updateShoot() {
@@ -82,7 +75,7 @@ public class Alien extends Enemy {
 
 			if ((right && pos.x >= originX + maxOffset) || (!right && pos.x <= originX)) {
 				right = !right;
-
+				
 				// Switch direction and move down
 				pos.y -= 10;
 			}
