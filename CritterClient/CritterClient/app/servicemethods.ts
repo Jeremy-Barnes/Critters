@@ -44,5 +44,12 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("changeUserInformation", "users", user);
     }
 
+    public static getPetSpecies(user: User): JQueryPromise<PetSpecies[]> {
+        return ServiceMethods.doAjax("getPetSpecies", "meta", user);
+    }
+
+    public static getPetColors(user: User): JQueryPromise<PetColor[]> {
+        return ServiceMethods.doAjax("getPetColors", "meta", user);
+    }
 
 }
