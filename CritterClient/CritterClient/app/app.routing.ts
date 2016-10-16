@@ -5,6 +5,7 @@ import { AccountCreateBasicInfoComponent } from './components/accountcreate-basi
 import { AccountCreateDetailsComponent } from './components/accountcreate-userdetail.component';
 import { AccountCreatePetComponent } from './components/accountcreate-petcreate.component';
 import { AccountFormComponent } from './components/accountform.component';
+import { CreatePetComponent } from './components/petcreate.component';
 
 import { AppComponent } from './components/app.component';
 
@@ -35,6 +36,10 @@ const appRoutes: Routes = [
     {
         path: 'account',
         component: AccountFormComponent
+    },
+    {
+        path: 'newpet',
+        component: CreatePetComponent
     }
 ];
 

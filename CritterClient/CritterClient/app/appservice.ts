@@ -12,12 +12,16 @@ export class Application {
         return ServiceMethods.createUser(createRequest);
     }
 
-    public static getPetSpecies(user: User) {
+    public static submitCreatePet(pet: Pet): JQueryPromise<Pet> {
+        return ServiceMethods.createPet(pet);
+    }
+
+    public static getPetSpecies() {
         //ServiceMethods.getPetOptions(createRequest);
         return [{ petSpeciesConfigID: 1, petTypeName: "dog" }, { petSpeciesConfigID: 2, petTypeName: "cat" }, { petSpeciesConfigID: 3, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data
     }
 
-    public static getPetColors(user: User) {
+    public static getPetColors() {
         //ServiceMethods.getPetOptions(createRequest);
         return [{ petColorConfigID: 1, petColorName: "blue" }, { petColorConfigID: 2, petColorName: "red" }, { petColorConfigID: 3, petColorName: "octarine" }]; //todo replace with server call, this is test data
 

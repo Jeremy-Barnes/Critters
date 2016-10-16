@@ -8,10 +8,10 @@ import {Application} from "../appservice"
 
 
 @Component({
-    templateUrl: '../../templates/accountcreate-petcreate.template.htm'
+    templateUrl: '../../templates/petcreate.template.htm'
 })
 
-export class AccountCreatePetComponent implements OnInit {
+export class CreatePetComponent implements OnInit {
     user: User;
     colors: PetColor[];
     species: PetSpecies[];
@@ -27,18 +27,9 @@ export class AccountCreatePetComponent implements OnInit {
 
     ngOnInit() {
         this.user = Application.user;
-        if (this.userIsValid()) {
-            this.species = Application.getPetSpecies();
-            this.colors = Application.getPetColors();
-        } else {
-            let link = ['/signUp'];
-            this.router.navigate(link);
-        }
     }
 
     onSubmit() {
-        alert("Successful account creation");
-
         var self = this;
         var pet = new Pet();
         pet.petName = this.petName;
@@ -46,7 +37,7 @@ export class AccountCreatePetComponent implements OnInit {
         pet.petSpecies = this.activeSpecies;
         pet.sex = this.activeSex;
 
-        Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
+        Application.(this.user, pet).then((u: User) => {
             Application.user = u;
             let link = ['/'];
             self.router.navigate(link);
@@ -66,12 +57,4 @@ export class AccountCreatePetComponent implements OnInit {
         this.activeSpecies = pet;
         if (this.activeColor != null) this.petAndColorSelected = true;
     }
-
-    private userIsValid(): boolean {
-        return <boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
-            this.user.emailAddress && this.user.firstName && this.user.lastName &&
-            this.user.password && this.user.postcode && this.user.state && this.user.userName);
-    }
-
-    
 }

@@ -40,6 +40,10 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("createUser", "users", userCreateRequest);
     }
 
+    public static createPet(pet: Pet): JQueryPromise<Pet> {
+        return ServiceMethods.doAjax("addPet", "users", pet);
+    }
+
     public static changeUserInformation(user: User): JQueryPromise<User> {
         return ServiceMethods.doAjax("changeUserInformation", "users", user);
     }
