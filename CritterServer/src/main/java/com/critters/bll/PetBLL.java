@@ -24,7 +24,7 @@ public class PetBLL {
 		return pet;
 	}
 
-	public static List<Pet> getPet(User user){
+	public static List<Pet> getPets(User user){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<Pet> pets = entityManager.createQuery("from Pet where ownerid = :id").setParameter("id", user.getUserID()).getResultList();
 		entityManager.close();
@@ -39,7 +39,7 @@ public class PetBLL {
 		entityManager.close();
 	}
 
-	public static List<Pet.PetSpecies> getPetOptions() {
+	public static List<Pet.PetSpecies> getPetSpecies() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<Pet.PetSpecies> options = entityManager.createQuery("from PetSpecies").getResultList();
 		entityManager.close();
