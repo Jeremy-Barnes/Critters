@@ -14,12 +14,12 @@ export class Application {
 
     public static getPetSpecies(user: User) {
         //ServiceMethods.getPetOptions(createRequest);
-        return [{ petSpeciesConfigID: 0, petTypeName: "dog" }, { petSpeciesConfigID: 1, petTypeName: "cat" }, { petSpeciesConfigID: 2, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data
+        return [{ petSpeciesConfigID: 1, petTypeName: "dog" }, { petSpeciesConfigID: 2, petTypeName: "cat" }, { petSpeciesConfigID: 3, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data
     }
 
     public static getPetColors(user: User) {
         //ServiceMethods.getPetOptions(createRequest);
-        return [{ petColorConfigID: 0, petColorName: "blue" }, { petColorConfigID: 1, petColorName: "red" }, { petColorConfigID: 2, petColorName: "octarine" }]; //todo replace with server call, this is test data
+        return [{ petColorConfigID: 1, petColorName: "blue" }, { petColorConfigID: 2, petColorName: "red" }, { petColorConfigID: 3, petColorName: "octarine" }]; //todo replace with server call, this is test data
 
     }
 }
