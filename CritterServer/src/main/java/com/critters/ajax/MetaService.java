@@ -73,14 +73,14 @@ public class MetaService extends AjaxService {
 		return UserBLL.isEmailAddressValid(email);
 	}
 
-	@POST
+	@GET
 	@Path("/getPetSpecies")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
 		return Response.status(Response.Status.OK).entity(PetBLL.getPetSpecies()).build();
 	}
 
-	@POST
+	@GET
 	@Path("/getPetColors")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
