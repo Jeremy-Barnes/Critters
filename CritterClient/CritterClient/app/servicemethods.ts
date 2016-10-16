@@ -6,11 +6,11 @@ export class ServiceMethods {
     static baseURL: string = "http://c96979c7.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
 
-    private static doAjax(functionName: string, functionService: string, parameters: any): JQueryPromise<any> {
+    private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
         var param = JSON.stringify(parameters);
         var settings: JQueryAjaxSettings = {
             url: ServiceMethods.baseURL + functionService + "/" + functionName,
-            type: "POST",
+            type: type,
             contentType: "application/json",
             headers: {
                 SelectorValidator: ServiceMethods.selectorValidator ? ServiceMethods.selectorValidator[0] + ':' + ServiceMethods.selectorValidator[1] : null,
@@ -44,12 +44,12 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("changeUserInformation", "users", user);
     }
 
-    public static getPetSpecies(user: User): JQueryPromise<PetSpecies[]> {
-        return ServiceMethods.doAjax("getPetSpecies", "meta", user);
+    public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
+        return ServiceMethods.doAjax("getPetSpecies", "meta", null, "GET");
     }
 
-    public static getPetColors(user: User): JQueryPromise<PetColor[]> {
-        return ServiceMethods.doAjax("getPetColors", "meta", user);
+    public static getPetColors(): JQueryPromise<PetColor[]> {
+        return ServiceMethods.doAjax("getPetColors", "meta", null, "GET");
     }
 
 }
