@@ -11,6 +11,8 @@ import { AccountFormComponent }   from './components/accountform.component';
 import { AccountCreateBasicInfoComponent }   from './components/accountcreate-basicinfo.component';
 import { AccountCreatePetComponent }   from './components/accountcreate-petcreate.component';
 import { AccountCreateDetailsComponent }   from './components/accountcreate-userdetail.component';
+import { CreatePetComponent }   from './components/petcreate.component';
+
 
 
 @NgModule({

@@ -16,6 +16,10 @@ export class Application {
         return ServiceMethods.createPet(pet);
     }
 
+    public static submitUserAccountUpdate(user: User): JQueryPromise<User> {
+        return ServiceMethods.changeUserInformation(user);
+    }
+
     public static getPetSpecies() {
         //ServiceMethods.getPetOptions(createRequest);
         return [{ petSpeciesConfigID: 1, petTypeName: "dog" }, { petSpeciesConfigID: 2, petTypeName: "cat" }, { petSpeciesConfigID: 3, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data

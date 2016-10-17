@@ -12,12 +12,20 @@ export class AccountFormComponent {
     user: User;
     confirmPassword: string;
 
+
     constructor(private router: Router) { }
 
 
     ngOnInit() { this.user = Application.user }
 
     onSubmit() {
+        var self = this;
+
+        Application.submitUserAccountUpdate(this.user).then((u: User) => {
+        }).fail((error: JQueryXHR) => {
+            alert("Error text received from server (do something with this later): \n\n" + error.responseText)
+        });
+
         return false;
     }
 

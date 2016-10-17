@@ -5,5 +5,9 @@
     <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
     <input type="text" name="country" placeholder="country" [(ngModel)]="user.country" required />
     <input type="text" name="postcode" placeholder="postcode" [(ngModel)]="user.postcode" required />
+    <select name="sexSelect" [(ngModel)]="user.sex">
+        <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
+    </select>
+
     <input type="submit" value="Next"/>
 </form>
