@@ -12,6 +12,7 @@ export class AccountCreateDetailsComponent {
     user: User;
     confirmPassword: string;
 
+
     constructor(private router: Router) { }
 
     ngOnInit() {

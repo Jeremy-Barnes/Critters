@@ -6,6 +6,7 @@
     emailAddress: string = "";
     password: string = "";
     birthdate: Date = null;
+    sex: string = "";
     salt: string = "";
     city: string = "";
     state: string = "";
