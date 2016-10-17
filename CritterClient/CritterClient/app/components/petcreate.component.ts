@@ -37,10 +37,8 @@ export class CreatePetComponent implements OnInit {
         pet.petSpecies = this.activeSpecies;
         pet.sex = this.activeSex;
 
-        Application.(this.user, pet).then((u: User) => {
-            Application.user = u;
-            let link = ['/'];
-            self.router.navigate(link);
+        Application.submitCreatePet(pet).then((p: Pet) => {
+            Application.user.pets.push(p);
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });

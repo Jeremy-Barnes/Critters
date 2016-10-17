@@ -15,6 +15,8 @@
     tokenValidator: string = "";
     critterbuxx: number = 0;
     friends: Array<Friendship>;
+    pets: Array<Pet>;
+
 }
 
 export class Friendship {
