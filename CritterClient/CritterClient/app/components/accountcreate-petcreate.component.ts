@@ -23,13 +23,13 @@ export class AccountCreatePetComponent implements OnInit {
     petName: string = "";
     activeSex: string = "";
 
-    constructor(private router: Router) { }
+    constructor(private router: Router) { Application.getPetColors(); Application.getPetSpecies(); }
 
     ngOnInit() {
         this.user = Application.user;
         if (this.userIsValid()) {
-            this.species = Application.getPetSpecies();
-            this.colors = Application.getPetColors();
+            this.species = Application.petSpecies;
+            this.colors = Application.petColors;
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
