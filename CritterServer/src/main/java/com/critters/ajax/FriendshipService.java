@@ -55,4 +55,34 @@ public class FriendshipService extends AjaxService {
 
 		return Response.status(Response.Status.OK).build();
 	}
+
+	@POST
+	@Path("/cancelFriendRequest")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response cancelFriendRequest(JAXBElement<Friendship> request) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		Friendship req = request.getValue();
+		FriendshipBLL.cancelFriendRequest(req, loggedInUser);
+		return Response.status(Response.Status.OK).build();
+	}
+
+	@POST
+	@Path("/deleteFriendship")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response endFriendship(JAXBElement<Friendship> request) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		Friendship req = request.getValue();
+		FriendshipBLL.endFriendship(req, loggedInUser);
+		return Response.status(Response.Status.OK).build();
+	}
 }

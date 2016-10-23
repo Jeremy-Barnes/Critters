@@ -24,7 +24,7 @@ public class PetBLL {
 		return pet;
 	}
 
-	public static List<Pet> getPet(User user){
+	public static List<Pet> getPets(User user){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<Pet> pets = entityManager.createQuery("from Pet where ownerid = :id").setParameter("id", user.getUserID()).getResultList();
 		entityManager.close();
@@ -39,7 +39,7 @@ public class PetBLL {
 		entityManager.close();
 	}
 
-	public static List<Pet.PetSpecies> getPetOptions() {
+	public static List<Pet.PetSpecies> getPetSpecies() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<Pet.PetSpecies> options = entityManager.createQuery("from PetSpecies").getResultList();
 		entityManager.close();
@@ -63,7 +63,7 @@ public class PetBLL {
 		valid = (petName != null && !petName.isEmpty()); //todo: content filter
 		if(valid) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = (boolean) entityManager.createNativeQuery("IF EXISTS(SELECT 1 from pets where petName = ?1) SELECT 1 AS FOUND ELSE SELECT 0 AS FOUND")
+			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from pets where petName = ?1)")
 													.setParameter(1, petName)
 													.getSingleResult();
 			entityManager.close();
