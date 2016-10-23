@@ -5,6 +5,7 @@ CREATE TABLE users(
     lastName VARCHAR(24),
     emailAddress VARCHAR(100) NOT NULL,
     password VARCHAR NOT NULL,
+    sex VARCHAR(8) NOT NULL,
     birthdate DATE NOT NULL,
     salt VARCHAR NOT NULL,
     city VARCHAR(50),
@@ -16,7 +17,8 @@ CREATE TABLE users(
     critterbuxx INT NOT NULL,
     isActive boolean not null default 't',
     CONSTRAINT uk_username UNIQUE (userName),
-    CONSTRAINT uk_email UNIQUE (emailAddress)
+    CONSTRAINT uk_email UNIQUE (emailAddress),
+    CHECK (sex IN ('male','female','other'))
 );
 
 CREATE TABLE petSpeciesConfigs(
@@ -70,9 +72,3 @@ CREATE TABLE messages(
     messageText TEXT,
     messageSubject VARCHAR(140)
 );
-
--- //pets
--- //inventory
--- //game scores
--- //friends
--- //messages

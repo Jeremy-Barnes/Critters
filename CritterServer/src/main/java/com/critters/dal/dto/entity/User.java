@@ -29,6 +29,7 @@ public class User {
 	private String lastName;
 	private String emailAddress;
 	private String password;
+	private String sex;
 	@Temporal(TemporalType.DATE)
 	private Date birthdate;
 	private String salt;
@@ -44,6 +45,7 @@ public class User {
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
 	private List<Friendship> friends;
+
 	@OneToMany
 	@JoinColumn(name="requesteduserid")
 	private List<Friendship> friendsOf;
@@ -58,7 +60,7 @@ public class User {
 
 
 
-	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
+	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
 				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive) {
 		this.userID = userID;
@@ -67,6 +69,7 @@ public class User {
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.password = password;
+		this.sex = sex;
 		this.birthdate = birthdate;
 		this.salt = salt;
 		this.city = city;
@@ -162,6 +165,14 @@ public class User {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String getCity() {

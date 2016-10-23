@@ -6,6 +6,7 @@ import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.User;
 
+import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -24,12 +25,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Path("/meta")
 public class MetaService extends AjaxService {
-	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+	private static Map<Integer, AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
-	public Response checkJobs(){
+	public Response checkJobs() {
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
@@ -38,7 +39,7 @@ public class MetaService extends AjaxService {
 	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 
-		if(loggedInUser != null) {
+		if (loggedInUser != null) {
 			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
 			peers.put(1, asyncResponse);
 		}
@@ -71,4 +72,20 @@ public class MetaService extends AjaxService {
 	public boolean checkEmailAvailability(@PathParam("email") String email) {
 		return UserBLL.isEmailAddressValid(email);
 	}
+
+	@GET
+	@Path("/getPetSpecies")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
+		return Response.status(Response.Status.OK).entity(PetBLL.getPetSpecies()).build();
+	}
+
+	@GET
+	@Path("/getPetColors")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
+		return Response.status(Response.Status.OK).entity(PetBLL.getPetColors()).build();
+	}
+
+
 }
