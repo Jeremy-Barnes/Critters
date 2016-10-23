@@ -21,7 +21,7 @@ import { CreatePetComponent }   from './components/petcreate.component';
         FormsModule,
         Routing
     ],
-    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent],
+    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 
