@@ -17,7 +17,7 @@ CREATE TABLE users(
     critterbuxx INT NOT NULL,
     isActive boolean not null default 't',
     CONSTRAINT uk_username UNIQUE (userName),
-    CONSTRAINT uk_email UNIQUE (emailAddress)
+    CONSTRAINT uk_email UNIQUE (emailAddress),
     CHECK (sex IN ('male','female','other'))
 );
 
@@ -72,9 +72,3 @@ CREATE TABLE messages(
     messageText TEXT,
     messageSubject VARCHAR(140)
 );
-
--- //pets
--- //inventory
--- //game scores
--- //friends
--- //messages
