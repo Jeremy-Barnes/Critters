@@ -10,7 +10,7 @@ import {Application} from "../appservice"
 export class AppComponent {
     user: User;
 
-    ngOnInit() { this.user = Application.user }
+    ngOnInit() { this.user = Application.user; prepDisplay(); }
 
     summonLogin() {
     }
