@@ -12,6 +12,8 @@ import { AccountCreateBasicInfoComponent }   from './components/accountcreate-ba
 import { AccountCreatePetComponent }   from './components/accountcreate-petcreate.component';
 import { AccountCreateDetailsComponent }   from './components/accountcreate-userdetail.component';
 import { CreatePetComponent }   from './components/petcreate.component';
+import { DashboardComponent } from './components/dashboard.component';
+
 
 
 
@@ -21,7 +23,7 @@ import { CreatePetComponent }   from './components/petcreate.component';
         FormsModule,
         Routing
     ],
-    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent],
+    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 
