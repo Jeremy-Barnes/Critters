@@ -6,21 +6,21 @@ import { AccountCreateDetailsComponent } from './components/accountcreate-userde
 import { AccountCreatePetComponent } from './components/accountcreate-petcreate.component';
 import { AccountFormComponent } from './components/accountform.component';
 import { CreatePetComponent } from './components/petcreate.component';
-
+import { DashboardComponent } from './components/dashboard.component';
 import { AppComponent } from './components/app.component';
 
 
 
 const appRoutes: Routes = [
-    //{
-    //    path: '',
-    //    redirectTo: 'home',
-    //    pathMatch: 'full'
-    //},
-    //{
-    //    path: 'home',
-    //    component: AppComponent
-    //},
+    {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+    },
+    {
+        path: 'home',
+        component: DashboardComponent
+    },
     {
         path: 'signUp',
         component: AccountCreateBasicInfoComponent
