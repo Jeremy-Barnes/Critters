@@ -35,6 +35,7 @@
     <Content Include="img\horrible clion_blue.png" />
     <Content Include="img\horrible clion_octarine.png" />
     <Content Include="img\horrible clion_red.png" />
+    <Content Include="img\print-pattern.png" />
     <Content Include="index.html" />
     <Content Include="systemjs.config.js" />
     <None Include="Libraries\jquery-2.1.4.intellisense.js" />
@@ -74,6 +75,7 @@
     <TypeScriptCompile Include="app\servicemethods.ts" />
     <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="presentation.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\jquery-2.1.4.min.map" />

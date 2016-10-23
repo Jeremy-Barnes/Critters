@@ -1,17 +1,32 @@
-﻿<div>
-    <!--TODO put some fuckin nav bars here-->
-    <nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: lightskyblue"> 
-        <div class="container">
-            CRITTER 
+﻿<nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: #12a6da">
+    <div class="container">
+        <div class="navbar-header">
+            CRITTER
             <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
             <a routerLink="/signUp">Sign Up!</a>
-
         </div>
-    </nav> 
+    </div>
+</nav>
+<div class="container-fluid">
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas sidebar" id="sidebar">
+            <div class="">
+                <a href="#">Link</a><br /><br /><br />
+                <a href="#">Link</a><br />
+                <a href="#">Link</a><br />
+                <a href="#">Link</a><br />
+                <a href="#">Link</a><br />
+            </div>
+        </div>
 
-
+        <div class="col-xs-12 col-sm-9">
+            <router-outlet></router-outlet>
+            main content goes hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!
+            <p class="pull-left visible-xs">
+                lolololol
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+            </p>
+        </div>   
 </div>
 <br /><br/>
 
 <login></login>
-<router-outlet>
