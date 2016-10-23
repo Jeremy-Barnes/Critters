@@ -4,20 +4,20 @@ import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
+import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -77,14 +77,17 @@ public class MetaService extends AjaxService {
 	@Path("/getPetSpecies")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
-		return Response.status(Response.Status.OK).entity(PetBLL.getPetSpecies()).build();
+		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
+			   	new GenericEntity<Pet.PetSpecies[]>(PetBLL.getPetSpecies().toArray(new Pet.PetSpecies[0]), Pet.PetSpecies[].class)).build();
+
 	}
 
 	@GET
 	@Path("/getPetColors")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
-		return Response.status(Response.Status.OK).entity(PetBLL.getPetColors()).build();
+		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
+				new GenericEntity<Pet.PetColor[]>(PetBLL.getPetColors().toArray(new Pet.PetColor[0]), Pet.PetColor[].class)).build();
 	}
 
 
