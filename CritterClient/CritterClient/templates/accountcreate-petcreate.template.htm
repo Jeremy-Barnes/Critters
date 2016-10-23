@@ -12,7 +12,8 @@
     Enter your pet's Name: 
     <input type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
     <br />
-    <select name="sexSelect" [(ngModel)]="activeSex" (ngModelChange)="onChange($event)">
+    <select name="sexSelect" [(ngModel)]="activeSex" (ngModelChange)="onChange($event)" required>
+        <option value="" disabled selected style="display: none;">Gender</option>
         <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
     </select>
     <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
