@@ -1,12 +1,14 @@
 ﻿<nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: #12a6da">
+    <h1 class="navbar-left">CRITTER</h1>
     <div class="container">
         <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
 
         <div class="navbar-header">
-            CRITTER
             <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
             <a routerLink="/signUp">Sign Up!</a>
         </div>
+
+        <div></div>
     </div>
 </nav>
 <div class="container-fluid">

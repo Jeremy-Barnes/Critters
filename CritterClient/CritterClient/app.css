@@ -5,6 +5,15 @@
 }
 body {
       padding-top: 80px;
+      font-family: 'Open Sans';
+      color: #333333;
+}
+h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
+
+
+
+.inlineblock {
+    display: inline-block !important;
 }
 .container-fluid {
     height: 100%;
@@ -18,6 +27,7 @@ body {
 .navbar{
     height: 80px;
     border: none;
+    color: white;
 }
 
 #sidebar {
