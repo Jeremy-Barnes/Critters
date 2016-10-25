@@ -43,15 +43,17 @@ public class Level {
 	public final float LEVEL_HEIGHT;
 
 	public int time;
-	public int STEP_TIME = 12 / 2;
+	public int STEP_TIME = 12;
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
 	public int score;
 	private int difficulty = 1;
 
-	public Level(Game game) {
+	public Level(Game game, int difficulty) {
 		this.game = game;
+		this.difficulty = difficulty;
+		STEP_TIME /= difficulty;
 
 		random = new Random();
 
