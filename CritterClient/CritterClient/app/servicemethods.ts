@@ -1,9 +1,9 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest} from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship} from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://c96979c7.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://127.0.0.1:8080/api/critters/";//"http://c96979c7.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
@@ -12,7 +12,9 @@ export class ServiceMethods {
             url: ServiceMethods.baseURL + functionService + "/" + functionName,
             type: type,
             contentType: "application/json",
+            
             headers: {
+                
                 SelectorValidator: ServiceMethods.selectorValidator ? ServiceMethods.selectorValidator[0] + ':' + ServiceMethods.selectorValidator[1] : null,
             },
 
@@ -56,4 +58,7 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getPetColors", "meta", null, "GET");
     }
 
+    public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
+        return ServiceMethods.doAjax("createFriendship", "friends", request);
+    }
 }

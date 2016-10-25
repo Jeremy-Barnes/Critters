@@ -16,7 +16,7 @@ export class AccountFormComponent {
     constructor(private router: Router) { }
 
 
-    ngOnInit() { this.user = Application.user }
+    ngOnInit() { this.user = Application.getApp().user }
 
     onSubmit() {
         var self = this;

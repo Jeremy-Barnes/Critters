@@ -26,10 +26,10 @@ export class AccountCreatePetComponent implements OnInit {
     constructor(private router: Router) { Application.getPetColors(); Application.getPetSpecies(); }
 
     ngOnInit() {
-        this.user = Application.user;
+        this.user = Application.getApp().user;
         if (this.userIsValid()) {
-            this.species = Application.petSpecies;
-            this.colors = Application.petColors;
+            this.species = Application.getApp().petSpecies;
+            this.colors = Application.getApp().petColors;
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
@@ -47,7 +47,7 @@ export class AccountCreatePetComponent implements OnInit {
         pet.sex = this.activeSex;
 
         Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
-            Application.user = u;
+            this.user.set(u);
             let link = ['/'];
             self.router.navigate(link);
         }).fail((error: JQueryXHR) => {

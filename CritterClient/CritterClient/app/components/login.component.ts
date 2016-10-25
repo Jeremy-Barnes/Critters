@@ -10,14 +10,14 @@ import {Application} from "../appservice"
 
 export class LoginComponent {
     user: User;
-    confirmPassword: string;;
-
-    ngOnInit() { this.user = Application.user }
+    confirmPassword: string;
+    app = Application.getApp();
+    ngOnInit() { this.user = this.app.user }
 
     onSubmit() {
         var self = this;
-        ServiceMethods.logIn(this.user).then((u: User) => {
-            self.user = u;
+        ServiceMethods.logIn(this.app.user).then((u: User) => {
+            self.user.set(u);
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });
