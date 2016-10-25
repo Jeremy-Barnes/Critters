@@ -37,6 +37,9 @@ public class Level {
 
 	public final int SPECIAL = -6;
 
+	public final int OBSTACLE_MIN = -1000;
+	public final int OBSTACLE_MAX = -600;
+
 	public int tiles[][];
 
 	public final float LEVEL_WIDTH;
@@ -85,6 +88,10 @@ public class Level {
 		tiles[4][TILES_Y / 2] = 2;
 
 		placeFood();
+
+		for (int i = 0; i < difficulty; i++) {
+			tiles[10 + i * 5][10 + i * 5] = OBSTACLE_MIN + (OBSTACLE_MAX - OBSTACLE_MIN) * i / difficulty;
+		}
 	}
 
 	/**
@@ -239,7 +246,14 @@ public class Level {
 
 	private boolean canMove(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
-			return tiles[x][y] != WALL && tiles[x][y] < 1;
+			return tiles[x][y] != WALL && tiles[x][y] < 1 && tiles[x][y] > OBSTACLE_MAX;
+		else
+			return false;
+	}
+
+	private boolean isFree(int x, int y) {
+		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
+			return tiles[x][y] == FREE;
 		else
 			return false;
 	}
@@ -249,7 +263,7 @@ public class Level {
 		do {
 			int x = random.nextInt(TILES_X);
 			int y = random.nextInt(TILES_Y);
-			if (canMove(x, y)) {
+			if (isFree(x, y)) {
 				placed = true;
 
 				{
@@ -281,6 +295,7 @@ public class Level {
 		if (state != State.LOST && time % STEP_TIME == 0) {
 			updatePlayer();
 		}
+		updateObstacle();
 		updateUI();
 
 		// update special
@@ -289,6 +304,29 @@ public class Level {
 			STEP_TIME = STEP_TIME_DEFAULT / 2;
 		else
 			STEP_TIME = STEP_TIME_DEFAULT;
+	}
+
+	private void updateObstacle() {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				if (tiles[x][y] < OBSTACLE_MAX && tiles[x][y] >= OBSTACLE_MIN) {
+					tiles[x][y]++;
+				} else if (tiles[x][y] == OBSTACLE_MAX) {
+					tiles[x][y] = FREE;
+
+					// Place a new one
+					boolean placed = false;
+					do {
+						int xx = random.nextInt(TILES_X);
+						int yy = random.nextInt(TILES_Y);
+						if (isFree(xx, yy)) {
+							placed = true;
+							tiles[xx][yy] = OBSTACLE_MIN;
+						}
+					} while (!placed);
+				}
+			}
+		}
 	}
 
 	private void renderUI(Render render) {
@@ -331,8 +369,11 @@ public class Level {
 					break;
 
 				default:
-					// Must be a player then
-					c = Color.YELLOW;
+					// Must be a player then, unless it's an obstacle
+					if (id >= OBSTACLE_MIN && id <= OBSTACLE_MAX)
+						c = Color.BLACK;
+					else
+						c = Color.YELLOW;
 					break;
 				}
 
