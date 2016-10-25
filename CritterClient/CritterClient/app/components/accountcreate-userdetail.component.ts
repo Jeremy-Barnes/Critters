@@ -16,7 +16,7 @@ export class AccountCreateDetailsComponent {
     constructor(private router: Router) { }
 
     ngOnInit() {
-        this.user = Application.user;
+        this.user = Application.getApp().user;
         if (!this.userIsValid()) {
             let link = ['/signUp'];
             this.router.navigate(link);

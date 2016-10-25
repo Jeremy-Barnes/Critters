@@ -26,7 +26,7 @@ export class CreatePetComponent implements OnInit {
     constructor(private router: Router) { }
 
     ngOnInit() {
-        this.user = Application.user;
+        this.user = Application.getApp().user;
     }
 
     onSubmit() {
@@ -38,7 +38,7 @@ export class CreatePetComponent implements OnInit {
         pet.sex = this.activeSex;
 
         Application.submitCreatePet(pet).then((p: Pet) => {
-            Application.user.pets.push(p);
+            this.user.pets.push(p);
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });

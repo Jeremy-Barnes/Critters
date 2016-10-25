@@ -7,6 +7,7 @@
         <div class="navbar-header">
             <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
             <a routerLink="/signUp">Sign Up!</a>
+            <div>{{user.userID}} and also {{user.emailAddress}}</div>
         </div>
     </div>
 </nav>
@@ -30,10 +31,11 @@
             <a href="#">Link</a><br />
             <a href="#">Link</a><br />
             <a href="#">Link</a><br />
+            <input type="button" (click)="sendFriend()" value="SindFrind"/>
+
         </div>
     </div>
     <div id="sidebar-placeholder" class="hidden-xs"></div>
-
     <router-outlet></router-outlet>
 </div>
 <br /><br/>

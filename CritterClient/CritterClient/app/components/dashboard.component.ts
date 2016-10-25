@@ -9,5 +9,5 @@ import {Application} from "../appservice"
 export class DashboardComponent {
     user: User;
 
-    ngOnInit() { this.user = Application.user; }
+    ngOnInit() { this.user = Application.getApp().user; }
 }

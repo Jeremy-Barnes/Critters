@@ -14,7 +14,7 @@ import { AppComponent } from './components/app.component';
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: 'home',
+        redirectTo: '/home',
         pathMatch: 'full'
     },
     {
