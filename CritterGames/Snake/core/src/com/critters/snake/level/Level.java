@@ -28,9 +28,14 @@ public class Level {
 	public final int TILES_X;
 	public final int TILES_Y;
 
+	public final int FREE = 0;
 	public final int WALL = -1;
 	public final int FOOD = -2;
-	public final int FREE = 0;
+	public final int FOOD_DOUBLE = -3;
+	public final int FOOD_TRIPLE = -4;
+	public final int FOOD_QUADRUPLE = -5;
+
+	public final int SPECIAL = -6;
 
 	public int tiles[][];
 
@@ -38,11 +43,12 @@ public class Level {
 	public final float LEVEL_HEIGHT;
 
 	public int time;
-	public int STEP_TIME = 7;
+	public int STEP_TIME = 12 / 2;
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
 	public int score;
+	private int difficulty = 1;
 
 	public Level(Game game) {
 		this.game = game;
@@ -155,6 +161,7 @@ public class Level {
 
 						boolean valid = canMove(x + dx, y + dy);
 						if (valid) {
+							getPoints(x + dx, y + dy);
 							ate = isFood(x + dx, y + dy);
 							if (ate) {
 								length++;
@@ -187,9 +194,38 @@ public class Level {
 
 	private boolean isFood(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
-			return tiles[x][y] == FOOD;
+			return tiles[x][y] == FOOD || tiles[x][y] == FOOD_DOUBLE || tiles[x][y] == FOOD_TRIPLE
+					|| tiles[x][y] == FOOD_QUADRUPLE || tiles[x][y] == SPECIAL;
 		else
 			return false;
+	}
+
+	private void getPoints(int x, int y) {
+		int value = 0;
+		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
+			value = tiles[x][y];
+		else
+			return;
+
+		switch (value) {
+		case FOOD:
+			value = 1;
+			break;
+		case FOOD_DOUBLE:
+			value = 2;
+			break;
+		case FOOD_TRIPLE:
+			value = 3;
+			break;
+		case FOOD_QUADRUPLE:
+			value = 4;
+			break;
+		case SPECIAL:
+			value = 5;
+			break;
+		}
+
+		score += value * difficulty;
 	}
 
 	private boolean canMove(int x, int y) {
@@ -206,7 +242,21 @@ public class Level {
 			int y = random.nextInt(TILES_Y);
 			if (canMove(x, y)) {
 				placed = true;
-				tiles[x][y] = FOOD;
+
+				{
+					// Find the food item to place
+					int number = random.nextInt(100);
+					if (number < 75) {
+						tiles[x][y] = FOOD;
+					} else if (number < 90) {
+						tiles[x][y] = FOOD_DOUBLE;
+					} else if (number < 98) {
+						tiles[x][y] = FOOD_TRIPLE;
+					} else if (number < 99) {
+						tiles[x][y] = FOOD_QUADRUPLE;
+					} else
+						tiles[x][y] = SPECIAL;
+				}
 			}
 		} while (!placed);
 	}
@@ -221,9 +271,6 @@ public class Level {
 		if (state != State.LOST && time % STEP_TIME == 0) {
 			updatePlayer();
 		}
-
-		score = length - 2;
-
 		updateUI();
 	}
 
@@ -236,23 +283,44 @@ public class Level {
 	private void renderTiles(Render render) {
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {
+
 				int id = tiles[x][y];
+				boolean shouldRender = true;
+				Color c = Color.WHITE;
+
 				switch (id) {
 				case WALL:
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.BLACK);
+					c = Color.BLACK;
 					break;
 				case FREE:
-
+					// Dont't render empty tiles
+					shouldRender = false;
 					break;
+
 				case FOOD:
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.GREEN);
+					c = Color.GREEN;
+					break;
+				case FOOD_DOUBLE:
+					c = Color.FOREST;
+					break;
+				case FOOD_TRIPLE:
+					c = Color.RED;
+					break;
+				case FOOD_QUADRUPLE:
+					c = Color.CORAL;
+					break;
+				case SPECIAL:
+					c = Color.PINK;
 					break;
 
 				default:
 					// Must be a player then
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.YELLOW);
+					c = Color.YELLOW;
 					break;
 				}
+
+				if (shouldRender)
+					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, c);
 			}
 		}
 	}
