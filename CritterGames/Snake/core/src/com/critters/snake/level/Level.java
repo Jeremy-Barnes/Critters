@@ -43,7 +43,9 @@ public class Level {
 	public final float LEVEL_HEIGHT;
 
 	public int time;
+	public int STEP_TIME_DEFAULT = 12;
 	public int STEP_TIME = 12;
+	private int special_time = 0;
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
@@ -53,7 +55,8 @@ public class Level {
 	public Level(Game game, int difficulty) {
 		this.game = game;
 		this.difficulty = difficulty;
-		STEP_TIME /= difficulty;
+		STEP_TIME_DEFAULT /= difficulty;
+		STEP_TIME = STEP_TIME_DEFAULT;
 
 		random = new Random();
 
@@ -209,6 +212,8 @@ public class Level {
 		else
 			return;
 
+		// sp_max is the number of ticks the special effect is taking place.
+		int sp_max = 300;
 		switch (value) {
 		case FOOD:
 			value = 1;
@@ -223,11 +228,13 @@ public class Level {
 			value = 4;
 			break;
 		case SPECIAL:
+			special_time += sp_max;
 			value = 5;
 			break;
 		}
 
-		score += value * difficulty;
+		// Calculate the score for the eaten food for and all modifiers
+		score += value * difficulty * (special_time > 0 && special_time != sp_max ? 3 : 1);
 	}
 
 	private boolean canMove(int x, int y) {
@@ -258,6 +265,7 @@ public class Level {
 						tiles[x][y] = FOOD_QUADRUPLE;
 					} else
 						tiles[x][y] = SPECIAL;
+
 				}
 			}
 		} while (!placed);
@@ -274,6 +282,13 @@ public class Level {
 			updatePlayer();
 		}
 		updateUI();
+
+		// update special
+		special_time--;
+		if (special_time > 0)
+			STEP_TIME = STEP_TIME_DEFAULT / 2;
+		else
+			STEP_TIME = STEP_TIME_DEFAULT;
 	}
 
 	private void renderUI(Render render) {
