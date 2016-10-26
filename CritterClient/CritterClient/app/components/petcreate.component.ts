@@ -8,10 +8,10 @@ import {Application} from "../appservice"
 
 
 @Component({
-    templateUrl: '../../templates/accountcreate-petcreate.template.htm'
+    templateUrl: '../../templates/petcreate.template.htm'
 })
 
-export class AccountCreatePetComponent implements OnInit {
+export class CreatePetComponent implements OnInit {
     user: User;
     colors: PetColor[];
     species: PetSpecies[];
@@ -23,22 +23,13 @@ export class AccountCreatePetComponent implements OnInit {
     petName: string = "";
     activeSex: string = "";
 
-    constructor(private router: Router) { Application.getPetColors(); Application.getPetSpecies(); }
+    constructor(private router: Router) { }
 
     ngOnInit() {
         this.user = Application.getApp().user;
-        if (this.userIsValid()) {
-            this.species = Application.getApp().petSpecies;
-            this.colors = Application.getApp().petColors;
-        } else {
-            let link = ['/signUp'];
-            this.router.navigate(link);
-        }
     }
 
     onSubmit() {
-        alert("Successful account creation");
-
         var self = this;
         var pet = new Pet();
         pet.petName = this.petName;
@@ -46,10 +37,8 @@ export class AccountCreatePetComponent implements OnInit {
         pet.petSpecies = this.activeSpecies;
         pet.sex = this.activeSex;
 
-        Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
-            this.user.set(u);
-            let link = ['/'];
-            self.router.navigate(link);
+        Application.submitCreatePet(pet).then((p: Pet) => {
+            this.user.pets.push(p);
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });
@@ -66,12 +55,4 @@ export class AccountCreatePetComponent implements OnInit {
         this.activeSpecies = pet;
         if (this.activeColor != null) this.petAndColorSelected = true;
     }
-
-    private userIsValid(): boolean {
-        return <boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
-            this.user.emailAddress && this.user.firstName && this.user.lastName &&
-            this.user.password && this.user.postcode && this.user.state && this.user.userName);
-    }
-
-    
 }

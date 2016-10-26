@@ -9,10 +9,14 @@ import {Application} from "../appservice"
 
 export class AppComponent {
     user: User;
-
-    ngOnInit() { this.user = Application.user }
+    app: Application = Application.getApp();
+    ngOnInit() { this.user = this.app.user; prepDisplay(); }
 
     summonLogin() {
     }
 
+    sendFriend() {
+        alert("boop");
+        Application.sendFriendRequest(this.user.userID, 1);
+    }
 }
