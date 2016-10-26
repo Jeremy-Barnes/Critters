@@ -41,14 +41,14 @@ public class PetBLL {
 
 	public static List<Pet.PetSpecies> getPetSpecies() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet.PetSpecies> options = entityManager.createQuery("from PetSpecies").getResultList();
+		List<Pet.PetSpecies> options = entityManager.createQuery("from Pet$PetSpecies").getResultList();
 		entityManager.close();
 		return options;
 	}
 
 	public static List<Pet.PetColor> getPetColors() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet.PetColor> options = entityManager.createQuery("from PetColor ").getResultList();
+		List<Pet.PetColor> options = entityManager.createQuery("from Pet$PetColor").getResultList();
 		entityManager.close();
 		return options;
 	}
