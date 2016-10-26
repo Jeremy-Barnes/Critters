@@ -11,6 +11,10 @@ import { AccountFormComponent }   from './components/accountform.component';
 import { AccountCreateBasicInfoComponent }   from './components/accountcreate-basicinfo.component';
 import { AccountCreatePetComponent }   from './components/accountcreate-petcreate.component';
 import { AccountCreateDetailsComponent }   from './components/accountcreate-userdetail.component';
+import { CreatePetComponent }   from './components/petcreate.component';
+import { DashboardComponent } from './components/dashboard.component';
+
+
 
 
 @NgModule({
@@ -19,7 +23,7 @@ import { AccountCreateDetailsComponent }   from './components/accountcreate-user
         FormsModule,
         Routing
     ],
-    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent],
+    declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent, AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 
