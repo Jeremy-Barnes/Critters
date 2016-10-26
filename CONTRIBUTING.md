@@ -1,4 +1,4 @@
-All work (code, design and art) is managed through Github. 
+All work (code, design and art) is managed through Github.
 
 ### Help
 
