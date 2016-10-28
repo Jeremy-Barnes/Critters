@@ -3,8 +3,9 @@
 import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship} from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://localhost:8080/api/critters/"; //"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
+    static jsessionID: string;
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
         var param = JSON.stringify(parameters);
@@ -12,15 +13,22 @@ export class ServiceMethods {
             url: ServiceMethods.baseURL + functionService + "/" + functionName,
             type: type,
             contentType: "application/json",
-            
-            headers: {
-                
-                SelectorValidator: ServiceMethods.selectorValidator ? ServiceMethods.selectorValidator[0] + ':' + ServiceMethods.selectorValidator[1] : null,
+            xhrFields: {
+                withCredentials: true
             },
 
+            headers: {
+                Cookie: ServiceMethods.jsessionID,
+            },
+            beforeSend: (xhr: any) => {  
+                xhr.setRequestHeader('Cookie', ServiceMethods.jsessionID);
+            },
             success: (json, status, args) => {
                 if (args.getResponseHeader("SelectorValidator")) {
                     ServiceMethods.selectorValidator = args.getResponseHeader("SelectorValidator").split(":");
+                }
+                if (args.getResponseHeader("JSESSIONID")) {
+                    ServiceMethods.jsessionID = args.getResponseHeader("JSESSIONID");
                 }
             },
             data: param,
