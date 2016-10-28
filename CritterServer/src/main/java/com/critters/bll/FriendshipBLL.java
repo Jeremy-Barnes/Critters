@@ -16,7 +16,7 @@ import java.util.Calendar;
 public class FriendshipBLL {
 
 	public static void createFriendship(User requester, User requestee, User loggedInUser) throws GeneralSecurityException, UnsupportedEncodingException {
-		if(loggedInUser.getEmailAddress().equalsIgnoreCase(requester.getEmailAddress())){
+		if(loggedInUser.getUserID() == (requester.getUserID())){
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			entityManager.getTransaction().begin();
 
