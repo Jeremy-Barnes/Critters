@@ -51,8 +51,8 @@ export class Application {
         return ServiceMethods.sendFriendRequest({
             accepted: false,
             friendshipID: 0,
-            requesterUser: requesterUser,
-            requestedUser: requestedUser
+            requester: requesterUser,
+            requested: requestedUser
         }).done(() => {
             alert("success");
         });

@@ -44,8 +44,8 @@
 
 export class Friendship {
     friendshipID: number;
-    requesterUser: User;
-    requestedUser: User;
+    requester: User;
+    requested: User;
     accepted: boolean;
 }
 
