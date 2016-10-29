@@ -18,7 +18,7 @@ export class UserProfileComponent implements OnInit {
     ngOnInit() {
         var self = this;
         this.route.params.forEach((params: Params) => {
-            let id = params['id'];
+            let id = parseFloat(params['id']);
             Application.getUser(id).done((u: User) => {
                 self.user = u;
             });
