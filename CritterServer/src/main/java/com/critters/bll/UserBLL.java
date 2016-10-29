@@ -99,6 +99,19 @@ public class UserBLL {
 		}
 	}
 
+	public static User getUser(int id) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
+			user = wipeSensitiveFields(user);
+			return user;
+		} catch (PersistenceException ex) {
+			return null; //no user found
+		} finally {
+			entityManager.close();
+		}
+	}
+
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -148,12 +161,12 @@ public class UserBLL {
 		user.setPassword("");
 		user.setTokenSelector("");
 		user.setTokenValidator("");
-		for(Friendship friend: user.getFriends()){
-			wipeSensitiveFields(friend.getRequested());
-			wipeSensitiveFields(friend.getRequester());
-		}
-
-		//do this for friends when implemented TODO
+		user.setEmailAddress("");
+		if(user.getFriends()!= null)
+			for(Friendship friend: user.getFriends()){
+				wipeSensitiveFields(friend.getRequested());
+				wipeSensitiveFields(friend.getRequester());
+			}
 		return user;
 	}
 
