@@ -69,4 +69,8 @@ export class ServiceMethods {
     public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
         return ServiceMethods.doAjax("createFriendship", "friends", request);
     }
+
+    public static getUserFromID(id: number): JQueryPromise<User> {
+        return ServiceMethods.doAjax("getUserFromID", "friends", id, "GET");
+    }
 }

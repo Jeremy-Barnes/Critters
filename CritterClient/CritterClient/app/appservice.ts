@@ -57,4 +57,8 @@ export class Application {
             alert("success");
         });
     }
+
+    public static getUser(id: number) {
+        return ServiceMethods.getUserFromID(id);
+    }
 }
