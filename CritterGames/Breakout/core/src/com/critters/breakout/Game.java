@@ -31,21 +31,8 @@ public class Game extends ApplicationAdapter {
 			level = new Level(level.score);
 		}
 
-		if (level.state == State.LOST) {
-			level = new Level(level.score);
-		}
-
-	}
-
-	public void update() {
-		level.update();
-
-		if (level.state == State.WON) {
-			level = new Level();
-		}
-
-		if (level.state == State.LOST) {
-			level = new Level();
+		if (level.state == State.LOST && Gdx.input.justTouched()) {
+			level = new Level(0);
 		}
 
 	}

@@ -79,7 +79,6 @@ public class MetaService extends AjaxService {
 	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
 		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
 			   	new GenericEntity<Pet.PetSpecies[]>(PetBLL.getPetSpecies().toArray(new Pet.PetSpecies[0]), Pet.PetSpecies[].class)).build();
-
 	}
 
 	@GET

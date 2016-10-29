@@ -9,11 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class ScoreDisplay extends UIElement {
 
 	int score = 0;
-	private BitmapFont font = new BitmapFont();
+	protected BitmapFont font;
 
 	public ScoreDisplay(int score) {
-		font.setColor(Color.BLACK);
 		this.score = score;
+
+		font = new BitmapFont();
+
+		font.setColor(Color.BLACK);
 	}
 
 	@Override
@@ -22,8 +25,8 @@ public class ScoreDisplay extends UIElement {
 	}
 
 	@Override
-	public void render(SpriteBatch render) {
-		font.draw(render, "Score: " + score, 30, 25);
+	public void renderIfVisible(SpriteBatch render) {
+		font.draw(render, "Score: " + score, 30, 30);
 	}
 
 }
