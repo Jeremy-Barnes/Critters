@@ -9,8 +9,9 @@ export class ServiceMethods {
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
         var param = JSON.stringify(parameters);
+        var pathParams = type == "GET" ? "/" + param : null;
         var settings: JQueryAjaxSettings = {
-            url: ServiceMethods.baseURL + functionService + "/" + functionName,
+            url: ServiceMethods.baseURL + functionService + "/" + functionName + pathParams,
             type: type,
             contentType: "application/json",
             xhrFields: {
@@ -31,7 +32,7 @@ export class ServiceMethods {
                     ServiceMethods.jsessionID = args.getResponseHeader("JSESSIONID");
                 }
             },
-            data: param,
+            data: type == "POST" ? param : null,
             crossDomain: true,
         };
         return jQuery.ajax(settings);
