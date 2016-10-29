@@ -71,6 +71,6 @@ export class ServiceMethods {
     }
 
     public static getUserFromID(id: number): JQueryPromise<User> {
-        return ServiceMethods.doAjax("getUserFromID", "friends", id, "GET");
+        return ServiceMethods.doAjax("getUserFromID", "users", id, "GET");
     }
 }
