@@ -1,6 +1,7 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
@@ -35,6 +36,7 @@ public class UserBLL {
 
 	public static String createUserReturnUnHashedValidator(User user) throws UnsupportedEncodingException {
 		user.setCritterbuxx(500); //TODO: economics
+		user.setIsActive(true);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
@@ -97,6 +99,19 @@ public class UserBLL {
 		}
 	}
 
+	public static User getUser(int id) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
+			user = wipeSensitiveFields(user);
+			return user;
+		} catch (PersistenceException ex) {
+			return null; //no user found
+		} finally {
+			entityManager.close();
+		}
+	}
+
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -146,7 +161,12 @@ public class UserBLL {
 		user.setPassword("");
 		user.setTokenSelector("");
 		user.setTokenValidator("");
-		//do this for friends when implemented TODO
+		user.setEmailAddress("");
+		if(user.getFriends()!= null)
+			for(Friendship friend: user.getFriends()){
+				wipeSensitiveFields(friend.getRequested());
+				wipeSensitiveFields(friend.getRequester());
+			}
 		return user;
 	}
 

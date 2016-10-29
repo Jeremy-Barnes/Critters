@@ -90,15 +90,20 @@ public class User {
 		this.firstName = copyUser.firstName;
 		this.lastName = copyUser.lastName;
 		this.emailAddress = copyUser.emailAddress;
+		this.password = copyUser.password;
+		this.sex = copyUser.sex;
 		this.birthdate = copyUser.birthdate;
+		this.salt = copyUser.salt;
 		this.city = copyUser.city;
-		this.state =copyUser.state;
+		this.state = copyUser.state;
 		this.country = copyUser.country;
 		this.postcode = copyUser.postcode;
+		this.tokenSelector = copyUser.tokenSelector;
+		this.tokenValidator = copyUser.tokenValidator;
 		this.critterbuxx = copyUser.critterbuxx;
+		this.isActive = copyUser.isActive;
 		this.friends = null;
 		this.friendsOf = null;
-		this.isActive = copyUser.isActive;
 	}
 
 	public User(){}

@@ -3,7 +3,7 @@
 import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship} from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://localhost:8080/api/critters/"; //"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://581c949b.ngrok.io/api/critters/";// "http://localhost:8080/api/critters/"; //"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string;
 

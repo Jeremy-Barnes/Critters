@@ -71,10 +71,14 @@ public class UserService extends AjaxService{
 		user = UserBLL.getUser(user.getEmailAddress(), user.getPassword(), true);
 
 		httpRequest.getSession().setAttribute("user", user);
+		if(user == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid email/password. Try again!").build();
+		}
 		User copiedUser = super.serializeDeepCopy(user, User.class);
 
 		return Response.status(Response.Status.OK)
 					   .cookie(createUserCookies(copiedUser))
+					   .header("JSESSIONID", httpRequest.getSession().getId())
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 
@@ -145,4 +149,14 @@ public class UserService extends AjaxService{
 		return Response.status(Response.Status.OK).entity(pet).build();
 	}
 
+	@GET
+	@Path("/getUserFromID/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserFromID(@PathParam("id") int id) {
+		User user = UserBLL.getUser(id);
+		if(user == null){
+			return Response.status(Response.Status.NOT_FOUND).entity("No such user exists").build();
+		}
+		return Response.status(Response.Status.OK).entity(user).build();
+	}
 }
