@@ -19,10 +19,9 @@ export class UserProfileComponent implements OnInit {
         var self = this;
         this.route.params.forEach((params: Params) => {
             let id = params['id'];
-            self.user = Application.getUser(id);
-            //Application.getUser(id).done((u: User) => {
-            //    self.user = u;
-            //});
+            Application.getUser(id).done((u: User) => {
+                self.user = u;
+            });
         });
     }
 }
