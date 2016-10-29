@@ -1,6 +1,7 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
@@ -35,6 +36,7 @@ public class UserBLL {
 
 	public static String createUserReturnUnHashedValidator(User user) throws UnsupportedEncodingException {
 		user.setCritterbuxx(500); //TODO: economics
+		user.setIsActive(true);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
@@ -146,6 +148,11 @@ public class UserBLL {
 		user.setPassword("");
 		user.setTokenSelector("");
 		user.setTokenValidator("");
+		for(Friendship friend: user.getFriends()){
+			wipeSensitiveFields(friend.getRequested());
+			wipeSensitiveFields(friend.getRequester());
+		}
+
 		//do this for friends when implemented TODO
 		return user;
 	}
