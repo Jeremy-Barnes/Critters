@@ -8,6 +8,8 @@ import { AccountFormComponent } from './components/accountform.component';
 import { CreatePetComponent } from './components/petcreate.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { AppComponent } from './components/app.component';
+import { UserProfileComponent } from './components/userprofile.component';
+
 
 
 
@@ -40,6 +42,10 @@ const appRoutes: Routes = [
     {
         path: 'newpet',
         component: CreatePetComponent
+    },
+    {
+        path: 'viewUser/:id',
+        component: UserProfileComponent
     }
 ];
 
