@@ -12,7 +12,7 @@ public class Shield extends Wall {
 	@Override
 	public void update() {
 
-		if (hitCount >= 5) {
+		if (hitCount >= 1) {
 			level.removeEntity(this);
 		}
 	}
