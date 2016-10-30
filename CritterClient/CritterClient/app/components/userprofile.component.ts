@@ -9,7 +9,7 @@ import {Application} from "../appservice"
 })
 
 export class UserProfileComponent implements OnInit {
-    user: User;
+    user: User = new User();
 
     constructor(
         private route: ActivatedRoute
