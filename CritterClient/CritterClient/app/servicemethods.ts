@@ -9,7 +9,7 @@ export class ServiceMethods {
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
         var param = JSON.stringify(parameters);
-        var pathParams = type == "GET" ? "/" + param : null;
+        var pathParams = type == "GET" ? "/" + param : "";
         var settings: JQueryAjaxSettings = {
             url: ServiceMethods.baseURL + functionService + "/" + functionName + pathParams,
             type: type,
