@@ -2,12 +2,12 @@
 <nav class="navbar-fixed-top navbar hidden-xs"> 
     <h1 class="navbar-left">CRITTER</h1>
     <div class="container">
-        <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-
         <div class="navbar-header">
-            <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
-            <a routerLink="/signUp">Sign Up!</a>
-            <div>{{user.userID}} and also {{user.userName}}</div>
+            <div class="inlineblock" *ngIf="!app.loggedIn">
+                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <a routerLink="/signUp">Sign Up!</a>
+            </div>
+            <div class="inlineblock">{{user.userName}}</div>
         </div>
     </div>
 </nav>
@@ -25,16 +25,23 @@
 
 <div class="container-fluid">
     <div class="sidebar-offcanvas sidebar" id="sidebar">
+        <div class="mobileInfopane">
+            <div class="inlineblock" *ngIf="!app.loggedIn">
+                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <a routerLink="/signUp">Sign Up!</a>
+            </div>
+            <div class="inlineblock">{{user.userName}}</div>
+        </div>
+
         <div class="">
-            <a href="/CritterGames/Minesweeper">MineSweeper</a><br /><br /><br />
+            <a href="/CritterGames/Minesweeper">MineSweeper</a><br />
             <a href="/CritterGames/Breakout">Breakout</a><br />
             <a href="/CritterGames/SpaceInvaders">Space Invaders</a><br />
             <a href="/CritterGames/Snake">Snake</a><br />
-            <input type="button" (click)="sendFriend()" value="SindFrind"/>
-
         </div>
     </div>
     <div id="sidebar-placeholder" class="hidden-xs"></div>
+
     <router-outlet></router-outlet>
 </div>
 <br /><br/>

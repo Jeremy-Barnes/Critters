@@ -8,6 +8,6 @@ import {Application} from "../appservice"
 
 export class DashboardComponent implements OnInit {
     user: User;
-
-    ngOnInit() { this.user = Application.getApp().user; }
+    app: Application = Application.getApp();
+    ngOnInit() { this.user = this.app.user; }
 }
