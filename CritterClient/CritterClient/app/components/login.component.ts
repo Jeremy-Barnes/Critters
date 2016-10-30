@@ -8,7 +8,7 @@ import {Application} from "../appservice"
     templateUrl: '../../templates/login.template.htm'
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     user: User;
     confirmPassword: string;
     app = Application.getApp();
@@ -16,10 +16,11 @@ export class LoginComponent {
 
     onSubmit() {
         var self = this;
-        ServiceMethods.logIn(this.app.user).then((u: User) => {
-            self.user.set(u);
+        Application.logIn(this.app.user).then((u: User) => {
+            (<any>$("#log-in")).modal('hide'); //I'm not happy about this either.
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
+            self.confirmPassword = "";
         });
         return false;
     }
