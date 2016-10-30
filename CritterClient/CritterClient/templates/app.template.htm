@@ -7,7 +7,7 @@
                 <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
-            <div class="inlineblock">{{user.userName}}</div>
+            <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
         </div>
     </div>
 </nav>
@@ -30,7 +30,7 @@
                 <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
-            <div class="inlineblock">{{user.userName}}</div>
+            <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
         </div>
 
         <div class="">
