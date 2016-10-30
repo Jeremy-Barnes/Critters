@@ -9,19 +9,25 @@ import {Application} from "../appservice"
 })
 
 export class UserProfileComponent implements OnInit {
-    user: User = new User();
-
+    viewUser: User = new User();
+    user: User;
+    app: Application = Application.getApp();
     constructor(
         private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
+        this.user = this.app.user;
         var self = this;
         this.route.params.forEach((params: Params) => {
             let id = parseFloat(params['id']);
             Application.getUser(id).done((u: User) => {
-                self.user = u;
+                self.viewUser = u;
             });
         });
+    }
+
+    sendFriend() {
+        Application.sendFriendRequest(this.user.userID, this.viewUser.userID);
     }
 }
