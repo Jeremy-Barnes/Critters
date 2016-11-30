@@ -45,10 +45,11 @@ public class Level {
 	public final float LEVEL_WIDTH;
 	public final float LEVEL_HEIGHT;
 
-	public int time;
-	public int STEP_TIME_DEFAULT = 12;
-	public int STEP_TIME = 12;
-	private int special_time = 0;
+	// In seconds
+	public float time;
+	public float STEP_TIME_DEFAULT = 0.25f;
+	public float STEP_TIME;
+	private float special_time = 0;
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
@@ -219,8 +220,8 @@ public class Level {
 		else
 			return;
 
-		// sp_max is the number of ticks the special effect is taking place.
-		int sp_max = 300;
+		// sp_max is the number of seconds the special effect is taking place.
+		final float SP_TIME = 5;
 		switch (value) {
 		case FOOD:
 			value = 1;
@@ -235,13 +236,13 @@ public class Level {
 			value = 4;
 			break;
 		case SPECIAL:
-			special_time += sp_max;
+			special_time += SP_TIME;
 			value = 5;
 			break;
 		}
 
 		// Calculate the score for the eaten food for and all modifiers
-		score += value * difficulty * (special_time > 0 && special_time != sp_max ? 3 : 1);
+		score += value * difficulty * (special_time > 0 && special_time != SP_TIME ? 3 : 1);
 	}
 
 	private boolean canMove(int x, int y) {
@@ -291,15 +292,16 @@ public class Level {
 	public void update() {
 		processInput();
 
-		time++;
-		if (state != State.LOST && time % STEP_TIME == 0) {
+		time += Gdx.graphics.getDeltaTime();
+		if (state != State.LOST && time >= STEP_TIME) {
+			time = 0;
 			updatePlayer();
 		}
 		updateObstacle();
 		updateUI();
 
 		// update special
-		special_time--;
+		special_time-= Gdx.graphics.getDeltaTime();
 		if (special_time > 0)
 			STEP_TIME = STEP_TIME_DEFAULT / 2;
 		else
