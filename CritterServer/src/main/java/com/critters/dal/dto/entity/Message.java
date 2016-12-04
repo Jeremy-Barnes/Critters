@@ -34,14 +34,26 @@ public class Message {
 	private String messageText;
 	private String messageSubject;
 
-	public Message(User sender, User recipient, boolean read, Date dateSent, String messageText, String messageSubject) {
+	@ManyToOne
+	@JoinColumn(name = "rootMessageID")
+	private Message rootMessage;
+
+	@ManyToOne
+	@JoinColumn(name = "parentMessageID")
+	private Message parentMessage;
+
+	public Message(User sender, User recipient, boolean read, Date dateSent, String messageText, String messageSubject, Message rootMessage, Message parentMessage) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.read = read;
 		this.dateSent = dateSent;
 		this.messageText = messageText;
 		this.messageSubject = messageSubject;
+		this.rootMessage = rootMessage;
+		this.parentMessage = parentMessage;
 	}
+
+	public Message(){}
 
 	public boolean isRead() {
 		return read;
@@ -66,8 +78,6 @@ public class Message {
 	public void setMessageSubject(String messageSubject) {
 		this.messageSubject = messageSubject;
 	}
-
-	public Message(){}
 
 	public int getMessageID() {
 		return messageID;
@@ -99,5 +109,22 @@ public class Message {
 
 	public void setDateSent(Date dateSent) {
 		this.dateSent = dateSent;
+	}
+
+
+	public Message getRootMessage() {
+		return rootMessage;
+	}
+
+	public void setRootMessage(Message rootMessage) {
+		this.rootMessage = rootMessage;
+	}
+
+	public Message getParentMessage() {
+		return parentMessage;
+	}
+
+	public void setParentMessage(Message parentMessage) {
+		this.parentMessage = parentMessage;
 	}
 }

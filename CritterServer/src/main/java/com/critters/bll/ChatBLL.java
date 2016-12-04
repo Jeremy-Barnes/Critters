@@ -20,7 +20,8 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			entityManager.getTransaction().begin();
 
-			Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(), message.getMessageSubject());
+			Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(),
+									   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 			entityManager.persist(mail);
 			entityManager.getTransaction().commit();
 			entityManager.refresh(mail);
@@ -32,6 +33,8 @@ public class ChatBLL {
 	}
 
 	private static Message wipeSensitiveDetails(Message message) {
+		UserBLL.wipeSensitiveFields(message.getSender());
+		UserBLL.wipeSensitiveFields(message.getRecipient());
 		return message;
 	}
 
