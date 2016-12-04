@@ -28,7 +28,7 @@ public class Message {
 	private User recipient;
 
 	private boolean read;
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateSent;
 
 	private String messageText;
