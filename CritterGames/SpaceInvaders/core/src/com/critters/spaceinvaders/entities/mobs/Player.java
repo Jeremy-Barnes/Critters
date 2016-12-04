@@ -24,15 +24,15 @@ public class Player extends Collidable {
 
 	// Movement of the pad
 	protected float goalX;
-	protected final float MAX_VEL = 5;
+	protected final float MAX_VEL = 300; // Per seconds
 	protected final float DEFAULT_SIZE;
 
-	protected int SHOOT_TIME = 20;
-	protected int currentShootTime = 0;
+	protected float SHOOT_TIME = 0.4f; // In seconds
+	protected float currentShootTime = 0;
 
 	protected InputMode mode;
 
-	protected int laserShots = 50;
+	protected int laserShots = 2;
 
 	protected int healthPoints = 5;
 
@@ -76,7 +76,7 @@ public class Player extends Collidable {
 		if (input && currentShootTime <= 0) {
 			if (laserShots <= 0)
 				level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
-						new Vector2f(0, 3)));
+						new Vector2f(0, 180)));
 			else {
 				laserShots--;
 				level.addEntity(new Laser(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(2, 3000),
@@ -127,14 +127,15 @@ public class Player extends Collidable {
 
 		// Speed limitation
 		float deltaX = Math.abs(pos.x - goalX);
-		if (deltaX < MAX_VEL) {
+		if (deltaX < MAX_VEL * Gdx.graphics.getDeltaTime()) {
 			pos.x = goalX;
 		} else {
-			pos.x += (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
+			float dx = (pos.x - goalX) > 0 ? -MAX_VEL  : MAX_VEL;
+			pos.x += dx * Gdx.graphics.getDeltaTime();
 		}
 
 		// Shoot timer
-		currentShootTime--;
+		currentShootTime -= Gdx.graphics.getDeltaTime();
 
 		// Update the size with the active effects
 		checkActivePowerups();
