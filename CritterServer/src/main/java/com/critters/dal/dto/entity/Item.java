@@ -21,9 +21,12 @@ public class Item {
 	@JoinColumn(name="itemTypeId", updatable = false)
 	private ItemDescription description;
 
-	public Item(int inventoryItemId, int ownerId){
+	private Integer price;
+
+	public Item(int inventoryItemId, int ownerId, Integer price){
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
+		this.price = price;
 	}
 
 	public Item(){};
@@ -50,6 +53,14 @@ public class Item {
 
 	public void setDescription(ItemDescription description) {
 		this.description = description;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 
 
