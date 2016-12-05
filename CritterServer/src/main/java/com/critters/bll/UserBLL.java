@@ -200,8 +200,14 @@ public class UserBLL {
 		return valid;
 	}
 
-	public static void getInventory(User user){
-
+	public static List<Item> getInventory(User user){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		List<Item> inventory = entityManager
+				.createQuery("from Item where ownerId = :id")
+				.setParameter("id", user.getUserID())
+				.getResultList();
+		entityManager.close();
+		return inventory;
 	}
 
 	public static void discardInventoryItem(Item item, User user){

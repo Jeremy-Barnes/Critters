@@ -4,12 +4,13 @@ import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.CreateAccountRequest;
+import com.critters.dal.dto.SearchResponse;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -158,5 +159,21 @@ public class UserService extends AjaxService{
 			return Response.status(Response.Status.NOT_FOUND).entity("No such user exists").build();
 		}
 		return Response.status(Response.Status.OK).entity(user).build();
+	}
+
+	@POST
+	@Path("/getInventory")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInventory(JAXBElement<User> jsonUser) throws JAXBException, IOException,  InvalidPropertyException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		} else {
+			SearchResponse resp = new SearchResponse();
+			resp.items = UserBLL.getInventory(loggedInUser).toArray(new Item[0]);
+			return Response.status(Response.Status.OK).entity(resp).build();
+		}
 	}
 }
