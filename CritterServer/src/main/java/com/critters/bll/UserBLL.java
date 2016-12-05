@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
@@ -197,6 +198,18 @@ public class UserBLL {
 			entityManager.close();
 		}
 		return valid;
+	}
+
+	public static void getInventory(User user){
+
+	}
+
+	public static void discardInventoryItem(Item item, User user){
+
+	}
+
+	public static void moveItemToStore(Item item, User user) {
+
 	}
 
 	/***************** SECURITY STUFF **********************/

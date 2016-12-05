@@ -1,14 +1,11 @@
 package com.critters.dal.dto.entity;
 
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.CascadeType;
-
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
+import javax.mail.Store;
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,11 +55,13 @@ public class User {
 	@JoinColumn(name="ownerid")
 	private List<Pet> pets;
 
-
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name="ownerid")
+	private List<com.critters.dal.dto.entity.Store> store;
 
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive, List<com.critters.dal.dto.entity.Store> store) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -82,6 +81,7 @@ public class User {
 		this.friends = friends;
 		this.friendsOf = friendsOf;
 		this.isActive = isActive;
+		this.store = store;
 	}
 
 	public User(User copyUser) {
@@ -300,6 +300,14 @@ public class User {
 		Hibernate.initialize(friendsOf);
 		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
+	}
+
+	public List<com.critters.dal.dto.entity.Store> getStore(){
+		return this.store;
+	}
+
+	public void setStore(List<com.critters.dal.dto.entity.Store> store){
+		this.store = store;
 	}
 
 }
