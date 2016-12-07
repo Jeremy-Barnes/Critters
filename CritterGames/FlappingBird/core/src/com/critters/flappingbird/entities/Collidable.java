@@ -26,8 +26,4 @@ public abstract class Collidable extends Entity {
 		return rectangle;
 	}
 
-	public void destroy() {
-		hit();
-	}
-
 }

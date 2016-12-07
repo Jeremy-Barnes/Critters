@@ -21,7 +21,7 @@ public class ScoreDisplay extends UIElement {
 
 	@Override
 	public void renderIfVisible(Render render) {
-		render.drawText("Score: " + score, Color.BLACK, 30, 30);
+		render.drawText("Score: " + score, Color.BLACK, 30, 100);
 	}
 
 }

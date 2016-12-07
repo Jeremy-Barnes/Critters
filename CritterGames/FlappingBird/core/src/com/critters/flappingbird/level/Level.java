@@ -5,14 +5,17 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.critters.flappingbird.Game;
+import com.critters.flappingbird.entities.Bird;
 import com.critters.flappingbird.entities.Collidable;
 import com.critters.flappingbird.entities.Entity;
+import com.critters.flappingbird.entities.Wall;
 import com.critters.flappingbird.entities.powerup.Powerup;
 import com.critters.flappingbird.entities.ui.GameOverDisplay;
 import com.critters.flappingbird.entities.ui.ScoreDisplay;
 import com.critters.flappingbird.entities.ui.UIElement;
 import com.critters.flappingbird.graphics.Render;
 import com.critters.flappingbird.input.Input;
+import com.critters.flappingbird.math.Vector2f;
 
 public class Level {
 
@@ -29,10 +32,11 @@ public class Level {
 
 	public State state;
 
-	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Powerup> powerups = new ArrayList<Powerup>();
-
+	private Bird bird;
+	
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
@@ -45,6 +49,12 @@ public class Level {
 
 		LevelLoader.loadLevel(this);
 
+		// Add entities
+		bird = new Bird(this, new Vector2f(300, 300));
+		entities.add(bird);
+		entities.add(new Wall(this, new Vector2f(0, 0),new Vector2f(1600, 50)));
+		entities.add(new Wall(this, new Vector2f(0, 850),new Vector2f(1600, 50)));
+		
 		uiElements.add(new ScoreDisplay(this, score));
 		GameOverDisplay gameOver = new GameOverDisplay(this, score);
 		gameOver.setVisible(false);
@@ -59,7 +69,7 @@ public class Level {
 	 * Check the state of the level, it can either have been won or lost.
 	 */
 	private void checkState() {
-		if (false) {
+		if (bird.isDead()) {
 			// The game has been lost
 			state = State.LOST;
 		}
