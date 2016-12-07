@@ -46,15 +46,14 @@ public class Powerup extends Entity {
 
 	@Override
 	public void update() {
-		if (!pickedUp)
-			pos.y -= fallSpeed * Gdx.graphics.getDeltaTime();
-
+		
+		// Remove the powerup
 		if (pos.y < -20)
 			level.removeEntity(this);
 
+		// Pickedup logic
 		if (pickedUp) {
 			time+= Gdx.graphics.getDeltaTime();
-
 			if (time >= LENGTH)
 				level.removePowerup(this);
 		}
