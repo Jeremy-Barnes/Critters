@@ -2,32 +2,49 @@ package com.critters.flappingbird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.flappingbird.graphics.Render;
+import com.critters.flappingbird.graphics.SpriteLoader;
+import com.critters.flappingbird.input.Input;
+import com.critters.flappingbird.level.Level;
 
 public class Game extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+
+	private Level level;
+
+	private Render render;
+
 	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+	public void create() {
+		Gdx.input.setInputProcessor(new Input());
+
+		render = new Render();
+		SpriteLoader.loadSprites();
+
+		level = new Level(this);
+	}
+
+	public void update() {
+		level.update();
 	}
 
 	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+	public void render() {
+		// Dirty temporary reset feature
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.O)) {
+			level = new Level(this);
+		}
+
+		render.begin();
+		
+		update();
+		
+		level.render(render);
+
+		render.end();
 	}
-	
+
 	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+	public void dispose() {
+		render.dispose();
 	}
 }
