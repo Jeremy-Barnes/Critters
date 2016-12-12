@@ -14,3 +14,4 @@ CREATE TABLE storePurchaseLogs (
 );
 
 ALTER TABLE inventoryItems ADD COLUMN price int null;
+ALTER TABLE inventoryItems ALTER COLUMN ownerId DROP NOT NULL;

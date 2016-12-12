@@ -15,7 +15,7 @@ public class Item {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int inventoryItemId;
-	private int ownerId;
+	private Integer ownerId;
 
 	@ManyToOne
 	@JoinColumn(name="itemTypeId", updatable = false)
@@ -35,7 +35,7 @@ public class Item {
 		return ownerId;
 	}
 
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
 
