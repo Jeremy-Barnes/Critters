@@ -4,6 +4,7 @@ import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.CreateAccountRequest;
+import com.critters.dal.dto.ItemRequest;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
@@ -173,6 +174,22 @@ public class UserService extends AjaxService{
 		} else {
 			SearchResponse resp = new SearchResponse();
 			resp.items = UserBLL.getInventory(loggedInUser).toArray(new Item[0]);
+			return Response.status(Response.Status.OK).entity(resp).build();
+		}
+	}
+
+	@POST
+	@Path("/discardInventoryItem")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response discardInventoryItem(JAXBElement<ItemRequest> jsonRequest) throws JAXBException, IOException,  InvalidPropertyException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		ItemRequest request = jsonRequest.getValue();
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		} else {
+			SearchResponse resp = new SearchResponse();
+			UserBLL.discardInventoryItem(request.item, loggedInUser);
 			return Response.status(Response.Status.OK).entity(resp).build();
 		}
 	}
