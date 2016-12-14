@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
@@ -197,6 +198,41 @@ public class UserBLL {
 			entityManager.close();
 		}
 		return valid;
+	}
+
+	public static List<Item> getInventory(User user){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		List<Item> inventory = entityManager
+				.createQuery("from Item where ownerId = :id")
+				.setParameter("id", user.getUserID())
+				.getResultList();
+		entityManager.close();
+		return inventory;
+	}
+
+	public static void discardInventoryItem(Item item, User user){
+		verifyUserInventoryIsLoaded(user);
+		Item[] resultant = user.getInventory().parallelStream().filter(i -> i.getInventoryItemId() == item.getInventoryItemId()).toArray(Item[]::new);
+		if(resultant != null && resultant.length != 0) {
+			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+			try {
+				entityManager.getTransaction().begin();
+				user.getInventory().remove(resultant[0]);
+				resultant[0].setOwnerId(null);
+
+				entityManager.merge(user);
+				entityManager.merge(resultant[0]);
+				entityManager.getTransaction().commit();
+			} finally {
+				entityManager.close();
+			}
+		}
+	}
+
+	protected static void verifyUserInventoryIsLoaded(User user){
+		if(user.getInventory() == null){
+			user.setInventory(getInventory(user));
+		}
 	}
 
 	/***************** SECURITY STUFF **********************/

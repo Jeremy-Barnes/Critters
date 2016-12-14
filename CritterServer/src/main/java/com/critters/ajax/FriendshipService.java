@@ -31,9 +31,9 @@ public class FriendshipService extends AjaxService {
 		}
 
 		Friendship request = jsonRequest.getValue();
-		FriendshipBLL.createFriendship(request.getRequester(), request.getRequested(), loggedInUser);
+		request = FriendshipBLL.createFriendship(request.getRequester(), request.getRequested(), loggedInUser);
 
-		return Response.status(Response.Status.OK).build();
+		return Response.status(Response.Status.OK).entity(request).build();
 	}
 
 	@POST
@@ -48,12 +48,12 @@ public class FriendshipService extends AjaxService {
 
 		Friendship req = request.getValue();
 		if(req.isAccepted()){
-			FriendshipBLL.acceptFriendRequest(req, loggedInUser);
+			req = FriendshipBLL.acceptFriendRequest(req, loggedInUser);
 		} else {
 			FriendshipBLL.deleteFriendRequest(req, loggedInUser);
 		}
 
-		return Response.status(Response.Status.OK).build();
+		return Response.status(Response.Status.OK).entity(req).build();
 	}
 
 	@POST
