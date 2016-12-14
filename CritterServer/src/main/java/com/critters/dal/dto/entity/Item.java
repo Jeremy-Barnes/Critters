@@ -15,15 +15,18 @@ public class Item {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int inventoryItemId;
-	private int ownerId;
+	private Integer ownerId;
 
 	@ManyToOne
 	@JoinColumn(name="itemTypeId", updatable = false)
 	private ItemDescription description;
 
-	public Item(int inventoryItemId, int ownerId){
+	private Integer price;
+
+	public Item(int inventoryItemId, int ownerId, Integer price){
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
+		this.price = price;
 	}
 
 	public Item(){};
@@ -32,7 +35,7 @@ public class Item {
 		return ownerId;
 	}
 
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
 
@@ -50,6 +53,14 @@ public class Item {
 
 	public void setDescription(ItemDescription description) {
 		this.description = description;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 
 
