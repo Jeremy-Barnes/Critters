@@ -77,6 +77,7 @@ public class UserBLL {
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+			System.out.println(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
 				entityManager.getTransaction().begin();
@@ -94,6 +95,7 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
+			System.out.println(ex.getStackTrace());
 			return null; //no user found
 		} finally {
 			entityManager.close();
