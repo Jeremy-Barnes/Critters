@@ -15,9 +15,11 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
-import java.io.IOException;
+import java.io.*;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +32,9 @@ public class MetaService extends AjaxService {
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
-	public Response checkJobs() {
+	public Response checkJobs() throws FileNotFoundException {
+		File file = new File("/home/build/logJeremy.txt");
+		System.setOut(new PrintStream(file));
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
