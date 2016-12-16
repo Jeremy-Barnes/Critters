@@ -95,7 +95,10 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
-			System.out.println(ex.getStackTrace());
+						System.out.println(email);
+			System.out.println(password);
+			
+			ex.printStackTrace(System.out);
 			return null; //no user found
 		} finally {
 			entityManager.close();
