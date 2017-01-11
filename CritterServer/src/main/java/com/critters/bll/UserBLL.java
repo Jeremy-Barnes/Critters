@@ -12,6 +12,8 @@ import com.lambdaworks.crypto.SCrypt;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.resource.spi.InvalidPropertyException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -48,7 +50,11 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
-			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + e.getStackTrace().toString() + "\n\n\n next log \n\n\n";
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+
+			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + sw.toString() + "\n\n\n next log \n\n\n";
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
