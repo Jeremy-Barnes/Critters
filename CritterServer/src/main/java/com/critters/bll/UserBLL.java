@@ -50,10 +50,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			BackgroundJobManager.printLine(sw.toString());
+			BackgroundJobManager.printLine(e);
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
@@ -104,7 +101,7 @@ public class UserBLL {
 		} catch (PersistenceException ex) {
 			BackgroundJobManager.printLine(email);
 			BackgroundJobManager.printLine(password);
-			
+			BackgroundJobManager.printLine(ex);
 			ex.printStackTrace(System.out);
 			return null; //no user found
 		} finally {
@@ -276,9 +273,10 @@ public class UserBLL {
 			user.setTokenSelector(UUID.randomUUID().toString());
 			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {ex.printStackTrace();} //shouldn't ever happen
+		} catch (UnsupportedEncodingException ex) {			BackgroundJobManager.printLine(ex);
+		} //shouldn't ever happen
 		return validatorStr;
 	}
 
@@ -288,7 +286,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashedCookieValidator = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -302,7 +300,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashStrConfirm = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
