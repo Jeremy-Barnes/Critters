@@ -10,6 +10,7 @@ import javax.ejb.Singleton;
 public class BackgroundJobManager {
 
 	public static int jobs = 0;
+	public static String logs = "";
 
 	@Schedule(hour="*", minute="*", second="*/10", persistent=true)
 	public void someQuarterlyJob() {

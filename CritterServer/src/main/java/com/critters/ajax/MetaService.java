@@ -38,6 +38,15 @@ public class MetaService extends AjaxService {
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
+	@Path("/logs")
+	@GET
+	@Produces("text/plain")
+	public Response checkLogs() throws FileNotFoundException {
+		File file = new File("/home/build/logJeremy.txt");
+		System.setOut(new PrintStream(file));
+		return Response.status(Response.Status.OK).entity(BackgroundJobManager.logs).build();
+	}
+
 	@Path("/poll")
 	@POST
 	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
