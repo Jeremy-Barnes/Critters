@@ -1,5 +1,6 @@
 package com.critters.bll;
 
+import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
@@ -47,6 +48,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
+			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + e.getStackTrace() + "\n\n\n next log \n\n\n";
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
@@ -95,7 +97,7 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
-						System.out.println(email);
+			System.out.println(email);
 			System.out.println(password);
 			
 			ex.printStackTrace(System.out);
