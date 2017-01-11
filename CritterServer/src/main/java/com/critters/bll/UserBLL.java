@@ -48,7 +48,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
-			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + e.getStackTrace() + "\n\n\n next log \n\n\n";
+			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + e.getStackTrace().toString() + "\n\n\n next log \n\n\n";
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
