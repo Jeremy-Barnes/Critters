@@ -53,8 +53,7 @@ public class UserBLL {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e.printStackTrace(pw);
-
-			BackgroundJobManager.logs = BackgroundJobManager.logs + " \n" + sw.toString() + "\n\n\n next log \n\n\n";
+			BackgroundJobManager.printLine(sw.toString());
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
@@ -85,7 +84,7 @@ public class UserBLL {
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
-			System.out.println(user.getSalt() + " password: " + user.getPassword());
+			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
 				entityManager.getTransaction().begin();
@@ -103,8 +102,8 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
-			System.out.println(email);
-			System.out.println(password);
+			BackgroundJobManager.printLine(email);
+			BackgroundJobManager.printLine(password);
 			
 			ex.printStackTrace(System.out);
 			return null; //no user found
