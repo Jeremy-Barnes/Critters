@@ -38,11 +38,11 @@ public class Store {
 		this.ownerId = ownerId;
 	}
 
-	public int getInventoryItemId() {
+	public int getStoreId() {
 		return storeConfigID;
 	}
 
-	public void setInventoryItemId(int storeConfigID) {
+	public void setStoreId(int storeConfigID) {
 		this.storeConfigID = storeConfigID;
 	}
 
