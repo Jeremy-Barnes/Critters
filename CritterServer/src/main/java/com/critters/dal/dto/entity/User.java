@@ -1,11 +1,13 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.bll.UserBLL;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
 import javax.mail.Store;
 import javax.persistence.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -277,7 +279,7 @@ public class User {
 	}
 
 	public List<Item> getInventory() {
-		if(inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) {
+		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
 			return inventory;
 		}
 		return null;
@@ -300,6 +302,10 @@ public class User {
 		Hibernate.initialize(friendsOf);
 		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
+	}
+
+	public void initializeInventory(){
+		this.setInventory(UserBLL.getInventory(this));
 	}
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){

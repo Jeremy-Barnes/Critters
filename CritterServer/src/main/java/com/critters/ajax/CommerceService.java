@@ -2,6 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.CommerceBLL;
 import com.critters.dal.dto.ItemRequest;
+import com.critters.dal.dto.entity.Store;
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
@@ -50,6 +51,22 @@ public class CommerceService extends AjaxService {
 		}
 	}
 
+
+	@POST
+	@Path("/setInventoryItemStorePrice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setInventoryItemStorePrice(JAXBElement<ItemRequest> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		ItemRequest request = jsonRequest.getValue();
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		} else {
+			CommerceBLL.changeItemPrice(request.item, loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		}
+	}
+
 	@POST
 	@Path("/removeInventoryItemFromStore")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -81,5 +98,19 @@ public class CommerceService extends AjaxService {
 		}
 	}
 
+	@POST
+	@Path("/createStore")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createStore(JAXBElement<Store> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		Store request = jsonRequest.getValue();
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		} else {
+			CommerceBLL.createStore(request, loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		}
+	}
 
 }

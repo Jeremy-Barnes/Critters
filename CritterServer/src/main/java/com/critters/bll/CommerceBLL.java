@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Item;
+import com.critters.dal.dto.entity.Store;
 import com.critters.dal.dto.entity.User;
 
 import javax.persistence.EntityManager;
@@ -20,7 +21,6 @@ public class CommerceBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-				user.getInventory().remove(resultant[0]);
 				resultant[0].setPrice(item.getPrice());
 
 				entityManager.merge(user);
@@ -34,22 +34,24 @@ public class CommerceBLL {
 
 	public static void changeItemOwnerViaPurchase(Item item, User user) throws InvalidPropertyException {
 		Item dbItem = getItem(item);
-		user = UserBLL.getUser(user.getUserID());
+		user = UserBLL.getFullUser(user.getUserID());
+		User owner  = UserBLL.getFullUser(dbItem.getOwnerId());
 		UserBLL.verifyUserInventoryIsLoaded(user);
 
 		if(dbItem != null) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
-				if(user.getCritterbuxx() >= dbItem.getPrice()) {
+				if(dbItem.getPrice() != null && user.getCritterbuxx() >= dbItem.getPrice()) {
 					entityManager.getTransaction().begin();
 					dbItem.setOwnerId(user.getUserID());
 					user.setCritterbuxx(user.getCritterbuxx() - dbItem.getPrice());
+					owner.setCritterbuxx(owner.getCritterbuxx() + dbItem.getPrice());
 					dbItem.setPrice(null);
 					entityManager.merge(dbItem);
 					entityManager.merge(user);
+					entityManager.merge(owner);
 					entityManager.getTransaction().commit();
 				} else {
-					entityManager.getTransaction().rollback();
 					throw new InvalidPropertyException("You don't have enough money for this item.");
 				}
 			} finally {
@@ -71,5 +73,22 @@ public class CommerceBLL {
 		}
 	}
 
+	public static Store createStore(Store store, User owner){
+		store.setOwnerId(owner.getUserID());
+		//todo contentfilter on store.description and store.name
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
+		try {
+			entityManager.persist(store);
+			entityManager.getTransaction().commit();
+			return store;
+		} catch(Exception e) {
+			entityManager.getTransaction().rollback();
+			throw e;
+		} finally {
+			entityManager.close();
+		}
+
+	}
 
 }
