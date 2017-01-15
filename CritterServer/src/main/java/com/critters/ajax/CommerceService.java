@@ -46,7 +46,7 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			CommerceBLL.changeItemPrice(request.item, loggedInUser);
+			CommerceBLL.changeItemStore(request.item, loggedInUser);
 			return Response.status(Response.Status.OK).build();
 		}
 	}
@@ -79,6 +79,8 @@ public class CommerceService extends AjaxService {
 		} else {
 			request.item.setPrice(null);
 			CommerceBLL.changeItemPrice(request.item, loggedInUser);
+			request.item.setContainingStoreId(null);
+			CommerceBLL.changeItemStore(request.item, loggedInUser);
 			return Response.status(Response.Status.OK).build();
 		}
 	}
@@ -108,9 +110,32 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			CommerceBLL.createStore(request, loggedInUser);
-			return Response.status(Response.Status.OK).build();
+			return Response.status(Response.Status.OK).entity(CommerceBLL.createStore(request, loggedInUser)).build();
 		}
+	}
+
+	@POST
+	@Path("/editStore")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editStore(JAXBElement<Store> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		Store request = jsonRequest.getValue();
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		} else {
+			return Response.status(Response.Status.OK).entity(CommerceBLL.editStore(request, loggedInUser)).build();
+		}
+	}
+
+	@POST
+	@Path("/getStorefront")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response viewStore(JAXBElement<Store> jsonRequest) throws JAXBException {
+		Store copiedStore = super.serializeDeepCopy(CommerceBLL.getStore(jsonRequest.getValue()), Store.class);
+		return Response.status(Response.Status.OK).entity(copiedStore).build();
+
 	}
 
 }

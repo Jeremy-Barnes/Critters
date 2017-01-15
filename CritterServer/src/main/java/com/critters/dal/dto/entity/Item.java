@@ -22,14 +22,16 @@ public class Item {
 	private ItemDescription description;
 
 	private Integer price;
+	private Integer containingStoreId;
 
-	public Item(int inventoryItemId, int ownerId, Integer price){
+	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId){
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
 		this.price = price;
+		this.containingStoreId = containingStoreId;
 	}
 
-	public Item(){};
+	public Item(){}
 
 	public int getOwnerId() {
 		return ownerId;
@@ -61,6 +63,14 @@ public class Item {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public Integer getContainingStoreId() {
+		return containingStoreId;
+	}
+
+	public void setContainingStoreId(Integer storeId) {
+		this.containingStoreId = storeId;
 	}
 
 
