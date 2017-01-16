@@ -3,6 +3,7 @@ package com.critters.ajax;
 import com.critters.bll.ChatBLL;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import com.critters.backgroundservices.BackgroundJobManager;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
