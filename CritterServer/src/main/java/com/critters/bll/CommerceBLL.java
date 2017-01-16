@@ -63,12 +63,12 @@ public class CommerceBLL {
 					entityManager.getTransaction().begin();
 					dbItem.setOwnerId(user.getUserID());
 					user.setCritterbuxx(user.getCritterbuxx() - dbItem.getPrice());
-					owner.setCritterbuxx(owner.getCritterbuxx() + dbItem.getPrice());
+					if(owner != null) owner.setCritterbuxx(owner.getCritterbuxx() + dbItem.getPrice());
 					dbItem.setPrice(null);
 					dbItem.setContainingStoreId(null);
 					entityManager.merge(dbItem);
 					entityManager.merge(user);
-					entityManager.merge(owner);
+					if(owner != null) entityManager.merge(owner);
 					entityManager.getTransaction().commit();
 				} else {
 					throw new InvalidPropertyException("You don't have enough money for this item.");
