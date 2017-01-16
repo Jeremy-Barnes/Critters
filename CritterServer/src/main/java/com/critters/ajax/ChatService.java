@@ -25,6 +25,7 @@ public class ChatService extends AjaxService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendMessage(JAXBElement<Message> message) throws GeneralSecurityException, UnsupportedEncodingException {
+		BackgroundJobManager.printLine("Enter sendmessage in chatservice " + Calendar.getInstance().getTime());
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -33,6 +34,7 @@ public class ChatService extends AjaxService {
 		Message msg = message.getValue();
 		msg = ChatBLL.sendMessage(msg, loggedInUser);
 		//todo send message to recipient as notification
+		BackgroundJobManager.printLine("exit sendmessage in chatservice " + Calendar.getInstance().getTime());
 		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 
