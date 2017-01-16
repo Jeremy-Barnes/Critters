@@ -1,6 +1,8 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
+import com.critters.backgroundservices.BackgroundJobManager;
+
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
