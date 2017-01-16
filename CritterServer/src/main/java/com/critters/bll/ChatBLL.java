@@ -45,7 +45,7 @@ public class ChatBLL {
 	}
 
 	public static Message sendMessage(Message message, User user) throws GeneralSecurityException, UnsupportedEncodingException {
-
+		BackgroundJobManager.printLine("Entered sendMessage method at  " + Calendar.getInstance().getTime());
 		if (user.getUserID() == (message.getSender().getUserID())) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			entityManager.getTransaction().begin();
@@ -57,6 +57,7 @@ public class ChatBLL {
 			entityManager.refresh(mail);
 			entityManager.close();
 			Message wiped = wipeSensitiveDetails(mail);
+			BackgroundJobManager.printLine("Current time in before notify " + Calendar.getInstance().getTime());
 			notify(message.getRecipient().getUserID(), wiped);
 			return wiped;
 
