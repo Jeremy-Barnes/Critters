@@ -44,6 +44,7 @@
     <Content Include="Libraries\jquery-ui-1.11.4.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
+    <Content Include="templates\userprofile.template.htm" />
     <Content Include="templates\dashboard.template.htm" />
     <Content Include="templates\petcreate.template.htm" />
     <Content Include="templates\accountcreate-petcreate.template.htm" />
@@ -63,6 +64,7 @@
     </None>
     <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
+    <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
