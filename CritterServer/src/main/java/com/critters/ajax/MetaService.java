@@ -45,8 +45,6 @@ public class MetaService extends AjaxService {
  	@GET
  	@Produces("text/plain")
  	public Response checkLogs() throws FileNotFoundException {
- 		File file = new File("/home/build/logJeremy.txt");
- 		System.setOut(new PrintStream(file));
  		return Response.status(Response.Status.OK).entity(BackgroundJobManager.logs).build();
  	}
 	
