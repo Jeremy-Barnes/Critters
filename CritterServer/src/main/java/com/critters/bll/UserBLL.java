@@ -81,6 +81,7 @@ public class UserBLL {
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+
 			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
@@ -99,10 +100,10 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
+
 			BackgroundJobManager.printLine(email);
 			BackgroundJobManager.printLine(password);
 			BackgroundJobManager.printLine(ex);
-			ex.printStackTrace(System.out);
 			return null; //no user found
 		} finally {
 			entityManager.close();
@@ -110,16 +111,9 @@ public class UserBLL {
 	}
 
 	public static User getUser(int id) {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
-			user = wipeSensitiveFields(user);
+			User user = wipeSensitiveFields(getFullUser(id));
 			return user;
-		} catch (PersistenceException ex) {
-			return null; //no user found
-		} finally {
-			entityManager.close();
-		}
+
 	}
 
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
@@ -228,6 +222,7 @@ public class UserBLL {
 				entityManager.getTransaction().begin();
 				user.getInventory().remove(resultant[0]);
 				resultant[0].setOwnerId(null);
+				resultant[0].setPrice(null);
 
 				entityManager.merge(user);
 				entityManager.merge(resultant[0]);
@@ -239,9 +234,8 @@ public class UserBLL {
 	}
 
 	protected static void verifyUserInventoryIsLoaded(User user){
-		if(user.getInventory() == null){
-			user.setInventory(getInventory(user));
-		}
+		user.initializeInventory();
+
 	}
 
 	/***************** SECURITY STUFF **********************/
@@ -306,5 +300,17 @@ public class UserBLL {
 			return false;
 		}
 		return hashStrConfirm.equals(dbPasswordHash);
+	}
+
+	protected static User getFullUser(int id){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
+			return user;
+		} catch (PersistenceException ex) {
+			return null; //no user found
+		} finally {
+			entityManager.close();
+		}
 	}
 }

@@ -3,6 +3,8 @@ package com.critters.dal.dto.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
+
 
 /**
  * Created by Jeremy on 12/4/2016.
@@ -20,6 +22,8 @@ public class Store {
 	private String description;
 	private String name;
 
+	@Transient
+	private List<Item> storeStock;
 
 	public Store(int storeConfigID, int ownerId, String name, String description) {
 		this.storeConfigID = storeConfigID;
@@ -38,11 +42,11 @@ public class Store {
 		this.ownerId = ownerId;
 	}
 
-	public int getInventoryItemId() {
+	public int getStoreConfigID() {
 		return storeConfigID;
 	}
 
-	public void setInventoryItemId(int storeConfigID) {
+	public void setStoreConfigID(int storeConfigID) {
 		this.storeConfigID = storeConfigID;
 	}
 
@@ -61,4 +65,13 @@ public class Store {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public List<Item> getStoreStock() {
+		return storeStock;
+	}
+
+	public void setStoreStock(List<Item> stock) {
+		this.storeStock = stock;
+	}
+
 }
