@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
 
+
 /**
  * Created by Jeremy on 12/4/2016.
  */
@@ -72,4 +73,5 @@ public class Store {
 	public void setStoreStock(List<Item> stock) {
 		this.storeStock = stock;
 	}
+
 }

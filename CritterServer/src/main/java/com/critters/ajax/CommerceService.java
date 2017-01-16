@@ -3,6 +3,7 @@ package com.critters.ajax;
 import com.critters.bll.CommerceBLL;
 import com.critters.dal.dto.ItemRequest;
 import com.critters.dal.dto.entity.Store;
+
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
@@ -81,6 +82,7 @@ public class CommerceService extends AjaxService {
 			CommerceBLL.changeItemPrice(request.item, loggedInUser);
 			request.item.setContainingStoreId(null);
 			CommerceBLL.changeItemStore(request.item, loggedInUser);
+
 			return Response.status(Response.Status.OK).build();
 		}
 	}
@@ -137,5 +139,6 @@ public class CommerceService extends AjaxService {
 		return Response.status(Response.Status.OK).entity(copiedStore).build();
 
 	}
+
 
 }

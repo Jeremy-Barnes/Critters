@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * Created by Jeremy on 11/29/2016.
  */
@@ -58,6 +59,7 @@ public class ChatBLL {
 			Message wiped = wipeSensitiveDetails(mail);
 			notify(message.getRecipient().getUserID(), wiped);
 			return wiped;
+
 		} else {
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
