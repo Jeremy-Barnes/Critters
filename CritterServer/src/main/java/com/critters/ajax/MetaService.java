@@ -1,6 +1,7 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
+import com.critters.bll.ChatBLL;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
@@ -8,17 +9,22 @@ import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jeremy on 8/22/2016.
@@ -30,18 +36,18 @@ public class MetaService extends AjaxService {
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
-	public Response checkJobs() {
+	public Response checkJobs() throws FileNotFoundException {
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
-	@Path("/poll")
-	@POST
-	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
+	@Path("/pollForNotifications")
+	@GET
+	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
-		if (loggedInUser != null) {
-			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
-			peers.put(1, asyncResponse);
+		if(loggedInUser == null) {
+			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());
+		} else {
+			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 		}
 	}
 
