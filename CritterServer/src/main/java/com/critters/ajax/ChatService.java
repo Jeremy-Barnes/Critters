@@ -1,13 +1,11 @@
 package com.critters.ajax;
 
 import com.critters.bll.ChatBLL;
+import com.critters.dal.dto.Conversation;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -32,8 +30,41 @@ public class ChatService extends AjaxService {
 
 		Message msg = message.getValue();
 		msg = ChatBLL.sendMessage(msg, loggedInUser);
-		//todo send message to recipient as notification
 		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 
+
+	@GET
+	@Path("/getMessage/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMessage(@PathParam("id") int id) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+		return Response.status(Response.Status.OK).entity(ChatBLL.getMessage(id, loggedInUser)).build();
+	}
+
+	@GET
+	@Path("/getMailbox")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMailbox() throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+		return Response.status(Response.Status.OK).entity(ChatBLL.getConversations(loggedInUser.getUserID()).toArray(new Conversation[0])).build();
+	}
+
+
+	@GET
+	@Path("/getUnreadMail")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUnreadMail() throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+		return Response.status(Response.Status.OK).entity(ChatBLL.getMail(loggedInUser.getUserID(), true).toArray(new Message[0])).build();
+	}
 }
