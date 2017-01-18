@@ -79,7 +79,7 @@ public class ChatBLL {
 			mail.forEach(m->m.setRead(true));
 			mail.forEach(m->entityManager.merge(m));
 			entityManager.getTransaction().commit();
-			mail.forEach(m-> wipeSensitiveDetails(m));
+			mail.forEach(m -> wipeSensitiveDetails(m));
 			return mail;
 		} finally {
 			entityManager.close();
@@ -97,7 +97,7 @@ public class ChatBLL {
 			mail.forEach(m->m.setRead(true));
 			mailChildren.forEach(m -> m.setRead(true));
 			mail.forEach(m->entityManager.merge(m));
-			mailChildren.forEach(m->entityManager.merge(m));
+			mailChildren.forEach(m -> entityManager.merge(m));
 			entityManager.getTransaction().commit();
 			return buildConversations(mail, mailChildren);
 		} finally {
@@ -113,19 +113,14 @@ public class ChatBLL {
 			entityManager.merge(mail);
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				entityManager.detach(mail);
-				return wipeSensitiveDetails(mail);
+				Message wiped = wipeSensitiveDetails(mail);
+				notify(mail.getRecipient().getUserID(), wiped);
+				return wiped;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
 			}
 		} finally {
 			entityManager.close();
-
-			Message wiped = wipeSensitiveDetails(mail);
-			notify(message.getRecipient().getUserID(), wiped);
-			return wiped;
-
-		} else {
-			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
 
