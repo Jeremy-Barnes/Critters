@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,9 +41,18 @@ public class MetaService extends AjaxService {
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
+	@Path("/logs")
+ 	@GET
+ 	@Produces("text/plain")
+ 	public Response checkLogs() throws FileNotFoundException {
+ 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.logs).build();
+ 	}
+	
+
 	@Path("/pollForNotifications")
 	@GET
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
+
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());

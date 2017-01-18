@@ -8,6 +8,7 @@ import org.hibernate.collection.internal.PersistentBag;
 import javax.mail.Store;
 import javax.persistence.*;
 import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -304,9 +305,10 @@ public class User {
 		Hibernate.initialize(inventory);
 	}
 
-	public void initializeInventory(){
+  public void initializeInventory(){
 		this.setInventory(UserBLL.getInventory(this));
 	}
+
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){
 		return this.store;

@@ -28,6 +28,7 @@ public class FriendshipBLL {
 			Friendship wiped = wipeSensitiveDetails(request);
 			ChatBLL.notify(request.getRequested().getUserID(), wiped);
 			return wiped;
+
 		} else {
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
@@ -48,6 +49,7 @@ public class FriendshipBLL {
 			Friendship wiped = wipeSensitiveDetails(dbReq);
 			ChatBLL.notify(request.getRequester().getUserID(), wiped);
 			return wiped;
+
 		} else {
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}

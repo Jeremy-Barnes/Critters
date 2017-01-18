@@ -9,8 +9,9 @@ export class ServiceMethods {
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
         var param = JSON.stringify(parameters);
+        var pathParams = type == "GET" && parameters != null ? "/" + param : "";
         var settings: JQueryAjaxSettings = {
-            url: ServiceMethods.baseURL + functionService + "/" + functionName,
+            url: ServiceMethods.baseURL + functionService + "/" + functionName + pathParams,
             type: type,
             contentType: "application/json",
             xhrFields: {
@@ -31,7 +32,7 @@ export class ServiceMethods {
                     ServiceMethods.jsessionID = args.getResponseHeader("JSESSIONID");
                 }
             },
-            data: param,
+            data: type == "POST" ? param : "",
             crossDomain: true,
         };
         return jQuery.ajax(settings);
@@ -68,5 +69,9 @@ export class ServiceMethods {
 
     public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
         return ServiceMethods.doAjax("createFriendship", "friends", request);
+    }
+
+    public static getUserFromID(id: number): JQueryPromise<User> {
+        return ServiceMethods.doAjax("getUserFromID", "users", id, "GET");
     }
 }

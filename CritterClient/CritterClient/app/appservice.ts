@@ -3,10 +3,14 @@ import {ServiceMethods} from "./servicemethods"
 
 
 export class Application {
+    public loggedIn: boolean = false;
+
     public user: User = new User();
     public petSpecies: PetSpecies[] = [];
     public petColors: PetColor[] = [];
     public static app: Application = new Application();
+
+
     public static getApp() {
         if (Application.app) {
             return Application.app;
@@ -43,7 +47,7 @@ export class Application {
 
     }
 
-    public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {
+    public static sendFriendRequest(requestingUserID: number, requestedUserID: number): JQueryPromise<void> {
         var requesterUser = new User();
         var requestedUser = new User();
         requesterUser.userID = requestingUserID;
@@ -53,8 +57,18 @@ export class Application {
             friendshipID: 0,
             requester: requesterUser,
             requested: requestedUser
-        }).done(() => {
-            alert("success");
         });
+    }
+
+    public static logIn(user: User) {
+        return ServiceMethods.logIn(user).done((retUser: User) => {
+            var app = Application.getApp()
+            app.user.set(retUser);
+            app.loggedIn = true;
+        });
+    }
+
+    public static getUser(id: number) {
+        return ServiceMethods.getUserFromID(id);
     }
 }

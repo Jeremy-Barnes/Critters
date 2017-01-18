@@ -17,6 +17,7 @@
     critterbuxx: number = 0;
     friends: Array<Friendship>;
     pets: Array<Pet>;
+    isActive: boolean = true;
 
     public set(user: User) {
         this.userID = user.userID;
@@ -37,7 +38,7 @@
         this.critterbuxx = user.critterbuxx;
         this.friends = user.friends;
         this.pets = user.pets;
-
+        this.isActive = user.isActive;
 
     }
 }

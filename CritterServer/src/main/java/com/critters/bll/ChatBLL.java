@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 /**
  * Created by Jeremy on 11/29/2016.
  */
@@ -118,6 +119,13 @@ public class ChatBLL {
 			}
 		} finally {
 			entityManager.close();
+
+			Message wiped = wipeSensitiveDetails(mail);
+			notify(message.getRecipient().getUserID(), wiped);
+			return wiped;
+
+		} else {
+			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
 

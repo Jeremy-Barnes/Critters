@@ -6,8 +6,8 @@ import {Application} from "../appservice"
     templateUrl: "../../templates/dashboard.template.htm"
 })
 
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
     user: User;
-
-    ngOnInit() { this.user = Application.getApp().user; }
+    app: Application = Application.getApp();
+    ngOnInit() { this.user = this.app.user; }
 }

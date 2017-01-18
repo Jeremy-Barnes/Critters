@@ -29,6 +29,7 @@ public class Item {
 		this.ownerId = ownerId;
 		this.price = price;
 		this.containingStoreId = containingStoreId;
+
 	}
 
 	public Item(){}
@@ -72,7 +73,6 @@ public class Item {
 	public void setContainingStoreId(Integer storeId) {
 		this.containingStoreId = storeId;
 	}
-
 
 	@Entity
 	@Table(name="itemconfigs")
