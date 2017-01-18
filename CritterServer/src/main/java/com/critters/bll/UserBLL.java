@@ -12,8 +12,6 @@ import com.lambdaworks.crypto.SCrypt;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.resource.spi.InvalidPropertyException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -166,6 +164,8 @@ public class UserBLL {
 		user.setTokenSelector("");
 		user.setTokenValidator("");
 		user.setEmailAddress("");
+		user.setCritterbuxx(0);
+		user.setInventory(null);
 		if(user.getFriends()!= null)
 			for(Friendship friend: user.getFriends()){
 				wipeSensitiveFields(friend.getRequested());
