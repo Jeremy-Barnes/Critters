@@ -318,4 +318,27 @@ public class User {
 		this.store = store;
 	}
 
+	public void nullAllButID(){
+		this.userName = null;
+		this.firstName = null;
+		this.lastName = null;
+		this.emailAddress = null;
+		this.password = null;
+		this.sex = null;
+		this.birthdate = null;
+		this.salt = null;
+		this.city = null;
+		this.state = null;
+		this.country = null;
+		this.postcode = null;
+		this.tokenSelector = null;
+		this.tokenValidator = null;
+		this.critterbuxx = -1;
+		this.isActive = true;
+		this.friends = null;
+		this.friendsOf = null;
+		this.inventory = null;
+		this.pets = null;
+		this.store = null;
+	}
 }

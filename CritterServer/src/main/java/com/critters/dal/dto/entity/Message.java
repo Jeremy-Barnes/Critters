@@ -127,4 +127,14 @@ public class Message {
 	public void setParentMessage(Message parentMessage) {
 		this.parentMessage = parentMessage;
 	}
+
+	public void nullUsersOut(){
+		sender.nullAllButID();
+		recipient.nullAllButID();
+	}
+
+	public void nullParentsOut(){
+		parentMessage = null;
+		rootMessage = null;
+	}
 }
