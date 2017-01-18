@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
+
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
@@ -25,6 +26,7 @@ public class ChatBLL {
 	private static Map<Integer, AsyncResponse> listeners = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	public static void createPoll(int userId, AsyncResponse asyncResponse){
+		BackgroundJobManager.printLine("Entered createpoll " + Calendar.getInstance().getTime());
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
 			@Override
 			public void handleTimeout(AsyncResponse asyncResponse) {
@@ -33,19 +35,24 @@ public class ChatBLL {
 											 .entity("Operation time out.").build());
 			}
 		});
+		BackgroundJobManager.printLine("Timeouthandler set " + Calendar.getInstance().getTime());
 		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
+		BackgroundJobManager.printLine("Timeout duration set  " + Calendar.getInstance().getTime());
 		listeners.put(userId, asyncResponse);
+		BackgroundJobManager.printLine("Leaving createpoll " + Calendar.getInstance().getTime());
 	}
 
 	public static void notify(int userId, Object notification){
+		BackgroundJobManager.printLine("notify method entrance  " + Calendar.getInstance().getTime());
 		if(listeners.containsKey(userId)) {
 			listeners.get(userId).resume(notification);
 			listeners.remove(userId);
 		}
+		BackgroundJobManager.printLine("notify method exit " + Calendar.getInstance().getTime());
 	}
 
 	public static Message sendMessage(Message message, User user) throws GeneralSecurityException, UnsupportedEncodingException {
-
+		BackgroundJobManager.printLine("Entered sendMessage method at  " + Calendar.getInstance().getTime());
 		if (user.getUserID() == (message.getSender().getUserID())) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
@@ -83,8 +90,9 @@ public class ChatBLL {
 			return mail;
 		} finally {
 			entityManager.close();
-		}
+    }
 	}
+
 
 	public static List<Conversation> getConversations(int userID) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
