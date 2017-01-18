@@ -161,6 +161,8 @@ public class UserBLL {
 		user.setTokenSelector("");
 		user.setTokenValidator("");
 		user.setEmailAddress("");
+		user.setCritterbuxx(0);
+		user.setInventory(null);
 		if(user.getFriends()!= null)
 			for(Friendship friend: user.getFriends()){
 				wipeSensitiveFields(friend.getRequested());
