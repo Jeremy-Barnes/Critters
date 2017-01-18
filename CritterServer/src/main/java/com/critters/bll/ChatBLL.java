@@ -68,7 +68,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static List<Message> getMail(int userID, boolean unrebaadOnly) {
+	public static List<Message> getMail(int userID, boolean unreadOnly) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			List<Message> mail = unreadOnly ?
