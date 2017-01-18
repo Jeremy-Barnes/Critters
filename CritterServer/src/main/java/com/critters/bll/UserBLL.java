@@ -1,5 +1,6 @@
 package com.critters.bll;
 
+import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
@@ -47,6 +48,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
+			BackgroundJobManager.printLine(e);
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
@@ -77,7 +79,8 @@ public class UserBLL {
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
-			System.out.println(user.getSalt() + " password: " + user.getPassword());
+
+			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
 				entityManager.getTransaction().begin();
@@ -95,10 +98,10 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
-			System.out.println(email);
-			System.out.println(password);
 
-			ex.printStackTrace(System.out);
+			BackgroundJobManager.printLine(email);
+			BackgroundJobManager.printLine(password);
+			BackgroundJobManager.printLine(ex);
 			return null; //no user found
 		} finally {
 			entityManager.close();
@@ -220,6 +223,7 @@ public class UserBLL {
 				user.getInventory().remove(resultant[0]);
 				resultant[0].setOwnerId(null);
 				resultant[0].setPrice(null);
+
 				entityManager.merge(user);
 				entityManager.merge(resultant[0]);
 				entityManager.getTransaction().commit();
@@ -231,6 +235,7 @@ public class UserBLL {
 
 	protected static void verifyUserInventoryIsLoaded(User user){
 		user.initializeInventory();
+
 	}
 
 	/***************** SECURITY STUFF **********************/
@@ -262,9 +267,10 @@ public class UserBLL {
 			user.setTokenSelector(UUID.randomUUID().toString());
 			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {ex.printStackTrace();} //shouldn't ever happen
+		} catch (UnsupportedEncodingException ex) {			BackgroundJobManager.printLine(ex);
+		} //shouldn't ever happen
 		return validatorStr;
 	}
 
@@ -274,7 +280,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashedCookieValidator = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -288,7 +294,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashStrConfirm = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;

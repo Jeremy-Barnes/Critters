@@ -3,12 +3,14 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Store;
+
 import com.critters.dal.dto.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.resource.spi.InvalidPropertyException;
 import java.util.List;
+
 
 /**
  * Created by Jeremy on 8/28/2016.
@@ -57,6 +59,7 @@ public class CommerceBLL {
 		UserBLL.verifyUserInventoryIsLoaded(user);
 
 		if(dbItem != null && dbItem.getPrice() != null) {
+
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				if(user.getCritterbuxx() >= dbItem.getPrice()) {
@@ -143,4 +146,5 @@ public class CommerceBLL {
 			entityManager.close();
 		}
 	}
+
 }
