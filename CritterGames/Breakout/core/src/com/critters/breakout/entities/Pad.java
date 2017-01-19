@@ -23,7 +23,7 @@ public class Pad extends Collidable {
 
 	// Movement of the pad
 	private float goalX;
-	private final float MAX_VEL = 5;
+	private final float MAX_VEL = 300; // px/s
 	private final float DEFAULT_SIZE;
 
 	private InputMode mode;
@@ -85,10 +85,10 @@ public class Pad extends Collidable {
 
 		// Speed limitation
 		float deltaX = Math.abs(pos.x - goalX);
-		if (deltaX < MAX_VEL) {
+		if (deltaX < MAX_VEL * Gdx.graphics.getDeltaTime()) {
 			pos.x = goalX;
 		} else {
-			pos.x += (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
+			pos.x += ((pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL) * Gdx.graphics.getDeltaTime();
 		}
 
 		// Update the size with the active effects
