@@ -253,12 +253,8 @@ public class Level {
 		return shields;
 	}
 
-<<<<<<< HEAD
 	public ArrayList<Entity> getEntities() {
 		return entities;
 	}
 
 }
-=======
-}
->>>>>>> origin/minigame-dev
