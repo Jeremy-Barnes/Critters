@@ -75,7 +75,6 @@ public class Level {
 		}
 		
 		//TODO
-
 		if (false) {
 			// The game has been won
 			state = State.WON;
