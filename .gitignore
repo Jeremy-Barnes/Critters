@@ -436,3 +436,5 @@ local.properties
 CritterServer/resources/hibernate.cfg.xml
 CritterServer/resources/META-INF/persistence.xml
 
+CritterClient/CritterClient/presentation.js
+*.map

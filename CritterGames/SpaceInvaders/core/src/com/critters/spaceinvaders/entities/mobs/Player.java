@@ -12,7 +12,6 @@ import com.critters.spaceinvaders.entities.Entity;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
 import com.critters.spaceinvaders.entities.powerup.PowerupLife;
-import com.critters.spaceinvaders.entities.projectiles.Laser;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -83,6 +82,7 @@ public class Player extends Collidable {
 				level.addEntity(new Laser(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(2, 3000),
 						new Vector2f()));
 			}
+
 			currentShootTime = SHOOT_TIME;
 		}
 	}
@@ -99,6 +99,7 @@ public class Player extends Collidable {
 	
 	@Override
 	public void hit(Projectile projectile) {
+		System.out.println(healthPoints);
 		healthPoints--;
 
 		if (healthPoints <= 0) {
@@ -114,10 +115,13 @@ public class Player extends Collidable {
 
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLife.class).deactivate();
+			;
 		}
 
 		if (Powerup.exists(level, PowerupLaser.class)) {
-			laserShots = 2;
+
+			// TODO Activate laser
+
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLaser.class).deactivate();
 		}

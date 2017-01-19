@@ -1,10 +1,14 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.bll.UserBLL;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
+import javax.mail.Store;
 import javax.persistence.*;
+import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +29,7 @@ public class User {
 	private String lastName;
 	private String emailAddress;
 	private String password;
+	private String sex;
 	@Temporal(TemporalType.DATE)
 	private Date birthdate;
 	private String salt;
@@ -35,10 +40,12 @@ public class User {
 	private String tokenSelector;
 	private String tokenValidator;
 	private int critterbuxx;
+	private boolean isActive;
 
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
 	private List<Friendship> friends;
+
 	@OneToMany
 	@JoinColumn(name="requesteduserid")
 	private List<Friendship> friendsOf;
@@ -49,18 +56,22 @@ public class User {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="ownerid")
-	private List<Pet> zoo;
+	private List<Pet> pets;
 
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name="ownerid")
+	private List<com.critters.dal.dto.entity.Store> store;
 
-	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
+	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive, List<com.critters.dal.dto.entity.Store> store) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.password = password;
+		this.sex = sex;
 		this.birthdate = birthdate;
 		this.salt = salt;
 		this.city = city;
@@ -72,7 +83,8 @@ public class User {
 		this.critterbuxx = critterbuxx;
 		this.friends = friends;
 		this.friendsOf = friendsOf;
-
+		this.isActive = isActive;
+		this.store = store;
 	}
 
 	public User(User copyUser) {
@@ -81,12 +93,18 @@ public class User {
 		this.firstName = copyUser.firstName;
 		this.lastName = copyUser.lastName;
 		this.emailAddress = copyUser.emailAddress;
+		this.password = copyUser.password;
+		this.sex = copyUser.sex;
 		this.birthdate = copyUser.birthdate;
+		this.salt = copyUser.salt;
 		this.city = copyUser.city;
-		this.state =copyUser.state;
+		this.state = copyUser.state;
 		this.country = copyUser.country;
 		this.postcode = copyUser.postcode;
+		this.tokenSelector = copyUser.tokenSelector;
+		this.tokenValidator = copyUser.tokenValidator;
 		this.critterbuxx = copyUser.critterbuxx;
+		this.isActive = copyUser.isActive;
 		this.friends = null;
 		this.friendsOf = null;
 	}
@@ -157,6 +175,14 @@ public class User {
 		this.salt = salt;
 	}
 
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
 	public String getCity() {
 		return city;
 	}
@@ -213,6 +239,14 @@ public class User {
 		this.critterbuxx = critterbuxx;
 	}
 
+	public boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public List<Friendship> getFriends() {
 		List<Friendship> frnds = new ArrayList();
 		if(friends != null && ((friends instanceof PersistentBag) ? ((PersistentBag)friends).wasInitialized() : true)) {
@@ -237,16 +271,16 @@ public class User {
 		return frnds;
 	}
 
-	public List<Pet> getZoo() {
-		return zoo;
+	public List<Pet> getPets() {
+		return pets;
 	}
 
-	public void setZoo(List<Pet> zoo) {
-		this.zoo = zoo;
+	public void setPets(List<Pet> zoo) {
+		this.pets = zoo;
 	}
 
 	public List<Item> getInventory() {
-		if(inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) {
+		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
 			return inventory;
 		}
 		return null;
@@ -267,8 +301,44 @@ public class User {
 	public void initializeCollections() {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
-		Hibernate.initialize(zoo);
+		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
 	}
 
+  public void initializeInventory(){
+		this.setInventory(UserBLL.getInventory(this));
+	}
+
+
+	public List<com.critters.dal.dto.entity.Store> getStore(){
+		return this.store;
+	}
+
+	public void setStore(List<com.critters.dal.dto.entity.Store> store){
+		this.store = store;
+	}
+
+	public void nullAllButID(){
+		this.userName = null;
+		this.firstName = null;
+		this.lastName = null;
+		this.emailAddress = null;
+		this.password = null;
+		this.sex = null;
+		this.birthdate = null;
+		this.salt = null;
+		this.city = null;
+		this.state = null;
+		this.country = null;
+		this.postcode = null;
+		this.tokenSelector = null;
+		this.tokenValidator = null;
+		this.critterbuxx = -1;
+		this.isActive = true;
+		this.friends = null;
+		this.friendsOf = null;
+		this.inventory = null;
+		this.pets = null;
+		this.store = null;
+	}
 }
