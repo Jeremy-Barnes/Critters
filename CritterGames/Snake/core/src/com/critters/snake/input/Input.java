@@ -14,6 +14,7 @@ public class Input implements InputProcessor {
 	public static float mouseX;
 	public static float mouseY;
 
+
 	public static boolean ready() {
 		return inputs.size() > 0;
 	}
@@ -26,6 +27,7 @@ public class Input implements InputProcessor {
 
 		mouseX = x;
 		mouseY = y;
+
 		inputs.add(new Click(x, y, button));
 		return false;
 	}
@@ -68,6 +70,7 @@ public class Input implements InputProcessor {
 		mouseX = x;
 		mouseY = y;
 		return true;
+
 	}
 
 	@Override

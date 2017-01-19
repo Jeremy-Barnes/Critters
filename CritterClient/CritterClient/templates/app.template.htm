@@ -1,16 +1,49 @@
-﻿<div>
-    <!--TODO put some fuckin nav bars here-->
-    <nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: lightskyblue"> 
-        <div class="container">
-            CRITTER 
-            <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
-            <a routerLink="/signUp">Sign Up!</a>
-
+﻿<!-- Normal Navbar -->
+<nav class="navbar-fixed-top navbar hidden-xs"> 
+    <h1 class="navbar-left">CRITTER</h1>
+    <div class="container">
+        <div class="navbar-header">
+            <div class="inlineblock" *ngIf="!app.loggedIn">
+                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <a routerLink="/signUp">Sign Up!</a>
+            </div>
+            <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
         </div>
+    </div>
+</nav>
+
+<nav class="centered navbar optional-topbar navbar-fixed-top visible-xs">
+    <button type="button" class="menu-expand collapsed navbar-left inlineblock" data-toggle="offcanvas" data-target="#sidebar">
+        <span class="fa fa-bars"></span>
+    </button>
+    <h1>CRITTER</h1>
 </nav> 
 
+<!--Mobile Navbar-->
 
+
+
+<div class="container-fluid">
+    <div class="sidebar-offcanvas sidebar" id="sidebar">
+        <div class="mobileInfopane">
+            <div class="inlineblock" *ngIf="!app.loggedIn">
+                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <a routerLink="/signUp">Sign Up!</a>
+            </div>
+            <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
+        </div>
+
+        <div class="">
+            <a href="/CritterGames/Minesweeper">MineSweeper</a><br />
+            <a href="/CritterGames/Breakout">Breakout</a><br />
+            <a href="/CritterGames/SpaceInvaders">Space Invaders</a><br />
+            <a href="/CritterGames/Snake">Snake</a><br />
+        </div>
+    </div>
+    <div id="sidebar-placeholder" class="hidden-xs"></div>
+
+    <router-outlet></router-outlet>
 </div>
+<br /><br/>
 
 <login></login>
-<router-outlet>
