@@ -4,6 +4,7 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
@@ -14,7 +15,7 @@ import com.critters.spaceinvaders.math.Vector2f;
 public class Laser extends Projectile {
 
 	protected boolean hit;
-	private int time = 20;
+	private float time = 0.5f; // In seconds
 
 	public Laser(Level level, Entity owner, Vector2f pos, Vector2f size, Vector2f vel) {
 		super(level, owner, pos, size, vel);
@@ -39,7 +40,8 @@ public class Laser extends Projectile {
 	public void update() {
 		super.update();
 
-		if (--time < 0) {
+		time -= Gdx.graphics.getDeltaTime();
+		if (time < 0) {
 			level.removeEntity(this);
 		}
 	}

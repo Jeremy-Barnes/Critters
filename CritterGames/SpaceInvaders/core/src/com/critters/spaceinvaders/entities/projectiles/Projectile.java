@@ -4,6 +4,7 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
 import com.critters.spaceinvaders.entities.Entity;
@@ -14,7 +15,7 @@ public class Projectile extends Collidable {
 
 	protected Entity owner;
 
-	protected Vector2f vel;
+	protected Vector2f vel; // Per second in each direction
 
 	public Projectile(Level level, Entity owner, Vector2f pos, Vector2f size, Vector2f vel) {
 		super(level, pos, size);
@@ -38,7 +39,7 @@ public class Projectile extends Collidable {
 
 	@Override
 	public void update() {
-		pos = pos.add(vel);
+		pos = pos.add(vel.mul(Gdx.graphics.getDeltaTime()));
 
 		rectangle.update(pos, pos.add(size));
 
