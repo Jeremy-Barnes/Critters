@@ -100,16 +100,19 @@ public class Level {
 	 */
 	private void processInput() {
 		// TODO INPUT
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+		float mouseX = com.critters.snake.input.Input.mouseX;
+		float mouseY = com.critters.snake.input.Input.mouseY;
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || mouseX >= Render.WIDTH * 3 / 4) {
 			move = Move.RIGHT;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || mouseX <= Render.WIDTH / 4) {
 			move = Move.LEFT;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)|| mouseY >= Render.HEIGHT / 2) {
 			move = Move.UP;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)|| mouseY <= Render.HEIGHT / 2) {
 			move = Move.DOWN;
 		}
 	}
