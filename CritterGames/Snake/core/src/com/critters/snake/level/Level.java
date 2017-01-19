@@ -40,6 +40,7 @@ public class Level {
 	public final int OBSTACLE_MIN = -1000;
 	public final int OBSTACLE_MAX = -600;
 
+
 	public int tiles[][];
 
 	public final float LEVEL_WIDTH;
@@ -51,6 +52,7 @@ public class Level {
 	public float STEP_TIME;
 	private float special_time = 0;
 
+
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
 	public int score;
@@ -61,6 +63,7 @@ public class Level {
 		this.difficulty = difficulty;
 		STEP_TIME_DEFAULT /= difficulty;
 		STEP_TIME = STEP_TIME_DEFAULT;
+
 
 		random = new Random();
 
@@ -93,6 +96,7 @@ public class Level {
 		for (int i = 0; i < difficulty; i++) {
 			tiles[10 + i * 5][10 + i * 5] = OBSTACLE_MIN + (OBSTACLE_MAX - OBSTACLE_MIN) * i / difficulty;
 		}
+
 	}
 
 	/**
@@ -113,6 +117,7 @@ public class Level {
 			move = Move.UP;
 		}else
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)|| mouseY <= Render.HEIGHT / 2) {
+
 			move = Move.DOWN;
 		}
 	}
@@ -178,6 +183,7 @@ public class Level {
 						boolean valid = canMove(x + dx, y + dy);
 						if (valid) {
 							getPoints(x + dx, y + dy);
+
 							ate = isFood(x + dx, y + dy);
 							if (ate) {
 								length++;
@@ -212,6 +218,7 @@ public class Level {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
 			return tiles[x][y] == FOOD || tiles[x][y] == FOOD_DOUBLE || tiles[x][y] == FOOD_TRIPLE
 					|| tiles[x][y] == FOOD_QUADRUPLE || tiles[x][y] == SPECIAL;
+
 		else
 			return false;
 	}
@@ -258,6 +265,7 @@ public class Level {
 	private boolean isFree(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
 			return tiles[x][y] == FREE;
+
 		else
 			return false;
 	}
@@ -294,7 +302,6 @@ public class Level {
 	 */
 	public void update() {
 		processInput();
-
 		time += Gdx.graphics.getDeltaTime();
 		if (state != State.LOST && time >= STEP_TIME) {
 			time = 0;

@@ -15,24 +15,30 @@ public class Item {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int inventoryItemId;
-	private int ownerId;
+	private Integer ownerId;
 
 	@ManyToOne
 	@JoinColumn(name="itemTypeId", updatable = false)
 	private ItemDescription description;
 
-	public Item(int inventoryItemId, int ownerId){
+	private Integer price;
+	private Integer containingStoreId;
+
+	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId){
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
+		this.price = price;
+		this.containingStoreId = containingStoreId;
+
 	}
 
-	public Item(){};
+	public Item(){}
 
 	public int getOwnerId() {
 		return ownerId;
 	}
 
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
 
@@ -52,6 +58,21 @@ public class Item {
 		this.description = description;
 	}
 
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public Integer getContainingStoreId() {
+		return containingStoreId;
+	}
+
+	public void setContainingStoreId(Integer storeId) {
+		this.containingStoreId = storeId;
+	}
 
 	@Entity
 	@Table(name="itemconfigs")

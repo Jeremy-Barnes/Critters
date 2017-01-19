@@ -7,12 +7,11 @@ import {Application} from "../appservice"
     templateUrl: "../../templates/app.template.htm"
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
     user: User;
-
-    ngOnInit() { this.user = Application.user }
+    app: Application = Application.getApp();
+    ngOnInit() { this.user = this.app.user; prepDisplay(); }
 
     summonLogin() {
     }
-
 }
