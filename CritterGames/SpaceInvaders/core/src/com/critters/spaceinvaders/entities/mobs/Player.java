@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.Entity;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
 import com.critters.spaceinvaders.entities.powerup.PowerupLife;
@@ -95,7 +96,7 @@ public class Player extends Collidable {
 		}
 
 	}
-
+	
 	@Override
 	public void hit(Projectile projectile) {
 		healthPoints--;
@@ -105,6 +106,7 @@ public class Player extends Collidable {
 			level.removeEntity(this);
 		}
 	}
+
 
 	protected void checkActivePowerups() {
 		if (Powerup.exists(level, PowerupLife.class)) {
@@ -154,6 +156,12 @@ public class Player extends Collidable {
 
 		// Collision update
 		rectangle.update(pos, pos.add(size));
+		
+		for (int i = 0; i < level.getEntities().size(); i++) {
+			Entity e = level.getEntities().get(i);
+			if (e instanceof Alien && ((Alien) e).getRectangle().intersectsRect(rectangle))
+				this.hit(null);
+		}
 
 		// Check for intersecting of entity powerups
 		checkPowerups();
