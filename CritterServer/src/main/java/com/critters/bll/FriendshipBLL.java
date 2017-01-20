@@ -15,7 +15,7 @@ import java.util.Calendar;
  */
 public class FriendshipBLL {
 
-	public static void createFriendship(User requester, User requestee, User loggedInUser) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static Friendship createFriendship(User requester, User requestee, User loggedInUser) throws GeneralSecurityException, UnsupportedEncodingException {
 		if(loggedInUser.getUserID() == (requester.getUserID())){
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			entityManager.getTransaction().begin();
@@ -23,14 +23,19 @@ public class FriendshipBLL {
 			Friendship request = new Friendship(loggedInUser, requestee, false, Calendar.getInstance().getTime());
 			entityManager.persist(request);
 			entityManager.getTransaction().commit();
+			entityManager.refresh(request);
 			entityManager.close();
+			Friendship wiped = wipeSensitiveDetails(request);
+			ChatBLL.notify(request.getRequested().getUserID(), wiped);
+			return wiped;
+
 		} else {
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 
 	}
 
-	public static void acceptFriendRequest(Friendship request, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static Friendship acceptFriendRequest(Friendship request, User user) throws GeneralSecurityException, UnsupportedEncodingException {
 		if(user.getUserID() == request.getRequested().getUserID()) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
@@ -41,7 +46,10 @@ public class FriendshipBLL {
 			dbReq.setAccepted(true);
 			entityManager.getTransaction().commit();
 			entityManager.close();
-			request.setFriendshipID(dbReq.getFriendshipID());
+			Friendship wiped = wipeSensitiveDetails(dbReq);
+			ChatBLL.notify(request.getRequester().getUserID(), wiped);
+			return wiped;
+
 		} else {
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
@@ -81,5 +89,11 @@ public class FriendshipBLL {
 		entityManager.remove(dbReq);
 		entityManager.getTransaction().commit();
 		entityManager.close();
+	}
+
+	private static Friendship wipeSensitiveDetails(Friendship f){
+		UserBLL.wipeSensitiveFields(f.getRequested());
+		UserBLL.wipeSensitiveFields(f.getRequester());
+		return f;
 	}
 }

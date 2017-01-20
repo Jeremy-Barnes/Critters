@@ -5,6 +5,7 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.projectiles.ProjectileEnemy;
 import com.critters.spaceinvaders.level.Level;
@@ -18,8 +19,8 @@ public class Alien extends Enemy {
 	private float originX;
 	private float maxOffset = 100;
 	private final int STEPS = 10;
-	private final int STEPS_TIME = 10;
-	private int currentStepsTime = 0;
+	private final float STEPS_TIME = 0.20f; // In seconds
+	private float currentStepsTime = 0;
 	private boolean right = true;
 
 	public int row;
@@ -53,7 +54,7 @@ public class Alien extends Enemy {
 
 			if (random.nextInt(200) == 0) {
 				level.addEntity(new ProjectileEnemy(level, this, getRectangle().getCenter(), new Vector2f(5, 15),
-						new Vector2f(0, -3)));
+						new Vector2f(0, -180)));
 				cooldown = 50;
 			}
 
@@ -63,7 +64,7 @@ public class Alien extends Enemy {
 	}
 
 	private void updatePosition() {
-		currentStepsTime++;
+		currentStepsTime += Gdx.graphics.getDeltaTime();
 		if (currentStepsTime >= STEPS_TIME) {
 			currentStepsTime = 0;
 

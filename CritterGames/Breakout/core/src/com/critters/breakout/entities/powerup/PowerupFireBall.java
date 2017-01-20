@@ -6,7 +6,7 @@ import com.critters.breakout.math.Vector2f;
 public class PowerupFireBall extends Powerup {
 
 	public PowerupFireBall(Vector2f pos) {
-		super(pos, 10 * 60);
+		super(pos, 10);
 		color = new Color(0xC0392Bff);
 	}
 

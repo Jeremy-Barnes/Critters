@@ -13,7 +13,7 @@ import java.util.List;
 public class PetBLL {
 
 	public static Pet createPet(Pet pet, User owner){
-		pet.setOwnerid(owner.getUserID());
+		pet.setOwnerID(owner.getUserID());
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 
@@ -26,7 +26,7 @@ public class PetBLL {
 
 	public static List<Pet> getPets(User user){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet> pets = entityManager.createQuery("from Pet where ownerid = :id").setParameter("id", user.getUserID()).getResultList();
+		List<Pet> pets = entityManager.createQuery("from Pet where ownerID = :id").setParameter("id", user.getUserID()).getResultList();
 		entityManager.close();
 		return pets;
 	}

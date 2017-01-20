@@ -20,7 +20,8 @@ public class Game extends ApplicationAdapter {
 		render = new Render();
 		SpriteLoader.loadSprites();
 
-		level = new Level(this);
+		level = new Level(this, 1);
+
 	}
 
 	public void update() {
@@ -32,7 +33,16 @@ public class Game extends ApplicationAdapter {
 	public void render() {
 		// Dirty temporary reset feature
 		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-			level = new Level(this);
+			level = new Level(this, 1);
+		}
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.NUM_1)) {
+			level = new Level(this, 1);
+		}
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.NUM_2)) {
+			level = new Level(this, 2);
+		}
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.NUM_3)) {
+			level = new Level(this, 4);
 		}
 
 		render.begin();

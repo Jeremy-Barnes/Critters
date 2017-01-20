@@ -17,7 +17,7 @@ public class Pet {
 	private int petID;
 	private String petName;
 	private String sex;
-	private int ownerid;
+	private int ownerID;
 	private boolean isAbandoned;
 
 
@@ -32,10 +32,10 @@ public class Pet {
 
 	public Pet() {}
 
-	public Pet(String petName, String sex, int ownerid, boolean isAbandoned) {
+	public Pet(String petName, String sex, int ownerID, boolean isAbandoned) {
 		this.petName = petName;
 		this.sex = sex;
-		this.ownerid = ownerid;
+		this.ownerID = ownerID;
 		this.isAbandoned = isAbandoned;
 	}
 
@@ -63,12 +63,12 @@ public class Pet {
 		this.sex = sex;
 	}
 
-	public int getOwnerid() {
-		return ownerid;
+	public int getOwnerID() {
+		return ownerID;
 	}
 
-	public void setOwnerid(int ownerid) {
-		this.ownerid = ownerid;
+	public void setOwnerID(int ownerid) {
+		this.ownerID = ownerid;
 	}
 
 	public PetColor getPetColor() {

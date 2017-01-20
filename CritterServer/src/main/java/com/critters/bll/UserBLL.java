@@ -1,7 +1,9 @@
 package com.critters.bll;
 
+import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
@@ -46,6 +48,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
+			BackgroundJobManager.printLine(e);
 			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
@@ -76,6 +79,8 @@ public class UserBLL {
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+
+			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
 				entityManager.getTransaction().begin();
@@ -93,6 +98,10 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
+
+			BackgroundJobManager.printLine(email);
+			BackgroundJobManager.printLine(password);
+			BackgroundJobManager.printLine(ex);
 			return null; //no user found
 		} finally {
 			entityManager.close();
@@ -100,16 +109,9 @@ public class UserBLL {
 	}
 
 	public static User getUser(int id) {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
-			user = wipeSensitiveFields(user);
+			User user = wipeSensitiveFields(getFullUser(id));
 			return user;
-		} catch (PersistenceException ex) {
-			return null; //no user found
-		} finally {
-			entityManager.close();
-		}
+
 	}
 
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
@@ -162,6 +164,8 @@ public class UserBLL {
 		user.setTokenSelector("");
 		user.setTokenValidator("");
 		user.setEmailAddress("");
+		user.setCritterbuxx(0);
+		user.setInventory(null);
 		if(user.getFriends()!= null)
 			for(Friendship friend: user.getFriends()){
 				wipeSensitiveFields(friend.getRequested());
@@ -199,6 +203,41 @@ public class UserBLL {
 		return valid;
 	}
 
+	public static List<Item> getInventory(User user){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		List<Item> inventory = entityManager
+				.createQuery("from Item where ownerId = :id")
+				.setParameter("id", user.getUserID())
+				.getResultList();
+		entityManager.close();
+		return inventory;
+	}
+
+	public static void discardInventoryItem(Item item, User user){
+		verifyUserInventoryIsLoaded(user);
+		Item[] resultant = user.getInventory().parallelStream().filter(i -> i.getInventoryItemId() == item.getInventoryItemId()).toArray(Item[]::new);
+		if(resultant != null && resultant.length != 0) {
+			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+			try {
+				entityManager.getTransaction().begin();
+				user.getInventory().remove(resultant[0]);
+				resultant[0].setOwnerId(null);
+				resultant[0].setPrice(null);
+
+				entityManager.merge(user);
+				entityManager.merge(resultant[0]);
+				entityManager.getTransaction().commit();
+			} finally {
+				entityManager.close();
+			}
+		}
+	}
+
+	protected static void verifyUserInventoryIsLoaded(User user){
+		user.initializeInventory();
+
+	}
+
 	/***************** SECURITY STUFF **********************/
 	private static void hashAndSaltPassword(User user) throws UnsupportedEncodingException {
 		try {
@@ -228,9 +267,10 @@ public class UserBLL {
 			user.setTokenSelector(UUID.randomUUID().toString());
 			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {ex.printStackTrace();} //shouldn't ever happen
+		} catch (UnsupportedEncodingException ex) {			BackgroundJobManager.printLine(ex);
+		} //shouldn't ever happen
 		return validatorStr;
 	}
 
@@ -240,7 +280,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashedCookieValidator = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -254,11 +294,23 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashStrConfirm = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
 		}
 		return hashStrConfirm.equals(dbPasswordHash);
+	}
+
+	protected static User getFullUser(int id){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
+			return user;
+		} catch (PersistenceException ex) {
+			return null; //no user found
+		} finally {
+			entityManager.close();
+		}
 	}
 }
