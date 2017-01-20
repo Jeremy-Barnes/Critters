@@ -1,9 +1,9 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship} from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store} from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://localhost:8080/api/critters/";;//"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string = null;
 
@@ -67,11 +67,43 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getPetColors", "meta", null, "GET");
     }
 
+    public static getUserFromID(id: number): JQueryPromise<User> {
+        return ServiceMethods.doAjax("getUserFromID", "users", id, "GET");
+    }
+
+    public static startLongPolling(): JQueryPromise<Notification> {
+        return ServiceMethods.doAjax("pollForNotifications", "meta", null, "GET");
+    }
+
+    /************** Friend Stuff **************/
     public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
         return ServiceMethods.doAjax("createFriendship", "friends", request);
     }
 
-    public static getUserFromID(id: number): JQueryPromise<User> {
-        return ServiceMethods.doAjax("getUserFromID", "users", id, "GET");
+    public static respondToFriendRequest(request: Friendship): JQueryPromise<void> {
+        return ServiceMethods.doAjax("respondToFriendRequest", "friends", request);
+    }
+
+    public static cancelFriendRequest(request: Friendship): JQueryPromise<void> {
+        return ServiceMethods.doAjax("cancelFriendRequest", "friends", request);
+    }
+
+    public static deleteFriendship(request: Friendship): JQueryPromise<void> {
+        return ServiceMethods.doAjax("deleteFriendship", "friends", request);
+    }
+
+    /************** Store Stuff **************/
+    public static getStorefront(request: Store): JQueryPromise<void> {
+        return ServiceMethods.doAjax("getStorefront", "commerce", request);
+    }
+
+    /************** Chat Stuff **************/
+    public static sendMessage(request: Message): JQueryPromise<void> {
+        return ServiceMethods.doAjax("sendMessage", "chat", request);
+    }
+
+    /************** Inventory Stuff **************/
+    public static getInventory(request: User): JQueryPromise<void> {
+        return ServiceMethods.doAjax("getInventory", "users", request);
     }
 }

@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship} from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification} from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -65,10 +65,24 @@ export class Application {
             var app = Application.getApp()
             app.user.set(retUser);
             app.loggedIn = true;
+            Application.startLongPolling();
         });
     }
 
     public static getUser(id: number) {
         return ServiceMethods.getUserFromID(id);
     }
+
+    private static startLongPolling() {
+        var self = this;
+        return ServiceMethods.startLongPolling().done((a: Notification) => {
+            Application.startLongPolling();
+        }).fail((x) => {
+            alert(x);
+            Application.startLongPolling();
+        });
+    }
+
+
+
 }
