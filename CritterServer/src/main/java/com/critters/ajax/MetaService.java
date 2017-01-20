@@ -21,20 +21,14 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.Calendar;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Jeremy on 8/22/2016.
  */
 @Path("/meta")
 public class MetaService extends AjaxService {
-	private static Map<Integer, AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	@Path("/jobs")
 	@GET

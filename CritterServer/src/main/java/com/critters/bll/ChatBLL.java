@@ -3,6 +3,8 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
 
+import com.critters.dal.dto.Notification;
+import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
@@ -42,17 +44,16 @@ public class ChatBLL {
 		BackgroundJobManager.printLine("Leaving createpoll " + Calendar.getInstance().getTime());
 	}
 
-	public static void notify(int userId, Object notification){
-		BackgroundJobManager.printLine("notify method entrance  " + Calendar.getInstance().getTime());
+
+	public static void notify(int userId, Message message, Friendship friendRequest){
 		if(listeners.containsKey(userId)) {
+			Notification notification = new Notification(message, friendRequest);
 			listeners.get(userId).resume(notification);
 			listeners.remove(userId);
 		}
-		BackgroundJobManager.printLine("notify method exit " + Calendar.getInstance().getTime());
 	}
 
 	public static Message sendMessage(Message message, User user) throws GeneralSecurityException, UnsupportedEncodingException {
-		BackgroundJobManager.printLine("Entered sendMessage method at  " + Calendar.getInstance().getTime());
 		if (user.getUserID() == (message.getSender().getUserID())) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
@@ -65,7 +66,7 @@ public class ChatBLL {
 				entityManager.refresh(mail);
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(message.getRecipient().getUserID(), wiped);
+				notify(message.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} finally {
 				entityManager.close();
@@ -122,7 +123,7 @@ public class ChatBLL {
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(mail.getRecipient().getUserID(), wiped);
+				notify(mail.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
