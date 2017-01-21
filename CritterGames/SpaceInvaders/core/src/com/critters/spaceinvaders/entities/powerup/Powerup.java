@@ -4,6 +4,7 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Entity;
@@ -16,11 +17,12 @@ public class Powerup extends Entity {
 	// Probably a temp. color variable. Should get some sprites some time.
 	protected Color color;
 
-	protected final int LENGTH;
+	protected final int LENGTH; // In seconds
 	protected int time = 0;
 
 	public boolean pickedUp = false;
 	public boolean ended = false;
+	private final float yVel = 120;// Per second
 
 	public Rectangle rect;
 
@@ -49,13 +51,13 @@ public class Powerup extends Entity {
 	@Override
 	public void update() {
 		if (!pickedUp)
-			pos.y -= 2;
+			pos.y -= yVel * Gdx.graphics.getDeltaTime();
 
 		if (pos.y < -20)
 			level.removeEntity(this);
 
 		if (pickedUp) {
-			time++;
+			time += Gdx.graphics.getDeltaTime();
 
 			if (time >= LENGTH)
 				level.removePowerup(this);

@@ -11,6 +11,9 @@ public class Input implements InputProcessor {
 	private boolean fullscreen = false;
 
 	public static ArrayList<Click> inputs = new ArrayList<Click>();
+	public static float mouseX;
+	public static float mouseY;
+
 
 	public static boolean ready() {
 		return inputs.size() > 0;
@@ -21,6 +24,9 @@ public class Input implements InputProcessor {
 		// Transform into proper location on the screen and fit it to the render camera size
 		int x = (int) (((float) screenX / Gdx.graphics.getWidth()) * Render.WIDTH);
 		int y = (int) (((float) (Gdx.graphics.getHeight() - screenY) / Gdx.graphics.getHeight()) * Render.HEIGHT);
+
+		mouseX = x;
+		mouseY = y;
 
 		inputs.add(new Click(x, y, button));
 		return false;
@@ -58,7 +64,13 @@ public class Input implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
+		int x = (int) (((float) screenX / Gdx.graphics.getWidth()) * Render.WIDTH);
+		int y = (int) (((float) (Gdx.graphics.getHeight() - screenY) / Gdx.graphics.getHeight()) * Render.HEIGHT);
+
+		mouseX = x;
+		mouseY = y;
+		return true;
+
 	}
 
 	@Override

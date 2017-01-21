@@ -1,5 +1,6 @@
 package com.critters.breakout.entities.powerup;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.Entity;
@@ -16,8 +17,9 @@ public class Powerup extends Entity {
 	// Probably a temp. color variable. Should get some sprites some time.
 	protected Color color;
 
-	protected final int LENGTH;
-	protected int time = 0;
+	protected final float LENGTH;
+	protected float time = 0;
+	protected float fallSpeed = 150; // Per second
 
 	public boolean pickedUp = false;
 	public boolean ended = false;
@@ -45,13 +47,13 @@ public class Powerup extends Entity {
 	@Override
 	public void update() {
 		if (!pickedUp)
-			pos.y -= 2;
+			pos.y -= fallSpeed * Gdx.graphics.getDeltaTime();
 
 		if (pos.y < -20)
 			level.removeEntity(this);
 
 		if (pickedUp) {
-			time++;
+			time+= Gdx.graphics.getDeltaTime();
 
 			if (time >= LENGTH)
 				level.removePowerup(this);

@@ -28,24 +28,42 @@ public class Level {
 	public final int TILES_X;
 	public final int TILES_Y;
 
+	public final int FREE = 0;
 	public final int WALL = -1;
 	public final int FOOD = -2;
-	public final int FREE = 0;
+	public final int FOOD_DOUBLE = -3;
+	public final int FOOD_TRIPLE = -4;
+	public final int FOOD_QUADRUPLE = -5;
+
+	public final int SPECIAL = -6;
+
+	public final int OBSTACLE_MIN = -1000;
+	public final int OBSTACLE_MAX = -600;
+
 
 	public int tiles[][];
 
 	public final float LEVEL_WIDTH;
 	public final float LEVEL_HEIGHT;
 
-	public int time;
-	public int STEP_TIME = 7;
+	// In seconds
+	public float time;
+	public float STEP_TIME_DEFAULT = 0.25f;
+	public float STEP_TIME;
+	private float special_time = 0;
+
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
 	public int score;
+	private int difficulty = 1;
 
-	public Level(Game game) {
+	public Level(Game game, int difficulty) {
 		this.game = game;
+		this.difficulty = difficulty;
+		STEP_TIME_DEFAULT /= difficulty;
+		STEP_TIME = STEP_TIME_DEFAULT;
+
 
 		random = new Random();
 
@@ -74,6 +92,11 @@ public class Level {
 		tiles[4][TILES_Y / 2] = 2;
 
 		placeFood();
+
+		for (int i = 0; i < difficulty; i++) {
+			tiles[10 + i * 5][10 + i * 5] = OBSTACLE_MIN + (OBSTACLE_MAX - OBSTACLE_MIN) * i / difficulty;
+		}
+
 	}
 
 	/**
@@ -81,16 +104,20 @@ public class Level {
 	 */
 	private void processInput() {
 		// TODO INPUT
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+		float mouseX = com.critters.snake.input.Input.mouseX;
+		float mouseY = com.critters.snake.input.Input.mouseY;
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || mouseX >= Render.WIDTH * 3 / 4) {
 			move = Move.RIGHT;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || mouseX <= Render.WIDTH / 4) {
 			move = Move.LEFT;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)|| mouseY >= Render.HEIGHT / 2) {
 			move = Move.UP;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)|| mouseY <= Render.HEIGHT / 2) {
+
 			move = Move.DOWN;
 		}
 	}
@@ -155,6 +182,8 @@ public class Level {
 
 						boolean valid = canMove(x + dx, y + dy);
 						if (valid) {
+							getPoints(x + dx, y + dy);
+
 							ate = isFood(x + dx, y + dy);
 							if (ate) {
 								length++;
@@ -187,14 +216,56 @@ public class Level {
 
 	private boolean isFood(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
-			return tiles[x][y] == FOOD;
+			return tiles[x][y] == FOOD || tiles[x][y] == FOOD_DOUBLE || tiles[x][y] == FOOD_TRIPLE
+					|| tiles[x][y] == FOOD_QUADRUPLE || tiles[x][y] == SPECIAL;
+
 		else
 			return false;
 	}
 
+	private void getPoints(int x, int y) {
+		int value = 0;
+		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
+			value = tiles[x][y];
+		else
+			return;
+
+		// sp_max is the number of seconds the special effect is taking place.
+		final float SP_TIME = 5;
+		switch (value) {
+		case FOOD:
+			value = 1;
+			break;
+		case FOOD_DOUBLE:
+			value = 2;
+			break;
+		case FOOD_TRIPLE:
+			value = 3;
+			break;
+		case FOOD_QUADRUPLE:
+			value = 4;
+			break;
+		case SPECIAL:
+			special_time += SP_TIME;
+			value = 5;
+			break;
+		}
+
+		// Calculate the score for the eaten food for and all modifiers
+		score += value * difficulty * (special_time > 0 && special_time != SP_TIME ? 3 : 1);
+	}
+
 	private boolean canMove(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
-			return tiles[x][y] != WALL && tiles[x][y] < 1;
+			return tiles[x][y] != WALL && tiles[x][y] < 1 && tiles[x][y] > OBSTACLE_MAX;
+		else
+			return false;
+	}
+
+	private boolean isFree(int x, int y) {
+		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
+			return tiles[x][y] == FREE;
+
 		else
 			return false;
 	}
@@ -204,9 +275,24 @@ public class Level {
 		do {
 			int x = random.nextInt(TILES_X);
 			int y = random.nextInt(TILES_Y);
-			if (canMove(x, y)) {
+			if (isFree(x, y)) {
 				placed = true;
-				tiles[x][y] = FOOD;
+
+				{
+					// Find the food item to place
+					int number = random.nextInt(100);
+					if (number < 75) {
+						tiles[x][y] = FOOD;
+					} else if (number < 90) {
+						tiles[x][y] = FOOD_DOUBLE;
+					} else if (number < 98) {
+						tiles[x][y] = FOOD_TRIPLE;
+					} else if (number < 99) {
+						tiles[x][y] = FOOD_QUADRUPLE;
+					} else
+						tiles[x][y] = SPECIAL;
+
+				}
 			}
 		} while (!placed);
 	}
@@ -216,15 +302,43 @@ public class Level {
 	 */
 	public void update() {
 		processInput();
-
-		time++;
-		if (state != State.LOST && time % STEP_TIME == 0) {
+		time += Gdx.graphics.getDeltaTime();
+		if (state != State.LOST && time >= STEP_TIME) {
+			time = 0;
 			updatePlayer();
 		}
-
-		score = length - 2;
-
+		updateObstacle();
 		updateUI();
+
+		// update special
+		special_time-= Gdx.graphics.getDeltaTime();
+		if (special_time > 0)
+			STEP_TIME = STEP_TIME_DEFAULT / 2;
+		else
+			STEP_TIME = STEP_TIME_DEFAULT;
+	}
+
+	private void updateObstacle() {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				if (tiles[x][y] < OBSTACLE_MAX && tiles[x][y] >= OBSTACLE_MIN) {
+					tiles[x][y]++;
+				} else if (tiles[x][y] == OBSTACLE_MAX) {
+					tiles[x][y] = FREE;
+
+					// Place a new one
+					boolean placed = false;
+					do {
+						int xx = random.nextInt(TILES_X);
+						int yy = random.nextInt(TILES_Y);
+						if (isFree(xx, yy)) {
+							placed = true;
+							tiles[xx][yy] = OBSTACLE_MIN;
+						}
+					} while (!placed);
+				}
+			}
+		}
 	}
 
 	private void renderUI(Render render) {
@@ -236,23 +350,47 @@ public class Level {
 	private void renderTiles(Render render) {
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {
+
 				int id = tiles[x][y];
+				boolean shouldRender = true;
+				Color c = Color.WHITE;
+
 				switch (id) {
 				case WALL:
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.BLACK);
+					c = Color.BLACK;
 					break;
 				case FREE:
-
+					// Dont't render empty tiles
+					shouldRender = false;
 					break;
+
 				case FOOD:
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.GREEN);
+					c = Color.GREEN;
+					break;
+				case FOOD_DOUBLE:
+					c = Color.FOREST;
+					break;
+				case FOOD_TRIPLE:
+					c = Color.RED;
+					break;
+				case FOOD_QUADRUPLE:
+					c = Color.CORAL;
+					break;
+				case SPECIAL:
+					c = Color.PINK;
 					break;
 
 				default:
-					// Must be a player then
-					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, Color.YELLOW);
+					// Must be a player then, unless it's an obstacle
+					if (id >= OBSTACLE_MIN && id <= OBSTACLE_MAX)
+						c = Color.BLACK;
+					else
+						c = Color.YELLOW;
 					break;
 				}
+
+				if (shouldRender)
+					render.drawRect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, c);
 			}
 		}
 	}

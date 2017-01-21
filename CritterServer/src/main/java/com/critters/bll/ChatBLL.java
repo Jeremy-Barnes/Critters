@@ -28,7 +28,6 @@ public class ChatBLL {
 	private static Map<Integer, AsyncResponse> listeners = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	public static void createPoll(int userId, AsyncResponse asyncResponse){
-		BackgroundJobManager.printLine("Entered createpoll " + Calendar.getInstance().getTime());
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
 			@Override
 			public void handleTimeout(AsyncResponse asyncResponse) {
@@ -37,11 +36,8 @@ public class ChatBLL {
 											 .entity("Operation time out.").build());
 			}
 		});
-		BackgroundJobManager.printLine("Timeouthandler set " + Calendar.getInstance().getTime());
 		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
-		BackgroundJobManager.printLine("Timeout duration set  " + Calendar.getInstance().getTime());
 		listeners.put(userId, asyncResponse);
-		BackgroundJobManager.printLine("Leaving createpoll " + Calendar.getInstance().getTime());
 	}
 
 
@@ -58,7 +54,6 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-
 				Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(),
 										   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 				entityManager.persist(mail);
