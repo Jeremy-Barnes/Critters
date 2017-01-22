@@ -8,6 +8,7 @@ export class Application {
     public user: User = new User();
     public petSpecies: PetSpecies[] = [];
     public petColors: PetColor[] = [];
+    public alerts: Notification[] = [];
     public static app: Application = new Application();
 
 
@@ -38,13 +39,10 @@ export class Application {
     public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
         var self = this;
         return ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.push(...p); });
-        //return [{ petSpeciesConfigID: 1, petTypeName: "dog" }, { petSpeciesConfigID: 2, petTypeName: "cat" }, { petSpeciesConfigID: 3, petTypeName: "horrible clion" }]; //todo replace with server call, this is test data
     }
 
     public static getPetColors(): JQueryPromise<PetColor[]>{
         return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.push(...p); });
-        //return [{ petColorConfigID: 1, petColorName: "blue" }, { petColorConfigID: 2, petColorName: "red" }, { petColorConfigID: 3, petColorName: "octarine" }]; //todo replace with server call, this is test data
-
     }
 
     public static sendFriendRequest(requestingUserID: number, requestedUserID: number): JQueryPromise<void> {
@@ -74,11 +72,10 @@ export class Application {
     }
 
     private static startLongPolling() {
-        var self = this;
-        return ServiceMethods.startLongPolling().done((a: Notification) => {
+        ServiceMethods.startLongPolling().done((a: Notification) => {
+            Application.getApp().alerts.push(a);
             Application.startLongPolling();
         }).fail((x) => {
-            alert(x);
             Application.startLongPolling();
         });
     }

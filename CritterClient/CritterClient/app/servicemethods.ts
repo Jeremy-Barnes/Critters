@@ -15,9 +15,10 @@ export class ServiceMethods {
             type: type,
             contentType: "application/json",
             xhrFields: {
-                withCredentials: true
+                withCredentials: true,
+                cache: false
             },
-
+            cache: false,
             headers: {
                 Cookie: ServiceMethods.jsessionID,
             },

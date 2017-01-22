@@ -9,7 +9,7 @@ import { CreatePetComponent } from './components/petcreate.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { AppComponent } from './components/app.component';
 import { UserProfileComponent } from './components/userprofile.component';
-
+import { MessageComponent } from './components/messages.component';
 
 
 
@@ -46,6 +46,10 @@ const appRoutes: Routes = [
     {
         path: 'viewUser/:id',
         component: UserProfileComponent
+    },
+    {
+        path: 'messages',
+        component: MessageComponent
     }
 ];
 
