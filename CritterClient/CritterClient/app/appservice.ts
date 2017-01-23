@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification} from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -9,6 +9,9 @@ export class Application {
     public petSpecies: PetSpecies[] = [];
     public petColors: PetColor[] = [];
     public alerts: Notification[] = [];
+    public inbox: Conversation[] = [];
+    public sentbox: Message[] = [];
+
     public static app: Application = new Application();
 
 
@@ -77,6 +80,34 @@ export class Application {
             Application.startLongPolling();
         }).fail((x) => {
             Application.startLongPolling();
+        });
+    }
+
+    public static getMailbox() {
+        ServiceMethods.getMailbox().done((conversations: Conversation[]) => {
+            var user = Application.getApp().user;
+            var sentmsgs : Message[] = [];
+            for (var i = 0; i < conversations.length; i++) {
+                let conv = conversations[i];
+                for (var j = 0; j < conv.messages.length; j++) {
+                    let message = conv.messages[j];
+                    if (message.sender.userID == user.userID) {
+                        sentmsgs.push(message);
+                    }
+                    for (var k = 0; k < conv.participants.length; k++) {
+                        let participant = conv.participants[k];
+                        if (message.recipient.userID == participant.userID) {
+                            message.recipient = (participant);
+                        }
+                        if (message.sender.userID == participant.userID) {
+                            message.sender = (participant);
+                        }
+                    }
+                    message.dateSent = new Date(<any>message.dateSent);
+                }
+            }
+            Application.getApp().sentbox.push(...sentmsgs);
+            Application.getApp().inbox.push(...conversations);
         });
     }
 

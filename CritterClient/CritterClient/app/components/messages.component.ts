@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification } from '../dtos'
+import { User, Notification, Message, Conversation } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -13,19 +13,26 @@ export class MessageComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
     alerts: Notification[];
+    messages: Conversation[];
+    sentMessages: Message[];
 
-    constructor(
-        private route: ActivatedRoute
-    ) { this.user = this.app.user; prepDisplay(); this.alerts = this.app.alerts; }
+
+    constructor(private route: ActivatedRoute) {
+        prepDisplay();
+        Application.getMailbox();
+        this.user = this.app.user;
+        this.alerts = this.app.alerts;
+        this.messages = this.app.inbox;
+        this.sentMessages = this.app.sentbox;
+    }
 
     ngOnInit() {
-        this.user = this.app.user;
-        var self = this;
-        this.route.params.forEach((params: Params) => {
-            let id = parseFloat(params['id']);
-            Application.getUser(id).done((u: User) => {
-                self.viewUser = u;
-            });
-        });
+    }
+
+    debug() {
+        alert(this.user);
+        alert(Application.getApp());
+        var ap2 = Application.getApp();
+        alert(this.messages.length);
     }
 }

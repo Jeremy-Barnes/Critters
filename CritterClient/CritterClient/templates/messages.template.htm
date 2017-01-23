@@ -1,5 +1,5 @@
 ﻿<h1>Messaging I guess!</h1>
-<div>
+<div class="inlineblock">
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a data-toggle="tab" href="#inbox">Inbox</a></li>
         <li role="presentation"><a data-toggle="tab" href="#sent">Sent</a></li>
@@ -8,9 +8,28 @@
     <div class="tab-content">
 
         <div id="inbox" class="tab-pane fade in active">
-            <p>IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIINBOX</p>
-       
+            {{messages.length}} Conversations
+            <br />
+            <div *ngFor="let conversation of messages">
+                <div class="messageSubject">{{conversation.messages[0].messageSubject}}</div>
+                <div><span><input type="checkbox" [(ngModel)]="conversation.delete" /></span><span>From: <a class="messageUser">{{conversation.messages[0].sender.userName}}</a> | {{conversation.messages[0].dateSent.toLocaleString()}}</span></div>
+                <br />
+            </div>
 
+            <input type="button" (click)="debug()" value="Debug" />
+            <input type="submit" value="Select All" />
+            <input type="submit" value="Delete" />
+        </div>
+
+        <div id="sent" class="tab-pane fade in">
+            {{sentMessages.length}} Sent Messages
+            <div *ngFor="let message of sentMessages">
+                <div class="messageSubject">{{message.messageSubject}}</div>
+                <div><span><input type="checkbox" [(ngModel)]="message.delete" /></span><span>From: <a class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}</span></div>
+                <br />
+            </div>
+
+            <input type="button" (click)="debug()" value="Debug" />
             <input type="submit" value="Select All" />
             <input type="submit" value="Delete" />
         </div>

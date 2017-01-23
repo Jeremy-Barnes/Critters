@@ -1,6 +1,6 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store} from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item } from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://localhost:8080/api/critters/";;//"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -94,17 +94,21 @@ export class ServiceMethods {
     }
 
     /************** Store Stuff **************/
-    public static getStorefront(request: Store): JQueryPromise<void> {
+    public static getStorefront(request: Store): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", request);
     }
 
     /************** Chat Stuff **************/
-    public static sendMessage(request: Message): JQueryPromise<void> {
+    public static sendMessage(request: Message): JQueryPromise<Message> {
         return ServiceMethods.doAjax("sendMessage", "chat", request);
     }
 
+    public static getMailbox(): JQueryPromise<Conversation[]> {
+        return ServiceMethods.doAjax("getMailbox", "chat", null, "GET");
+    }
+
     /************** Inventory Stuff **************/
-    public static getInventory(request: User): JQueryPromise<void> {
+    public static getInventory(request: User): JQueryPromise<Item[]> {
         return ServiceMethods.doAjax("getInventory", "users", request);
     }
 }
