@@ -111,6 +111,9 @@ export class Application {
         });
     }
 
+    public static sendMessage(msg: Message) {
+        ServiceMethods.sendMessage(msg);
+    }
 
 
 }

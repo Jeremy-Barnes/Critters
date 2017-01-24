@@ -9,13 +9,14 @@ import {Application} from "../appservice"
 })
 
 export class MessageComponent implements OnInit {
-    viewUser: User = new User();
     user: User;
     app: Application = Application.getApp();
     alerts: Notification[];
     messages: Conversation[];
     sentMessages: Message[];
-
+    activeConversation: Message[];
+    replyMessage: Message;
+    newMessage: Message;
 
     constructor(private route: ActivatedRoute) {
         prepDisplay();
@@ -35,4 +36,47 @@ export class MessageComponent implements OnInit {
         var ap2 = Application.getApp();
         alert(this.messages.length);
     }
+
+    reply(replyMessage: Message) {
+        this.replyMessage = replyMessage;
+        this.newMessage = new Message();
+    }
+
+    returnToOverview() {
+        this.activeConversation = null;
+        this.replyMessage = null;
+        this.newMessage = null;
+    }
+
+    cancelReply() {
+        this.replyMessage = null;
+        this.cancelCompose();
+    }
+
+    cancelCompose() {
+        this.newMessage = null;
+    }
+
+    deleteConversation(...message: Message[]) {
+        alert(message);
+    }
+
+    replyLatest() {
+        this.reply(this.activeConversation[this.activeConversation.length-1]);
+    }
+
+    viewDetail(viewMessage: Conversation) {
+        this.activeConversation = viewMessage.messages;
+    }
+
+    sendMessage() {
+        this.newMessage.sender = this.user;
+        if (this.replyMessage != null) {
+            this.newMessage.parentMessage = this.replyMessage;
+            this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
+            this.newMessage.recipient = this.replyMessage.sender;
+        }
+        Application.sendMessage(this.newMessage);
+    }
+
 }
