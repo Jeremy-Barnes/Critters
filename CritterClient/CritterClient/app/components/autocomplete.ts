@@ -2,7 +2,7 @@
 
 @Component({
     selector: "<autocomplete></autocomplete>",
-    template: `<input type="text" (keyup)="this.handleInput($event)"/><br />
+    template: `<input type="text" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
 				<div class="search-results" *ngFor="let item of resultList">
                     <a (click)="onClick(item)">{{item.resultText}}</a>
                </div>`
@@ -13,6 +13,7 @@ export class AutocompleteList {
     private searching = false;
     private secondSearchNeeded = false;
     private inputSearchTerm: string;
+    private searchTextModel: string;
 
     @Input("autocomplete-func") public asyncSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
     @Output("result-out") public selected = new EventEmitter();
@@ -60,6 +61,13 @@ export class AutocompleteList {
                     this.resultList = results;
                 }
             });
+        }
+    }
+
+    checkClearInput(event: any) {
+        if (event == "" || event == null) {
+            this.clearResultList();
+            this.searching = false;
         }
     }
 }
