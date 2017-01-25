@@ -115,5 +115,20 @@ export class Application {
         ServiceMethods.sendMessage(msg);
     }
 
+    public static searchFriends(searchTerm: string) {
+        var app = Application.getApp();
+        if (app.user.friends != null && app.user.friends.length > 0) {
+            //search this list
+        } else {
+            //try remote
+        }
+        //GARBAGE DATA
+        var x: string[] = [];
+        x.push("lelelel");
+        x.push("12354");
+        x.push("5678");
+        return x;
+    }
+
 
 }

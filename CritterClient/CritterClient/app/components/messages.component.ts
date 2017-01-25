@@ -17,6 +17,7 @@ export class MessageComponent implements OnInit {
     activeConversation: Message[];
     replyMessage: Message;
     newMessage: Message;
+    composeToFriend: User;
 
     constructor(private route: ActivatedRoute) {
         prepDisplay();
@@ -39,6 +40,10 @@ export class MessageComponent implements OnInit {
 
     reply(replyMessage: Message) {
         this.replyMessage = replyMessage;
+        this.composeNewMessage();
+    }
+
+    composeNewMessage() {
         this.newMessage = new Message();
     }
 
@@ -58,7 +63,7 @@ export class MessageComponent implements OnInit {
     }
 
     deleteConversation(...message: Message[]) {
-        alert(message);
+        alert("this one doesn't work yet, make the server op for it, dummy");
     }
 
     replyLatest() {
@@ -79,4 +84,18 @@ export class MessageComponent implements OnInit {
         Application.sendMessage(this.newMessage);
     }
 
+    public searchFriends(searchTerm: string) {
+        return new Promise((resolve) => {
+            var x = Application.searchFriends(searchTerm);
+            resolve(x);
+        });
+    }
+
+    public onItemSelected(result: { itemText: string, item: User }) {
+        this.composeToFriend = result.item;
+    }
+
+    public deselctComposeFriend() {
+        this.composeToFriend = null;
+    }
 }
