@@ -91,8 +91,8 @@ export class MessageComponent implements OnInit {
         });
     }
 
-    public onItemSelected(result: { itemText: string, item: User }) {
-        this.composeToFriend = result.item;
+    public onItemSelected(result: { resultText: string, resultData: User }) {
+        this.composeToFriend = result.resultData;
     }
 
     public deselctComposeFriend() {

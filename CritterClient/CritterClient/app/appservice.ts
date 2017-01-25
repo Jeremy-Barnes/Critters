@@ -116,18 +116,27 @@ export class Application {
     }
 
     public static searchFriends(searchTerm: string) {
+        searchTerm = searchTerm.toLowerCase();
         var app = Application.getApp();
+        var results: { resultText: string, resultData: User }[] = [];
         if (app.user.friends != null && app.user.friends.length > 0) {
-            //search this list
+            for (var i = 0; i < app.user.friends.length; i++) {
+                var friendship = app.user.friends[i];
+                var resultData = friendship.requested.userID == app.user.userID ? friendship.requester : friendship.requested;
+
+                if (resultData.userName.toLowerCase().includes(searchTerm) ||
+                    resultData.firstName.toLowerCase().includes(searchTerm) ||
+                    resultData.lastName.toLowerCase().includes(searchTerm)) {
+                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
+                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
+                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    results.push({ resultText, resultData });
+                }
+            }
         } else {
-            //try remote
+            //search remote for user
         }
-        //GARBAGE DATA
-        var x: string[] = [];
-        x.push("lelelel");
-        x.push("12354");
-        x.push("5678");
-        return x;
+        return results;
     }
 
 

@@ -4,7 +4,7 @@
     selector: "<autocomplete></autocomplete>",
     template: `<input type="text" (keyup)="this.handleInput($event)"/><br />
 				<div class="search-results" *ngFor="let item of resultList">
-                    <a (click)="onClick(item)">{{item}}</a>
+                    <a (click)="onClick(item)">{{item.resultText}}</a>
                </div>`
 })
 export class AutocompleteList {
