@@ -15,24 +15,47 @@ public class Item {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int inventoryItemId;
+<<<<<<< HEAD
 	private int ownerId;
+=======
+	private Integer ownerId;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	@ManyToOne
 	@JoinColumn(name="itemTypeId", updatable = false)
 	private ItemDescription description;
 
+<<<<<<< HEAD
 	public Item(int inventoryItemId, int ownerId){
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
 	}
 
 	public Item(){};
+=======
+	private Integer price;
+	private Integer containingStoreId;
+
+	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId){
+		this.inventoryItemId = inventoryItemId;
+		this.ownerId = ownerId;
+		this.price = price;
+		this.containingStoreId = containingStoreId;
+
+	}
+
+	public Item(){}
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	public int getOwnerId() {
 		return ownerId;
 	}
 
+<<<<<<< HEAD
 	public void setOwnerId(int ownerId) {
+=======
+	public void setOwnerId(Integer ownerId) {
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		this.ownerId = ownerId;
 	}
 
@@ -52,6 +75,24 @@ public class Item {
 		this.description = description;
 	}
 
+<<<<<<< HEAD
+=======
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public Integer getContainingStoreId() {
+		return containingStoreId;
+	}
+
+	public void setContainingStoreId(Integer storeId) {
+		this.containingStoreId = storeId;
+	}
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	@Entity
 	@Table(name="itemconfigs")

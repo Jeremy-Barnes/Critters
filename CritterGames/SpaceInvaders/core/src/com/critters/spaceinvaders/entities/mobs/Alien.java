@@ -5,8 +5,13 @@ import static com.critters.spaceinvaders.graphics.Render.sr;
 import java.util.ArrayList;
 import java.util.Random;
 
+<<<<<<< HEAD
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
+=======
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 import com.critters.spaceinvaders.entities.projectiles.ProjectileEnemy;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -19,8 +24,13 @@ public class Alien extends Enemy {
 	private float originX;
 	private float maxOffset = 100;
 	private final int STEPS = 10;
+<<<<<<< HEAD
 	private final int STEPS_TIME = 10;
 	private int currentStepsTime = 0;
+=======
+	private final float STEPS_TIME = 0.10f; // In seconds
+	private float currentStepsTime = 0;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	private boolean right = true;
 
 	public int row;
@@ -40,12 +50,15 @@ public class Alien extends Enemy {
 		super(level, pos, size, hp);
 	}
 
+<<<<<<< HEAD
 	@Override
 	public void hit(Projectile projectile) {
 		super.hit(projectile);
 		level.score++;
 	}
 
+=======
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	private void updateShoot() {
 		// Only the lowest alien it it's column can shoot
 		ArrayList<Alien> aliens = level.getAliensInColumn(column);
@@ -60,7 +73,11 @@ public class Alien extends Enemy {
 
 			if (random.nextInt(200) == 0) {
 				level.addEntity(new ProjectileEnemy(level, this, getRectangle().getCenter(), new Vector2f(5, 15),
+<<<<<<< HEAD
 						new Vector2f(0, -3)));
+=======
+						new Vector2f(0, -180)));
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 				cooldown = 50;
 			}
 
@@ -70,7 +87,11 @@ public class Alien extends Enemy {
 	}
 
 	private void updatePosition() {
+<<<<<<< HEAD
 		currentStepsTime++;
+=======
+		currentStepsTime += Gdx.graphics.getDeltaTime();
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		if (currentStepsTime >= STEPS_TIME) {
 			currentStepsTime = 0;
 
@@ -82,7 +103,11 @@ public class Alien extends Enemy {
 
 			if ((right && pos.x >= originX + maxOffset) || (!right && pos.x <= originX)) {
 				right = !right;
+<<<<<<< HEAD
 
+=======
+				
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 				// Switch direction and move down
 				pos.y -= 10;
 			}

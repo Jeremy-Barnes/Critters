@@ -5,6 +5,7 @@ CREATE TABLE users(
     lastName VARCHAR(24),
     emailAddress VARCHAR(100) NOT NULL,
     password VARCHAR NOT NULL,
+    sex VARCHAR(8) NOT NULL,
     birthdate DATE NOT NULL,
     salt VARCHAR NOT NULL,
     city VARCHAR(50),
@@ -14,8 +15,10 @@ CREATE TABLE users(
     tokenSelector VARCHAR,
     tokenValidator VARCHAR,
     critterbuxx INT NOT NULL,
+    isActive boolean not null default 't',
     CONSTRAINT uk_username UNIQUE (userName),
-    CONSTRAINT uk_email UNIQUE (emailAddress)
+    CONSTRAINT uk_email UNIQUE (emailAddress),
+    CHECK (sex IN ('male','female','other'))
 );
 
 CREATE TABLE petSpeciesConfigs(
@@ -31,10 +34,12 @@ CREATE TABLE petColorConfigs(
 CREATE TABLE pets(
     petID SERIAL NOT NULL PRIMARY KEY,
     petName VARCHAR(24) NOT NULL,
-    sex BOOLEAN NULL,
+    sex VARCHAR(8) NOT NULL,
     colorID INT NOT NULL REFERENCES petColorConfigs(petColorConfigID),
     ownerID INT NOT NULL REFERENCES users(userID),
-    speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID)
+    speciesID INT NOT NULL REFERENCES petSpeciesConfigs(petSpeciesConfigID),
+    isAbandoned boolean not null default 'f',
+    CHECK (sex IN ('male','female','other'))
 );
 
 CREATE TABLE itemConfigs(
@@ -67,9 +72,3 @@ CREATE TABLE messages(
     messageText TEXT,
     messageSubject VARCHAR(140)
 );
-
--- //pets
--- //inventory
--- //game scores
--- //friends
--- //messages

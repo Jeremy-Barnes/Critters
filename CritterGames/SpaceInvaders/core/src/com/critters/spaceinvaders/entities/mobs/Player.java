@@ -8,6 +8,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+<<<<<<< HEAD
+=======
+import com.critters.spaceinvaders.entities.Entity;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
 import com.critters.spaceinvaders.entities.powerup.PowerupLife;
@@ -24,6 +28,7 @@ public class Player extends Collidable {
 
 	// Movement of the pad
 	protected float goalX;
+<<<<<<< HEAD
 	protected final float MAX_VEL = 5;
 	protected final float DEFAULT_SIZE;
 
@@ -33,6 +38,17 @@ public class Player extends Collidable {
 	protected InputMode mode;
 
 	protected int laserShots = 50;
+=======
+	protected final float MAX_VEL = 300; // Per seconds
+	protected final float DEFAULT_SIZE;
+
+	protected float SHOOT_TIME = 0.4f; // In seconds
+	protected float currentShootTime = 0;
+
+	protected InputMode mode;
+
+	protected int laserShots = 2;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	protected int healthPoints = 5;
 
@@ -76,12 +92,20 @@ public class Player extends Collidable {
 		if (input && currentShootTime <= 0) {
 			if (laserShots <= 0)
 				level.addEntity(new Projectile(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(5, 15),
+<<<<<<< HEAD
 						new Vector2f(0, 3)));
+=======
+						new Vector2f(0, 180)));
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			else {
 				laserShots--;
 				level.addEntity(new Laser(level, this, new Vector2f(rectangle.getCenter()), new Vector2f(2, 3000),
 						new Vector2f()));
 			}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			currentShootTime = SHOOT_TIME;
 		}
 	}
@@ -98,6 +122,10 @@ public class Player extends Collidable {
 
 	@Override
 	public void hit(Projectile projectile) {
+<<<<<<< HEAD
+=======
+		System.out.println(healthPoints);
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		healthPoints--;
 
 		if (healthPoints <= 0) {
@@ -112,10 +140,20 @@ public class Player extends Collidable {
 
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLife.class).deactivate();
+<<<<<<< HEAD
 		}
 
 		if (Powerup.exists(level, PowerupLaser.class)) {
 			laserShots = 2;
+=======
+			;
+		}
+
+		if (Powerup.exists(level, PowerupLaser.class)) {
+
+			// TODO Activate laser
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			// Remove the powerup that was used to give hp
 			level.getPowerup(PowerupLaser.class).deactivate();
 		}
@@ -127,6 +165,7 @@ public class Player extends Collidable {
 
 		// Speed limitation
 		float deltaX = Math.abs(pos.x - goalX);
+<<<<<<< HEAD
 		if (deltaX < MAX_VEL) {
 			pos.x = goalX;
 		} else {
@@ -135,6 +174,17 @@ public class Player extends Collidable {
 
 		// Shoot timer
 		currentShootTime--;
+=======
+		if (deltaX < MAX_VEL * Gdx.graphics.getDeltaTime()) {
+			pos.x = goalX;
+		} else {
+			float dx = (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
+			pos.x += dx * Gdx.graphics.getDeltaTime();
+		}
+
+		// Shoot timer
+		currentShootTime -= Gdx.graphics.getDeltaTime();
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 		// Update the size with the active effects
 		checkActivePowerups();
@@ -154,6 +204,15 @@ public class Player extends Collidable {
 		// Collision update
 		rectangle.update(pos, pos.add(size));
 
+<<<<<<< HEAD
+=======
+		for (int i = 0; i < level.getEntities().size(); i++) {
+			Entity e = level.getEntities().get(i);
+			if (e instanceof Alien && ((Alien) e).getRectangle().intersectsRect(rectangle))
+				this.hit(null);
+		}
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		// Check for intersecting of entity powerups
 		checkPowerups();
 	}
@@ -169,4 +228,8 @@ public class Player extends Collidable {
 		}
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a

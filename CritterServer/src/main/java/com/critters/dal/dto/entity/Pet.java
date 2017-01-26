@@ -16,8 +16,16 @@ public class Pet {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int petID;
 	private String petName;
+<<<<<<< HEAD
 	private Boolean sex;
 	private int ownerid;
+=======
+	private String sex;
+	private int ownerID;
+	private boolean isAbandoned;
+
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	@ManyToOne
 	@JoinColumn(name="colorid", updatable = false)
@@ -29,10 +37,18 @@ public class Pet {
 
 	public Pet() {}
 
+<<<<<<< HEAD
 	public Pet(String petName, boolean sex, int ownerid) {
 		this.petName = petName;
 		this.sex = sex;
 		this.ownerid = ownerid;
+=======
+	public Pet(String petName, String sex, int ownerID, boolean isAbandoned) {
+		this.petName = petName;
+		this.sex = sex;
+		this.ownerID = ownerID;
+		this.isAbandoned = isAbandoned;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	public int getPetID() {
@@ -52,6 +68,7 @@ public class Pet {
 	}
 
 	public String getSex() {
+<<<<<<< HEAD
 		return sex ? "Male" : sex == null ? "Other" : "Female";
 	}
 
@@ -65,6 +82,21 @@ public class Pet {
 
 	public void setOwnerid(int ownerid) {
 		this.ownerid = ownerid;
+=======
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public int getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(int ownerid) {
+		this.ownerID = ownerid;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	public PetColor getPetColor() {
@@ -83,6 +115,17 @@ public class Pet {
 		this.petSpecies = petSpecies;
 	}
 
+<<<<<<< HEAD
+=======
+	public boolean getIsAbandoned() {
+		return isAbandoned;
+	}
+
+	public void setIsAbandoned(boolean isAbandoned) {
+		this.isAbandoned = isAbandoned;
+	}
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	@Entity
 	@Table(name = "petcolorconfigs")
 	public static class PetColor {

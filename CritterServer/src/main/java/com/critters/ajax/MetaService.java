@@ -1,6 +1,7 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
+<<<<<<< HEAD
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.User;
@@ -17,17 +18,51 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+=======
+import com.critters.bll.ChatBLL;
+import com.critters.bll.PetBLL;
+import com.critters.bll.UserBLL;
+import com.critters.dal.dto.SearchResponse;
+import com.critters.dal.dto.entity.Pet;
+import com.critters.dal.dto.entity.User;
+
+import javax.resource.spi.InvalidPropertyException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.Calendar;
+
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 /**
  * Created by Jeremy on 8/22/2016.
  */
 @Path("/meta")
 public class MetaService extends AjaxService {
+<<<<<<< HEAD
 	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+=======
+	private static Map<Integer, AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
+<<<<<<< HEAD
 	public Response checkJobs(){
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
@@ -41,6 +76,31 @@ public class MetaService extends AjaxService {
 			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
 			peers.put(1, asyncResponse);
 		}
+=======
+	public Response checkJobs() throws FileNotFoundException {
+		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
+	}
+
+	@Path("/logs")
+ 	@GET
+ 	@Produces("text/plain")
+ 	public Response checkLogs() throws FileNotFoundException {
+ 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.logs).build();
+ 	}
+	
+
+	@Path("/pollForNotifications")
+	@GET
+	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
+		BackgroundJobManager.printLine("enter poll for notifications " + Calendar.getInstance().getTime());
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());
+		} else {
+			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
+		}
+		BackgroundJobManager.printLine("leave pollfornotifications " + Calendar.getInstance().getTime());
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	@GET
@@ -52,4 +112,43 @@ public class MetaService extends AjaxService {
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
 		return Response.status(200).entity(results).build();
 	}
+<<<<<<< HEAD
+=======
+
+	@GET
+	@Path("/checkPetName/{petName}")
+	public boolean checkPetNameAvailability(@PathParam("petName") String petName) {
+		return PetBLL.isPetNameValid(petName);
+	}
+
+	@GET
+	@Path("/checkUserName/{userName}")
+	public boolean checkUserNameAvailability(@PathParam("userName") String userName) {
+		return UserBLL.isUserNameValid(userName);
+	}
+
+	@GET
+	@Path("/checkEmail/{email}")
+	public boolean checkEmailAvailability(@PathParam("email") String email) {
+		return UserBLL.isEmailAddressValid(email);
+	}
+
+	@GET
+	@Path("/getPetSpecies")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
+		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
+			   	new GenericEntity<Pet.PetSpecies[]>(PetBLL.getPetSpecies().toArray(new Pet.PetSpecies[0]), Pet.PetSpecies[].class)).build();
+	}
+
+	@GET
+	@Path("/getPetColors")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
+		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
+				new GenericEntity<Pet.PetColor[]>(PetBLL.getPetColors().toArray(new Pet.PetColor[0]), Pet.PetColor[].class)).build();
+	}
+
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 }

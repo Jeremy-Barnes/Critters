@@ -40,15 +40,28 @@ public class Level {
 	public final int OBSTACLE_MIN = -1000;
 	public final int OBSTACLE_MAX = -600;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	public int tiles[][];
 
 	public final float LEVEL_WIDTH;
 	public final float LEVEL_HEIGHT;
 
+<<<<<<< HEAD
 	public int time;
 	public int STEP_TIME_DEFAULT = 12;
 	public int STEP_TIME = 12;
 	private int special_time = 0;
+=======
+	// In seconds
+	public float time;
+	public float STEP_TIME_DEFAULT = 0.25f;
+	public float STEP_TIME;
+	private float special_time = 0;
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	private ArrayList<UIElement> ui = new ArrayList<UIElement>();
 
@@ -61,6 +74,10 @@ public class Level {
 		STEP_TIME_DEFAULT /= difficulty;
 		STEP_TIME = STEP_TIME_DEFAULT;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		random = new Random();
 
 		ui.add(new ScoreDisplay(this, 0));
@@ -92,6 +109,10 @@ public class Level {
 		for (int i = 0; i < difficulty; i++) {
 			tiles[10 + i * 5][10 + i * 5] = OBSTACLE_MIN + (OBSTACLE_MAX - OBSTACLE_MIN) * i / difficulty;
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	/**
@@ -99,6 +120,7 @@ public class Level {
 	 */
 	private void processInput() {
 		// TODO INPUT
+<<<<<<< HEAD
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			move = Move.RIGHT;
 		}
@@ -109,6 +131,22 @@ public class Level {
 			move = Move.UP;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+=======
+		float mouseX = com.critters.snake.input.Input.mouseX;
+		float mouseY = com.critters.snake.input.Input.mouseY;
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || mouseX >= Render.WIDTH * 3 / 4) {
+			move = Move.RIGHT;
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || mouseX <= Render.WIDTH / 4) {
+			move = Move.LEFT;
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)|| mouseY >= Render.HEIGHT / 2) {
+			move = Move.UP;
+		}else
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)|| mouseY <= Render.HEIGHT / 2) {
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			move = Move.DOWN;
 		}
 	}
@@ -174,6 +212,10 @@ public class Level {
 						boolean valid = canMove(x + dx, y + dy);
 						if (valid) {
 							getPoints(x + dx, y + dy);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 							ate = isFood(x + dx, y + dy);
 							if (ate) {
 								length++;
@@ -208,6 +250,10 @@ public class Level {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
 			return tiles[x][y] == FOOD || tiles[x][y] == FOOD_DOUBLE || tiles[x][y] == FOOD_TRIPLE
 					|| tiles[x][y] == FOOD_QUADRUPLE || tiles[x][y] == SPECIAL;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		else
 			return false;
 	}
@@ -219,8 +265,13 @@ public class Level {
 		else
 			return;
 
+<<<<<<< HEAD
 		// sp_max is the number of ticks the special effect is taking place.
 		int sp_max = 300;
+=======
+		// sp_max is the number of seconds the special effect is taking place.
+		final float SP_TIME = 5;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		switch (value) {
 		case FOOD:
 			value = 1;
@@ -235,13 +286,21 @@ public class Level {
 			value = 4;
 			break;
 		case SPECIAL:
+<<<<<<< HEAD
 			special_time += sp_max;
+=======
+			special_time += SP_TIME;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			value = 5;
 			break;
 		}
 
 		// Calculate the score for the eaten food for and all modifiers
+<<<<<<< HEAD
 		score += value * difficulty * (special_time > 0 && special_time != sp_max ? 3 : 1);
+=======
+		score += value * difficulty * (special_time > 0 && special_time != SP_TIME ? 3 : 1);
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	private boolean canMove(int x, int y) {
@@ -254,6 +313,10 @@ public class Level {
 	private boolean isFree(int x, int y) {
 		if (x >= 0 && y >= 0 && y < TILES_Y && x < TILES_X)
 			return tiles[x][y] == FREE;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		else
 			return false;
 	}
@@ -290,16 +353,26 @@ public class Level {
 	 */
 	public void update() {
 		processInput();
+<<<<<<< HEAD
 
 		time++;
 		if (state != State.LOST && time % STEP_TIME == 0) {
+=======
+		time += Gdx.graphics.getDeltaTime();
+		if (state != State.LOST && time >= STEP_TIME) {
+			time = 0;
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			updatePlayer();
 		}
 		updateObstacle();
 		updateUI();
 
 		// update special
+<<<<<<< HEAD
 		special_time--;
+=======
+		special_time-= Gdx.graphics.getDeltaTime();
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		if (special_time > 0)
 			STEP_TIME = STEP_TIME_DEFAULT / 2;
 		else
