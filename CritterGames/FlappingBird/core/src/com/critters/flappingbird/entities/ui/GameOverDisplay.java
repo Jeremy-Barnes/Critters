@@ -22,7 +22,7 @@ public class GameOverDisplay extends ScoreDisplay {
 
 	@Override
 	public void renderIfVisible(Render render) {
-		render.drawText("GameOver", Color.BLACK, 1270, 100);
+		render.drawText("GameOver", Color.BLACK, 1270 + level.getTranslation(), 100);
 	}
 
 }

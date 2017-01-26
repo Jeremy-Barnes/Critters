@@ -29,6 +29,7 @@ public class Level {
 	// Dirty work around
 	public static Level level;
 
+	// This is not the complete score. Does not count fly time
 	public int score;
 
 	public State state;
@@ -74,12 +75,6 @@ public class Level {
 		if (bird.isDead()) {
 			// The game has been lost
 			state = State.LOST;
-		}
-
-		// TODO
-		if (false) {
-			// The game has been won
-			state = State.WON;
 		}
 	}
 
@@ -128,7 +123,7 @@ public class Level {
 	 * Render the level.
 	 */
 	public void render(Render render) {
-		render.translate(bird.pos.x - 300, 0);
+		render.translate(getTranslation(), 0);
 
 		for (Entity e : entities) {
 			e.render(render);
@@ -183,6 +178,10 @@ public class Level {
 
 	public ArrayList<Entity> getEntities() {
 		return entities;
+	}
+
+	public float getTranslation() {
+		return bird.pos.x - 300;
 	}
 
 }

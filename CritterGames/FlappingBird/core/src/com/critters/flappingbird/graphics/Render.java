@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
+import com.critters.flappingbird.math.Vector2f;
 
 public class Render {
 
@@ -33,8 +35,13 @@ public class Render {
 		camera.update();
 	}
 
+	public Vector2f getTranslation() {
+		return new Vector2f(camera.position.x - Render.WIDTH / 2, camera.position.y - Render.HEIGHT / 2);
+	}
+
 	public void translate(float x, float y) {
-		camera.translate(x - camera.position.x + Render.WIDTH / 2, y - camera.position.y + Render.HEIGHT / 2);
+		Vector2f translation = getTranslation();
+		camera.translate(x - translation.x, y - translation.y);
 		camera.update();
 	}
 
@@ -133,8 +140,7 @@ public class Render {
 
 		// The draw method requires rotation in degrees.
 		rotation = rotation * 180f / 3.14f;
-		spriteBatch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, texture.getWidth(),
-				texture.getHeight(), false, false);
+		spriteBatch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
 	}
 
 	public void beginRenderer(Object renderer) {
