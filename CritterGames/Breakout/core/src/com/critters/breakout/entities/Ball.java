@@ -9,6 +9,7 @@ import static com.critters.breakout.math.Rectangle.VERTICAL;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.blocks.Block;
 import com.critters.breakout.entities.blocks.BlockIndestructible;
@@ -27,7 +28,11 @@ public class Ball extends Entity {
 	private Circle circle;
 
 	private Vector2f vel;
+<<<<<<< HEAD
 	private final float MAX_VEL_DEFAULT = 4;
+=======
+	private final float MAX_VEL_DEFAULT = 250; // Per sec
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	private float maxVel;
 
 	private boolean fireBall = false;
@@ -151,7 +156,11 @@ public class Ball extends Entity {
 	}
 
 	public void normalVel() {
+<<<<<<< HEAD
 		vel = vel.normal().mul(maxVel);
+=======
+		vel = vel.normal().mul(maxVel * Gdx.graphics.getDeltaTime());
+>>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	@Override
@@ -164,6 +173,7 @@ public class Ball extends Entity {
 		// Check for active powerups
 		checkActivePowerups();
 
+		normalVel();
 		pos = pos.add(vel);
 
 		circle.updateCenter(pos);
