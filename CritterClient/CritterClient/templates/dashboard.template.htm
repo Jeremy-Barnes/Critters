@@ -1,3 +1,8 @@
 ﻿<div class="col-xs-12 col-sm-9">
-    <div *ngIf="app.loggedIn">Welcome back {{user.userName}}</div>    
+    
+    <h2 *ngIf="app.loggedIn">Welcome back {{user.userName}}</h2>    
+    <h3>Here are your friends</h3>
+    <div *ngFor="let friend of user.friends">
+        <p>{{friend.accepted}}</p>
+    </div>
 </div>

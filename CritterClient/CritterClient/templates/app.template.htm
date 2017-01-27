@@ -8,6 +8,8 @@
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
             <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
+            <div> here are alerts</div>
+            <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
         </div>
     </div>
 </nav>

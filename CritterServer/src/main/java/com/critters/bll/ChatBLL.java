@@ -39,8 +39,7 @@ public class ChatBLL {
 		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
 		listeners.put(userId, asyncResponse);
 	}
-
-
+  
 	public static void notify(int userId, Message message, Friendship friendRequest){
 		if(listeners.containsKey(userId)) {
 			Notification notification = new Notification(message, friendRequest);
