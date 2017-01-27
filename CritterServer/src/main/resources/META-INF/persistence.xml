@@ -13,13 +13,8 @@
 
         <class>com.critters.dal.dto.entity.Item</class>
         <class>com.critters.dal.dto.entity.Item$ItemDescription</class>
-<<<<<<< HEAD
-        <!--<class>com.critters.dal.dto.WishListItem</class>-->
-        <class>com.critters.dal.dto.entity.Friendship</class>
-=======
         <class>com.critters.dal.dto.entity.Friendship</class>
         <class>com.critters.dal.dto.entity.Store</class>
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/critters?autoReconnect=true"/>

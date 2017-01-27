@@ -1,7 +1,6 @@
 package com.critters.ajax;
 
 import com.critters.dal.dto.entity.User;
-import com.critters.sockets.SocketManager;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,12 +48,7 @@ public class AjaxService {
 
 	protected NewCookie[] createUserCookies(User user){
 		NewCookie longTermCookie = new NewCookie("critters", user.getTokenSelector() + ":" + user.getTokenValidator(), "/", null, null, 60*60*24*30, false ); //sec*min*hours*days
-<<<<<<< HEAD
-		NewCookie sessionID = new NewCookie("JSESSIONID", httpRequest.getSession().getId(), "/", null, null, 60*60*3, false ); //used because setting other cookie seems to overwrite Tomcat generated cookie.
-=======
 		NewCookie sessionID = new NewCookie("JSESSIONID", httpRequest.getSession().getId(), "/api/", null, null, 60*60*3, false ); //used because setting other cookie seems to overwrite Tomcat generated cookie.
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
-		SocketManager.addPeer(httpRequest.getSession().getId(), user);
 		return new NewCookie[]{longTermCookie, sessionID};
 	}
 }

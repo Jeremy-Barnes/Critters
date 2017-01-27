@@ -29,21 +29,13 @@ public abstract class Block extends Collidable {
 		rectangle = new Rectangle(pos, pos.add(size));
 
 		color = new Color(1, 0, 0, 1);
-<<<<<<< HEAD
-
-=======
 		powerups.add(new PowerupSlowBall(rectangle.getCenter()));
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		if (random.nextInt(6) == 0)
 			addRandomPowerup();
 	}
 
-<<<<<<< HEAD
-	private void addRandomPowerup() {
-=======
 	private void addRandomPowerup() {			
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		int type = random.nextInt(3);
 		switch (type) {
 		case 0:

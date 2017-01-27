@@ -26,7 +26,7 @@ public class FriendshipBLL {
 			entityManager.refresh(request);
 			entityManager.close();
 			Friendship wiped = wipeSensitiveDetails(request);
-			ChatBLL.notify(request.getRequested().getUserID(), wiped);
+			ChatBLL.notify(request.getRequested().getUserID(), null, wiped);
 			return wiped;
 
 		} else {
@@ -47,7 +47,7 @@ public class FriendshipBLL {
 			entityManager.getTransaction().commit();
 			entityManager.close();
 			Friendship wiped = wipeSensitiveDetails(dbReq);
-			ChatBLL.notify(request.getRequester().getUserID(), wiped);
+			ChatBLL.notify(request.getRequester().getUserID(), null, wiped);
 			return wiped;
 
 		} else {

@@ -1,9 +1,4 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
-<<<<<<< HEAD
-import { User } from '../dtos'
-import {Application} from "../appservice"
-
-=======
 import { Router } from '@angular/router';
 import { FormGroup }        from '@angular/forms';
 
@@ -12,23 +7,10 @@ import {Application} from "../appservice"
 
 
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 @Component({
     templateUrl: '../../templates/accountcreate-petcreate.template.htm'
 })
 
-<<<<<<< HEAD
-export class AccountCreatePetComponent {
-    user: User;
-    confirmPassword: string;
-
-    ngOnInit() { this.user = Application.user }
-
-    onSubmit() {
-        return false;
-    }
-
-=======
 export class AccountCreatePetComponent implements OnInit {
     user: User;
     colors: PetColor[];
@@ -91,6 +73,5 @@ export class AccountCreatePetComponent implements OnInit {
             this.user.password && this.user.postcode && this.user.state && this.user.userName);
     }
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     
 }

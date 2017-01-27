@@ -44,12 +44,10 @@
     <Content Include="Libraries\jquery-ui-1.11.4.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
-<<<<<<< HEAD
-=======
+    <Content Include="templates\messages.template.htm" />
     <Content Include="templates\userprofile.template.htm" />
     <Content Include="templates\dashboard.template.htm" />
     <Content Include="templates\petcreate.template.htm" />
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     <Content Include="templates\accountcreate-petcreate.template.htm" />
     <Content Include="templates\accountcreate-userdetail.template.htm" />
     <Content Include="templates\accountcreate-basicinfo.template.htm" />
@@ -67,12 +65,11 @@
     </None>
     <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
-<<<<<<< HEAD
-=======
+    <TypeScriptCompile Include="app\components\autocomplete.ts" />
+    <TypeScriptCompile Include="app\components\messages.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-userdetail.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-basicinfo.component.ts" />
@@ -85,10 +82,7 @@
     <TypeScriptCompile Include="app\servicemethods.ts" />
     <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
-<<<<<<< HEAD
-=======
     <TypeScriptCompile Include="presentation.ts" />
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\jquery-2.1.4.min.map" />

@@ -1,24 +1,6 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
-<<<<<<< HEAD
-import com.critters.bll.UserBLL;
-import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.entity.User;
-
-import javax.ws.rs.*;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-=======
 import com.critters.bll.ChatBLL;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
@@ -41,43 +23,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.Calendar;
-
-import java.util.HashMap;
-import java.util.Map;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 /**
  * Created by Jeremy on 8/22/2016.
  */
 @Path("/meta")
 public class MetaService extends AjaxService {
-<<<<<<< HEAD
-	private static Map<Integer,AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
-=======
-	private static Map<Integer, AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
-<<<<<<< HEAD
-	public Response checkJobs(){
-		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
-	}
-
-	@Path("/poll")
-	@POST
-	public void poll(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
-		if(loggedInUser != null) {
-			asyncResponse.setTimeout(10, TimeUnit.SECONDS);
-			peers.put(1, asyncResponse);
-		}
-=======
 	public Response checkJobs() throws FileNotFoundException {
+		Object us = UserBLL.searchForUser("");
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
@@ -100,7 +58,6 @@ public class MetaService extends AjaxService {
 			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 		}
 		BackgroundJobManager.printLine("leave pollfornotifications " + Calendar.getInstance().getTime());
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	@GET
@@ -112,8 +69,6 @@ public class MetaService extends AjaxService {
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
 		return Response.status(200).entity(results).build();
 	}
-<<<<<<< HEAD
-=======
 
 	@GET
 	@Path("/checkPetName/{petName}")
@@ -150,5 +105,4 @@ public class MetaService extends AjaxService {
 	}
 
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 }

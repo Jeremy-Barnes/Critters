@@ -22,12 +22,7 @@
         <mapping class="com.critters.dal.dto.entity.Pet$PetSpecies" />
         <mapping class="com.critters.dal.dto.entity.Item" />
         <mapping class="com.critters.dal.dto.entity.Item$ItemDescription" />
-<<<<<<< HEAD
-        <!--<mapping class="list.nice.dal.dto.WishListItem"/>-->
-        <mapping class="com.critters.dal.dto.entity.Friendship"/>
-=======
         <mapping class="com.critters.dal.dto.entity.Friendship"/>
         <mapping class="com.critters.dal.dto.entity.Store"/>
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     </session-factory>
 </hibernate-configuration>

@@ -1,13 +1,5 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
     <h1>Make A Pet, Dumbo</h1>
-<<<<<<< HEAD
-    <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
-    <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
-    <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
-    <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
-    Birth: <input type="date" name="birthdate" placeholder="mm/dd/yyyy" [(ngModel)]="user.birthdate" required />
-    <input type="submit" value="Sign Up"/>
-=======
     <div *ngFor="let specie of species"> 
         Species: {{specie.petTypeName}} <br /> 
         <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
@@ -26,5 +18,4 @@
     </select>
     <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
     <input [disabled]="!petAndColorSelected" type="submit" value="Sign Up"/>
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 </form>

@@ -2,18 +2,17 @@ package com.critters.bll;
 
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
-<<<<<<< HEAD
-=======
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
 import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
+import javax.persistence.StoredProcedureQuery;
 import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -27,23 +26,6 @@ import java.util.UUID;
 public class UserBLL {
 
 	public static List<User> searchUsers(String searchString){
-<<<<<<< HEAD
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<User> users = entityManager
-				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm")
-				.setParameter("searchTerm", '%' + searchString + '%')
-				.getResultList();
-		entityManager.close();
-		for(User user : users) {
-			wipeSensitiveFields(user);
-		}
-		return users;
-	}
-
-	public static String createUserReturnUnHashedValidator(User user) throws GeneralSecurityException, UnsupportedEncodingException {
-		user.setCritterbuxx(500); //TODO: economics
-=======
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<User> users = entityManager
 				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm and isActive = true")
@@ -60,18 +42,6 @@ public class UserBLL {
 		user.setCritterbuxx(500); //TODO: economics
 		user.setIsActive(true);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-<<<<<<< HEAD
-
-		User user = (User) entityManager.createQuery("from User where tokenSelector = :selector").setParameter("selector", selector).getSingleResult();
-
-		if(verifyValidator(validator, user)) {
-			user.initializeCollections();
-			entityManager.close();
-			return user;
-		} else {
-			entityManager.close();
-			throw new GeneralSecurityException("Could not log in.");
-=======
 		entityManager.getTransaction().begin();
 		try {
 			hashAndSaltPassword(user);
@@ -103,26 +73,14 @@ public class UserBLL {
 			return null;
 		} finally {
 			entityManager.close();
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		}
 	}
 
 	public static User getUser(String email, String password, boolean login) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-<<<<<<< HEAD
-		entityManager.getTransaction().begin();
-
-		User user = (User) entityManager.createQuery("from User where emailAddress = :email").setParameter("email", email).getSingleResult();
-		user.initializeCollections();
-		if(login) {
-			String validator = null;
-			if (checkLogin(user.getPassword(), password, user.getSalt())) {
-				validator = createSelectorAndHashValidator(user);
-=======
 
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
 			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
@@ -138,27 +96,16 @@ public class UserBLL {
 				}
 				if (validator != null) user.setTokenValidator(validator);
 			} else {
-<<<<<<< HEAD
-				entityManager.getTransaction().rollback();
-				entityManager.close();
-				throw new GeneralSecurityException("Could not log in.");
-			}
-			if (validator != null) user.setTokenValidator(validator);
-		} else {
-=======
 				user = wipeSensitiveFields(user);
 			}
 			return user;
 		} catch (PersistenceException ex) {
-
 			BackgroundJobManager.printLine(email);
 			BackgroundJobManager.printLine(password);
 			BackgroundJobManager.printLine(ex);
 			return null; //no user found
 		} finally {
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 			entityManager.close();
-			user = wipeSensitiveFields(user);
 		}
 	}
 
@@ -166,6 +113,22 @@ public class UserBLL {
 			User user = wipeSensitiveFields(getFullUser(id));
 			return user;
 
+	}
+
+	public static Object searchForUser(String searchTerm) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("usersearch",User.class);
+
+		query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
+		query.setParameter(1, searchTerm);
+		query.execute();
+		User[] results = (User[]) query.getResultList().toArray(new User[0]);
+
+		entityManager.close();
+		for(User u : results){
+			wipeSensitiveFields(u);
+		}
+		return results;
 	}
 
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {

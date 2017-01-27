@@ -14,11 +14,7 @@ export class AccountCreateBasicInfoComponent {
 
     constructor(private router: Router) { }
 
-<<<<<<< HEAD
-    ngOnInit() { this.user = Application.user }
-=======
     ngOnInit() { this.user = Application.getApp().user }
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 
     onSubmit() {
         let link = ['/signUp-2'];

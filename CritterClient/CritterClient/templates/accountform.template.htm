@@ -1,17 +1,9 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountUpdateForm="ngForm">
-<<<<<<< HEAD
-    <h1>Sign Up, Dumb-Dumb</h1>
-=======
     <h1>Update Your Account!</h1>
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
     <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
     <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
     <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
-<<<<<<< HEAD
-    Birth: <input type="date" name="birthdate" placeholder="mm/dd/yyyy" [(ngModel)]="user.birthdate" required />
-    <input type="submit" value="Sign Up"/>
-=======
     <input type="date" name="birthdate" placeholder="birthday (MM/DD/YYYY)" [(ngModel)]="user.birthdate" required />
     <input type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
     <input type="text" name="lastName" placeholder="last name" [(ngModel)]="user.lastName" required />
@@ -25,5 +17,4 @@
 
     <input type="submit" value="Change It"/>
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 </form>

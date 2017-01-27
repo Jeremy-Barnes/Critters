@@ -129,7 +129,9 @@ public class Message {
 	}
 
 	public void nullUsersOut(){
+		sender = new User(sender);
 		sender.nullAllButID();
+		recipient = new User(recipient);
 		recipient.nullAllButID();
 	}
 

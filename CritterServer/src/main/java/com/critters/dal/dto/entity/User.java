@@ -1,20 +1,14 @@
 package com.critters.dal.dto.entity;
 
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-=======
 import com.critters.bll.UserBLL;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
 import javax.mail.Store;
 import javax.persistence.*;
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-=======
 import java.lang.reflect.Array;
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,29 +51,11 @@ public class User {
 	private List<Friendship> friendsOf;
 
 	@OneToMany
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-	@JoinColumn(name="requesteruserid")
-	private List<Friendship> friends;
-	@OneToMany
-	@JoinColumn(name="requesteduserid")
-	private List<Friendship> friendsOf;
-
-	@OneToMany
-=======
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 	@JoinColumn(name="ownerid")
 	private List<Item> inventory;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name="ownerid")
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-	private List<Pet> zoo;
-
-
-	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, Date birthdate,
-				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf) {
-=======
 	private List<Pet> pets;
 
 	@OneToMany(fetch = FetchType.EAGER)
@@ -89,7 +65,6 @@ public class User {
 	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, Date birthdate,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
 				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive, List<com.critters.dal.dto.entity.Store> store) {
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -108,12 +83,8 @@ public class User {
 		this.critterbuxx = critterbuxx;
 		this.friends = friends;
 		this.friendsOf = friendsOf;
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-
-=======
 		this.isActive = isActive;
 		this.store = store;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 	}
 
 	public User(User copyUser) {
@@ -133,10 +104,7 @@ public class User {
 		this.tokenSelector = copyUser.tokenSelector;
 		this.tokenValidator = copyUser.tokenValidator;
 		this.critterbuxx = copyUser.critterbuxx;
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-=======
 		this.isActive = copyUser.isActive;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 		this.friends = null;
 		this.friendsOf = null;
 	}
@@ -271,8 +239,6 @@ public class User {
 		this.critterbuxx = critterbuxx;
 	}
 
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-=======
 	public boolean getIsActive() {
 		return isActive;
 	}
@@ -281,7 +247,6 @@ public class User {
 		this.isActive = isActive;
 	}
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 	public List<Friendship> getFriends() {
 		List<Friendship> frnds = new ArrayList();
 		if(friends != null && ((friends instanceof PersistentBag) ? ((PersistentBag)friends).wasInitialized() : true)) {
@@ -306,18 +271,6 @@ public class User {
 		return frnds;
 	}
 
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-	public List<Pet> getZoo() {
-		return zoo;
-	}
-
-	public void setZoo(List<Pet> zoo) {
-		this.zoo = zoo;
-	}
-
-	public List<Item> getInventory() {
-		if(inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) {
-=======
 	public List<Pet> getPets() {
 		return pets;
 	}
@@ -328,7 +281,6 @@ public class User {
 
 	public List<Item> getInventory() {
 		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 			return inventory;
 		}
 		return null;
@@ -349,12 +301,6 @@ public class User {
 	public void initializeCollections() {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
-<<<<<<< HEAD:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
-		Hibernate.initialize(zoo);
-		Hibernate.initialize(inventory);
-	}
-
-=======
 		Hibernate.initialize(pets);
 		Hibernate.initialize(inventory);
 	}
@@ -395,5 +341,4 @@ public class User {
 		this.pets = null;
 		this.store = null;
 	}
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a:CritterServer/src/main/java/com/critters/dal/dto/entity/User.java
 }

@@ -21,10 +21,7 @@ public class Game extends ApplicationAdapter {
 		SpriteLoader.loadSprites();
 
 		level = new Level(this, 1);
-<<<<<<< HEAD
-=======
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	public void update() {

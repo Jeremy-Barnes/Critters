@@ -1,19 +1,12 @@
 ﻿export class User {
-<<<<<<< HEAD
-    userID: number = -1;
-=======
     userID: number = 0;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     userName: string = "";
     firstName: string = "";
     lastName: string = "";
     emailAddress: string = "";
     password: string = "";
-    birthdate: Date = null;
-<<<<<<< HEAD
-=======
+    birthdate: Date;
     sex: string = "";
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     salt: string = "";
     city: string = "";
     state: string = "";
@@ -23,8 +16,6 @@
     tokenValidator: string = "";
     critterbuxx: number = 0;
     friends: Array<Friendship>;
-<<<<<<< HEAD
-=======
     pets: Array<Pet>;
     isActive: boolean = true;
 
@@ -50,18 +41,12 @@
         this.isActive = user.isActive;
 
     }
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 }
 
 export class Friendship {
     friendshipID: number;
-<<<<<<< HEAD
-    requesterUserID: User;
-    requestedUserID: User;
-=======
     requester: User;
     requested: User;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     accepted: boolean;
 }
 
@@ -91,3 +76,46 @@ export class CreateAccountRequest {
     pet: Pet;
 }
 
+export class Message {
+    messageID: number;
+    sender: User;
+    recipient: User;
+    dateSent: Date;
+    messageText: string;
+    messageSubject: string;
+    rootMessage: Message;
+    parentMessage: Message;
+}
+
+export class Conversation {
+    messages: Message[];
+    participants: User[];
+}
+
+export class Notification {
+    messages: Message[];
+    friendRequests: Friendship[];
+}
+
+export class Store {
+    storeConfigID: number;
+    ownerId: number;
+    storeStock: Item[];
+    description: string;
+    name: string;
+}
+
+export class Item {
+    inventoryItemId: number;
+    ownerId: number;
+    storeStock: Item[];
+    description: ItemDescription;
+    price: string;
+    containingStoreId: number;
+}
+
+export class ItemDescription {
+    itemConfigID: number;
+    itemName: string;
+    itemDescription: string;
+}

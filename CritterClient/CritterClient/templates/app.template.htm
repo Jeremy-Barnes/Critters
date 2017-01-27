@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-﻿<div>
-    <!--TODO put some fuckin nav bars here-->
-    <nav class="centered navbar-fixed-top navbar navbar-default" style="background-color: lightskyblue"> 
-        <div class="container">
-            CRITTER 
-            <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
-            <a routerLink="/signUp">Sign Up!</a>
-
-        </div>
-</nav> 
-
-
-</div>
-
-<login></login>
-<router-outlet>
-=======
 ﻿<!-- Normal Navbar -->
 <nav class="navbar-fixed-top navbar hidden-xs"> 
     <h1 class="navbar-left">CRITTER</h1>
@@ -26,6 +8,8 @@
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
             <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
+            <div> here are alerts</div>
+            <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
         </div>
     </div>
 </nav>
@@ -65,4 +49,3 @@
 <br /><br/>
 
 <login></login>
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a

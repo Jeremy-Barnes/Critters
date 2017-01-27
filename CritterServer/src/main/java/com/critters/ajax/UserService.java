@@ -3,14 +3,6 @@ package com.critters.ajax;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AuthToken;
-<<<<<<< HEAD
-import com.critters.dal.dto.entity.User;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-=======
 import com.critters.dal.dto.CreateAccountRequest;
 import com.critters.dal.dto.ItemRequest;
 import com.critters.dal.dto.SearchResponse;
@@ -20,7 +12,6 @@ import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -40,14 +31,6 @@ public class UserService extends AjaxService{
 	@Path("/createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
-	public Response createUser(JAXBElement<User> jsonUser) throws Exception {
-		User user = jsonUser.getValue();
-		String validator = UserBLL.createUserReturnUnHashedValidator(user);
-
-		httpRequest.getSession().setAttribute("user", user);
-		User copiedUser = super.serializeDeepCopy(user, User.class);
-=======
 	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest)  throws UnsupportedEncodingException, JAXBException {
 		CreateAccountRequest request = jsonRequest.getValue();
 
@@ -77,7 +60,6 @@ public class UserService extends AjaxService{
 		request.user.setPets(pets);
 		httpRequest.getSession().setAttribute("user", request.user);
 		User copiedUser = super.serializeDeepCopy(request.user, User.class);
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		return Response.status(Response.Status.OK).cookie(createUserCookies(copiedUser))
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
@@ -91,20 +73,14 @@ public class UserService extends AjaxService{
 		user = UserBLL.getUser(user.getEmailAddress(), user.getPassword(), true);
 
 		httpRequest.getSession().setAttribute("user", user);
-<<<<<<< HEAD
-=======
 		if(user == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid email/password. Try again!").build();
 		}
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 		User copiedUser = super.serializeDeepCopy(user, User.class);
 
 		return Response.status(Response.Status.OK)
 					   .cookie(createUserCookies(copiedUser))
-<<<<<<< HEAD
-=======
 					   .header("JSESSIONID", httpRequest.getSession().getId())
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
 	}
 
@@ -120,31 +96,11 @@ public class UserService extends AjaxService{
 
 		return Response.status(Response.Status.OK)
 					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
-<<<<<<< HEAD
-
-
-		//throw new JAXBException("Not implemented yet"); //TODO this
-=======
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 
 	@POST
 	@Path("/changeUserInformation")
 	@Consumes(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, GeneralSecurityException, IOException {
-		User user = jsonUser.getValue();
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		}
-		user = UserBLL.updateUser(user, loggedInUser);
-		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
-
-		//throw new IOException("Not implemented yet"); //TODO this
-=======
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, IOException {
 		User user = jsonUser.getValue();
@@ -236,6 +192,5 @@ public class UserService extends AjaxService{
 			UserBLL.discardInventoryItem(request.item, loggedInUser);
 			return Response.status(Response.Status.OK).entity(resp).build();
 		}
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 	}
 }

@@ -1,0 +1,99 @@
+﻿<h1>Messaging I guess!</h1>
+<div class="inlineblock">
+    <!----------------------CONVERSATION VIEW------------------>
+    <div id="viewDetail" *ngIf="activeConversation!=null">
+        Conversation view
+        <div *ngFor="let message of activeConversation">
+            <div class="messageSubject">{{message.messageSubject}}</div>
+            <div><span>From: <a class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}</span></div>
+            <br />
+            <p>{{message.messageText}}</p>
+            <input type="button" (click)="reply(message)" value="reply" /> <input type="button" (click)="deleteConversation(message)" value="Delete Message" />
+
+            <div id="reply" *ngIf="replyMessage != null && replyMessage.messageID == message.messageID">
+                Subject: <input type="text" [(ngModel)]="newMessage.messageSubject" /> <br />
+                Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br/>
+                <input type="button" (click)="sendMessage()" value="Send" />
+                <input type="button" (click)="cancelReply()" value="Stop Editing" />
+            </div>
+        </div>
+        <input type="button" (click)="replyLatest()" value="Reply Latest" />
+        <input type="button" (click)="returnToOverview()" value="Back to Messages" />
+        <input type="button" (click)="deleteConversation(activeConversation)" value="Delete Conversation" />
+    </div>
+
+
+
+    <!----------------------COMPOSE VIEW------------------>
+    <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
+        To: <autocomplete *ngIf="composeToFriend == null" [autocomplete-func]="searchFriends" (result-out)="onItemSelected($event)"></autocomplete>
+        <span *ngIf="composeToFriend != null">{{composeToFriend.userName}} <a (click)="deselctComposeFriend()">X</a></span>
+        <br />
+        Subject: <input type="text" [(ngModel)]="newMessage.Subject" /> <br />
+        
+        Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br />
+        <input type="button" (click)="sendMessage()" value="Send" />
+        <input type="button" (click)="cancelCompose()" value="Stop Editing" />
+    </div>
+
+
+
+
+    <!----------------------MAIN VIEW------------------>
+    <div id="mainView" *ngIf="activeConversation==null && newMessage == null">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a data-toggle="tab" href="#inbox">Inbox</a></li>
+            <li role="presentation"><a data-toggle="tab" href="#sent">Sent</a></li>
+            <li role="presentation"><a data-toggle="tab" href="#friends">Friends</a></li>
+        </ul>
+        <div class="tab-content">
+
+
+
+            <div id="inbox" class="tab-pane fade in active">
+                {{messages.length}} Conversations <input type="button" (click)="composeNewMessage()" value="New Message" />
+                <br />
+                <div *ngFor="let conversation of messages">
+                    <div class="messageSubject">{{conversation.messages[0].messageSubject}} <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div></div>
+                    <div><span><input type="checkbox" [(ngModel)]="conversation.delete" /></span><span>From: <a class="messageUser">{{conversation.messages[0].sender.userName}}</a> | {{conversation.messages[0].dateSent.toLocaleString()}}</span></div>
+                    <input type="button" (click)="viewDetail(conversation)" value="View More" /> 
+                    <input type="button" (click)="deleteConversation(conversation.messages)" value="Delete Message" />
+                    <br />
+                </div>
+
+                <input type="button" (click)="debug()" value="Debug" />
+                <input type="submit" value="Select All" />
+                <input type="submit" value="Delete" />
+            </div>
+
+
+
+            <div id="sent" class="tab-pane fade in">
+                {{sentMessages.length}} Sent Messages
+                <div *ngFor="let message of sentMessages">
+                    <div class="messageSubject">{{message.messageSubject}}</div>
+                    <div><span><input type="checkbox" [(ngModel)]="message.delete" /></span><span>From: <a class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}</span></div>
+                    <br />
+                </div>
+
+                <input type="button" (click)="debug()" value="Debug" />
+                <input type="submit" value="Select All" />
+                <input type="submit" value="Delete" />
+            </div>
+
+
+
+            <div id="friends" class="tab-pane fade">
+                FRRRRRRRRRRRIIIIIIIEEEEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNDS
+                <!--<div *ngFor="let friend of friendRequests">
+                    <div>Subject2</div>
+                    <div><span>radio</span><span>From User Date</span></div>
+                </div>-->
+
+                <input type="submit" value="Select All" />
+                <input type="submit" value="Delete" />
+            </div>
+
+        </div>
+    </div>
+</div>

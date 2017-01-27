@@ -1,9 +1,6 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
-<<<<<<< HEAD
-=======
 import { Router } from '@angular/router';
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
 import { User } from '../dtos'
 import {Application} from "../appservice"
 
@@ -15,14 +12,6 @@ export class AccountCreateDetailsComponent {
     user: User;
     confirmPassword: string;
 
-<<<<<<< HEAD
-    ngOnInit() { this.user = Application.user }
-
-    onSubmit() {
-        return false;
-    }
-
-=======
 
     constructor(private router: Router) { }
 
@@ -47,6 +36,5 @@ export class AccountCreateDetailsComponent {
             this.user.password && this.user.userName);
     }
 
->>>>>>> 2b09b9c0877790f1aedb224f3ffcf2be39e0ef2a
     
 }

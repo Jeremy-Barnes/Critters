@@ -3,6 +3,8 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
 
+import com.critters.dal.dto.Notification;
+import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
@@ -38,8 +40,9 @@ public class ChatBLL {
 		listeners.put(userId, asyncResponse);
 	}
 
-	public static void notify(int userId, Object notification){
+	public static void notify(int userId, Message message, Friendship friendRequest){
 		if(listeners.containsKey(userId)) {
+			Notification notification = new Notification(message, friendRequest);
 			listeners.get(userId).resume(notification);
 			listeners.remove(userId);
 		}
@@ -50,7 +53,6 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-
 				Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(),
 										   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 				entityManager.persist(mail);
@@ -58,8 +60,8 @@ public class ChatBLL {
 				entityManager.refresh(mail);
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(message.getRecipient().getUserID(), wiped);
-				return wiped;
+				notify(message.getRecipient().getUserID(), wiped, null);
+        return wiped;
 			} finally {
 				entityManager.close();
 			}
@@ -115,7 +117,7 @@ public class ChatBLL {
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(mail.getRecipient().getUserID(), wiped);
+				notify(mail.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
