@@ -36,7 +36,8 @@ public class Powerup extends Entity {
 	}
 
 	/**
-	 * Method called from paddle when it intersects the powerup. Move the object into the active powerups group.
+	 * Method called from paddle when it intersects the powerup. Move the object
+	 * into the active powerups group.
 	 */
 	public void pickUp() {
 		pickedUp = true;
@@ -46,14 +47,14 @@ public class Powerup extends Entity {
 
 	@Override
 	public void update() {
-		
+
 		// Remove the powerup
 		if (pos.y < -20)
 			level.removeEntity(this);
 
 		// Pickedup logic
 		if (pickedUp) {
-			time+= Gdx.graphics.getDeltaTime();
+			time += Gdx.graphics.getDeltaTime();
 			if (time >= LENGTH)
 				level.removePowerup(this);
 		}
@@ -67,9 +68,23 @@ public class Powerup extends Entity {
 		if (pickedUp)
 			return;
 
-		float[] verts = {pos.x - 7.5f, pos.y - +6.5f, pos.x + 7.5f, pos.y - +6.5f, pos.x, pos.y + 6.5f};
+		float[] verts = { pos.x - 15f, pos.y - +13f, pos.x + 15f, pos.y - +13f, pos.x, pos.y + 13f };
 		Polygon p = new Polygon(verts);
 		render.drawPolygon(p, color, 0, 0);
+	}
+
+	/**
+	 * Check if the given powerup is currently active
+	 */
+	public static void removeAll(Class<? extends Powerup> someClass, Level level) {
+		ArrayList<Powerup> powerups = level.getActivePowerups();
+		for (int i = 0; i < powerups.size(); i++) {
+			Powerup p = powerups.get(i);
+			if (p.getClass() == someClass) {
+				level.removePowerup(p);
+				i--;
+			}
+		}
 	}
 
 	/**

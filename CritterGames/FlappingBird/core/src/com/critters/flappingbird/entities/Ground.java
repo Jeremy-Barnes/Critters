@@ -35,7 +35,7 @@ public class Ground extends Wall {
 			x += step;
 
 			float h = (float) Math.abs(pos.y - getHeight(x));
-			r.drawRectangle(Color.RED, x, Math.min(pos.y, getHeight(x)), step, h);
+			r.drawRectangle(Color.GRAY, x, Math.min(pos.y, getHeight(x)), step, h);
 		}
 	}
 }

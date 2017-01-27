@@ -22,6 +22,10 @@ public abstract class Collidable extends Entity {
 		return rectangle.intersectsPoint(point);
 	}
 
+	public Vector2f getDirection(Vector2f point) {
+		return pos.sub(point);
+	}
+
 	public void hit() {
 		hit = true;
 	}

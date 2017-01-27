@@ -34,6 +34,17 @@ public class Terrain extends Collidable {
 	}
 
 	@Override
+	public Vector2f getDirection(Vector2f point) {
+		System.out.println(objects.size());
+		for (Collidable c : objects) {
+			if (c.intersectsPoint(point)) {
+				return c.getDirection(point);
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void update() {
 		ground.setOffset(pos.x);
 		ceiling.setOffset(pos.x);

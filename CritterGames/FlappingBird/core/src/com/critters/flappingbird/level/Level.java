@@ -11,6 +11,7 @@ import com.critters.flappingbird.entities.Entity;
 import com.critters.flappingbird.entities.Terrain;
 import com.critters.flappingbird.entities.Wall;
 import com.critters.flappingbird.entities.powerup.Powerup;
+import com.critters.flappingbird.entities.powerup.PowerupShield;
 import com.critters.flappingbird.entities.ui.GameOverDisplay;
 import com.critters.flappingbird.entities.ui.ScoreDisplay;
 import com.critters.flappingbird.entities.ui.UIElement;
@@ -53,10 +54,14 @@ public class Level {
 		LevelLoader.loadLevel(this);
 
 		// Add entities
-		bird = new Bird(this, new Vector2f(0, 300));
+		bird = new Bird(this, new Vector2f(0, 400));
 		entities.add(bird);
 		terrain = new Terrain(level);
 		entities.add(terrain);
+		
+		for(int i = 1; i < 100; i++){
+			entities.add(new PowerupShield(this, new Vector2f(i * 500, 450), 20));
+		}
 
 		uiElements.add(new ScoreDisplay(this, score));
 		GameOverDisplay gameOver = new GameOverDisplay(this, score);
@@ -107,8 +112,6 @@ public class Level {
 			if (Input.ready()) {
 				Input.inputs.remove(0);
 				state = State.PLAY;
-
-				// START GAME
 			}
 			return;
 		}

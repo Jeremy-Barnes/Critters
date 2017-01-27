@@ -13,6 +13,7 @@ public class Ceiling extends Ground {
 
 	@Override
 	public boolean intersectsPoint(Vector2f point) {
+		// TODO this method sucks
 		return !super.intersectsPoint(point);
 	}
 
