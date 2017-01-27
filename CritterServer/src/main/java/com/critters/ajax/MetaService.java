@@ -34,6 +34,7 @@ public class MetaService extends AjaxService {
 	@GET
 	@Produces("text/plain")
 	public Response checkJobs() throws FileNotFoundException {
+		Object us = UserBLL.searchForUser("");
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
