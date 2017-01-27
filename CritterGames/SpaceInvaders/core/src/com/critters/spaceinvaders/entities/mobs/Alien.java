@@ -20,6 +20,7 @@ public class Alien extends Enemy {
 	private float maxOffset = 100;
 	private final int STEPS = 10;
 	private final float STEPS_TIME = 0.20f; // In seconds
+
 	private float currentStepsTime = 0;
 	private boolean right = true;
 

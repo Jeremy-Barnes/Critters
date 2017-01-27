@@ -23,23 +23,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.Calendar;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Jeremy on 8/22/2016.
  */
 @Path("/meta")
 public class MetaService extends AjaxService {
-	private static Map<Integer, AsyncResponse> peers = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
 
 	@Path("/jobs")
 	@GET
 	@Produces("text/plain")
 	public Response checkJobs() throws FileNotFoundException {
+		Object us = UserBLL.searchForUser("");
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 

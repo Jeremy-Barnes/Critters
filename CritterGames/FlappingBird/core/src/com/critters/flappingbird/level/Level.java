@@ -8,6 +8,7 @@ import com.critters.flappingbird.Game;
 import com.critters.flappingbird.entities.Bird;
 import com.critters.flappingbird.entities.Collidable;
 import com.critters.flappingbird.entities.Entity;
+import com.critters.flappingbird.entities.Terrain;
 import com.critters.flappingbird.entities.Wall;
 import com.critters.flappingbird.entities.powerup.Powerup;
 import com.critters.flappingbird.entities.ui.GameOverDisplay;
@@ -36,7 +37,8 @@ public class Level {
 	private ArrayList<UIElement> uiElements = new ArrayList<UIElement>();
 	private ArrayList<Powerup> powerups = new ArrayList<Powerup>();
 	private Bird bird;
-	
+	private Terrain terrain;
+
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
@@ -50,11 +52,11 @@ public class Level {
 		LevelLoader.loadLevel(this);
 
 		// Add entities
-		bird = new Bird(this, new Vector2f(300, 300));
+		bird = new Bird(this, new Vector2f(0, 300));
 		entities.add(bird);
-		entities.add(new Wall(this, new Vector2f(0, 0),new Vector2f(1600, 50)));
-		entities.add(new Wall(this, new Vector2f(0, 850),new Vector2f(1600, 50)));
-		
+		terrain = new Terrain(level);
+		entities.add(terrain);
+
 		uiElements.add(new ScoreDisplay(this, score));
 		GameOverDisplay gameOver = new GameOverDisplay(this, score);
 		gameOver.setVisible(false);
@@ -73,8 +75,8 @@ public class Level {
 			// The game has been lost
 			state = State.LOST;
 		}
-		
-		//TODO
+
+		// TODO
 		if (false) {
 			// The game has been won
 			state = State.WON;
@@ -110,12 +112,13 @@ public class Level {
 			if (Input.ready()) {
 				Input.inputs.remove(0);
 				state = State.PLAY;
-			
+
 				// START GAME
 			}
 			return;
 		}
 		updateEntities();
+		terrain.pos.x = bird.pos.x;
 
 		// Check winning or losing
 		checkState();
@@ -125,6 +128,8 @@ public class Level {
 	 * Render the level.
 	 */
 	public void render(Render render) {
+		render.translate(bird.pos.x - 300, 0);
+
 		for (Entity e : entities) {
 			e.render(render);
 		}
@@ -132,6 +137,7 @@ public class Level {
 		for (UIElement e : uiElements) {
 			e.render(render);
 		}
+
 	}
 
 	public void addEntity(Entity e) {

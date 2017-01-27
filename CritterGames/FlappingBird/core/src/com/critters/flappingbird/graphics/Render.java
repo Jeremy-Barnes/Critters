@@ -33,14 +33,19 @@ public class Render {
 		camera.update();
 	}
 
+	public void translate(float x, float y) {
+		camera.translate(x - camera.position.x + Render.WIDTH / 2, y - camera.position.y + Render.HEIGHT / 2);
+		camera.update();
+	}
+
 	/**
-	 * Only works for 1 size for the moment. 
+	 * Only works for 1 size for the moment.
 	 * 
 	 * TODO: Expand into multiple needed font sizes.
-	 * */
+	 */
 	public void drawText(String text, Color color, float x, float y) {
 		beginRenderer(spriteBatch);
-		
+
 		font.setColor(color);
 		font.draw(spriteBatch, text, x, y);
 	}
@@ -92,7 +97,7 @@ public class Render {
 
 	public void drawRectangle(Color color, float x, float y, float w, float h) {
 		beginRenderer(shapeRenderer);
-		
+
 		shapeRenderer.setColor(color);
 
 		float rotation = 0;
@@ -104,10 +109,10 @@ public class Render {
 		shapeRenderer.rotate(0, 0, 1, -rotation);
 		shapeRenderer.translate(-(x + w / 2), -(y + h / 2), 0);
 	}
-	
-	public void drawCirlce(Color color, float x, float y, float radius){
+
+	public void drawCirlce(Color color, float x, float y, float radius) {
 		beginRenderer(shapeRenderer);
-		
+
 		shapeRenderer.setColor(color);
 		shapeRenderer.circle(x, y, radius);
 	}
@@ -128,7 +133,8 @@ public class Render {
 
 		// The draw method requires rotation in degrees.
 		rotation = rotation * 180f / 3.14f;
-		spriteBatch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+		spriteBatch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, texture.getWidth(),
+				texture.getHeight(), false, false);
 	}
 
 	public void beginRenderer(Object renderer) {

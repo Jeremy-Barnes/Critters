@@ -10,7 +10,9 @@ import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
 import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
+import javax.persistence.StoredProcedureQuery;
 import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -98,7 +100,6 @@ public class UserBLL {
 			}
 			return user;
 		} catch (PersistenceException ex) {
-
 			BackgroundJobManager.printLine(email);
 			BackgroundJobManager.printLine(password);
 			BackgroundJobManager.printLine(ex);
@@ -112,6 +113,22 @@ public class UserBLL {
 			User user = wipeSensitiveFields(getFullUser(id));
 			return user;
 
+	}
+
+	public static Object searchForUser(String searchTerm) {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("usersearch",User.class);
+
+		query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
+		query.setParameter(1, searchTerm);
+		query.execute();
+		User[] results = (User[]) query.getResultList().toArray(new User[0]);
+
+		entityManager.close();
+		for(User u : results){
+			wipeSensitiveFields(u);
+		}
+		return results;
 	}
 
 	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
