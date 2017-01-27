@@ -5,7 +5,7 @@
     lastName: string = "";
     emailAddress: string = "";
     password: string = "";
-    birthdate: Date = null;
+    birthdate: Date;
     sex: string = "";
     salt: string = "";
     city: string = "";
@@ -76,3 +76,46 @@ export class CreateAccountRequest {
     pet: Pet;
 }
 
+export class Message {
+    messageID: number;
+    sender: User;
+    recipient: User;
+    dateSent: Date;
+    messageText: string;
+    messageSubject: string;
+    rootMessage: Message;
+    parentMessage: Message;
+}
+
+export class Conversation {
+    messages: Message[];
+    participants: User[];
+}
+
+export class Notification {
+    messages: Message[];
+    friendRequests: Friendship[];
+}
+
+export class Store {
+    storeConfigID: number;
+    ownerId: number;
+    storeStock: Item[];
+    description: string;
+    name: string;
+}
+
+export class Item {
+    inventoryItemId: number;
+    ownerId: number;
+    storeStock: Item[];
+    description: ItemDescription;
+    price: string;
+    containingStoreId: number;
+}
+
+export class ItemDescription {
+    itemConfigID: number;
+    itemName: string;
+    itemDescription: string;
+}

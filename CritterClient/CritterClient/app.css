@@ -10,7 +10,23 @@ body {
 }
 h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
 
+.nav-tabs {
+    display:block;
+    width: 100%;
+    height: 45px;
+}
 
+.messageSubject {
+    background-color: #12a6da;
+    font-size: 20px;
+    width: 870px !important;
+}
+
+.messageUser {
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+}
 
 .inlineblock {
     display: inline-block !important;

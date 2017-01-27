@@ -87,6 +87,13 @@ public class Level {
 	 * Check the state of the level, it can either have been won or lost.
 	 */
 	private void checkState() {
+
+		for (Entity e : entities) {
+			if (e instanceof Enemy && e.pos.y <= 0) {
+				state = State.LOST;
+			}
+		}
+
 		if (!entities.contains(player)) {
 			// The game has been lost
 			state = State.LOST;
@@ -112,7 +119,12 @@ public class Level {
 			return;
 
 		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).update();
+			// Make sure all are updated;
+			Entity e = entities.get(i);
+			e.update();
+
+			if (!entities.contains(e))
+				i--;
 		}
 
 		for (int i = 0; i < powerups.size(); i++) {
@@ -239,6 +251,10 @@ public class Level {
 				shields.add((Shield) e);
 
 		return shields;
+	}
+
+	public ArrayList<Entity> getEntities() {
+		return entities;
 	}
 
 }

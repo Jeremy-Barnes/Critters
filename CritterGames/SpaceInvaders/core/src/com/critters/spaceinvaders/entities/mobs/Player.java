@@ -8,9 +8,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.spaceinvaders.entities.Collidable;
+import com.critters.spaceinvaders.entities.Entity;
 import com.critters.spaceinvaders.entities.powerup.Powerup;
 import com.critters.spaceinvaders.entities.powerup.PowerupLaser;
 import com.critters.spaceinvaders.entities.powerup.PowerupLife;
+import com.critters.spaceinvaders.entities.projectiles.Laser;
 import com.critters.spaceinvaders.entities.projectiles.Projectile;
 import com.critters.spaceinvaders.level.Level;
 import com.critters.spaceinvaders.math.Vector2f;
@@ -134,7 +136,7 @@ public class Player extends Collidable {
 		if (deltaX < MAX_VEL * Gdx.graphics.getDeltaTime()) {
 			pos.x = goalX;
 		} else {
-			float dx = (pos.x - goalX) > 0 ? -MAX_VEL  : MAX_VEL;
+			float dx = (pos.x - goalX) > 0 ? -MAX_VEL : MAX_VEL;
 			pos.x += dx * Gdx.graphics.getDeltaTime();
 		}
 
@@ -158,6 +160,12 @@ public class Player extends Collidable {
 
 		// Collision update
 		rectangle.update(pos, pos.add(size));
+
+		for (int i = 0; i < level.getEntities().size(); i++) {
+			Entity e = level.getEntities().get(i);
+			if (e instanceof Alien && ((Alien) e).getRectangle().intersectsRect(rectangle))
+				this.hit(null);
+		}
 
 		// Check for intersecting of entity powerups
 		checkPowerups();

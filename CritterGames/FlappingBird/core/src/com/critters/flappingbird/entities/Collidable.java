@@ -18,6 +18,10 @@ public abstract class Collidable extends Entity {
 		rectangle = new Rectangle(pos, pos.add(size));
 	}
 
+	public boolean intersectsPoint(Vector2f point) {
+		return rectangle.intersectsPoint(point);
+	}
+
 	public void hit() {
 		hit = true;
 	}
