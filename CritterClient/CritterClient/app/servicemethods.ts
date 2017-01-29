@@ -93,6 +93,24 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("deleteFriendship", "friends", request);
     }
 
+    /************** Meta Stuff **************/
+
+    public static searchUsers(searchTerm: string): JQueryPromise<User[]> {
+        return ServiceMethods.doAjax("searchUsers", "meta", searchTerm, "GET");
+    }
+
+    public static checkUserName(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkUserName", "meta", searchTerm, "GET");
+    }
+
+    public static checkPetName(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkPetName", "meta", searchTerm, "GET");
+    }
+
+    public static checkEmail(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkEmail", "meta", searchTerm, "GET");
+    }
+
     /************** Store Stuff **************/
     public static getStorefront(request: Store): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", request);

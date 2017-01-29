@@ -133,10 +133,13 @@ export class Application {
                     results.push({ resultText, resultData });
                 }
             }
-        } else {
-            //search remote for user
         }
         return results;
+    }
+
+    public static searchUsers(searchTerm: string) {
+        var app = Application.getApp();
+        return ServiceMethods.searchUsers(searchTerm);
     }
 
 

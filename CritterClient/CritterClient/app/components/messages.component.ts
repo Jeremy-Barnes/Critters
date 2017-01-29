@@ -86,8 +86,16 @@ export class MessageComponent implements OnInit {
 
     public searchFriends(searchTerm: string) {
         return new Promise((resolve) => {
-            var x = Application.searchFriends(searchTerm);
-            resolve(x);
+            resolve(Application.searchFriends(searchTerm));
+        });
+    }
+
+
+    public searchUsers(searchTerm: string) {
+        return new Promise((resolve) => {
+            Application.searchUsers(searchTerm).done((results: User[]) => {
+                resolve(results);
+            });
         });
     }
 
