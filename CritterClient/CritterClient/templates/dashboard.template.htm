@@ -3,6 +3,7 @@
     <h2 *ngIf="app.loggedIn">Welcome back {{user.userName}}</h2>    
     <h3>Here are your friends</h3>
     <div *ngFor="let friend of user.friends">
-        <p>{{friend.accepted}}</p>
+        Friendship: <br />
+        <p>{{friend.requester.userName}} ------- {{friend.requested.userName}} | accepted? {{friend.accepted}} </p>
     </div>
 </div>
