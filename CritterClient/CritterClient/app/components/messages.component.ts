@@ -94,7 +94,16 @@ export class MessageComponent implements OnInit {
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {
             Application.searchUsers(searchTerm).done((results: User[]) => {
-                resolve(results);
+                var resultsForDisplay: { resultText: string, resultData: User }[] = [];
+                for (var i = 0; i < results.length; i++) {
+                    var resultData = results[i];
+
+                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
+                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
+                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    resultsForDisplay.push({ resultText, resultData });
+                }
+                resolve(resultsForDisplay);
             });
         });
     }

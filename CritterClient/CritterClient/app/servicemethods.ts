@@ -8,7 +8,7 @@ export class ServiceMethods {
     static jsessionID: string = null;
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
-        var param = JSON.stringify(parameters);
+        var param = parameters != null && parameters.constructor === String ? parameters : JSON.stringify(parameters);
         var pathParams = type == "GET" && parameters != null ? "/" + param : "";
         var settings: JQueryAjaxSettings = {
             url: ServiceMethods.baseURL + functionService + "/" + functionName + pathParams + (ServiceMethods.jsessionID != null ? ";jsessionid=" + ServiceMethods.jsessionID : ""),
