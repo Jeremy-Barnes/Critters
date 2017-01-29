@@ -4,12 +4,13 @@
     <div class="container">
         <div class="navbar-header">
             <div class="inlineblock" *ngIf="!app.loggedIn">
-                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <button type="button" data-toggle="modal" data-target="#log-in">Login</button>
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
             <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
-            <div> here are alerts</div>
+            <div *ngIf="app.loggedIn"> here are alerts</div>
             <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
+            <a *ngIf="app.loggedIn" routerLink="/messages">Messages!</a>
         </div>
     </div>
 </nav>

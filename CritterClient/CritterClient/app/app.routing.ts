@@ -1,4 +1,4 @@
-﻿import { ModuleWithProviders }  from '@angular/core';
+﻿import { NgModule }             from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AccountCreateBasicInfoComponent } from './components/accountcreate-basicinfo.component';
@@ -53,4 +53,8 @@ const appRoutes: Routes = [
     }
 ];
 
-export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+@NgModule({
+    imports: [RouterModule.forRoot(appRoutes)],
+    exports: [RouterModule]
+})
+export class AppRoutingModule { }

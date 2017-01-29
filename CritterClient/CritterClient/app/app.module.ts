@@ -4,7 +4,7 @@ import { FormsModule }   from '@angular/forms';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { ReactiveFormsModule }          from '@angular/forms';
 
-import { Routing } from './app.routing'
+import { AppRoutingModule } from './app.routing'
 import { AppComponent }   from './components/app.component';
 import { LoginComponent }   from './components/login.component';
 import { AccountFormComponent }   from './components/accountform.component';
@@ -24,7 +24,7 @@ import { AutocompleteList } from './components/autocomplete'
     imports: [
         BrowserModule,
         FormsModule,
-        Routing
+        AppRoutingModule
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
