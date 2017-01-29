@@ -272,7 +272,11 @@ public class User {
 	}
 
 	public List<Pet> getPets() {
-		return pets;
+		if((pets instanceof PersistentBag && ((PersistentBag)pets).wasInitialized()) || pets instanceof ArrayList) {
+			return this.pets;
+		} else {
+			return null;
+		}
 	}
 
 	public void setPets(List<Pet> zoo) {
@@ -302,16 +306,21 @@ public class User {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
 		Hibernate.initialize(pets);
+		Hibernate.initialize(store);
 		Hibernate.initialize(inventory);
 	}
 
-  public void initializeInventory(){
+    public void initializeInventory(){
 		this.setInventory(UserBLL.getInventory(this));
 	}
 
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){
-		return this.store;
+		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
+			return this.store;
+		} else {
+			return null;
+		}
 	}
 
 	public void setStore(List<com.critters.dal.dto.entity.Store> store){

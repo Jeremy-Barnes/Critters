@@ -115,14 +115,14 @@ public class UserBLL {
 
 	}
 
-	public static Object searchForUser(String searchTerm) {
+	public static List<User> searchForUser(String searchTerm) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("usersearch",User.class);
 
 		query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-		query.setParameter(1, searchTerm);
+		query.setParameter(1, "%" + searchTerm + "%");
 		query.execute();
-		User[] results = (User[]) query.getResultList().toArray(new User[0]);
+		List<User> results = query.getResultList();
 
 		entityManager.close();
 		for(User u : results){
