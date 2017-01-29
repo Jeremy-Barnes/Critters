@@ -251,20 +251,22 @@ public class User {
 		List<Friendship> frnds = new ArrayList();
 		if(friends != null && ((friends instanceof PersistentBag) ? ((PersistentBag)friends).wasInitialized() : true)) {
 			for (Friendship friendship : friends) {
-				friendship.setRequester(new User(this));
+				friendship.setRequester(new User(friendship.getRequester()));
 				friendship.setRequested(new User(friendship.getRequested()));
 			}
 			frnds.addAll(friends);
-		} else if(friends != null && !((PersistentBag)friends).wasInitialized())  {
-			return null;
 		}
+		else if(friends != null &&  !(friends instanceof PersistentBag))  {
+			frnds.addAll(friends);
+		}
+
 		if(friendsOf != null && ((friendsOf instanceof PersistentBag) ? ((PersistentBag)friendsOf).wasInitialized() : true)) {
 			for (Friendship friendship : friendsOf) {
-				friendship.setRequested(new User(this));
+				friendship.setRequested(new User(friendship.getRequested()));
 				friendship.setRequester(new User(friendship.getRequester()));
 			}
 			frnds.addAll(friendsOf);
-		} else if(friendsOf != null) {
+		} else if(friendsOf != null && !(friendsOf instanceof PersistentBag)) {
 			frnds.addAll(friendsOf);
 		}
 
