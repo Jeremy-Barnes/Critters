@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Message, Conversation } from '../dtos'
+import { User, Notification, Message, Conversation, Friendship } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -19,6 +19,9 @@ export class MessageComponent implements OnInit {
     newMessage: Message;
     composeToFriend: User;
 
+    pendingFriendRequests: Friendship[];
+    outstandingFriendRequests: Friendship[];
+
     constructor(private route: ActivatedRoute) {
         prepDisplay();
         Application.getMailbox();
@@ -26,6 +29,8 @@ export class MessageComponent implements OnInit {
         this.alerts = this.app.alerts;
         this.messages = this.app.inbox;
         this.sentMessages = this.app.sentbox;
+        this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
+        this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
     }
 
     ngOnInit() {
@@ -82,6 +87,18 @@ export class MessageComponent implements OnInit {
             this.newMessage.recipient = this.replyMessage.sender;
         }
         Application.sendMessage(this.newMessage);
+    }
+
+    acceptRequest(friendRequest: Friendship) {
+        Application.acceptFriendRequest(friendRequest);
+    }
+
+    declineRequest(friendRequest: Friendship) {
+        Application.rejectFriendRequest(friendRequest);
+    }
+
+    cancelRequest(friendRequest: Friendship) {
+        Application.cancelFriendRequest(friendRequest);
     }
 
     public searchFriends(searchTerm: string) {

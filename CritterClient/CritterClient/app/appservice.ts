@@ -57,8 +57,23 @@ export class Application {
             accepted: false,
             friendshipID: 0,
             requester: requesterUser,
-            requested: requestedUser
+            requested: requestedUser,
+            dateSent: undefined
         });
+    }
+
+    public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        friendRequest.accepted = false;
+        return ServiceMethods.respondToFriendRequest(friendRequest);
+    }
+
+    public static acceptFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        friendRequest.accepted = true;
+        return ServiceMethods.respondToFriendRequest(friendRequest);
+    }
+
+    public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
     public static logIn(user: User) {

@@ -67,7 +67,6 @@
             </div>
 
 
-
             <div id="sent" class="tab-pane fade in">
                 {{sentMessages.length}} Sent Messages
                 <div *ngFor="let message of sentMessages">
@@ -84,14 +83,20 @@
 
 
             <div id="friends" class="tab-pane fade">
-                FRRRRRRRRRRRIIIIIIIEEEEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNDS
-                <!--<div *ngFor="let friend of friendRequests">
-                    <div>Subject2</div>
-                    <div><span>radio</span><span>From User Date</span></div>
-                </div>-->
+                These people want to be your friends!
+                <div *ngFor="let friend of pendingFriendRequests">
+                    <div class="messageSubject"> <a class="messageUser">{{friend.requester.userName}}</a> | {{friend.requester.firstName}} {{friend.requester.lastName}}</div>
+                    <div><span>Sent on: {{friend.dateSent}}</span></div>
+                    <input type="button" (click)="acceptRequest(friend)" value="Accept Friend Request" />
+                    <input type="button" (click)="declineRequest(friend)" value="Decline Friend Request" />
+                </div>
 
-                <input type="submit" value="Select All" />
-                <input type="submit" value="Delete" />
+                Your outstanding friend requests
+                <div *ngFor="let friend of outstandingFriendRequests">
+                    <div class="messageSubject"> <a class="messageUser">{{friend.requested.userName}}</a> | {{friend.requested.firstName}} {{friend.requested.lastName}}</div>
+                    <div><span>Sent on: {{friend.dateSent}}</span></div>
+                    <input type="button" (click)="cancelRequest(friend)" value="Cancel Friend Request" />
+                </div>
             </div>
 
         </div>
