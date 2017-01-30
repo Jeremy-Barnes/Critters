@@ -44,6 +44,8 @@
     <Content Include="Libraries\jquery-ui-1.11.4.js" />
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
+    <Content Include="templates\inventory.template.htm" />
+    <Content Include="templates\error.template.htm" />
     <Content Include="templates\messages.template.htm" />
     <Content Include="templates\userprofile.template.htm" />
     <Content Include="templates\dashboard.template.htm" />
@@ -66,6 +68,8 @@
     <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
     <TypeScriptCompile Include="app\components\autocomplete.ts" />
+    <TypeScriptCompile Include="app\components\error.component.ts" />
+    <TypeScriptCompile Include="app\components\inventory.component.ts" />
     <TypeScriptCompile Include="app\components\messages.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
