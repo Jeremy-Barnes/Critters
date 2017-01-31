@@ -36,13 +36,6 @@ export class MessageComponent implements OnInit {
     ngOnInit() {
     }
 
-    debug() {
-        alert(this.user);
-        alert(Application.getApp());
-        var ap2 = Application.getApp();
-        alert(this.messages.length);
-    }
-
     reply(replyMessage: Message) {
         this.replyMessage = replyMessage;
         this.composeNewMessage();

@@ -15,7 +15,9 @@ import { CreatePetComponent }   from './components/petcreate.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
-import { AutocompleteList } from './components/autocomplete'
+import { AutocompleteList } from './components/autocomplete.component'
+import { ErrorComponent } from './components/error.component'
+
 
 
 
@@ -28,7 +30,7 @@ import { AutocompleteList } from './components/autocomplete'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

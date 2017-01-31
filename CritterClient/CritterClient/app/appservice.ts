@@ -11,7 +11,7 @@ export class Application {
     public alerts: Notification[] = [];
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
-
+    public errorCallback: (text: string) => void;
     public static app: Application = new Application();
 
 
