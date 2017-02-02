@@ -2,15 +2,15 @@ package com.critters.breakout;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.breakout.graphics.Render;
 import com.critters.breakout.graphics.SpriteLoader;
 import com.critters.breakout.input.Input;
 import com.critters.breakout.level.Level;
 import com.critters.breakout.level.Level.State;
 
 public class Game extends ApplicationAdapter {
-	SpriteBatch render;
+
+	private Render render;
 
 	private Level level;
 
@@ -18,7 +18,7 @@ public class Game extends ApplicationAdapter {
 	public void create() {
 		Gdx.input.setInputProcessor(new Input());
 
-		render = new SpriteBatch();
+		render = new Render();
 		SpriteLoader.loadSprites();
 
 		level = new Level(0);
@@ -40,15 +40,13 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void render() {
 		// Dirty temporary reset feature
-		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
+		if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.O)) {
 			level = new Level(level.score);
 		}
 
-		update();
-
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		render.begin();
+
+		update();
 
 		level.render(render);
 

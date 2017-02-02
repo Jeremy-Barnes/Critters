@@ -3,20 +3,14 @@ package com.critters.breakout.entities.ui;
 import static com.critters.breakout.level.Level.level;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.critters.breakout.graphics.Render;
 
 public class ScoreDisplay extends UIElement {
 
 	int score = 0;
-	protected BitmapFont font;
 
 	public ScoreDisplay(int score) {
 		this.score = score;
-
-		font = new BitmapFont();
-
-		font.setColor(Color.BLACK);
 	}
 
 	@Override
@@ -25,8 +19,8 @@ public class ScoreDisplay extends UIElement {
 	}
 
 	@Override
-	public void renderIfVisible(SpriteBatch render) {
-		font.draw(render, "Score: " + score, 30, 30);
+	public void renderIfVisible(Render render) {
+		render.drawText("Score: " + score, Color.BLACK, 40, 55);
 	}
 
 }

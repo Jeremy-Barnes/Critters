@@ -1,17 +1,16 @@
 package com.critters.breakout.entities.blocks;
 
-import static com.critters.breakout.graphics.Render.sr;
 import static com.critters.breakout.level.Level.random;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.entities.powerup.PowerupBigPaddle;
 import com.critters.breakout.entities.powerup.PowerupFireBall;
 import com.critters.breakout.entities.powerup.PowerupSlowBall;
+import com.critters.breakout.graphics.Render;
 import com.critters.breakout.math.Rectangle;
 import com.critters.breakout.math.Vector2f;
 
@@ -29,12 +28,13 @@ public abstract class Block extends Collidable {
 		rectangle = new Rectangle(pos, pos.add(size));
 
 		color = new Color(1, 0, 0, 1);
-		powerups.add(new PowerupSlowBall(rectangle.getCenter()));
+
+		// Add a power up if Random is so inclined
 		if (random.nextInt(6) == 0)
 			addRandomPowerup();
 	}
 
-	private void addRandomPowerup() {			
+	private void addRandomPowerup() {
 
 		int type = random.nextInt(3);
 		switch (type) {
@@ -56,12 +56,13 @@ public abstract class Block extends Collidable {
 	public abstract void update();
 
 	@Override
-	public void render(SpriteBatch render) {
-		sr.setColor(color);
+	public void render(Render render) {
 		/*
-		 * Debug code for ball proximity if (checked) { sr.setColor(0, 0, 1, 1); checked = false; }
+		 * Debug code for ball proximity if (checked) { sr.setColor(0, 0, 1, 1);
+		 * checked = false; }
 		 */
-		sr.rect(pos.x, pos.y, size.x, size.y);
+
+		render.drawRectangle(color, pos.x, pos.y, size.x, size.y);
 	}
 
 	@Override

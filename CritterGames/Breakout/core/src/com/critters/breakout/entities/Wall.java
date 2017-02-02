@@ -1,11 +1,8 @@
 package com.critters.breakout.entities;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.critters.breakout.graphics.Render;
 import com.critters.breakout.math.Vector2f;
-import static com.critters.breakout.graphics.Render.sr;
 
 public class Wall extends Collidable {
 
@@ -24,9 +21,8 @@ public class Wall extends Collidable {
 	}
 
 	@Override
-	public void render(SpriteBatch render) {
-		sr.setColor(new Color(0x2C3E50ff));
-		sr.rect(pos.x, pos.y, size.x, size.y);
+	public void render(Render render) {
+		render.drawRectangle(new Color(0x2C3E50ff), pos.x, pos.y, size.x, size.y);
 	}
 
 }

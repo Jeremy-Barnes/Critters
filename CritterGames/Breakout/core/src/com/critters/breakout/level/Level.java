@@ -1,13 +1,8 @@
 package com.critters.breakout.level;
 
-import static com.critters.breakout.graphics.Render.sr;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.critters.breakout.entities.Ball;
 import com.critters.breakout.entities.Collidable;
 import com.critters.breakout.entities.Entity;
@@ -16,10 +11,10 @@ import com.critters.breakout.entities.Wall;
 import com.critters.breakout.entities.blocks.Block;
 import com.critters.breakout.entities.blocks.BlockMulti;
 import com.critters.breakout.entities.powerup.Powerup;
-import com.critters.breakout.entities.powerup.PowerupBigPaddle;
 import com.critters.breakout.entities.ui.GameOverDisplay;
 import com.critters.breakout.entities.ui.ScoreDisplay;
 import com.critters.breakout.entities.ui.UIElement;
+import com.critters.breakout.graphics.Render;
 import com.critters.breakout.input.Input;
 import com.critters.breakout.math.Vector2f;
 
@@ -46,7 +41,7 @@ public class Level {
 	public final int LEVEL_WIDTH;
 	public final int LEVEL_HEIGHT;
 
-	public final int WALL_SIZE = 17;
+	public final int WALL_SIZE = 35;
 
 	// private final Pattern pattern;
 
@@ -57,13 +52,13 @@ public class Level {
 		// Start with the score from the previous level
 		this.score = score;
 
-		LEVEL_WIDTH = Gdx.graphics.getWidth();
-		LEVEL_HEIGHT = Gdx.graphics.getHeight();
+		LEVEL_WIDTH = Render.WIDTH;
+		LEVEL_HEIGHT = Render.HEIGHT;
 
 		// Add the ball and the paddle
-		ball = new Ball(new Vector2f(316, 100), 8);
+		ball = new Ball(new Vector2f(LEVEL_WIDTH / 2 - 8, 100), 15);
 		entities.add(ball);
-		entities.add(new Pad(new Vector2f(320 - 75 / 2, 30), new Vector2f(75, 10)));
+		entities.add(new Pad(new Vector2f(LEVEL_WIDTH / 2 - 200 / 2, 30), new Vector2f(200, 15)));
 
 		// Create the level
 		LevelLoader.loadLevel(this);
@@ -71,11 +66,9 @@ public class Level {
 		// Pattern.generateLevel(entities, pattern);
 
 		// Add the level walls
-		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, 480)));
-		// entities.add(new Wall(new Vector2f(0, 0), new Vector2f(640,
-		// WALL_SIZE))); /* Bottom debug wall*/
-		entities.add(new Wall(new Vector2f(0, 480 - WALL_SIZE), new Vector2f(640, WALL_SIZE)));
-		entities.add(new Wall(new Vector2f(640 - WALL_SIZE, 0), new Vector2f(WALL_SIZE, 480)));
+		entities.add(new Wall(new Vector2f(0, 0), new Vector2f(WALL_SIZE, LEVEL_HEIGHT)));
+		entities.add(new Wall(new Vector2f(0, LEVEL_HEIGHT - WALL_SIZE), new Vector2f(LEVEL_WIDTH, WALL_SIZE)));
+		entities.add(new Wall(new Vector2f(LEVEL_WIDTH - WALL_SIZE, 0), new Vector2f(WALL_SIZE, LEVEL_HEIGHT)));
 
 		uiElements.add(new ScoreDisplay(score));
 		GameOverDisplay gameOver = new GameOverDisplay(score);
@@ -144,9 +137,7 @@ public class Level {
 	/**
 	 * Render the level.
 	 */
-	public void render(SpriteBatch render) {
-		sr.begin(ShapeType.Filled);
-
+	public void render(Render render) {
 		for (Entity e : entities) {
 			e.render(render);
 		}
@@ -154,15 +145,6 @@ public class Level {
 		for (UIElement e : uiElements) {
 			e.render(render);
 		}
-
-		/*
-		 * I have absolutely no idea why this is needed, but it doesn't render
-		 * the score without it, when putting the same code used to render the
-		 * score inside this render method does render it.
-		 */
-		render.flush();
-
-		sr.end();
 	}
 
 	public void addEntity(Entity e) {

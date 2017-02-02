@@ -1,18 +1,15 @@
 package com.critters.breakout.entities;
 
-import static com.critters.breakout.graphics.Render.sr;
 import static com.critters.breakout.level.Level.level;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.Color;
 import com.critters.breakout.entities.powerup.Powerup;
 import com.critters.breakout.entities.powerup.PowerupBigPaddle;
-import com.critters.breakout.level.Level;
+import com.critters.breakout.graphics.Render;
 import com.critters.breakout.math.Vector2f;
 
 public class Pad extends Collidable {
@@ -43,13 +40,14 @@ public class Pad extends Collidable {
 		if (Gdx.input.isTouched() || Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			mode = InputMode.POINTER;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+				|| Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
 			mode = InputMode.KEYBOARD;
 		}
 
 		switch (mode) {
 		case POINTER:
-			goalX = Gdx.input.getX() - size.x / 2;
+			goalX = com.critters.breakout.input.Input.mouseX - size.x / 2;
 			break;
 
 		case KEYBOARD:
@@ -114,9 +112,9 @@ public class Pad extends Collidable {
 	}
 
 	@Override
-	public void render(SpriteBatch render) {
-		sr.setColor(0.75f, 0.5f, 0.25f, 1);
-		sr.rect(pos.x, pos.y, size.x, size.y);
+	public void render(Render render) {
+		Color c = new Color(0.75f, 0.5f, 0.25f, 1);
+		render.drawRectangle(c, pos.x, pos.y, size.x, size.y);
 	}
 
 }
