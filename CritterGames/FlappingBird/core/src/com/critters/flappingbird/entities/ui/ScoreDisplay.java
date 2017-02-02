@@ -21,7 +21,7 @@ public class ScoreDisplay extends UIElement {
 		actualScore += Gdx.graphics.getDeltaTime();
 
 		// If there are any points from the level, add them up
-		score = level.score + (int) actualScore;
+		score = (int) level.score;
 	}
 
 	@Override

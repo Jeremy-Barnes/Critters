@@ -11,6 +11,7 @@ import com.critters.flappingbird.entities.Entity;
 import com.critters.flappingbird.entities.Terrain;
 import com.critters.flappingbird.entities.Wall;
 import com.critters.flappingbird.entities.powerup.Powerup;
+import com.critters.flappingbird.entities.powerup.PowerupScore;
 import com.critters.flappingbird.entities.powerup.PowerupShield;
 import com.critters.flappingbird.entities.ui.GameOverDisplay;
 import com.critters.flappingbird.entities.ui.ScoreDisplay;
@@ -31,7 +32,7 @@ public class Level {
 	public static Level level;
 
 	// This is not the complete score. Does not count fly time
-	public int score;
+	public float score;
 
 	public State state;
 
@@ -58,13 +59,19 @@ public class Level {
 		entities.add(bird);
 		terrain = new Terrain(level);
 		entities.add(terrain);
-		
-		for(int i = 1; i < 100; i++){
-			entities.add(new PowerupShield(this, new Vector2f(i * 500, 450), 20));
+
+		for (int i = 1; i < 100; i++) {
+			entities.add(new PowerupShield(this, new Vector2f(i * 500, 350), 20));
+			entities.add(new PowerupScore(this, new Vector2f(i * 500, 400)));
 		}
 
-		uiElements.add(new ScoreDisplay(this, score));
-		GameOverDisplay gameOver = new GameOverDisplay(this, score);
+		for (int i = 1; i < 100; i++) {
+			entities.add(new Wall(this, new Vector2f(i * 250 + 100 + random.nextInt(50), 350 + random.nextInt(250)),
+					new Vector2f(50 + random.nextInt(20), 50 + random.nextInt(20))));
+		}
+
+		uiElements.add(new ScoreDisplay(this, (int) score));
+		GameOverDisplay gameOver = new GameOverDisplay(this, (int) score);
 		gameOver.setVisible(false);
 		uiElements.add(gameOver);
 
@@ -185,6 +192,10 @@ public class Level {
 
 	public float getTranslation() {
 		return bird.pos.x - 300;
+	}
+
+	public void addScore(float increment) {
+		score += increment;
 	}
 
 }

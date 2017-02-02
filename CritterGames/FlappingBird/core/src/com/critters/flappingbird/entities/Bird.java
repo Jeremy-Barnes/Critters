@@ -79,9 +79,14 @@ public class Bird extends Entity {
 				if (shielded)
 					invincible = 1;
 
-				Vector2f direction = c.getDirection(intersetcion);
-				if (direction.y < 0)
-					jump();
+				// Remove the obstacle if it is a wall
+				if (c instanceof Wall) {
+					level.removeEntity(c);
+				} else { // If it was ground, then maybe jump
+					Vector2f direction = c.getDirection(intersetcion);
+					if (direction.y < 0)
+						jump();
+				}
 			}
 		}
 	}
@@ -107,6 +112,10 @@ public class Bird extends Entity {
 		checkCollisions();
 		checkPowerups();
 		checkActivePowerups();
+
+		if (!dead) {
+			level.addScore(Gdx.graphics.getDeltaTime());
+		}
 	}
 
 	@Override
