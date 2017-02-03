@@ -312,8 +312,9 @@ public class User {
 		Hibernate.initialize(inventory);
 	}
 
-    public void initializeInventory(){
-		this.setInventory(UserBLL.getInventory(this));
+
+  	public void initializeInventory(){
+		this.setInventory(UserBLL.getUserInventory(this));
 	}
 
 

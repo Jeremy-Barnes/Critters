@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Pet;
@@ -91,7 +92,6 @@ public class UserBLL {
 					validator = createSelectorAndHashValidator(user);
 					entityManager.getTransaction().commit();
 				} else {
-					entityManager.getTransaction().rollback();
 					return null;
 				}
 				if (validator != null) user.setTokenValidator(validator);
@@ -105,6 +105,9 @@ public class UserBLL {
 			BackgroundJobManager.printLine(ex);
 			return null; //no user found
 		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 	}
@@ -220,7 +223,11 @@ public class UserBLL {
 		return valid;
 	}
 
-	public static List<Item> getInventory(User user){
+	public static List<InventoryGrouping> getInventory(User user){
+		return CommerceBLL.groupItems(getUserInventory(user));
+	}
+
+	public static List<Item> getUserInventory(User user){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<Item> inventory = entityManager
 				.createQuery("from Item where ownerId = :id")
