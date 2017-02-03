@@ -1,15 +1,19 @@
 package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Store;
-
 import com.critters.dal.dto.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.resource.spi.InvalidPropertyException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -147,4 +151,18 @@ public class CommerceBLL {
 		}
 	}
 
+	protected static List<InventoryGrouping> groupItems(List<Item> items){
+		List<InventoryGrouping> inventory = new ArrayList<InventoryGrouping>();
+
+		Map<Integer, List<Item>> itemMap = items.parallelStream().collect(Collectors.groupingBy(itm -> itm.getDescription().getItemConfigID()));
+		Collection<List<Item>> itemsGrouped = itemMap.values();
+		itemsGrouped.parallelStream().forEach(listitems -> {
+			for (int j = 1; j < listitems.size(); j++) {
+				listitems.get(j).setDescription(null);
+			}
+			inventory.add(new InventoryGrouping(listitems));
+		});
+
+		return inventory;
+	}
 }
