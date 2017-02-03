@@ -92,16 +92,10 @@ public class ChatBLL {
 	public static List<Conversation> getConversations(int userID) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id").setParameter("id", userID).getResultList();
+			List<Message> mail = entityManager.createQuery("from Message where (senderUserId = :id or recipientUserId = :id) and parentMessageId is null").setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where rootMessageId in :ids")
 													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
-			entityManager.getTransaction().begin();
-			mail.forEach(m->m.setRead(true));
-			mailChildren.forEach(m -> m.setRead(true));
-			mail.forEach(m->entityManager.merge(m));
-			mailChildren.forEach(m -> entityManager.merge(m));
-			entityManager.getTransaction().commit();
 			return buildConversations(mail, mailChildren);
 		} finally {
 		entityManager.close();

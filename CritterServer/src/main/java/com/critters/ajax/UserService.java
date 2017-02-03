@@ -2,11 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
-import com.critters.dal.dto.AuthToken;
-import com.critters.dal.dto.CreateAccountRequest;
-import com.critters.dal.dto.ItemRequest;
-import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.entity.Item;
+import com.critters.dal.dto.*;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
@@ -172,9 +168,7 @@ public class UserService extends AjaxService{
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			SearchResponse resp = new SearchResponse();
-			resp.items = UserBLL.getInventory(loggedInUser).toArray(new Item[0]);
-			return Response.status(Response.Status.OK).entity(resp).build();
+			return Response.status(Response.Status.OK).entity(UserBLL.getInventory(loggedInUser).toArray(new InventoryGrouping[0])).build();
 		}
 	}
 

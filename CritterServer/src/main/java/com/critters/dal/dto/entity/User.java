@@ -251,20 +251,22 @@ public class User {
 		List<Friendship> frnds = new ArrayList();
 		if(friends != null && ((friends instanceof PersistentBag) ? ((PersistentBag)friends).wasInitialized() : true)) {
 			for (Friendship friendship : friends) {
-				friendship.setRequester(new User(this));
+				friendship.setRequester(new User(friendship.getRequester()));
 				friendship.setRequested(new User(friendship.getRequested()));
 			}
 			frnds.addAll(friends);
-		} else if(friends != null && !((PersistentBag)friends).wasInitialized())  {
-			return null;
 		}
+		else if(friends != null &&  !(friends instanceof PersistentBag))  {
+			frnds.addAll(friends);
+		}
+
 		if(friendsOf != null && ((friendsOf instanceof PersistentBag) ? ((PersistentBag)friendsOf).wasInitialized() : true)) {
 			for (Friendship friendship : friendsOf) {
-				friendship.setRequested(new User(this));
+				friendship.setRequested(new User(friendship.getRequested()));
 				friendship.setRequester(new User(friendship.getRequester()));
 			}
 			frnds.addAll(friendsOf);
-		} else if(friendsOf != null) {
+		} else if(friendsOf != null && !(friendsOf instanceof PersistentBag)) {
 			frnds.addAll(friendsOf);
 		}
 
@@ -272,7 +274,11 @@ public class User {
 	}
 
 	public List<Pet> getPets() {
-		return pets;
+		if((pets instanceof PersistentBag && ((PersistentBag)pets).wasInitialized()) || pets instanceof ArrayList) {
+			return this.pets;
+		} else {
+			return null;
+		}
 	}
 
 	public void setPets(List<Pet> zoo) {
@@ -302,16 +308,22 @@ public class User {
 		Hibernate.initialize(friends);
 		Hibernate.initialize(friendsOf);
 		Hibernate.initialize(pets);
+		Hibernate.initialize(store);
 		Hibernate.initialize(inventory);
 	}
 
-  public void initializeInventory(){
-		this.setInventory(UserBLL.getInventory(this));
+
+  	public void initializeInventory(){
+		this.setInventory(UserBLL.getUserInventory(this));
 	}
 
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){
-		return this.store;
+		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
+			return this.store;
+		} else {
+			return null;
+		}
 	}
 
 	public void setStore(List<com.critters.dal.dto.entity.Store> store){

@@ -70,6 +70,14 @@ public class MetaService extends AjaxService {
 	}
 
 	@GET
+	@Path("/searchUsers/{searchStr}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchUsers(@PathParam("searchStr") String searchStr) throws JAXBException, GeneralSecurityException, IOException {
+		return Response.status(200).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
+				new GenericEntity<User[]>(UserBLL.searchForUser(searchStr).toArray(new User[0]), User[].class)).build();
+	}
+
+	@GET
 	@Path("/checkPetName/{petName}")
 	public boolean checkPetNameAvailability(@PathParam("petName") String petName) {
 		return PetBLL.isPetNameValid(petName);
