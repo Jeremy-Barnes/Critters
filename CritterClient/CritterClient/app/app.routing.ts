@@ -1,4 +1,4 @@
-﻿import { ModuleWithProviders }  from '@angular/core';
+﻿import { NgModule }             from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AccountCreateBasicInfoComponent } from './components/accountcreate-basicinfo.component';
@@ -10,6 +10,7 @@ import { DashboardComponent } from './components/dashboard.component';
 import { AppComponent } from './components/app.component';
 import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
+import { InventoryComponent } from './components/inventory.component';
 
 
 
@@ -50,7 +51,15 @@ const appRoutes: Routes = [
     {
         path: 'messages',
         component: MessageComponent
+    },
+    {
+        path: 'inventory',
+        component: InventoryComponent
     }
 ];
 
-export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+@NgModule({
+    imports: [RouterModule.forRoot(appRoutes)],
+    exports: [RouterModule]
+})
+export class AppRoutingModule { }

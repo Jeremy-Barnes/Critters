@@ -26,7 +26,8 @@
 
     <!----------------------COMPOSE VIEW------------------>
     <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
-        To: <autocomplete *ngIf="composeToFriend == null" [autocomplete-func]="searchFriends" (result-out)="onItemSelected($event)"></autocomplete>
+        To: <autocomplete *ngIf="composeToFriend == null" 
+                          [autocomplete-local-func]="searchFriends" [autocomplete-remote-func]="searchUsers" (result-out)="onItemSelected($event)"></autocomplete>
         <span *ngIf="composeToFriend != null">{{composeToFriend.userName}} <a (click)="deselctComposeFriend()">X</a></span>
         <br />
         Subject: <input type="text" [(ngModel)]="newMessage.Subject" /> <br />
@@ -48,35 +49,43 @@
         </ul>
         <div class="tab-content">
 
-
-
             <div id="inbox" class="tab-pane fade in active">
                 {{messages.length}} Conversations <input type="button" (click)="composeNewMessage()" value="New Message" />
                 <br />
                 <div *ngFor="let conversation of messages">
-                    <div class="messageSubject">{{conversation.messages[0].messageSubject}} <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div></div>
-                    <div><span><input type="checkbox" [(ngModel)]="conversation.delete" /></span><span>From: <a class="messageUser">{{conversation.messages[0].sender.userName}}</a> | {{conversation.messages[0].dateSent.toLocaleString()}}</span></div>
+                    <div class="messageSubject">{{conversation.messages[0].messageSubject}} 
+                        <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div>
+                    </div>
+                    <div>
+                        <span><input type="checkbox" [(ngModel)]="conversation.delete" /></span>
+                        <span>From: 
+                            <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
+                            {{conversation.messages[0].sender.userName}}</a> | {{conversation.messages[0].dateSent.toLocaleString()}}
+                        </span>
+                    </div>
                     <input type="button" (click)="viewDetail(conversation)" value="View More" /> 
                     <input type="button" (click)="deleteConversation(conversation.messages)" value="Delete Message" />
                     <br />
                 </div>
 
-                <input type="button" (click)="debug()" value="Debug" />
                 <input type="submit" value="Select All" />
                 <input type="submit" value="Delete" />
             </div>
-
 
 
             <div id="sent" class="tab-pane fade in">
                 {{sentMessages.length}} Sent Messages
                 <div *ngFor="let message of sentMessages">
                     <div class="messageSubject">{{message.messageSubject}}</div>
-                    <div><span><input type="checkbox" [(ngModel)]="message.delete" /></span><span>From: <a class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}</span></div>
+                    <div>
+                        <span><input type="checkbox" [(ngModel)]="message.delete" /></span>
+                        <span>From:
+                            <a [routerLink]="['/viewUser/', message.sender.userID]" class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}
+                        </span>
+                    </div>
                     <br />
                 </div>
 
-                <input type="button" (click)="debug()" value="Debug" />
                 <input type="submit" value="Select All" />
                 <input type="submit" value="Delete" />
             </div>
@@ -84,14 +93,27 @@
 
 
             <div id="friends" class="tab-pane fade">
-                FRRRRRRRRRRRIIIIIIIEEEEEEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNNDS
-                <!--<div *ngFor="let friend of friendRequests">
-                    <div>Subject2</div>
-                    <div><span>radio</span><span>From User Date</span></div>
-                </div>-->
-
-                <input type="submit" value="Select All" />
-                <input type="submit" value="Delete" />
+                These people want to be your friends!
+                <div *ngFor="let friend of pendingFriendRequests">
+                    <div class="messageSubject"> 
+                        <a [routerLink]="['/viewUser/', friend.requester.userID]" 
+                           class="messageUser">{{friend.requester.userName}}</a> | {{friend.requester.firstName}} {{friend.requester.lastName}}</div>
+                    <div><span>Sent on: {{friend.dateSent}}</span></div>
+                    <input type="button" (click)="acceptRequest(friend)" value="Accept Friend Request" />
+                    <input type="button" (click)="declineRequest(friend)" value="Decline Friend Request" />
+                    <br />
+                </div>
+                <br /><br />
+                Your outstanding friend requests
+                <div *ngFor="let friend of outstandingFriendRequests">
+                    <div class="messageSubject"> 
+                        <a class="messageUser" [routerLink]="['/viewUser/', friend.requested.userID]">
+                        {{friend.requested.userName}}</a> | {{friend.requested.firstName}} {{friend.requested.lastName}}
+                    </div>
+                    <div><span>Sent on: {{friend.dateSent}}</span></div>
+                    <input type="button" (click)="cancelRequest(friend)" value="Cancel Friend Request" />
+                    <br />
+                </div>
             </div>
 
         </div>
