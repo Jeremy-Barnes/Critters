@@ -120,3 +120,7 @@ export class ItemDescription {
     itemName: string;
     itemDescription: string;
 }
+
+export class InventoryGrouping {
+    inventoryItemsGrouped: Item[];
+}

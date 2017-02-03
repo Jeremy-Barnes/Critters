@@ -19,8 +19,7 @@ export class LoginComponent implements OnInit {
         Application.logIn(this.app.user).then((u: User) => {
             (<any>$("#log-in")).modal('hide'); //I'm not happy about this either.
         }).fail((error: JQueryXHR) => {
-            this.app.errorCallback(error.responseText);
-          //  alert("Error text received from server (do something with this later): \n\n" + error.responseText)
+            Application.handleServerError(error);
             self.confirmPassword = "";
         });
         return false;

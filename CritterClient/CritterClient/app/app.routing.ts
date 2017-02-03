@@ -10,6 +10,7 @@ import { DashboardComponent } from './components/dashboard.component';
 import { AppComponent } from './components/app.component';
 import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
+import { InventoryComponent } from './components/inventory.component';
 
 
 
@@ -50,6 +51,10 @@ const appRoutes: Routes = [
     {
         path: 'messages',
         component: MessageComponent
+    },
+    {
+        path: 'inventory',
+        component: InventoryComponent
     }
 ];
 

@@ -17,7 +17,7 @@ import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
 import { AutocompleteList } from './components/autocomplete.component'
 import { ErrorComponent } from './components/error.component'
-
+import { InventoryComponent} from './components/inventory.component'
 
 
 
@@ -30,7 +30,7 @@ import { ErrorComponent } from './components/error.component'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

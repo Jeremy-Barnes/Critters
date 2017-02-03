@@ -1,36 +1,28 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Message, Conversation, Friendship } from '../dtos'
+import { User, Notification, Item, ItemDescription, InventoryGrouping } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
-    templateUrl: "../../templates/messages.template.htm"
+    templateUrl: "../../templates/inventory.template.htm"
 })
 
 export class InventoryComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
     alerts: Notification[];
-    messages: Conversation[];
-    sentMessages: Message[];
-    activeConversation: Message[];
-    replyMessage: Message;
-    newMessage: Message;
-    composeToFriend: User;
 
-    pendingFriendRequests: Friendship[];
-    outstandingFriendRequests: Friendship[];
+    inventory: InventoryGrouping[];
+    activeItem: Item[];
+    composeToFriend: User;
 
     constructor(private route: ActivatedRoute) {
         prepDisplay();
-        Application.getMailbox();
+        Application.getInventory();
         this.user = this.app.user;
         this.alerts = this.app.alerts;
-        this.messages = this.app.inbox;
-        this.sentMessages = this.app.sentbox;
-        this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
-        this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
+        this.inventory = this.app.inventory;
     }
 
     ngOnInit() {
@@ -40,65 +32,28 @@ export class InventoryComponent implements OnInit {
         alert(this.user);
         alert(Application.getApp());
         var ap2 = Application.getApp();
-        alert(this.messages.length);
     }
 
-    reply(replyMessage: Message) {
-        this.replyMessage = replyMessage;
-        this.composeNewMessage();
-    }
 
-    composeNewMessage() {
-        this.newMessage = new Message();
-    }
 
-    returnToOverview() {
-        this.activeConversation = null;
-        this.replyMessage = null;
-        this.newMessage = null;
-    }
 
-    cancelReply() {
-        this.replyMessage = null;
-        this.cancelCompose();
-    }
 
-    cancelCompose() {
-        this.newMessage = null;
-    }
+    //viewDetail(viewMessage: Conversation) {
+    //    this.activeConversation = viewMessage.messages;
+    //}
 
-    deleteConversation(...message: Message[]) {
-        alert("this one doesn't work yet, make the server op for it, dummy");
-    }
+    //sendMessage() {
+    //    this.newMessage.sender = this.user;
+    //    if (this.replyMessage != null) {
+    //        this.newMessage.parentMessage = this.replyMessage;
+    //        this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
+    //        this.newMessage.recipient = this.replyMessage.sender;
+    //    }
+    //    Application.sendMessage(this.newMessage);
+    //}
 
-    replyLatest() {
-        this.reply(this.activeConversation[this.activeConversation.length-1]);
-    }
-
-    viewDetail(viewMessage: Conversation) {
-        this.activeConversation = viewMessage.messages;
-    }
-
-    sendMessage() {
-        this.newMessage.sender = this.user;
-        if (this.replyMessage != null) {
-            this.newMessage.parentMessage = this.replyMessage;
-            this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
-            this.newMessage.recipient = this.replyMessage.sender;
-        }
-        Application.sendMessage(this.newMessage);
-    }
-
-    acceptRequest(friendRequest: Friendship) {
-        Application.acceptFriendRequest(friendRequest);
-    }
-
-    declineRequest(friendRequest: Friendship) {
-        Application.rejectFriendRequest(friendRequest);
-    }
-
-    cancelRequest(friendRequest: Friendship) {
-        Application.cancelFriendRequest(friendRequest);
+    acceptRequest(friendRequest: Item[]) {
+      //  Application.acceptFriendRequest(friendRequest);
     }
 
     public searchFriends(searchTerm: string) {
