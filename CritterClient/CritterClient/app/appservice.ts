@@ -191,4 +191,11 @@ export class Application {
             //Application.getApp().inbox.push(...conversations);
         });
     }
+
+    public static submitInventoryAction(actionCode: number, items: Item[]) {
+        switch (actionCode) {
+            case 0: ServiceMethods.moveInventoryItemToStore(this.getApp().user, items); break;
+            case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
+        }
+    }
 }

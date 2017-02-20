@@ -129,4 +129,12 @@ export class ServiceMethods {
     public static getInventory(request: User): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("getInventory", "users", request);
     }
+
+    public static discardInventoryItems(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.doAjax("discardInventoryItem", "users", { user: user, items: items });
+    }
+
+    public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
+    }
 }

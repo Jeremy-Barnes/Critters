@@ -14,8 +14,12 @@ export class InventoryComponent implements OnInit {
     alerts: Notification[];
 
     inventory: InventoryGrouping[];
-    activeItem: Item[];
+    activeItemGroup: Item[] = [];
     composeToFriend: User;
+    itemActions: { id: number, text: string }[] = [];
+    selectedAction: { id: number, text: string } = null;
+
+    private defaultActions = [{ id: 0, text: "Move to Shop"}, {id: 1, text: "Discard Item"}]
 
     constructor(private route: ActivatedRoute) {
         prepDisplay();
@@ -34,15 +38,18 @@ export class InventoryComponent implements OnInit {
         var ap2 = Application.getApp();
     }
 
+    viewItem(viewItem: InventoryGrouping) {
+        this.activeItemGroup.length = 0;
+        this.activeItemGroup.push(...viewItem.inventoryItemsGrouped);
+        this.itemActions.length = 0;
+        this.itemActions.push(this.defaultActions[0]);
+        //todo get context sensitive actions based on item type
+        this.itemActions.push(this.defaultActions[1]);
+        (<any>$("#viewItemDetail")).modal('show'); //I'm not happy about this either.
+    }
 
-
-
-
-    //viewDetail(viewMessage: Conversation) {
-    //    this.activeConversation = viewMessage.messages;
-    //}
-
-    //sendMessage() {
+    submitItem() {
+        Application.submitInventoryAction(this.selectedAction.id, this.activeItemGroup);
     //    this.newMessage.sender = this.user;
     //    if (this.replyMessage != null) {
     //        this.newMessage.parentMessage = this.replyMessage;
@@ -50,7 +57,7 @@ export class InventoryComponent implements OnInit {
     //        this.newMessage.recipient = this.replyMessage.sender;
     //    }
     //    Application.sendMessage(this.newMessage);
-    //}
+    }
 
     acceptRequest(friendRequest: Item[]) {
       //  Application.acceptFriendRequest(friendRequest);
