@@ -18,8 +18,10 @@ import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jeremy on 8/9/2016.
@@ -237,19 +239,24 @@ public class UserBLL {
 		return inventory;
 	}
 
-	public static void discardInventoryItem(Item item, User user){
+	public static void discardInventoryItems(Item[] items, User user){
+		List<Item> streamableItems = Arrays.asList(items);
+		List<Integer> ids = streamableItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
+		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
+
 		verifyUserInventoryIsLoaded(user);
-		Item[] resultant = user.getInventory().parallelStream().filter(i -> i.getInventoryItemId() == item.getInventoryItemId()).toArray(Item[]::new);
-		if(resultant != null && resultant.length != 0) {
+
+		if(resultant != null && resultant.length == items.length) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-				user.getInventory().remove(resultant[0]);
-				resultant[0].setOwnerId(null);
-				resultant[0].setPrice(null);
-
+				for(int i = 0; i < resultant.length; i++) {
+					user.getInventory().remove(resultant[i]);
+					resultant[i].setOwnerId(null);
+					resultant[i].setPrice(null);
+					entityManager.merge(resultant[i]);
+				}
 				entityManager.merge(user);
-				entityManager.merge(resultant[0]);
 				entityManager.getTransaction().commit();
 			} finally {
 				entityManager.close();
