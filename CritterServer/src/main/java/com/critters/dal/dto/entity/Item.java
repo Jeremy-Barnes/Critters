@@ -83,6 +83,14 @@ public class Item {
 		String itemName;
 		String itemDescription;
 
+		@ManyToOne
+		@JoinColumn(name="itemClass", updatable = false)
+		private ItemClassification itemClass;
+
+		@ManyToOne
+		@JoinColumn(name="rarity", updatable = false)
+		private ItemRarityType rarity;
+
 		public ItemDescription(){}
 
 		public ItemDescription(int itemConfigID, String itemName, String itemDescription) {
@@ -113,6 +121,86 @@ public class Item {
 
 		public void setItemDescription(String itemDescription) {
 			this.itemDescription = itemDescription;
+		}
+
+		public ItemClassification getItemClass() {
+			return itemClass;
+		}
+
+		public void setItemClass(ItemClassification itemClass) {
+			this.itemClass = itemClass;
+		}
+
+		public ItemRarityType getRarity() {
+			return rarity;
+		}
+
+		public void setRarity(ItemRarityType rarity) {
+			this.rarity = rarity;
+		}
+
+
+	}
+
+	@Entity
+	@Table(name="itemClassifications")
+	public static class ItemClassification {
+		@Id
+		int itemClassificationID;
+		String name;
+
+		public ItemClassification(int itemClassificationID, String name) {
+			this.itemClassificationID = itemClassificationID;
+			this.name = name;
+		}
+
+		public ItemClassification(){}
+
+		public int getItemClassificationID() {
+			return itemClassificationID;
+		}
+
+		public void setItemClassificationID(int itemClassificationID) {
+			this.itemClassificationID = itemClassificationID;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
+	@Entity
+	@Table(name="itemRarityTypes")
+	public static class ItemRarityType {
+		@Id
+		int itemRarityTypeID;
+		String name;
+
+		public ItemRarityType(int itemRarityTypeID, String name) {
+			this.itemRarityTypeID = itemRarityTypeID;
+			this.name = name;
+		}
+
+		public ItemRarityType(){}
+
+		public int getItemRarityTypeID() {
+			return itemRarityTypeID;
+		}
+
+		public void setItemRarityTypeID(int itemRarityTypeID) {
+			this.itemRarityTypeID = itemRarityTypeID;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 	}
 }

@@ -54,7 +54,6 @@ public class CommerceBLL {
 					entityManager.merge(r);
 				});
 				entityManager.merge(user);
-				//entityManager.merge(resultant.toArray(Item[]::new));
 				entityManager.getTransaction().commit();
 			} finally {
 				entityManager.close();
