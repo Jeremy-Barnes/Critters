@@ -52,13 +52,35 @@ CREATE TABLE gameThumbnailConfigs(
     gameURL VARCHAR(100) NOT NULL
 );
 
+
+
+
 CREATE OR REPLACE FUNCTION restockRandomly(maxRarity int, minRarity int, returnQuantity int, specificClass int, specificItemType int)
-  RETURNS SETOF itemConfigs AS
-$$
-select *
-from itemConfigs where coalesce(maxRarity, rarity) >= rarity and coalesce(minRarity,rarity) <= maxRarity and coalesce(specificClass, class) = class and coalesce(specificItemType, itemConfigID) = itemConfigID
-order by random()
-limit  returnQuantity;
-$$
-  LANGUAGE sql VOLATILE
-  COST 100;
+    RETURNS setof itemConfigs AS
+    $$
+    BEGIN
+
+    IF maxRarity < 0 then
+    maxRarity := null;
+    END IF;
+
+    IF minRarity < 0 then
+    minRarity := null;
+    END IF;
+
+    IF specificClass < 0 then
+    specificClass := null;
+    END IF;
+
+    IF specificItemType < 0 then
+    specificItemType := null;
+    END IF;
+
+    return query select *
+    from itemConfigs where coalesce(maxRarity, rarity) >= rarity and coalesce(minRarity,rarity) <= rarity and coalesce(specificClass, itemClass) = itemClass and coalesce(specificItemType, itemConfigID) = itemConfigID
+    order by random()
+    limit  returnQuantity;
+    return;
+    END
+    $$
+    LANGUAGE plpgsql;

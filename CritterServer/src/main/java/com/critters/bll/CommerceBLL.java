@@ -197,8 +197,10 @@ public class CommerceBLL {
 	public static void restock(NPCStoreRestockConfig restock){
 		List<Item> stock = restock.getStore().getStoreStock();
 
-		int totalInStock = 0;
-		if(restock.getSpecificItem() != null) {
+		int totalInStock = -1;
+		if(stock == null || stock.size() == 0) {
+			totalInStock = 0;
+		} else if(restock.getSpecificItem() != null) {
 			totalInStock = (int) stock.stream().filter(s -> s.getDescription().getItemConfigID() == restock.getSpecificItem()).count();
 		} else if (restock.getSpecificClass() != null){
 			totalInStock = (int) stock.stream().filter(s -> s.getDescription().getItemClass().getItemClassificationID() == restock.getSpecificClass()).count();
@@ -208,22 +210,26 @@ public class CommerceBLL {
 					&& s.getDescription().getRarity().getItemRarityTypeID() >= restock.getRarityCeiling()).count();
 		}
 		int totalToGet = Math.min((restock.getMaxTotalQuantity() - totalInStock), restock.getMaxQuantityToAdd());
-		if(totalToGet >= 0) {
+		if(totalToGet <= 0) {
 			return;
 		}
-
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
 			StoredProcedureQuery query = entityManager.createStoredProcedureQuery("restockRandomly", Item.ItemDescription.class);
 
-			query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-			query.setParameter(1,restock.getRarityCeiling());
-			query.setParameter(2, restock.getRarityFloor());
+			query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+			query.registerStoredProcedureParameter(2, Integer.class, ParameterMode.IN);
+			query.registerStoredProcedureParameter(3, Integer.class, ParameterMode.IN);
+			query.registerStoredProcedureParameter(4, Integer.class, ParameterMode.IN);
+			query.registerStoredProcedureParameter(5, Integer.class, ParameterMode.IN);
+
+			query.setParameter(1, restock.getRarityCeiling() == null ? -1 : restock.getRarityCeiling());
+			query.setParameter(2, restock.getRarityFloor() == null ? -1 : restock.getRarityFloor());
 			query.setParameter(3, totalToGet);
-			query.setParameter(4, restock.getSpecificClass());
-			query.setParameter(5, restock.getSpecificItem());
+			query.setParameter(4, restock.getSpecificClass() == null ? -1 : restock.getSpecificClass());
+			query.setParameter(5, restock.getSpecificItem() == null ? -1 : restock.getSpecificItem());
 
 			query.execute();
 			List<Item.ItemDescription> results = query.getResultList();
