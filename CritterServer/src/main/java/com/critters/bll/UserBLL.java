@@ -54,9 +54,11 @@ public class UserBLL {
 			return validatorUnHashed;
 		} catch(Exception e) {
 			BackgroundJobManager.printLine(e);
-			entityManager.getTransaction().rollback();
 			throw e;
 		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 	}
@@ -153,7 +155,6 @@ public class UserBLL {
 			if (changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
 				sessionUser.setEmailAddress(changeUser.getEmailAddress());
 			} else if (changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
-				entityManager.getTransaction().rollback();
 				throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
 			}
 			sessionUser.setCity(changeUser.getCity());
@@ -164,6 +165,9 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return changeUser;
 		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 	}
@@ -259,6 +263,9 @@ public class UserBLL {
 				entityManager.merge(user);
 				entityManager.getTransaction().commit();
 			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
 				entityManager.close();
 			}
 		}

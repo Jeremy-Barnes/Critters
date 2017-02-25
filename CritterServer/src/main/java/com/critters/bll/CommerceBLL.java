@@ -3,11 +3,14 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.Item;
+import com.critters.dal.dto.entity.NPCStoreRestockConfig;
 import com.critters.dal.dto.entity.Store;
 import com.critters.dal.dto.entity.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
+import javax.persistence.StoredProcedureQuery;
 import javax.resource.spi.InvalidPropertyException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -177,5 +180,68 @@ public class CommerceBLL {
 		});
 
 		return inventory;
+	}
+
+	public static List<NPCStoreRestockConfig> getAllRestockConfigs(){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			List<NPCStoreRestockConfig> cfgs = entityManager.createQuery("from NPCStoreRestockConfig").getResultList();
+			return cfgs;
+		} catch (Exception ex){
+			return null;
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static void restock(NPCStoreRestockConfig restock){
+		List<Item> stock = restock.getStore().getStoreStock();
+
+		int totalInStock = 0;
+		if(restock.getSpecificItem() != null) {
+			totalInStock = (int) stock.stream().filter(s -> s.getDescription().getItemConfigID() == restock.getSpecificItem()).count();
+		} else if (restock.getSpecificClass() != null){
+			totalInStock = (int) stock.stream().filter(s -> s.getDescription().getItemClass().getItemClassificationID() == restock.getSpecificClass()).count();
+		}
+		else if(restock.getRarityCeiling() != null && restock.getRarityFloor() != null) {
+			totalInStock = (int) stock.stream().filter(s -> restock.getRarityFloor() >= s.getDescription().getRarity().getItemRarityTypeID()
+					&& s.getDescription().getRarity().getItemRarityTypeID() >= restock.getRarityCeiling()).count();
+		}
+		int totalToGet = Math.min((restock.getMaxTotalQuantity() - totalInStock), restock.getMaxQuantityToAdd());
+		if(totalToGet >= 0) {
+			return;
+		}
+
+
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
+		try {
+			StoredProcedureQuery query = entityManager.createStoredProcedureQuery("restockRandomly", Item.ItemDescription.class);
+
+			query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
+			query.setParameter(1,restock.getRarityCeiling());
+			query.setParameter(2, restock.getRarityFloor());
+			query.setParameter(3, totalToGet);
+			query.setParameter(4, restock.getSpecificClass());
+			query.setParameter(5, restock.getSpecificItem());
+
+			query.execute();
+			List<Item.ItemDescription> results = query.getResultList();
+			results.forEach(d -> {
+				Item i = new Item();
+				i.setDescription(d);
+				i.setContainingStoreId(restock.getStore().getStoreConfigID());
+				i.setPrice(50); //todo economics :(
+				entityManager.persist(i);
+			});
+			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
 	}
 }

@@ -3,7 +3,6 @@ package com.critters.dal.dto.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
 
 
 /**
@@ -15,34 +14,37 @@ public class NPCStoreRestockConfig {
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	private int npcStoreStockConfigID;
+	private Integer npcStoreStockConfigID;
 	private float percentOdds;
-	private int maxQuantityToAdd;
-	private int maxQuantityTotalQuantity;
-	private int specificClass;
-	private int rarityFloor;
-	private int rarityCeiling;
-	private int specificItem;
-	private int storeID;
+	private Integer maxQuantityToAdd;
+	private Integer maxTotalQuantity;
+	private Integer specificClass;
+	private Integer rarityFloor;
+	private Integer rarityCeiling;
+	private Integer specificItem;
 
-	public NPCStoreRestockConfig(float percentOdds, int maxQuantityToAdd, int maxQuantityTotalQuantity, int specificClass, int rarityFloor, int rarityCeiling, int specificItem, int storeID) {
+	@ManyToOne
+	@JoinColumn(name="storeid", updatable = false)
+	private Store store;
+
+	public NPCStoreRestockConfig(float percentOdds, Integer maxQuantityToAdd, Integer maxTotalQuantity, Integer specificClass, Integer rarityFloor, Integer rarityCeiling, Integer specificItem, Store store) {
 		this.percentOdds = percentOdds;
 		this.maxQuantityToAdd = maxQuantityToAdd;
-		this.maxQuantityTotalQuantity = maxQuantityTotalQuantity;
+		this.maxTotalQuantity = maxTotalQuantity;
 		this.specificClass = specificClass;
 		this.rarityFloor = rarityFloor;
 		this.rarityCeiling = rarityCeiling;
 		this.specificItem = specificItem;
-		this.storeID = storeID;
+		this.store = store;
 	}
 
 	public NPCStoreRestockConfig(){}
 
-	public int getNpcStoreStockConfigID() {
+	public Integer getNpcStoreStockConfigID() {
 		return npcStoreStockConfigID;
 	}
 
-	public void setNpcStoreStockConfigID(int npcStoreStockConfigID) {
+	public void setNpcStoreStockConfigID(Integer npcStoreStockConfigID) {
 		this.npcStoreStockConfigID = npcStoreStockConfigID;
 	}
 
@@ -54,59 +56,59 @@ public class NPCStoreRestockConfig {
 		this.percentOdds = percentOdds;
 	}
 
-	public int getMaxQuantityToAdd() {
+	public Integer getMaxQuantityToAdd() {
 		return maxQuantityToAdd;
 	}
 
-	public void setMaxQuantityToAdd(int maxQuantityToAdd) {
+	public void setMaxQuantityToAdd(Integer maxQuantityToAdd) {
 		this.maxQuantityToAdd = maxQuantityToAdd;
 	}
 
-	public int getMaxQuantityTotalQuantity() {
-		return maxQuantityTotalQuantity;
+	public Integer getMaxTotalQuantity() {
+		return maxTotalQuantity;
 	}
 
-	public void setMaxQuantityTotalQuantity(int maxQuantityTotalQuantity) {
-		this.maxQuantityTotalQuantity = maxQuantityTotalQuantity;
+	public void setMaxTotalQuantity(Integer maxTotalQuantity) {
+		this.maxTotalQuantity = maxTotalQuantity;
 	}
 
-	public int getSpecificClass() {
+	public Integer getSpecificClass() {
 		return specificClass;
 	}
 
-	public void setSpecificClass(int specificClass) {
+	public void setSpecificClass(Integer specificClass) {
 		this.specificClass = specificClass;
 	}
 
-	public int getRarityFloor() {
+	public Integer getRarityFloor() {
 		return rarityFloor;
 	}
 
-	public void setRarityFloor(int rarityFloor) {
+	public void setRarityFloor(Integer rarityFloor) {
 		this.rarityFloor = rarityFloor;
 	}
 
-	public int getRarityCeiling() {
+	public Integer getRarityCeiling() {
 		return rarityCeiling;
 	}
 
-	public void setRarityCeiling(int rarityCeiling) {
+	public void setRarityCeiling(Integer rarityCeiling) {
 		this.rarityCeiling = rarityCeiling;
 	}
 
-	public int getSpecificItem() {
+	public Integer getSpecificItem() {
 		return specificItem;
 	}
 
-	public void setSpecificItem(int specificItem) {
+	public void setSpecificItem(Integer specificItem) {
 		this.specificItem = specificItem;
 	}
 
-	public int getStoreID() {
-		return storeID;
+	public Store getStore() {
+		return store;
 	}
 
-	public void setStoreID(int storeID) {
-		this.storeID = storeID;
+	public void setStoreID(Store store) {
+		this.store = store;
 	}
 }

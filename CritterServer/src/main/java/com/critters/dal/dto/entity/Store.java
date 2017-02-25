@@ -18,14 +18,14 @@ public class Store {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int storeConfigID;
 
-	private int ownerId;
+	private Integer ownerId;
 	private String description;
 	private String name;
 
 	@Transient
 	private List<Item> storeStock;
 
-	public Store(int storeConfigID, int ownerId, String name, String description) {
+	public Store(int storeConfigID, Integer ownerId, String name, String description) {
 		this.storeConfigID = storeConfigID;
 		this.ownerId = ownerId;
 		this.name = name;
@@ -34,11 +34,11 @@ public class Store {
 
 	public Store() {}
 
-	public int getOwnerId() {
+	public Integer getOwnerId() {
 		return ownerId;
 	}
 
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
 
