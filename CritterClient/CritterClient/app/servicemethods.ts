@@ -1,9 +1,9 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping } from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://localhost:8080/api/critters/";// "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string = null;
 
@@ -111,6 +111,10 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("checkEmail", "meta", searchTerm, "GET");
     }
 
+    public static getGames(): JQueryPromise<GamesInfo> {
+        return ServiceMethods.doAjax("getGames", "meta", "", "GET");
+    }
+
     /************** Store Stuff **************/
     public static getStorefront(request: Store): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", request);
@@ -137,4 +141,23 @@ export class ServiceMethods {
     public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
     }
+
+    public static getTemplateHTML(url: String): JQueryPromise<any> {
+        var opts: JQueryAjaxSettings = {
+            url: "http://409cf50d.ngrok.io/" + url + "index.html", //location.origin + url,
+            type: "GET",
+            success: () => {
+                alert('wow');
+            }
+        };
+        var self = this;
+        return jQuery.ajax(opts);
+    }
 }
+
+
+
+
+
+
+
