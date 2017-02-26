@@ -119,8 +119,33 @@ export class ItemDescription {
     itemConfigID: number;
     itemName: string;
     itemDescription: string;
+    itemClass: ItemClassification;
+    rarity: ItemRarityType;
+}
+
+export class ItemClassification {
+    itemClassificationID: number;
+    name: string;
+}
+
+export class ItemRarityType {
+    itemRarityTypeID: number;
+    name: string;
 }
 
 export class InventoryGrouping {
     inventoryItemsGrouped: Item[];
+}
+
+export class GameThumbnail {
+    gameThumbnailConfigID: number;
+    gameName: string;
+    gameDescription: string;
+    gameIconPath: string;
+    gameURL: string;
+}
+
+export class GamesInfo {
+    games: GameThumbnail[];
+    featuredGame: GameThumbnail[];
 }

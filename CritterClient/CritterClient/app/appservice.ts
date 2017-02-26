@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -12,9 +12,13 @@ export class Application {
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
     public inventory: InventoryGrouping[] = [];
+
+
     public errorCallback: (text: string) => void;
     public static app: Application = new Application();
 
+
+    public games: GameThumbnail[] = [];
 
     public static getApp() {
         if (Application.app) {
@@ -167,28 +171,6 @@ export class Application {
         ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
             var user = Application.getApp().user;
             Application.getApp().inventory.push(...inventory);
-            //var sentmsgs: Message[] = [];
-            //for (var i = 0; i < conversations.length; i++) {
-            //    let conv = conversations[i];
-            //    for (var j = 0; j < conv.messages.length; j++) {
-            //        let message = conv.messages[j];
-            //        if (message.sender.userID == user.userID) {
-            //            sentmsgs.push(message);
-            //        }
-            //        for (var k = 0; k < conv.participants.length; k++) {
-            //            let participant = conv.participants[k];
-            //            if (message.recipient.userID == participant.userID) {
-            //                message.recipient = (participant);
-            //            }
-            //            if (message.sender.userID == participant.userID) {
-            //                message.sender = (participant);
-            //            }
-            //        }
-            //        message.dateSent = new Date(<any>message.dateSent);
-            //    }
-            //}
-            //Application.getApp().sentbox.push(...sentmsgs);
-            //Application.getApp().inbox.push(...conversations);
         });
     }
 
@@ -197,6 +179,16 @@ export class Application {
             case 0: ServiceMethods.moveInventoryItemToStore(this.getApp().user, items); break;
             case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
         }
+    }
+
+    public static getView(url: String) {
+        return ServiceMethods.getTemplateHTML(url);
+    }
+
+    public static getGames() {
+        ServiceMethods.getGames().done((games: GamesInfo) => {
+            Application.getApp().games.push(...games.games);
+        });
     }
 
 }

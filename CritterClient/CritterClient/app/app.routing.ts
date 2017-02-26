@@ -11,7 +11,7 @@ import { AppComponent } from './components/app.component';
 import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
 import { InventoryComponent } from './components/inventory.component';
-
+import { GamesComponent } from './components/games.component';
 
 
 const appRoutes: Routes = [
@@ -55,6 +55,10 @@ const appRoutes: Routes = [
     {
         path: 'inventory',
         component: InventoryComponent
+    },
+    {
+        path: 'games',
+        component: GamesComponent
     }
 ];
 
