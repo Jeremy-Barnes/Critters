@@ -13,4 +13,9 @@ export class AppComponent implements OnInit {
     alerts: Notification[];
     ngOnInit() { this.user = this.app.user; prepDisplay(); this.alerts = this.app.alerts; }
 
+    notifications() {
+        (<any>$("#notifications-bubble")).modal('show'); //I'm not happy about this either.
+
+    }
+
 }

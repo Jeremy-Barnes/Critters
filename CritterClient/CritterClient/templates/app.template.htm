@@ -10,7 +10,7 @@
             <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
             <div *ngIf="app.loggedIn"> here are alerts</div>
             <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
-            <a *ngIf="app.loggedIn" routerLink="/messages">Messages!</a>
+            <button type="button" *ngIf="!app.loggedIn" (click)="notifications()">Messages!</button>
             <a *ngIf="app.loggedIn" routerLink="/inventory">Inventory!</a>
         </div>
 
@@ -46,6 +46,22 @@
         </div>
     </div>
     <div id="sidebar-placeholder" class="hidden-xs"></div>
+
+    <div id="notifications-bubble" class="modal fade" role="alert">
+        <div *ngIf="notifications == null || notifications.length == 0">
+            No new notifications!
+        </div>
+        <a routerLink="/messages">Go to Mailbox!</a>
+        <!--<div *ngFor="let note of notifications">
+        <div *ngFor="let msg of note.messages">
+
+        </div>
+        <div *ngFor="let friend of note.friendRequests">
+
+        </div>
+    </div>-->
+
+    </div>
 
     <router-outlet></router-outlet>
 </div>
