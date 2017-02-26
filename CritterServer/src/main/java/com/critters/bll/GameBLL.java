@@ -4,7 +4,7 @@ import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.GamesInfo;
 import com.critters.dal.dto.entity.GameThumbnail;
 import com.critters.dal.dto.entity.Item;
-
+import com.critters.backgroundservices.BackgroundJobManager;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -23,6 +23,7 @@ public class GameBLL {
 			games.games = dbGames.toArray(new GameThumbnail[0]);
 			return games;
 		} catch (PersistenceException ex) {
+			BackgroundJobManager.printLine(ex);
 			return null; //no item found
 		} finally {
 			entityManager.close();
