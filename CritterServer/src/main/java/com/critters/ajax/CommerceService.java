@@ -47,7 +47,7 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			CommerceBLL.changeItemStore(request.item, loggedInUser);
+			CommerceBLL.changeItemsStore(request.items, loggedInUser);
 			return Response.status(Response.Status.OK).build();
 		}
 	}
@@ -63,7 +63,7 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			CommerceBLL.changeItemPrice(request.item, loggedInUser);
+			CommerceBLL.changeItemsPrice(request.items, loggedInUser);
 			return Response.status(Response.Status.OK).build();
 		}
 	}
@@ -78,10 +78,12 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			request.item.setPrice(null);
-			CommerceBLL.changeItemPrice(request.item, loggedInUser);
-			request.item.setContainingStoreId(null);
-			CommerceBLL.changeItemStore(request.item, loggedInUser);
+			for(int i = 0; i< request.items.length; i++) request.items[i].setPrice(null);
+
+			CommerceBLL.changeItemsPrice(request.items, loggedInUser);
+
+			for(int i = 0; i< request.items.length; i++) request.items[i].setContainingStoreId(null);
+			CommerceBLL.changeItemsStore(request.items, loggedInUser);
 
 			return Response.status(Response.Status.OK).build();
 		}
@@ -97,7 +99,7 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			CommerceBLL.changeItemOwnerViaPurchase(request.item, loggedInUser);
+			CommerceBLL.changeItemsOwnerViaPurchase(request.items, loggedInUser);
 			return Response.status(Response.Status.OK).build();
 		}
 	}

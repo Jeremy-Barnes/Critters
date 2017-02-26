@@ -22,7 +22,12 @@
         <mapping class="com.critters.dal.dto.entity.Pet$PetSpecies" />
         <mapping class="com.critters.dal.dto.entity.Item" />
         <mapping class="com.critters.dal.dto.entity.Item$ItemDescription" />
+        <mapping class="com.critters.dal.dto.entity.Item$ItemClassification" />
+        <mapping class="com.critters.dal.dto.entity.Item$ItemRarityType" />
         <mapping class="com.critters.dal.dto.entity.Friendship"/>
         <mapping class="com.critters.dal.dto.entity.Store"/>
+        <mapping class="com.critters.dal.dto.entity.NPCStoreRestockConfig"/>
+        <mapping class="com.critters.dal.dto.entity.GameThumbnail"/>
+
     </session-factory>
 </hibernate-configuration>

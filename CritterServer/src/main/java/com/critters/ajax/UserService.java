@@ -183,7 +183,7 @@ public class UserService extends AjaxService{
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
 			SearchResponse resp = new SearchResponse();
-			UserBLL.discardInventoryItem(request.item, loggedInUser);
+			UserBLL.discardInventoryItems(request.items, loggedInUser);
 			return Response.status(Response.Status.OK).entity(resp).build();
 		}
 	}
