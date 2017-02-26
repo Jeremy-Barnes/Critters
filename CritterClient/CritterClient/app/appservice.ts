@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -11,7 +11,8 @@ export class Application {
     public alerts: Notification[] = [];
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
-
+    public inventory: InventoryGrouping[] = [];
+    public errorCallback: (text: string) => void;
     public static app: Application = new Application();
 
 
@@ -22,6 +23,11 @@ export class Application {
             Application.app = new Application();
             return Application.app;
         }
+    }
+
+    public static handleServerError(error: JQueryXHR) {
+        if(error.status != 500)
+            Application.getApp().errorCallback(error.responseText);
     }
 
     public static submitUserAccountCreationRequest(user: User, pet: Pet) : JQueryPromise<User> {
@@ -57,8 +63,23 @@ export class Application {
             accepted: false,
             friendshipID: 0,
             requester: requesterUser,
-            requested: requestedUser
+            requested: requestedUser,
+            dateSent: undefined
         });
+    }
+
+    public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        friendRequest.accepted = false;
+        return ServiceMethods.respondToFriendRequest(friendRequest);
+    }
+
+    public static acceptFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        friendRequest.accepted = true;
+        return ServiceMethods.respondToFriendRequest(friendRequest);
+    }
+
+    public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
     public static logIn(user: User) {
@@ -133,11 +154,41 @@ export class Application {
                     results.push({ resultText, resultData });
                 }
             }
-        } else {
-            //search remote for user
         }
         return results;
     }
 
+    public static searchUsers(searchTerm: string) {
+        var app = Application.getApp();
+        return ServiceMethods.searchUsers(searchTerm);
+    }
 
+    public static getInventory() {
+        ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
+            var user = Application.getApp().user;
+            Application.getApp().inventory.push(...inventory);
+            //var sentmsgs: Message[] = [];
+            //for (var i = 0; i < conversations.length; i++) {
+            //    let conv = conversations[i];
+            //    for (var j = 0; j < conv.messages.length; j++) {
+            //        let message = conv.messages[j];
+            //        if (message.sender.userID == user.userID) {
+            //            sentmsgs.push(message);
+            //        }
+            //        for (var k = 0; k < conv.participants.length; k++) {
+            //            let participant = conv.participants[k];
+            //            if (message.recipient.userID == participant.userID) {
+            //                message.recipient = (participant);
+            //            }
+            //            if (message.sender.userID == participant.userID) {
+            //                message.sender = (participant);
+            //            }
+            //        }
+            //        message.dateSent = new Date(<any>message.dateSent);
+            //    }
+            //}
+            //Application.getApp().sentbox.push(...sentmsgs);
+            //Application.getApp().inbox.push(...conversations);
+        });
+    }
 }

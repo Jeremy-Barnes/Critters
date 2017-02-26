@@ -8,14 +8,16 @@
                </div>`
 })
 export class AutocompleteList {
-    public resultList: {resultText: string, resultData: any}[];
+    public resultList: { resultText: string, resultData: any }[] = [];
     private refreshTimer: any = undefined;
     private searching = false;
     private secondSearchNeeded = false;
     private inputSearchTerm: string;
     private searchTextModel: string;
 
-    @Input("autocomplete-func") public asyncSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
+    @Input("autocomplete-local-func") public localSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
+    @Input("autocomplete-remote-func") public remoteSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
+
     @Output("result-out") public selected = new EventEmitter();
 
 
@@ -45,6 +47,7 @@ export class AutocompleteList {
     private clearResultList() {
         this.searching = false;
         this.secondSearchNeeded = false;
+        this.resultList = [];
     }
 
     private callSearchFunction() {
@@ -52,14 +55,18 @@ export class AutocompleteList {
         if (this.inputSearchTerm != "") {
             this.searching = true;
 
-            this.asyncSearchFunction(this.inputSearchTerm).then((results) => {
+            this.remoteSearchFunction(this.inputSearchTerm).then((results) => {
                 this.searching = false;
                 if (this.secondSearchNeeded) {
                     this.secondSearchNeeded = false;
                     this.callSearchFunction();
                 } else {
-                    this.resultList = results;
+                    this.resultList.push(...results);
                 }
+            });
+
+            this.localSearchFunction(this.inputSearchTerm).then((results) => {
+                this.resultList.push(...results);
             });
         }
     }

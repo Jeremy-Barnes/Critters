@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Message, Conversation } from '../dtos'
+import { User, Notification, Message, Conversation, Friendship } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -19,6 +19,9 @@ export class MessageComponent implements OnInit {
     newMessage: Message;
     composeToFriend: User;
 
+    pendingFriendRequests: Friendship[];
+    outstandingFriendRequests: Friendship[];
+
     constructor(private route: ActivatedRoute) {
         prepDisplay();
         Application.getMailbox();
@@ -26,16 +29,11 @@ export class MessageComponent implements OnInit {
         this.alerts = this.app.alerts;
         this.messages = this.app.inbox;
         this.sentMessages = this.app.sentbox;
+        this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
+        this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
     }
 
     ngOnInit() {
-    }
-
-    debug() {
-        alert(this.user);
-        alert(Application.getApp());
-        var ap2 = Application.getApp();
-        alert(this.messages.length);
     }
 
     reply(replyMessage: Message) {
@@ -80,14 +78,45 @@ export class MessageComponent implements OnInit {
             this.newMessage.parentMessage = this.replyMessage;
             this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
             this.newMessage.recipient = this.replyMessage.sender;
+        } else {
+            this.newMessage.recipient = this.composeToFriend;
         }
         Application.sendMessage(this.newMessage);
     }
 
+    acceptRequest(friendRequest: Friendship) {
+        Application.acceptFriendRequest(friendRequest);
+    }
+
+    declineRequest(friendRequest: Friendship) {
+        Application.rejectFriendRequest(friendRequest);
+    }
+
+    cancelRequest(friendRequest: Friendship) {
+        Application.cancelFriendRequest(friendRequest);
+    }
+
     public searchFriends(searchTerm: string) {
         return new Promise((resolve) => {
-            var x = Application.searchFriends(searchTerm);
-            resolve(x);
+            resolve(Application.searchFriends(searchTerm));
+        });
+    }
+
+
+    public searchUsers(searchTerm: string) {
+        return new Promise((resolve) => {
+            Application.searchUsers(searchTerm).done((results: User[]) => {
+                var resultsForDisplay: { resultText: string, resultData: User }[] = [];
+                for (var i = 0; i < results.length; i++) {
+                    var resultData = results[i];
+
+                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
+                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
+                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    resultsForDisplay.push({ resultText, resultData });
+                }
+                resolve(resultsForDisplay);
+            });
         });
     }
 

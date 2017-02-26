@@ -1,14 +1,14 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item } from './dtos'
+import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping } from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://localhost:8080/api/critters/";;//"http://581c949b.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string = null;
 
     private static doAjax(functionName: string, functionService: string, parameters: any, type: string = "POST"): JQueryPromise<any> {
-        var param = JSON.stringify(parameters);
+        var param = parameters != null && parameters.constructor === String ? parameters : JSON.stringify(parameters);
         var pathParams = type == "GET" && parameters != null ? "/" + param : "";
         var settings: JQueryAjaxSettings = {
             url: ServiceMethods.baseURL + functionService + "/" + functionName + pathParams + (ServiceMethods.jsessionID != null ? ";jsessionid=" + ServiceMethods.jsessionID : ""),
@@ -93,6 +93,24 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("deleteFriendship", "friends", request);
     }
 
+    /************** Meta Stuff **************/
+
+    public static searchUsers(searchTerm: string): JQueryPromise<User[]> {
+        return ServiceMethods.doAjax("searchUsers", "meta", searchTerm, "GET");
+    }
+
+    public static checkUserName(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkUserName", "meta", searchTerm, "GET");
+    }
+
+    public static checkPetName(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkPetName", "meta", searchTerm, "GET");
+    }
+
+    public static checkEmail(searchTerm: string): JQueryPromise<boolean> {
+        return ServiceMethods.doAjax("checkEmail", "meta", searchTerm, "GET");
+    }
+
     /************** Store Stuff **************/
     public static getStorefront(request: Store): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", request);
@@ -108,7 +126,7 @@ export class ServiceMethods {
     }
 
     /************** Inventory Stuff **************/
-    public static getInventory(request: User): JQueryPromise<Item[]> {
+    public static getInventory(request: User): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("getInventory", "users", request);
     }
 }

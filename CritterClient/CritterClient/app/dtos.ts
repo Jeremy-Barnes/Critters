@@ -48,6 +48,7 @@ export class Friendship {
     requester: User;
     requested: User;
     accepted: boolean;
+    dateSent: Date;
 }
 
 export class Pet {
@@ -118,4 +119,8 @@ export class ItemDescription {
     itemConfigID: number;
     itemName: string;
     itemDescription: string;
+}
+
+export class InventoryGrouping {
+    inventoryItemsGrouped: Item[];
 }
