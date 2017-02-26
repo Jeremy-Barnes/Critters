@@ -23,7 +23,6 @@ export class InventoryComponent implements OnInit {
 
 
     constructor(private route: ActivatedRoute) {
-        prepDisplay();
         Application.getInventory();
         this.user = this.app.user;
         this.alerts = this.app.alerts;

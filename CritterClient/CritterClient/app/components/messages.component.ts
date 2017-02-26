@@ -23,7 +23,6 @@ export class MessageComponent implements OnInit {
     outstandingFriendRequests: Friendship[];
 
     constructor(private route: ActivatedRoute) {
-        prepDisplay();
         Application.getMailbox();
         this.user = this.app.user;
         this.alerts = this.app.alerts;

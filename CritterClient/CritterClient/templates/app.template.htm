@@ -7,13 +7,31 @@
                 <button type="button" data-toggle="modal" data-target="#log-in">Login</button>
                 <a routerLink="/signUp">Sign Up!</a>
             </div>
-            <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
-            <div *ngIf="app.loggedIn"> here are alerts</div>
-            <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
-            <button type="button" *ngIf="!app.loggedIn" (click)="notifications()">Messages!</button>
-            <a *ngIf="app.loggedIn" routerLink="/inventory">Inventory!</a>
-        </div>
+            <div *ngIf="app.loggedIn">
+                <div class="inlineblock">{{user.userName}}</div>
+                <div> here are alerts</div>
+                <div class="inlineblock">alert length {{alerts.length}}</div>
 
+                <button class="messageslink" data-toggle="popover" title="Notifications">Messages!</button>
+                <div class="notifications-bubble hide">
+                    <div *ngIf="alerts == null || alerts.length == 0">
+                        No new notifications!
+                    </div>
+                    <a routerLink="/messages">Go to Mailbox!</a>
+                    <div *ngIf="alerts != null">
+                        <div *ngFor="let note of alerts">
+                            <div *ngFor="let msg of note.messages">
+                                todo apptemplate
+                            </div>
+                            <div *ngFor="let friend of note.friendRequests">
+                                todo apptemplate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a  routerLink="/inventory">Inventory!</a>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -47,21 +65,7 @@
     </div>
     <div id="sidebar-placeholder" class="hidden-xs"></div>
 
-    <div id="notifications-bubble" class="modal fade" role="alert">
-        <div *ngIf="notifications == null || notifications.length == 0">
-            No new notifications!
-        </div>
-        <a routerLink="/messages">Go to Mailbox!</a>
-        <!--<div *ngFor="let note of notifications">
-        <div *ngFor="let msg of note.messages">
-
-        </div>
-        <div *ngFor="let friend of note.friendRequests">
-
-        </div>
-    </div>-->
-
-    </div>
+    
 
     <router-outlet></router-outlet>
 </div>

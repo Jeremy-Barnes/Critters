@@ -92,6 +92,7 @@ export class Application {
             app.user.set(retUser);
             app.loggedIn = true;
             Application.startLongPolling();
+            prepDisplayAfterLogin();
         });
     }
 
