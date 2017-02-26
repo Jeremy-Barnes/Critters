@@ -2,6 +2,8 @@ package com.critters.backgroundservices;
 
 import com.critters.bll.CommerceBLL;
 import com.critters.dal.dto.entity.NPCStoreRestockConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -18,6 +20,7 @@ public class BackgroundJobManager {
 
 	public static int jobs = 0;
 	public static String logs = "";
+	static final Logger logger = LoggerFactory.getLogger(BackgroundJobManager.class);
 
 	public static void printLine(String string){
 		logs = logs + " \n" + string + "\n\n\n next log \n\n\n";
@@ -34,6 +37,7 @@ public class BackgroundJobManager {
 
 	@Schedule(hour="*", minute="*", second="*/10", persistent=true)
 	public void someQuarterlyJob() {
+
 		jobs++;
 		System.out.println("JOB JAERB JEOREARB");
 
