@@ -1,4 +1,4 @@
-﻿<div id="mainView" *ngIf="activeGame==null">
+﻿<div id="mainView" [hidden]="activeGame.gameName!=null">
     <h1>Here are some games to play!</h1>
     <div *ngFor="let game of games">
         <div (click)="selectGame(game)">
@@ -10,26 +10,8 @@
 </div>
 
 
-<div id="activeGame"  *ngIf="activeGame!=null">
+<div id="activeGame"  [hidden]="activeGame.gameName==null">
     <h1>{{activeGame.gameName}}</h1>
     <div id="gameBind"></div>
     <div align="center" id="embed-html"></div>
-    <script type="text/javascript" src="html/html.nocache.js"></script>
-    <script src="Libraries/soundmanager2-setup.js"></script>
-    <script src="Libraries/soundmanager2-jsmin.js"></script>
-    <script>
-              function handleMouseDown(evt) {
-                evt.preventDefault();
-                evt.stopPropagation();
-                evt.target.style.cursor = 'default';
-              }
-
-              function handleMouseUp(evt) {
-                evt.preventDefault();
-                evt.stopPropagation();
-                evt.target.style.cursor = '';
-              }
-              document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);
-              document.getElementById('embed-html').addEventListener('mouseup', handleMouseUp, false);
-    </script>
 </div>

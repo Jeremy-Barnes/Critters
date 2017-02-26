@@ -10,7 +10,7 @@ import {Application} from "../appservice"
 export class GamesComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
-    activeGame: GameThumbnail;
+    activeGame: GameThumbnail = new GameThumbnail();
     games: GameThumbnail[];
     ngOnInit() { this.user = this.app.user; }
 
@@ -21,10 +21,13 @@ export class GamesComponent implements OnInit {
     }
 
     selectGame(game: GameThumbnail) {
-        Application.getView(game.gameURL).done((html: any) => {
-            jQuery("#gameBind").html(html);
-        });
+        //Application.getView(game.gameURL).done((html: any) => {
+        //    jQuery(\"#gameBind\").html(html);
+        //});
         this.activeGame = game;
+
+        jQuery('#gameBind').append("butts");
+        jQuery('#gameBind').append("<script src=\"http://409cf50d.ngrok.io/CritterGames/SpaceInvaders/html/html.nocache.js\"></script> <script src= \"Libraries/soundmanager2-setup.js\" ></script> <script type= \"text/javascript\" src= \"Libraries/soundmanager2-jsmin.js\" > </script><script> function handleMouseDown(evt) { evt.preventDefault(); evt.stopPropagation(); evt.target.style.cursor = 'default';} function handleMouseUp(evt) {evt.preventDefault();        evt.stopPropagation();       evt.target.style.cursor = '';   } document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);document.getElementById('embed-html').addEventListener('mouseup', handleMouseUp, false);</script>");
     }
 
 }
