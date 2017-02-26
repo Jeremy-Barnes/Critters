@@ -77,7 +77,7 @@ export class ServiceMethods {
     }
 
     /************** Friend Stuff **************/
-    public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
+    public static sendFriendRequest(request: Friendship): JQueryPromise<Friendship> {
         return ServiceMethods.doAjax("createFriendship", "friends", request);
     }
 
