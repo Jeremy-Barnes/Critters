@@ -2,6 +2,7 @@ package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.ChatBLL;
+import com.critters.bll.GameBLL;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.SearchResponse;
@@ -110,6 +111,12 @@ public class MetaService extends AjaxService {
 	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
 		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
 				new GenericEntity<Pet.PetColor[]>(PetBLL.getPetColors().toArray(new Pet.PetColor[0]), Pet.PetColor[].class)).build();
+	}
+
+	@GET
+	@Path("/getGames")
+	public Response getGames() {
+		return Response.status(Response.Status.OK).entity(GameBLL.getGames()).build();
 	}
 
 

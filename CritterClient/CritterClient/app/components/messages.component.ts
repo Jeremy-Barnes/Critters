@@ -78,6 +78,8 @@ export class MessageComponent implements OnInit {
             this.newMessage.parentMessage = this.replyMessage;
             this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
             this.newMessage.recipient = this.replyMessage.sender;
+        } else {
+            this.newMessage.recipient = this.composeToFriend;
         }
         Application.sendMessage(this.newMessage);
     }

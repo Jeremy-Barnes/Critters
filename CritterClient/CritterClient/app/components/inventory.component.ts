@@ -21,6 +21,7 @@ export class InventoryComponent implements OnInit {
 
     private defaultActions = [{ id: 0, text: "Move to Shop"}, {id: 1, text: "Discard Item"}]
 
+
     constructor(private route: ActivatedRoute) {
         prepDisplay();
         Application.getInventory();
@@ -50,6 +51,7 @@ export class InventoryComponent implements OnInit {
 
     submitItem() {
         Application.submitInventoryAction(this.selectedAction.id, this.activeItemGroup);
+
     //    this.newMessage.sender = this.user;
     //    if (this.replyMessage != null) {
     //        this.newMessage.parentMessage = this.replyMessage;
@@ -58,6 +60,7 @@ export class InventoryComponent implements OnInit {
     //    }
     //    Application.sendMessage(this.newMessage);
     }
+
 
     acceptRequest(friendRequest: Item[]) {
       //  Application.acceptFriendRequest(friendRequest);

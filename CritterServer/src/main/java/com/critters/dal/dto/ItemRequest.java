@@ -8,5 +8,5 @@ import com.critters.dal.dto.entity.User;
  */
 public class ItemRequest {
 	public User user;
-	public Item item;
+	public Item[] items;
 }

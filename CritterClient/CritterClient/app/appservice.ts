@@ -198,4 +198,5 @@ export class Application {
             case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
         }
     }
+
 }
