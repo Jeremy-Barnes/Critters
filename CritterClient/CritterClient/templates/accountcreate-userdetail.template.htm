@@ -1,5 +1,11 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
     <h1>Give us the deets, dummy</h1>
+    <ol class="breadcrumb">
+        <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div> Account Info</a></li>
+        <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">2</div> User Details</li>
+        <li><a routerLink="/signUp-3"><div class="breadcrumb-circle bc-inactive inlineblock centered">3</div> Create A Pet</a></li>
+    </ol>
+
     <input type="text" name="lastName" [(ngModel)]="user.lastName" placeholder="last name" required />
     <input type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
     <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />

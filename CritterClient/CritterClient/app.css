@@ -44,6 +44,22 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
     color: #EF4137;
 }
 
+.breadcrumb-circle {
+    width: 2em !important;
+    height: 2em;
+    border-radius: 50%;
+    padding-top: 0.3em;
+    color: white;
+}
+.bc-active {
+    background-color: #12a6da;
+}
+.bc-inactive {
+    background-color: #acacac;
+}
+
+/******** NAVS  **********/
+
 .navbar{
     height: 80px;
     border: none;
@@ -101,7 +117,6 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
     }
 }
 
-
 /*
  * Off Canvas
  * --------------------------------------------------
@@ -128,12 +143,14 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
   }
 }
 
-.fullscreen {
-    position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;
-}
-
 @media(min-width:768px) {
     .mobileInfopane {
         visibility: hidden;
     }
+}
+
+
+
+.fullscreen {
+    position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;
 }
