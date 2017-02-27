@@ -42,6 +42,7 @@
     <Content Include="systemjs.config.js" />
     <Content Include="img\games-icon.svg" />
     <Content Include="img\world-icon.svg" />
+    <Content Include="img\Logo.svg" />
     <None Include="Libraries\jquery-2.1.4.intellisense.js" />
     <Content Include="Libraries\jquery-2.1.4.js" />
     <Content Include="Libraries\jquery-2.1.4.min.js" />
