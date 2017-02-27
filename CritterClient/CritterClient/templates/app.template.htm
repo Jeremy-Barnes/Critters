@@ -56,12 +56,18 @@
             <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
         </div>
 
-        <div class="">
+        <nav id="sidebar-nav">
+            <ul>
+                <li><img class="nav-icon" src="../img/games-icon.svg" /><a routerLink="/games">Games</a></li>
+                <li><img class="nav-icon" src="../img/world-icon.svg" /><a href="">World</a></li>
+            </ul>
+
             <a href="/CritterGames/Minesweeper">MineSweeper</a><br />
             <a href="/CritterGames/Breakout">Breakout</a><br />
             <a href="/CritterGames/SpaceInvaders">Space Invaders</a><br />
             <a href="/CritterGames/Snake">Snake</a><br />
-        </div>
+            
+        </nav>
     </div>
     <div id="sidebar-placeholder" class="hidden-xs"></div>
 

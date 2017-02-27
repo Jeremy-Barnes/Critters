@@ -103,8 +103,36 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
     height: 100% !important;
     float:left;
 }
+
 #sidebar-placeholder {
     display:inline-block;
+}
+
+#sidebar-nav ul {
+    padding-left: 0;
+}
+
+#sidebar-nav ul li {
+    display: block;
+    padding: 10px 30px;
+    font-family: 'Bubblegum Sans';
+    font-size: 24px;
+    line-height: 1;
+    color: #ffffff;
+    border-left: 3px solid transparent;
+}
+
+#sidebar-nav ul li:hover, #sidebar-nav ul li:focus {
+    border-left: 3px solid #FFAE35;
+}
+
+#sidebar-nav .nav-icon {
+    padding-right: 15px;
+}
+
+#sidebar-nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .sidebar {
