@@ -1,4 +1,4 @@
-﻿html, body, .main {
+﻿html, body, .main { /*.main class is an angular thing*/
     height: 100%;
     width: 100%;
     overflow-x: hidden; /* Prevent scroll on narrow devices */
@@ -9,7 +9,31 @@ body {
       font-size: 16px;
       color: #333333;
 }
-h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
+ #contentwrap {
+    width:100%;
+    position: absolute;
+}
+@media(min-width:768px) {
+    #contentwrap { /*wraps the container fluid so that we get 12 columns NEXT TO the sidebar*/
+        position: relative;
+    }
+    #main { /* id main is the html element with padding to make the sidebar/containerfluid play nice */
+        padding-left:260px;
+    }
+}
+
+h1, h2, h3, h4 { font-family: 'Bubblegum Sans';}
+
+.page-title {
+    background-color: #ebebeb;
+    border-color: #acacac;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    width:100%;
+}
+.page-title > * {
+    margin-top: 0px;
+}
 
 .nav-tabs {
     display:block;
@@ -59,6 +83,11 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
     background-color: #acacac;
 }
 
+.breadcrumb {
+    background-color: transparent;
+    padding-left: 0px;
+}
+
 /******** NAVS  **********/
 
 .navbar{
@@ -104,10 +133,6 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
     float:left;
 }
 
-#sidebar-placeholder {
-    display:inline-block;
-}
-
 #sidebar-nav ul {
     padding-left: 0;
 }
@@ -138,6 +163,7 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
 .sidebar {
     position: fixed;
     z-index: 1000;
+    margin-left:-260px;
 }
 
 @media(max-width:768px){
@@ -159,16 +185,14 @@ h1, h2, h3, h4 { font-family: 'Bubblegum Sans'; }
   }
 
   .sidebar-offcanvas {
-    left: -270px; /* 6 columns */
+    left: -270px; 
   }
   .sidebar-offcanvas.active {
-    left: 0%; /* 6 columns */
+    left: 260px;
   }
 
   .sidebar-offcanvas {
-    /*position: absolute;*/
     top: 0;
-    /*width: 50%;*/ /* 6 columns */
   }
 }
 

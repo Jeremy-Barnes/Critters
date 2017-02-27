@@ -1,5 +1,5 @@
 ﻿<!-- Normal Navbar -->
-<nav class="navbar-fixed-top navbar hidden-xs"> 
+<nav class="navbar-fixed-top navbar hidden-xs">
     <h1 class="navbar-left">CRITTER</h1>
     <div class="container">
         <div class="navbar-header">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <a  routerLink="/inventory">Inventory!</a>
+                <a routerLink="/inventory">Inventory!</a>
             </div>
         </div>
     </div>
@@ -40,13 +40,11 @@
         <span class="fa fa-bars"></span>
     </button>
     <h1>CRITTER</h1>
-</nav> 
+</nav>
 
 <!--Mobile Navbar-->
 
-
-
-<div class="container-fluid">
+<div id="main">
     <div class="sidebar-offcanvas sidebar" id="sidebar">
         <div class="mobileInfopane">
             <div class="inlineblock" *ngIf="!app.loggedIn">
@@ -66,16 +64,18 @@
             <a href="/CritterGames/Breakout">Breakout</a><br />
             <a href="/CritterGames/SpaceInvaders">Space Invaders</a><br />
             <a href="/CritterGames/Snake">Snake</a><br />
-            
+
         </nav>
     </div>
-    <div id="sidebar-placeholder" class="hidden-xs"></div>
+    <!--<div id="sidebar-placeholder" class="hidden-xs"></div>-->
+    <div id="contentwrap">
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div>
 
-    
-
-    <router-outlet></router-outlet>
+    </div>
 </div>
-<br /><br/>
+<br /><br />
 
 <login></login>
 <error></error>
