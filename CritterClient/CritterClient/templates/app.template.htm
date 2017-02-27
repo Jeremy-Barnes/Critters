@@ -1,11 +1,11 @@
 ﻿<!-- Normal Navbar -->
-<nav class="navbar-fixed-top navbar hidden-xs">
-    <h1 class="navbar-left">CRITTER</h1>
+<nav class="navbar-fixed-top navbar hidden-xs"> 
+    <div class="navbar-left navbar-brand"><img src="../img/Logo.svg" /></div>
     <div class="container">
-        <div class="navbar-header">
+        <div class="navbar-header navbar-right">
             <div class="inlineblock" *ngIf="!app.loggedIn">
-                <button type="button" data-toggle="modal" data-target="#log-in">Login</button>
-                <a routerLink="/signUp">Sign Up!</a>
+                <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
+                <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
             <div *ngIf="app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
