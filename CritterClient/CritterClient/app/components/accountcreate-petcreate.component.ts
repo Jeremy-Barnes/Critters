@@ -57,7 +57,8 @@ export class AccountCreatePetComponent implements OnInit {
         return false;
     }
 
-    onChange(color: PetColor) {
+    colorChange(color: PetColor) {
+        this.activeColorObject = color;
         this.activeColor = "_" + this.activeColorObject.petColorName;
         if (this.activeSpecies != null) this.petAndColorSelected = true;
     }
