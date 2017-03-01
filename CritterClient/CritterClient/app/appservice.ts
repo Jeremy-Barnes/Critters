@@ -192,11 +192,13 @@ export class Application {
         }
     }
 
-    public static getGames() {
+  public static getGames() {
+      if(Application.getApp().games.length = 0){
         ServiceMethods.getGames().done((games: GamesInfo) => {
             Application.getApp().games.length = 0;
             Application.getApp().games.push(...games.games);
         });
+      }
     }
 
 }
