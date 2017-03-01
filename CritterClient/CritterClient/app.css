@@ -1,4 +1,4 @@
-html, body, .main { /*.main class is an angular thing*/
+﻿html, body, .main { /*.main class is an angular thing*/
     height: 100%;
     width: 100%;
     overflow-x: hidden; /* Prevent scroll on narrow devices */
@@ -23,6 +23,29 @@ body {
     #main { /* id main is the html element with padding to make the sidebar/containerfluid play nice */
         padding-left:260px;
     }
+}
+.specieRepeater {
+    position: relative;
+    display: inline-block;
+}
+
+.whitefade:after {
+        position: absolute;
+        content: '';
+        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,.5);
+}
+
+.specieSelect {
+    float:left ;
+    position: relative;
+    z-index: 1000;
+    transform: translateY(-70%);
+    width: 100%;
 }
 
 /*
