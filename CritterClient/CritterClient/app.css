@@ -153,6 +153,14 @@ form input {
     font-size: 24px;
 }
 
+.navbar-brand {
+    padding: 24px 33px;
+}
+
+.navbar-right {
+    padding-top: 18px;
+}
+
 .optional-topbar {
     height: 50px !important;
 }
@@ -196,7 +204,7 @@ form input {
     border-left: 3px solid transparent;
 }
 
-#sidebar-nav ul li:hover, #sidebar-nav ul li:focus {
+#sidebar-nav ul li:hover, #sidebar-nav ul li:focus, #sidebar-nav ul li:active {
     border-left: 3px solid #FFAE35;
 }
 
@@ -204,7 +212,11 @@ form input {
     padding-right: 15px;
 }
 
-#sidebar-nav ul li a {
+#sidebar-nav li:hover .nav-icon, #sidebar-nav:focus .nav-icon, #sidebar-nav:active .nav-icon {
+    transform: rotate(-10deg);
+}
+
+#sidebar-nav ul a, #sidebar-nav ul a:hover, #sidebar-nav ul a:focus {
     color: #ffffff;
     text-decoration: none;
 }

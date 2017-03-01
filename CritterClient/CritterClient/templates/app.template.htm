@@ -1,7 +1,7 @@
 ﻿<!-- Normal Navbar -->
 <nav class="navbar-fixed-top navbar hidden-xs"> 
     <div class="navbar-left navbar-brand"><img src="../img/Logo.svg" /></div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header navbar-right">
             <div class="inlineblock" *ngIf="!app.loggedIn">
                 <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
@@ -56,8 +56,8 @@
 
         <nav id="sidebar-nav">
             <ul>
-                <li><img class="nav-icon" src="../img/games-icon.svg" /><a routerLink="/games">Games</a></li>
-                <li><img class="nav-icon" src="../img/world-icon.svg" /><a href="">World</a></li>
+                <a routerLink="/games"><li><img class="nav-icon" src="../img/games-icon.svg" />Games</li></a>
+                <a href="#"><li><img class="nav-icon" src="../img/world-icon.svg" />World</li></a>
             </ul>
 
             <a href="/CritterGames/Minesweeper">MineSweeper</a><br />
