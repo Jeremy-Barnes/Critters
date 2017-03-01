@@ -2,24 +2,24 @@
     <div class="page-title"><h1>Create Your Account!</h1></div>
 
     <ol class="breadcrumb">
-        <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">1</div> Account Info</li>
-        <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div> User Details</a></li>
-        <li><a routerLink="/signUp-3"><div class="breadcrumb-circle bc-inactive inlineblock centered">3</div> Create A Pet</a></li>
+        <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">1</div>Account Info</li>
+        <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div>User Details</a></li>
+        <li><a routerLink="/signUp-3"><div class="breadcrumb-circle bc-inactive inlineblock centered">3</div>Create A Pet</a></li>
     </ol>
     
     <div class="row">
         <div class="col-md-4">
-            <p>Enter your basic account details - your username will be the name that other players identify you be, and your first name will be visible on your profile.</p>
+            <p>Enter your basic account details — your username will be the name that other players identify you be, and your first name will be visible on your profile.</p>
             
-            <input type="email" style="width:100%" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+            <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
 
-            <input type="text" style="width:100%" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
-            <input type="password" style="width:100%" name="password" placeholder="password" [(ngModel)]="user.password" required />
+            <input class="form-control" type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
+            <input class="form-control" type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
 
-            <input type="password" style="width:100%" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
+            <input class="form-control" type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
 
-            <input type="text" style="width:100%" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
-            <input type="submit" value="Next" />
+            <input class="form-control" type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
+            <input class="btn btn-primary" type="submit" value="Next" />
         </div>
         <div class="col-md-8">
             <img src="https://i.imgflip.com/1gjc7j.jpg" />

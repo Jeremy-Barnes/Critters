@@ -1,26 +1,63 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
-    <h1>Give us the deets, dummy</h1>
+    <div class="page-title">
+        <h1>Give us the deets, dummy</h1>
+    </div>
+    
+    <ol class="breadcrumb">
+        <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div>Account Info</a></li>
+        <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">2</div>User Details</li>
+        <li><a routerLink="/signUp-3"><div class="breadcrumb-circle bc-inactive inlineblock centered">3</div>Create A Pet</a></li>
+    </ol>
     <div class="row">
-            <ol class="breadcrumb">
-                <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div> Account Info</a></li>
-                <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">2</div> User Details</li>
-                <li><a routerLink="/signUp-3"><div class="breadcrumb-circle bc-inactive inlineblock centered">3</div> Create A Pet</a></li>
-            </ol>
-        <div class="col-md-5">
-            <input type="text" name="lastName" [(ngModel)]="user.lastName" placeholder="last name" required />
-            <input type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
-            <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
-            <input type="text" style="width:50%" name="country" placeholder="country" [(ngModel)]="user.country" required />
-            <input type="text" style="width:25%" name="postcode" placeholder="postcode" [(ngModel)]="user.postcode" required />
-            <select placeholder="choose a gender" name="sexSelect" [(ngModel)]="user.sex" required>
+        <div class="col-md-4">
+            <div class="radio">
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" value="Female">
+                    Female
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" value="Male">
+                    Male
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" value="Other">
+                    Other
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" value="Prefer not to say">
+                    Prefer not to say
+                </label>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input class="form-control" type="text" name="lastName" [(ngModel)]="user.lastName" placeholder="last name" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
+                </div>
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="country" placeholder="country" [(ngModel)]="user.country" required />
+                </div>
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="postcode" placeholder="postcode" [(ngModel)]="user.postcode" required />
+                </div>
+            </div>
+            <!-- <select placeholder="choose a gender" name="sexSelect" [(ngModel)]="user.sex" required>
                 <option value="" disabled selected style="display: none;">Gender</option>
                 <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
-            </select>
+            </select>-->
 
-            <input type="submit" value="Next" />
+            <input class="btn btn-primary" type="submit" value="Next" />
         </div>
-        <div class="col-md-7">
-            <img src="../img/cat.png" />
+        <div class="col-md-8">
+            <img src="https://i.imgflip.com/1gjc7j.jpg" />
         </div>
     </div>
 </form>
