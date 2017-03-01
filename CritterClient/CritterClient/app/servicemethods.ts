@@ -3,7 +3,7 @@
 import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
 
 export class ServiceMethods {
-    static baseURL: string = "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://localhost:8080/api/critters/";// "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string = null;
 
@@ -77,7 +77,7 @@ export class ServiceMethods {
     }
 
     /************** Friend Stuff **************/
-    public static sendFriendRequest(request: Friendship): JQueryPromise<void> {
+    public static sendFriendRequest(request: Friendship): JQueryPromise<Friendship> {
         return ServiceMethods.doAjax("createFriendship", "friends", request);
     }
 

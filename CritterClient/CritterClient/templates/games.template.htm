@@ -13,5 +13,8 @@
 <div id="activeGame"  [hidden]="activeGame.gameName==null">
     <h1>{{activeGame.gameName}}</h1>
     <div id="gameBind"></div>
+    <iframe src="http://409cf50d.ngrok.io/CritterGames/SpaceInvaders/" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}"></iframe>
+    <p (click)="goFull()">Go full!</p>
+
     <div align="center" id="embed-html"></div>
 </div>

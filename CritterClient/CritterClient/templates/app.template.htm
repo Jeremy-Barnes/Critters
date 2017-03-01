@@ -1,19 +1,37 @@
 ﻿<!-- Normal Navbar -->
 <nav class="navbar-fixed-top navbar hidden-xs"> 
-    <h1 class="navbar-left">CRITTER</h1>
-    <div class="container">
-        <div class="navbar-header">
+    <div class="navbar-left navbar-brand"><img src="../img/Logo.svg" /></div>
+    <div class="container-fluid">
+        <div class="navbar-header navbar-right">
             <div class="inlineblock" *ngIf="!app.loggedIn">
-                <button type="button" data-toggle="modal" data-target="#log-in">Login</button>
-                <a routerLink="/signUp">Sign Up!</a>
+                <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
+                <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
-            <div class="inlineblock" *ngIf="app.loggedIn">{{user.userName}}</div>
-            <div *ngIf="app.loggedIn"> here are alerts</div>
-            <div *ngIf="app.loggedIn" class="inlineblock">alert length {{alerts.length}}</div>
-            <a *ngIf="app.loggedIn" routerLink="/messages">Messages!</a>
-            <a *ngIf="app.loggedIn" routerLink="/inventory">Inventory!</a>
-        </div>
+            <div *ngIf="app.loggedIn">
+                <div class="inlineblock">{{user.userName}}</div>
+                <div> here are alerts</div>
+                <div class="inlineblock">alert length {{alerts.length}}</div>
 
+                <button class="messageslink" data-toggle="popover" title="Notifications">Messages!</button>
+                <div class="notifications-bubble hide">
+                    <div *ngIf="alerts == null || alerts.length == 0">
+                        No new notifications!
+                    </div>
+                    <a routerLink="/messages">Go to Mailbox!</a>
+                    <div *ngIf="alerts != null">
+                        <div *ngFor="let note of alerts">
+                            <div *ngFor="let msg of note.messages">
+                                todo apptemplate
+                            </div>
+                            <div *ngFor="let friend of note.friendRequests">
+                                todo apptemplate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a routerLink="/inventory">Inventory!</a>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -22,13 +40,11 @@
         <span class="fa fa-bars"></span>
     </button>
     <h1>CRITTER</h1>
-</nav> 
+</nav>
 
 <!--Mobile Navbar-->
 
-
-
-<div class="container-fluid">
+<div id="main">
     <div class="sidebar-offcanvas sidebar" id="sidebar">
         <div class="mobileInfopane">
             <div class="inlineblock" *ngIf="!app.loggedIn">
@@ -38,18 +54,28 @@
             <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
         </div>
 
-        <div class="">
+        <nav id="sidebar-nav">
+            <ul>
+                <a routerLink="/games"><li><img class="nav-icon" src="../img/games-icon.svg" />Games</li></a>
+                <a href="#"><li><img class="nav-icon" src="../img/world-icon.svg" />World</li></a>
+            </ul>
+
             <a href="/CritterGames/Minesweeper">MineSweeper</a><br />
             <a href="/CritterGames/Breakout">Breakout</a><br />
             <a href="/CritterGames/SpaceInvaders">Space Invaders</a><br />
             <a href="/CritterGames/Snake">Snake</a><br />
-        </div>
-    </div>
-    <div id="sidebar-placeholder" class="hidden-xs"></div>
 
-    <router-outlet></router-outlet>
+        </nav>
+    </div>
+    <!--<div id="sidebar-placeholder" class="hidden-xs"></div>-->
+    <div id="contentwrap">
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div>
+
+    </div>
 </div>
-<br /><br/>
+<br /><br />
 
 <login></login>
 <error></error>

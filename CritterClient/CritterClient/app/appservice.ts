@@ -49,16 +49,15 @@ export class Application {
         return ServiceMethods.changeUserInformation(user);
     }
 
-    public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
-        var self = this;
-        return ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.push(...p); });
+    public static getPetSpecies(){
+        if (Application.getApp().petSpecies.length == 0) ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.length = 0; Application.getApp().petSpecies.push(...p); });
     }
 
-    public static getPetColors(): JQueryPromise<PetColor[]>{
-        return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.push(...p); });
+    public static getPetColors() {
+        if (Application.getApp().petColors.length == 0) ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
     }
 
-    public static sendFriendRequest(requestingUserID: number, requestedUserID: number): JQueryPromise<void> {
+    public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {
         var requesterUser = new User();
         var requestedUser = new User();
         requesterUser.userID = requestingUserID;
@@ -69,10 +68,13 @@ export class Application {
             requester: requesterUser,
             requested: requestedUser,
             dateSent: undefined
+        }).done((friendRequest: Friendship) => {
+            Application.getApp().user.friends.push(friendRequest);
         });
     }
 
     public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
         friendRequest.accepted = false;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
@@ -83,6 +85,7 @@ export class Application {
     }
 
     public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
         return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
@@ -92,6 +95,7 @@ export class Application {
             app.user.set(retUser);
             app.loggedIn = true;
             Application.startLongPolling();
+            prepDisplayAfterLogin();
         });
     }
 
@@ -106,6 +110,10 @@ export class Application {
         }).fail((x) => {
             Application.startLongPolling();
         });
+    }
+
+    private static checkNotifications() {
+        Application.getApp().alerts.length = 0;
     }
 
     public static getMailbox() {
@@ -131,6 +139,8 @@ export class Application {
                     message.dateSent = new Date(<any>message.dateSent);
                 }
             }
+            Application.getApp().sentbox.length = 0;
+            Application.getApp().inbox.length = 0;
             Application.getApp().sentbox.push(...sentmsgs);
             Application.getApp().inbox.push(...conversations);
         });
@@ -170,6 +180,7 @@ export class Application {
     public static getInventory() {
         ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
             var user = Application.getApp().user;
+            Application.getApp().inventory.length = 0;
             Application.getApp().inventory.push(...inventory);
         });
     }
@@ -181,14 +192,13 @@ export class Application {
         }
     }
 
-    public static getView(url: String) {
-        return ServiceMethods.getTemplateHTML(url);
-    }
-
-    public static getGames() {
+  public static getGames() {
+      if(Application.getApp().games.length = 0){
         ServiceMethods.getGames().done((games: GamesInfo) => {
+            Application.getApp().games.length = 0;
             Application.getApp().games.push(...games.games);
         });
+      }
     }
 
 }
