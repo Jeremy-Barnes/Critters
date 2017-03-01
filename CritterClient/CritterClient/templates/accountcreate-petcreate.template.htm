@@ -21,7 +21,7 @@
             <div class="col-md-3 centered">
                 <div class="specieRepeater inlineblock" [ngClass]="{'whitefade': specie == activeSpecies}" (click)="onPetSelect(specie)">
                     <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
-                    <b>{{species.petTypeName}}</b>
+                    <b>{{specie.petTypeName}}</b>
                 </div>
                 <div class="specieSelect centered" *ngIf="specie == activeSpecies"><div>Info</div> <div>Select</div></div>
             </div>

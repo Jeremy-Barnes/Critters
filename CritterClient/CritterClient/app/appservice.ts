@@ -49,13 +49,12 @@ export class Application {
         return ServiceMethods.changeUserInformation(user);
     }
 
-    public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
-        var self = this;
-        return ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.push(...p); });
+    public static getPetSpecies(){
+        if (Application.getApp().petSpecies.length == 0) ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.length = 0; Application.getApp().petSpecies.push(...p); });
     }
 
-    public static getPetColors(): JQueryPromise<PetColor[]>{
-        return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.push(...p); });
+    public static getPetColors() {
+        if (Application.getApp().petColors.length == 0) ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
     }
 
     public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {
