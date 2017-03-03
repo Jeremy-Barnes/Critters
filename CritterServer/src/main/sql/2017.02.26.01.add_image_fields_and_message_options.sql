@@ -1,4 +1,4 @@
-ALTER TABLE itemConfigs ADD COLUMN imgPath varchar(200) not null;
+ALTER TABLE itemConfigs ADD COLUMN imagePath varchar(200) not null;
 ALTER TABLE petSpeciesConfigs ADD COLUMN imgPathWithoutModifiers varchar(200) not null;
 ALTER TABLE petSpeciesConfigs ADD COLUMN speciesDescription varchar(2000) not null;
 ALTER TABLE messages ADD COLUMN showRecipient boolean not null;
