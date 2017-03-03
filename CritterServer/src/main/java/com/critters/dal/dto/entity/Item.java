@@ -82,6 +82,7 @@ public class Item {
 		int itemConfigID;
 		String itemName;
 		String itemDescription;
+		String imagePath;
 
 		@ManyToOne
 		@JoinColumn(name="itemClass", updatable = false)
@@ -93,10 +94,11 @@ public class Item {
 
 		public ItemDescription(){}
 
-		public ItemDescription(int itemConfigID, String itemName, String itemDescription) {
+		public ItemDescription(int itemConfigID, String itemName, String itemDescription, String imagePath) {
 			this.itemConfigID = itemConfigID;
 			this.itemName = itemName;
 			this.itemDescription = itemDescription;
+			this.imagePath = imagePath;
 		}
 
 		public int getItemConfigID() {
@@ -121,6 +123,14 @@ public class Item {
 
 		public void setItemDescription(String itemDescription) {
 			this.itemDescription = itemDescription;
+		}
+		
+		public String getImagePath() {
+			return imagePath;
+		}
+
+		public void setImagePath(String imagePath) {
+			this.imagePath = imagePath;
 		}
 
 		public ItemClassification getItemClass() {
