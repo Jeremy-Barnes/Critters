@@ -6,7 +6,6 @@ ALTER TABLE messages ADD COLUMN showSender boolean not null;
 ALTER TABLE petColorConfigs ADD COLUMN patternPath varchar(200) not null;
 ALTER TABLE storeConfigs add column storeClerkImagePath varchar(200) not null;
 ALTER TABLE storeConfigs add column storeBackgroundImagePath varchar(200) not null;
-ALTER TABLE storeConfigs add column storeClerkImagePath varchar(200) not null;
 ALTER TABLE users add column userImagePath varchar(200) not null;
 ALTER TABLE users drop column birthdate;
 ALTER TABLE users add column birthMonth;
