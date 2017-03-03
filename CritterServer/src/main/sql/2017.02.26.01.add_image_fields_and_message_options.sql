@@ -8,8 +8,10 @@ ALTER TABLE storeConfigs add column storeClerkImagePath varchar(200) not null;
 ALTER TABLE storeConfigs add column storeBackgroundImagePath varchar(200) not null;
 ALTER TABLE users add column userImagePath varchar(200) not null;
 ALTER TABLE users drop column birthdate;
-ALTER TABLE users add column birthMonth;
-ALTER TABLE users add column birthDay;
+ALTER TABLE users add column birthMonth int not null;
+ALTER TABLE users add column birthDay int not null;
+ALTER TABLE users add constraint monthCheck CHECK (birthMonth <= 12 AND birthMonth >= 1)
+ALTER TABLE users add constraint dayCheck CHECK (birthDay <= 31 AND birthDay >= 1)
 
 CREATE TABLE userImageOptions(
     userImageOptionID SERIAL NOT NULL PRIMARY KEY,
