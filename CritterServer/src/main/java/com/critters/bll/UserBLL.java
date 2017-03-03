@@ -10,10 +10,7 @@ import com.critters.dal.dto.entity.User;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
-import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
-import javax.persistence.PersistenceException;
-import javax.persistence.StoredProcedureQuery;
+import javax.persistence.*;
 import javax.resource.spi.InvalidPropertyException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -103,11 +100,10 @@ public class UserBLL {
 				user = wipeSensitiveFields(user);
 			}
 			return user;
-		} catch (PersistenceException ex) {
-			BackgroundJobManager.printLine(email);
-			BackgroundJobManager.printLine(password);
-			BackgroundJobManager.printLine(ex);
-			return null; //no user found
+		} catch(NoResultException nrex) {//no user found
+			return null;
+		} catch (Exception ex) {
+			return null;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
