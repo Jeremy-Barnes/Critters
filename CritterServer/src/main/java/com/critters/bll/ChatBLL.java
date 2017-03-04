@@ -53,7 +53,7 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-				Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(),
+				Message mail = new Message(user, message.getRecipient(), false, true, true, Calendar.getInstance().getTime(), message.getMessageText(),
 										   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 				entityManager.persist(mail);
 				entityManager.getTransaction().commit();

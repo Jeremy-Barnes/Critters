@@ -99,7 +99,8 @@ public class User {
 		this.emailAddress = copyUser.emailAddress;//todo should this really be copied?
 		this.password = copyUser.password;//todo should this really be copied?
 		this.sex = copyUser.sex;
-		this.birthdate = copyUser.birthdate;
+		this.birthDay = copyUser.birthDay;
+		this.birthMonth = copyUser.birthMonth;
 		this.salt = copyUser.salt;//todo should this really be copied?
 		this.city = copyUser.city;
 		this.state = copyUser.state;
@@ -164,7 +165,7 @@ public class User {
 		this.password = password;
 	}
 
-	public Date getBirthMonth() {
+	public int getBirthMonth() {
 		return birthMonth;
 	}
 
@@ -172,7 +173,7 @@ public class User {
 		this.birthMonth = birthMonth;
 	}
 	
-	public Date getBirthDay() {
+	public int getBirthDay() {
 		return birthDay;
 	}
 
@@ -224,7 +225,7 @@ public class User {
 		return postcode;
 	}
 
-	public void setPostcode(String postcode) {userImagePath
+	public void setPostcode(String postcode) {
 		this.postcode = postcode;
 	}
 
@@ -303,8 +304,8 @@ public class User {
 		}
 	}
 
-	public void setPets(List<Pet> zoo) {
-		this.pets = zoo;
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
 	}
 
 	public List<Item> getInventory() {
@@ -334,11 +335,9 @@ public class User {
 		Hibernate.initialize(inventory);
 	}
 
-
   	public void initializeInventory(){
 		this.setInventory(UserBLL.getUserInventory(this));
 	}
-
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){
 		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
@@ -359,7 +358,8 @@ public class User {
 		this.emailAddress = null;
 		this.password = null;
 		this.sex = null;
-		this.birthdate = null;
+		this.birthDay = -1;
+		this.birthMonth = -1;
 		this.salt = null;
 		this.city = null;
 		this.state = null;
