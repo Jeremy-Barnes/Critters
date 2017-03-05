@@ -8,28 +8,29 @@ import javax.persistence.Id;
 /**
  * Created by Jeremy on 3/2/2017.
  */
-public class StoreBackgroundImageOptions {
+public class UserImageOption {
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	private int storeBackgroundImageOptionID;
+	private int userImageOptionID;
 	private String imagePath;
 
-	public StoreBackgroundImageOptions(int storeBackgroundImageOptionID, String imagePath) {
-		this.storeBackgroundImageOptionID = storeBackgroundImageOptionID;
+	public UserImageOption(int userImageOptionID, String imagePath) {
+		this.userImageOptionID = userImageOptionID;
 		this.imagePath = imagePath;
 	}
 
-	public StoreBackgroundImageOptions() {
+	public UserImageOption() {
 
 	}
 
-	public int getStoreBackgroundImageOptionID() {
-		return storeBackgroundImageOptionID;
+	public int getUserImageOptionID() {
+		return userImageOptionID;
 	}
 
-	public void setStoreBackgroundImageOptionID(int storeBackgroundImageOptionID) {
-		this.storeBackgroundImageOptionID = storeBackgroundImageOptionID;
+	public void setUserImageOptionID(int userImageOptionID) {
+		this.userImageOptionID = userImageOptionID;
 	}
 
 	public String getImagePath() {
@@ -39,6 +40,4 @@ public class StoreBackgroundImageOptions {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-
-
 }

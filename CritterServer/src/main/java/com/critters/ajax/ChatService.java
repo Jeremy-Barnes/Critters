@@ -71,4 +71,16 @@ public class ChatService extends AjaxService {
 		}
 		return Response.status(Response.Status.OK).entity(ChatBLL.getMail(loggedInUser.getUserID(), true).toArray(new Message[0])).build();
 	}
+
+	@GET
+	@Path("/deleteMail/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteMail(@PathParam("id") int messageId) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+		ChatBLL.deleteMessage(messageId, loggedInUser);
+		return Response.status(Response.Status.OK).build();
+	}
 }

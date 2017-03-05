@@ -19,6 +19,10 @@
         <class>com.critters.dal.dto.entity.Store</class>
         <class>com.critters.dal.dto.entity.GameThumbnail</class>
         <class>com.critters.dal.dto.entity.NPCStoreRestockConfig</class>
+        <class>com.critters.dal.dto.entity.StoreBackgroundImageOption</class>
+        <class>com.critters.dal.dto.entity.StoreClerkImageOption</class>
+        <class>com.critters.dal.dto.entity.UserImageOption</class>
+
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/critters?autoReconnect=true"/>

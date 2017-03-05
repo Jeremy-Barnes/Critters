@@ -28,6 +28,9 @@
         <mapping class="com.critters.dal.dto.entity.Store"/>
         <mapping class="com.critters.dal.dto.entity.NPCStoreRestockConfig"/>
         <mapping class="com.critters.dal.dto.entity.GameThumbnail"/>
+        <mapping class="com.critters.dal.dto.entity.StoreBackgroundImageOption"/>
+        <mapping class="com.critters.dal.dto.entity.StoreClerkImageOption"/>
+        <mapping class="com.critters.dal.dto.entity.UserImageOption"/>
 
     </session-factory>
 </hibernate-configuration>

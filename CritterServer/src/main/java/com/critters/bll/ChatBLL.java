@@ -63,6 +63,9 @@ public class ChatBLL {
 				notify(message.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
 				entityManager.close();
 			}
 		} else {
@@ -85,20 +88,22 @@ public class ChatBLL {
 			return mail;
 		} finally {
 			entityManager.close();
-    }
+		}
 	}
-
 
 	public static List<Conversation> getConversations(int userID) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = entityManager.createQuery("from Message where (senderUserId = :id or recipientUserId = :id) and parentMessageId is null").setParameter("id", userID).getResultList();
+			List<Message> mail = entityManager.createQuery("from Message where " +
+																   "((senderUserId = :id and showSender) or " +
+																   "(recipientUserId = :id and showRecipient)) and parentMessageId is null").setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where rootMessageId in :ids")
 													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
+			mailChildren.removeIf(m -> (m.getSender().getUserID() == userID && !m.getShowSender()) || (m.getSender().getUserID() == userID && !m.getShowSender()));
 			return buildConversations(mail, mailChildren);
 		} finally {
-		entityManager.close();
+			entityManager.close();
 		}
 	}
 
@@ -117,6 +122,27 @@ public class ChatBLL {
 				throw new GeneralSecurityException("Invalid cookie supplied");
 			}
 		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static void deleteMessage(int messageID, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+		Message m = getMessage(messageID, user);
+		if(m.getSender().getUserID() == user.getUserID()){
+			m.setShowSender(false);
+		}
+		if(m.getRecipient().getUserID() == user.getUserID()){
+			m.setShowRecipient(false);
+		}
+
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			entityManager.merge(m);
+			entityManager.getTransaction().commit();
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 	}

@@ -3,10 +3,7 @@ package com.critters.bll;
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
-import com.critters.dal.dto.entity.Friendship;
-import com.critters.dal.dto.entity.Item;
-import com.critters.dal.dto.entity.Pet;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.dto.entity.*;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
 
@@ -41,6 +38,7 @@ public class UserBLL {
 	public static String createUserReturnUnHashedValidator(User user) throws UnsupportedEncodingException {
 		user.setCritterbuxx(500); //TODO: economics
 		user.setIsActive(true);
+		user.setUserImagePath(getUserImageOption(1).getImagePath());
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		try {
@@ -134,7 +132,16 @@ public class UserBLL {
 		return results;
 	}
 
-	public static User updateUser(User changeUser, User sessionUser) throws UnsupportedEncodingException, InvalidPropertyException {
+	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws UnsupportedEncodingException, InvalidPropertyException {
+		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
+			//from User Input. That way porn lies.
+			imageOption = getUserImageOption(imageOption.getUserImageOptionID());
+			sessionUser.setUserImagePath(imageOption.getImagePath());
+		} else {
+			sessionUser.setUserImagePath(null);
+			changeUser.setUserImagePath(null);
+		}
+
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
@@ -157,6 +164,8 @@ public class UserBLL {
 			sessionUser.setState(changeUser.getState());
 			sessionUser.setCountry(changeUser.getCountry());
 			sessionUser.setIsActive(changeUser.getIsActive());
+			sessionUser.setBirthDay(changeUser.getBirthDay());
+			sessionUser.setBirthMonth(changeUser.getBirthMonth());
 			entityManager.merge(sessionUser);
 			entityManager.getTransaction().commit();
 			return changeUser;
@@ -171,7 +180,7 @@ public class UserBLL {
 	public static void deleteUser(User user) throws InvalidPropertyException {
 		try {
 			user.setIsActive(false);
-			updateUser(user, user);
+			updateUser(user, user, null);
 			for (Pet pet : user.getPets()) {
 				PetBLL.abandonPet(pet);
 			}
@@ -270,6 +279,30 @@ public class UserBLL {
 	protected static void verifyUserInventoryIsLoaded(User user){
 		user.initializeInventory();
 
+	}
+
+	public static UserImageOption getUserImageOption(int id){ //todo caching
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id).getSingleResult();
+			return image;
+		} catch (PersistenceException ex) {
+			return null; //no image found
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	public static UserImageOption[] getUserImageOptions(){ //todo caching
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			UserImageOption[] images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
+			return images;
+		} catch (PersistenceException ex) {
+			return null; //no images found
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	/***************** SECURITY STUFF **********************/
