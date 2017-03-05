@@ -48,8 +48,8 @@
     <div class="sidebar-offcanvas sidebar" id="sidebar">
         <div class="mobileInfopane">
             <div class="inlineblock" *ngIf="!app.loggedIn">
-                <button type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
-                <a routerLink="/signUp">Sign Up!</a>
+                <button class="btn btn-warning" type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <a class="btn btn-link" routerLink="/signUp">Sign Up!</a>
             </div>
             <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
         </div>
