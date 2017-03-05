@@ -2,6 +2,7 @@
 
 <form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
 
+
     <ol class="breadcrumb">
         <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">1</div>Account Info</li>
         <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div>User Details</a></li>
@@ -10,6 +11,7 @@
     
     <div class="row">
         <div class="col-md-6 col-lg-4">
+
             <p>Enter your basic account details — your username will be the name that other players identify you be, and your first name will be visible on your profile.</p>
             
             <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
