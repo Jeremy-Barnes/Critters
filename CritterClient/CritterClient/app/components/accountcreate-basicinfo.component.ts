@@ -11,8 +11,8 @@ import {Application} from "../appservice"
 export class AccountCreateBasicInfoComponent {
     user: User;
     confirmPassword: string;
-    birthDay: number;
-    birthMonth: { number: number, name: string };
+    birthDay: any = "";
+    birthMonth: any = "";
 
     months = [{ number: 1, name: "January" }, { number: 2, name: "February" }, { number: 3, name: "March" }, { number: 4, name: "April" }, //i18n? Nah!
         { number: 5, name: "May" }, { number: 6, name: "June" }, { number: 7, name: "July" }, { number: 8, name: "August" },

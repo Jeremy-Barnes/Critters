@@ -21,10 +21,12 @@ body {
     width:100%;
     position: absolute;
 }
-#contentwrap > * {
-     padding-left: 15px;
-     padding-right: 15px;
+
+ng-component > :not(.page-title) {
+    padding-left: 15px;
+    padding-right: 15px;
 }
+
 @media(min-width:768px) {
     #contentwrap { /*wraps the container fluid so that we get 12 columns NEXT TO the sidebar*/
         position: relative;
@@ -108,7 +110,6 @@ a:hover, a:focus {color: #0F8DBA;}
     background-color: #ebebeb;
     border-bottom: 1px solid #acacac;
     width:100%;
-    margin-left: -15px;
     padding-top: 30px;
     padding-bottom: 20px;
 }
@@ -199,7 +200,7 @@ a:hover, a:focus {color: #0F8DBA;}
  * --------------------------------------------------
  */
 
-form input {
+form input, form select {
     margin-bottom:20px;
 }
 
@@ -215,6 +216,10 @@ form input {
     border-color: #12a6da;
     box-shadow: 0px 0px 8px rgba(18, 166, 218, 0.25);
     -webkit-box-shadow: 0px 0px 8px rgba(18, 166, 218, 0.25);
+}
+
+select .placeholder {
+    color: #acacac!important;
 }
 
 /*
@@ -458,4 +463,22 @@ form input {
 
 .btn i.fa {
     padding-right:5px;
+}
+
+/*
+ * Button Styling
+ * --------------------------------------------------
+ */
+
+.modal-header, .modal-footer {
+    border: none;
+}
+
+.modal-body {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.modal-sm {
+    width: 400px;
 }
