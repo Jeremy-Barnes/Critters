@@ -5,7 +5,8 @@
     lastName: string = "";
     emailAddress: string = "";
     password: string = "";
-    birthdate: Date;
+    birthDay: number;
+    birthMonth: number;
     sex: string = "";
     salt: string = "";
     city: string = "";
@@ -15,6 +16,7 @@
     tokenSelector: string = "";
     tokenValidator: string = "";
     critterbuxx: number = 0;
+    userImagePath: string = "";
     friends: Array<Friendship>;
     pets: Array<Pet>;
     isActive: boolean = true;
@@ -26,7 +28,8 @@
         this.lastName = user.lastName;
         this.emailAddress = user.emailAddress;
         this.password = user.password;
-        this.birthdate = user.birthdate;
+        this.birthDay = user.birthDay;
+        this.birthMonth = user.birthMonth;
         this.sex = user.sex;
         this.salt = user.salt;
         this.city = user.city;
@@ -65,17 +68,28 @@ export class Pet {
 export class PetSpecies {
     petSpeciesConfigID: number;
     petTypeName: string;
+    imagePathWithoutModifiers: string;
+    speciesDescription: string;
 }
 
 export class PetColor {
     petColorConfigID: number;
     petColorName: string;
+    patternPath: string;
 }
 
-export class CreateAccountRequest {
+export class AccountInformationRequest {
     user: User;
     pet: Pet;
+    imageChoice: UserImageOption;
 }
+
+export class StoreInformationRequest {
+    store: Store;
+    background: StoreBackgroundImageOption;
+    clerkImage: StoreClerkImageOption;
+}
+
 
 export class Message {
     messageID: number;
@@ -86,6 +100,8 @@ export class Message {
     messageSubject: string;
     rootMessage: Message;
     parentMessage: Message;
+    showSender: boolean;
+    showRecipient: boolean;
 }
 
 export class Conversation {
@@ -104,6 +120,8 @@ export class Store {
     storeStock: Item[];
     description: string;
     name: string;
+    storeClerkImagePath: string;
+    storeBackgroundImagePath: string;
 }
 
 export class Item {
@@ -119,8 +137,49 @@ export class ItemDescription {
     itemConfigID: number;
     itemName: string;
     itemDescription: string;
+    itemClass: ItemClassification;
+    rarity: ItemRarityType;
+    imagePath: string;
+}
+
+export class ItemClassification {
+    itemClassificationID: number;
+    name: string;
+}
+
+export class ItemRarityType {
+    itemRarityTypeID: number;
+    name: string;
 }
 
 export class InventoryGrouping {
     inventoryItemsGrouped: Item[];
+}
+
+export class GameThumbnail {
+    gameThumbnailConfigID: number;
+    gameName: string;
+    gameDescription: string;
+    gameIconPath: string;
+    gameURL: string;
+}
+
+export class GamesInfo {
+    games: GameThumbnail[];
+    featuredGame: GameThumbnail[];
+}
+
+export class StoreClerkImageOption {
+    storeClerkImageOption: number;
+    imagePath: string;
+}
+
+export class StoreBackgroundImageOption {
+    storeBackgroundImageOption: number;
+    imagePath: string;
+}
+
+export class UserImageOption {
+    userImageOptionID: number;
+    imagePath: string;
 }

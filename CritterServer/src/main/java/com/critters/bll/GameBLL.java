@@ -4,7 +4,6 @@ import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.GamesInfo;
 import com.critters.dal.dto.entity.GameThumbnail;
 import com.critters.dal.dto.entity.Item;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import java.util.List;

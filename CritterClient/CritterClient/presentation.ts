@@ -11,3 +11,14 @@ function prepDisplay() {
 
     //other stuff here later
 }//);
+
+function prepDisplayAfterLogin() {
+    (<any>$('.messageslink')).popover({
+        placement: 'bottom',
+        container: 'body',
+        html: true,
+        content: function () {
+            return $(this).next('.notifications-bubble').html();
+        }
+    });
+}

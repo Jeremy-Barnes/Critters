@@ -57,20 +57,21 @@ export class AccountCreatePetComponent implements OnInit {
         return false;
     }
 
-    onChange(color: PetColor) {
+    colorChange(color: PetColor) {
+        this.activeColorObject = color;
         this.activeColor = "_" + this.activeColorObject.petColorName;
         if (this.activeSpecies != null) this.petAndColorSelected = true;
     }
 
     onPetSelect(pet: PetSpecies) {
         this.activeSpecies = pet;
-        if (this.activeColor != null) this.petAndColorSelected = true;
+        if (this.activeColorObject != null) this.petAndColorSelected = true;
     }
 
     private userIsValid(): boolean {
-        return <boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
+        return <boolean><any>(this.user.city && this.user.country &&
             this.user.emailAddress && this.user.firstName && this.user.lastName &&
-            this.user.password && this.user.postcode && this.user.state && this.user.userName);
+            this.user.password && this.user.postcode && this.user.state && this.user.userName && this.user.birthDay && this.user.birthMonth);
     }
 
     

@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -12,9 +12,13 @@ export class Application {
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
     public inventory: InventoryGrouping[] = [];
+
+
     public errorCallback: (text: string) => void;
     public static app: Application = new Application();
 
+
+    public games: GameThumbnail[] = [];
 
     public static getApp() {
         if (Application.app) {
@@ -31,7 +35,7 @@ export class Application {
     }
 
     public static submitUserAccountCreationRequest(user: User, pet: Pet) : JQueryPromise<User> {
-        var createRequest = new CreateAccountRequest();
+        var createRequest = new AccountInformationRequest();
         createRequest.pet = pet;
         createRequest.user = user;
         return ServiceMethods.createUser(createRequest);
@@ -41,20 +45,19 @@ export class Application {
         return ServiceMethods.createPet(pet);
     }
 
-    public static submitUserAccountUpdate(user: User): JQueryPromise<User> {
-        return ServiceMethods.changeUserInformation(user);
+    public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {
+        return ServiceMethods.changeUserInformation({ user: user, pet: null, imageChoice: image });
     }
 
-    public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
-        var self = this;
-        return ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.push(...p); });
+    public static getPetSpecies(){
+        if (Application.getApp().petSpecies.length == 0) ServiceMethods.getPetSpecies().done((p: PetSpecies[]) => { Application.getApp().petSpecies.length = 0; Application.getApp().petSpecies.push(...p); });
     }
 
-    public static getPetColors(): JQueryPromise<PetColor[]>{
-        return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.push(...p); });
+    public static getPetColors() {
+        if (Application.getApp().petColors.length == 0) ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
     }
 
-    public static sendFriendRequest(requestingUserID: number, requestedUserID: number): JQueryPromise<void> {
+    public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {
         var requesterUser = new User();
         var requestedUser = new User();
         requesterUser.userID = requestingUserID;
@@ -65,10 +68,13 @@ export class Application {
             requester: requesterUser,
             requested: requestedUser,
             dateSent: undefined
+        }).done((friendRequest: Friendship) => {
+            Application.getApp().user.friends.push(friendRequest);
         });
     }
 
     public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
         friendRequest.accepted = false;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
@@ -79,6 +85,7 @@ export class Application {
     }
 
     public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
         return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
@@ -88,6 +95,7 @@ export class Application {
             app.user.set(retUser);
             app.loggedIn = true;
             Application.startLongPolling();
+            prepDisplayAfterLogin();
         });
     }
 
@@ -102,6 +110,10 @@ export class Application {
         }).fail((x) => {
             Application.startLongPolling();
         });
+    }
+
+    private static checkNotifications() {
+        Application.getApp().alerts.length = 0;
     }
 
     public static getMailbox() {
@@ -127,6 +139,8 @@ export class Application {
                     message.dateSent = new Date(<any>message.dateSent);
                 }
             }
+            Application.getApp().sentbox.length = 0;
+            Application.getApp().inbox.length = 0;
             Application.getApp().sentbox.push(...sentmsgs);
             Application.getApp().inbox.push(...conversations);
         });
@@ -166,29 +180,25 @@ export class Application {
     public static getInventory() {
         ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
             var user = Application.getApp().user;
+            Application.getApp().inventory.length = 0;
             Application.getApp().inventory.push(...inventory);
-            //var sentmsgs: Message[] = [];
-            //for (var i = 0; i < conversations.length; i++) {
-            //    let conv = conversations[i];
-            //    for (var j = 0; j < conv.messages.length; j++) {
-            //        let message = conv.messages[j];
-            //        if (message.sender.userID == user.userID) {
-            //            sentmsgs.push(message);
-            //        }
-            //        for (var k = 0; k < conv.participants.length; k++) {
-            //            let participant = conv.participants[k];
-            //            if (message.recipient.userID == participant.userID) {
-            //                message.recipient = (participant);
-            //            }
-            //            if (message.sender.userID == participant.userID) {
-            //                message.sender = (participant);
-            //            }
-            //        }
-            //        message.dateSent = new Date(<any>message.dateSent);
-            //    }
-            //}
-            //Application.getApp().sentbox.push(...sentmsgs);
-            //Application.getApp().inbox.push(...conversations);
         });
     }
+
+    public static submitInventoryAction(actionCode: number, items: Item[]) {
+        switch (actionCode) {
+            case 0: ServiceMethods.moveInventoryItemToStore(this.getApp().user, items); break;
+            case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
+        }
+    }
+
+  public static getGames() {
+      if(Application.getApp().games.length = 0){
+        ServiceMethods.getGames().done((games: GamesInfo) => {
+            Application.getApp().games.length = 0;
+            Application.getApp().games.push(...games.games);
+        });
+      }
+    }
+
 }

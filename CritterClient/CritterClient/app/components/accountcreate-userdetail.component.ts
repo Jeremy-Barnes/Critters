@@ -31,8 +31,7 @@ export class AccountCreateDetailsComponent {
     }
 
     private userIsValid(): boolean {
-        return <boolean><any>(this.user.birthdate &&
-            this.user.emailAddress && this.user.firstName && 
+        return <boolean><any>(this.user.emailAddress && this.user.firstName && 
             this.user.password && this.user.userName);
     }
 

@@ -3,7 +3,6 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
-
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
@@ -328,6 +327,4 @@ public class CommerceBLL {
 			entityManager.close();
 		}
 	}
-
-
 }

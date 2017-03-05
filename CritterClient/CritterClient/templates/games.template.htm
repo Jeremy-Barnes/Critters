@@ -1,0 +1,20 @@
+﻿<div id="mainView" [hidden]="activeGame.gameName!=null">
+    <h1>Here are some games to play!</h1>
+    <div *ngFor="let game of games">
+        <div (click)="selectGame(game)">
+            <h2>{{game.gameName}}</h2>
+            <img src="{{game.gameIconPath}}" />
+            <p>{{game.gameDescription}}</p>
+        </div>
+    </div>
+</div>
+
+
+<div id="activeGame"  [hidden]="activeGame.gameName==null">
+    <h1>{{activeGame.gameName}}</h1>
+    <div id="gameBind"></div>
+    <iframe src="http://409cf50d.ngrok.io/CritterGames/SpaceInvaders/" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}"></iframe>
+    <p (click)="goFull()">Go full!</p>
+
+    <div align="center" id="embed-html"></div>
+</div>
