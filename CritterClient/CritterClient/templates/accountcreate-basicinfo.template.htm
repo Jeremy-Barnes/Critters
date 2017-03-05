@@ -1,5 +1,7 @@
-﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
-    <div class="page-title"><h1>Create Your Account!</h1></div>
+﻿<div class="page-title"><h1>Create Your Account!</h1></div>
+
+<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
+
 
     <ol class="breadcrumb">
         <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">1</div>Account Info</li>
@@ -8,7 +10,8 @@
     </ol>
     
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-4">
+
             <p>Enter your basic account details — your username will be the name that other players identify you be, and your first name will be visible on your profile.</p>
             
             <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
@@ -18,10 +21,25 @@
 
             <input class="form-control" type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
 
+            <div class="row">
+                <div class="col-sm-6">
+                    <select class="form-control" name="birthmonthSelect" [(ngModel)]="birthMonth" (ngModelChange)="onChange($event)">
+                        <option class="placeholder" value="" disabled selected>Birth Month</option>
+                        <option *ngFor="let month of months" [ngValue]="month">{{month.name}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <select class="form-control" name="birthdaySelect" [(ngModel)]="birthDay" (ngModelChange)="onChangeDay($event)">
+                        <option class="placeholder" value="" disabled selected>Birth Day</option>
+                        <option *ngFor="let day of days" [ngValue]="day">{{day}}</option>
+                    </select>
+                </div>
+            </div>
+
             <input class="form-control" type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
             <input class="btn btn-primary" type="submit" value="Next" />
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6 col-lg-8 hidden-sm hidden-xs">
             <img src="https://i.imgflip.com/1gjc7j.jpg" />
         </div>
     </div>

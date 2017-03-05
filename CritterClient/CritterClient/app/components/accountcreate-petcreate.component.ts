@@ -69,10 +69,9 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     private userIsValid(): boolean {
-        return true;
-        //<boolean><any>(this.user.birthdate && this.user.city && this.user.country &&
-          //  this.user.emailAddress && this.user.firstName && this.user.lastName &&
-           // this.user.password && this.user.postcode && this.user.state && this.user.userName);
+        return <boolean><any>(this.user.city && this.user.country &&
+            this.user.emailAddress && this.user.firstName && this.user.lastName &&
+            this.user.password && this.user.postcode && this.user.state && this.user.userName && this.user.birthDay && this.user.birthMonth);
     }
 
     

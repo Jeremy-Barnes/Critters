@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -35,7 +35,7 @@ export class Application {
     }
 
     public static submitUserAccountCreationRequest(user: User, pet: Pet) : JQueryPromise<User> {
-        var createRequest = new CreateAccountRequest();
+        var createRequest = new AccountInformationRequest();
         createRequest.pet = pet;
         createRequest.user = user;
         return ServiceMethods.createUser(createRequest);
@@ -45,8 +45,8 @@ export class Application {
         return ServiceMethods.createPet(pet);
     }
 
-    public static submitUserAccountUpdate(user: User): JQueryPromise<User> {
-        return ServiceMethods.changeUserInformation(user);
+    public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {
+        return ServiceMethods.changeUserInformation({ user: user, pet: null, imageChoice: image });
     }
 
     public static getPetSpecies(){

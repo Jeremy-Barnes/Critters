@@ -5,10 +5,10 @@
                 <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
                 <h1 class="text-center">Log In</h1>
             </div>
-            <form class="modal-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-                <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
-                <input type="password" name="password" [(ngModel)]="user.password" placeholder="password" required />
-                <button type="submit">Login</button>
+            <form class="modal-body" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+                <input class="form-control" type="password" name="password" [(ngModel)]="user.password" placeholder="password" required />
+                <button class="btn btn-primary btn-block" type="submit">Login</button>
             </form>
 
             <div class="modal-footer">
