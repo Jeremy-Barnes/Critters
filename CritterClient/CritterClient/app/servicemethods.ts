@@ -1,6 +1,6 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, CreateAccountRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
+import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://localhost:8080/api/critters/";// "http://40f167b1.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -47,8 +47,7 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getUserFromToken", "users", { selector: selector, validator: validator });
     }
 
-    public static createUser(userCreateRequest: CreateAccountRequest): JQueryPromise<User> {
-        userCreateRequest.user.birthdate = new Date(Date.parse(userCreateRequest.user.birthdate.toString()));
+    public static createUser(userCreateRequest: AccountInformationRequest): JQueryPromise<User> {
         return ServiceMethods.doAjax("createUser", "users", userCreateRequest);
     }
 
@@ -56,8 +55,8 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("addPet", "users", pet);
     }
 
-    public static changeUserInformation(user: User): JQueryPromise<User> {
-        return ServiceMethods.doAjax("changeUserInformation", "users", user);
+    public static changeUserInformation(userRequest: AccountInformationRequest): JQueryPromise<User> {
+        return ServiceMethods.doAjax("changeUserInformation", "users", userRequest);
     }
 
     public static getPetSpecies(): JQueryPromise<PetSpecies[]> {
@@ -140,18 +139,6 @@ export class ServiceMethods {
 
     public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
-    }
-
-    public static getTemplateHTML(url: String): JQueryPromise<any> {
-        var opts: JQueryAjaxSettings = {
-            url: "http://409cf50d.ngrok.io/" + url + "index.html", //location.origin + url,
-            type: "GET",
-            success: () => {
-                alert('wow');
-            }
-        };
-        var self = this;
-        return jQuery.ajax(opts);
     }
 }
 

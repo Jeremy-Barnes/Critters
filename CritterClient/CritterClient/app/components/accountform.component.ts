@@ -21,7 +21,7 @@ export class AccountFormComponent {
     onSubmit() {
         var self = this;
 
-        Application.submitUserAccountUpdate(this.user).then((u: User) => {
+        Application.submitUserAccountUpdate(this.user, null).then((u: User) => { //todo image selection
         }).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });

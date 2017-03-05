@@ -18,6 +18,15 @@
 
             <input class="form-control" type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
 
+            <select class="form-control" name="birthmonthSelect" [(ngModel)]="birthMonth" (ngModelChange)="onChange($event)">
+                <option value="" disabled selected style="display: none;">Select A Month!</option>
+                <option *ngFor="let month of months" [ngValue]="month">{{month.name}}</option>
+            </select>
+
+            <select class="form-control" name="birthdaySelect" [(ngModel)]="birthDay" (ngModelChange)="onChangeDay($event)">
+                <option *ngFor="let day of days" [ngValue]="day">{{day}}</option>
+            </select>
+
             <input class="form-control" type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
             <input class="btn btn-primary" type="submit" value="Next" />
         </div>
