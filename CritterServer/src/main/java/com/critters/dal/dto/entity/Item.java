@@ -92,14 +92,6 @@ public class Item {
 		@JoinColumn(name="rarity", updatable = false)
 		private ItemRarityType rarity;
 
-		@ManyToOne
-		@JoinColumn(name="itemClass", updatable = false)
-		private ItemClassification itemClass;
-
-		@ManyToOne
-		@JoinColumn(name="rarity", updatable = false)
-		private ItemRarityType rarity;
-
 		public ItemDescription(){}
 
 		public ItemDescription(int itemConfigID, String itemName, String itemDescription, String imagePath) {

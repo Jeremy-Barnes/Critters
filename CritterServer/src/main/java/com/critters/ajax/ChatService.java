@@ -4,7 +4,6 @@ import com.critters.bll.ChatBLL;
 import com.critters.dal.dto.Conversation;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
-import com.critters.backgroundservices.BackgroundJobManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,7 +11,6 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.Calendar;
 
 
 /**
@@ -26,7 +24,6 @@ public class ChatService extends AjaxService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendMessage(JAXBElement<Message> message) throws GeneralSecurityException, UnsupportedEncodingException {
-		BackgroundJobManager.printLine("Enter sendmessage in chatservice " + Calendar.getInstance().getTime());
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();

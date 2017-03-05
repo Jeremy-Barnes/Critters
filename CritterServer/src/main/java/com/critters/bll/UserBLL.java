@@ -48,7 +48,6 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
-			BackgroundJobManager.printLine(e);
 			throw e;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
@@ -82,7 +81,6 @@ public class UserBLL {
 		try {
 			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
 
-			BackgroundJobManager.printLine(user.getSalt() + " password: " + user.getPassword());
 			user.initializeCollections();
 			if (login) {
 				entityManager.getTransaction().begin();
@@ -334,9 +332,8 @@ public class UserBLL {
 			user.setTokenSelector(UUID.randomUUID().toString());
 			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
 		} catch (GeneralSecurityException ex) {
-			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {			BackgroundJobManager.printLine(ex);
+		} catch (UnsupportedEncodingException ex) {
 		} //shouldn't ever happen
 		return validatorStr;
 	}
@@ -347,7 +344,6 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashedCookieValidator = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -361,7 +357,6 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashStrConfirm = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
-			BackgroundJobManager.printLine(ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
