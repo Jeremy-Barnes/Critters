@@ -6,6 +6,8 @@ import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
 import com.lambdaworks.codec.Base64;
 import com.lambdaworks.crypto.SCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.resource.spi.InvalidPropertyException;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
  * Created by Jeremy on 8/9/2016.
  */
 public class UserBLL {
+
+	static final Logger logger = LoggerFactory.getLogger(UserBLL.class);
+
 
 	public static List<User> searchUsers(String searchString){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -76,6 +81,7 @@ public class UserBLL {
 	}
 
 	public static User getUser(String email, String password, boolean login) {
+		logger.debug("Email: " + email + " Password: " + password);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
 		try {
@@ -99,6 +105,7 @@ public class UserBLL {
 		} catch(NoResultException nrex) {//no user found
 			return null;
 		} catch (Exception ex) {
+			logger.error("Login failed for " + email, ex);
 			return null;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
@@ -183,6 +190,7 @@ public class UserBLL {
 				PetBLL.abandonPet(pet);
 			}
 		} catch(Exception e){
+			logger.error("Delete user failed", user, e);
 			e.printStackTrace();
 		}
 	}
