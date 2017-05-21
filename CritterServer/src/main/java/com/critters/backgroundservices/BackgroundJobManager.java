@@ -22,10 +22,8 @@ public class BackgroundJobManager {
 
 	@Schedule(hour="*", minute="*", second="*/10", persistent=true)
 	public void someQuarterlyJob() {
-		logger.info("Job Method Entry");
 		jobs++;
 		System.out.println("JOB JAERB JEOREARB");
-		logger.info("Job Method Entry");
 	}
 
 	@Schedule(hour="*", minute="*/15", second="*", persistent=true)
@@ -36,6 +34,7 @@ public class BackgroundJobManager {
 			if(rand.nextInt(97) == 7){ //why 7? why not? its a 1 in 96 chance and thats all I care about.
 			// 1 in 96 because this job happens every quarter hour and  I really only want it to happen once per day per rule.
 				if(rand.nextDouble() <= rcfgs.get(i).getPercentOdds()){
+					logger.info("Restocking", rcfgs.get(i));
 					CommerceBLL.restock(rcfgs.get(i));
 				}
 			}
