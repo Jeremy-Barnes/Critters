@@ -403,70 +403,84 @@ select .placeholder {
     padding: 1px 5px;
 }
 
-.btn-default {
+.btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active:hover {
     background-color: #EBEBEB;
     border-color: #ACACAC;
 }
 
-.btn-primary {
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary:active:hover {
     background-color: #12a6da;
     border-color: #12a6da;
 }
 
-.btn-success {
+.btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active:hover {
     background-color: #68BD45;
     border-color: #68BD45;
 }
 
-.btn-warning {
+.btn-warning, .btn-warning:hover, .btn-warning:focus, .btn-warning:active:hover {
     background-color: #FFAE35;
     border-color: #FFAE35
 }
 
-.btn-danger {
+.btn-danger, .btn-danger:hover, .btn-danger:focus, .btn-danger:active:hover {
     background-color: #EB5050;
     border-color: #EB5050;
 }
 
-.btn-link {
+.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active:hover {
     color: #12a6da;
-}
-
-.btn-default:hover, .btn-default:focus {
-    background-color: #D9D9D9;
-    border-color: #ACACAC;
-}
-
-.btn-primary:hover, .btn-primary:focus {
-    background-color: #0F8DBA;
-    border-color: #0F8DBA;
-}
-
-.btn-success:hover, .btn-success:focus {
-    background-color: #59A13B;
-    border-color: #59A13B;
-}
-
-.btn-warning:hover, .btn-warning:focus {
-    background-color: #FF942D;
-    border-color: #FF942D;
-}
-
-.btn-danger:hover, .btn-danger:focus {
-    background-color: #C84444;
-    border-color: #C84444;
-}
-
-.btn-link:hover, .btn-link:focus {
-    color: #0F8DBA;
 }
 
 .btn i.fa {
     padding-right:5px;
 }
 
+/* Button Hover Animation */
+.btn {
+	position: relative;
+	z-index: 1;
+	-webkit-backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+}
+
+.btn::before {
+	content: '';
+	z-index: -1;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -.75em;
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 50%;
+	background: rgba(0,0,0,.15);
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	-webkit-transition: -webkit-transform 0.25s, opacity 0.15s;
+	transition: transform 0.25s, opacity 0.15s;
+	-webkit-transition-timing-function: cubic-bezier(0.7,0,0.9,1);
+	transition-timing-function: cubic-bezier(0.7,0,0.9,1);
+    opacity: 0;
+}
+
+.btn:hover::before, .btn:focus::before {
+	opacity: 1;
+    -webkit-transform: scale3d(15, 15, 1);
+	transform: scale3d(15, 15, 1);
+}
+
+.btn:active {
+    position: relative;
+    top:1px;
+}
+.btn:focus, .btn:active:hover {
+    outline:0;
+}
+
 /*
- * Button Styling
+ * Modal Styling
  * --------------------------------------------------
  */
 
