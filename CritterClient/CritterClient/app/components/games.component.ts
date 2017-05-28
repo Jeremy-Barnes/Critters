@@ -22,6 +22,7 @@ export class GamesComponent implements OnInit {
     games: GameThumbnail[];
     playGame: boolean = false;
     isFull = false;
+    categories = ["chance", "adventure", "simple"];
 
     ngOnInit() {
 

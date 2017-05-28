@@ -25,7 +25,19 @@
             </div>
         </div>
         <div class="row">
-            <p> SEARCHBAR LEL </p>
+            <div class="col-md-12 card gameSearchBar">
+                <h2 class="inlineblock">Find a Game</h2>
+                <div class="inlineblock">
+                    <input type="text" class="form-control" placeholder="keyword search"/> <div class="btn btn-md btn-primary">search</div>
+                </div>
+                <div class="inlineblock">
+                    <select class="form-control inlineblock" name="gameCategory">
+                        <option class="placeholder" value="" disabled selected>Category</option>
+                        <option *ngFor="let category of categories" [ngValue]="category">{{category}}</option>
+                    </select>
+                    <div class="btn btn-md btn-primary">search</div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-4" *ngFor="let game of games">
@@ -45,11 +57,40 @@
 
 <div id="activeGameDescription" [hidden]="activeGame.gameName==null || playGame">
     <div class="container">
-        <a class="btn btn-primary" routerLink="/games">Back to Games!</a>
-        <h2>{{activeGame.gameName}}</h2> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></div>
-
-        <img src="{{activeGame.gameIconPath}}" />
-        <p>{{activeGame.gameDescription}} LOREM IPSUM A BILLION</p>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card gameTitleBackground" [ngStyle]="{'background-image': 'url(' + activeGame.gameIconPath + ')'}">
+                    <div class="col-md-4"> <h1 class="inlineblock">{{activeGame.gameName}}</h1> </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4"> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></div> </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card col-md-12 aboutGame">
+                    <div class="col-md-7 gameDesc">
+                        <h2>About the Game</h2>
+                        <p>{{activeGame.gameDescription}}</p>
+                    </div>
+                    <div class="col-md-5 gameShots">
+                        <img class="framed" src="http://i.onionstatic.com/avclub/5599/14/16x9/960.jpg" />
+                        <br />
+                        <img class="framed" src="https://i.ytimg.com/vi/AjyZN-fXN3M/maxresdefault.jpg" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card highScores">
+                    <h3>Your High Score</h3>
+                    <span>927fixme</span>
+                    <hr />
+                    <h3>Overall High Scores</h3>
+                    <p>lel                   1337</p>
+                </div>
+            </div>
+        </div>
+        <p> </p>
     </div>
 </div>
 

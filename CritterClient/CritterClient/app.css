@@ -134,6 +134,41 @@ img {
     padding: 0px 20px;
 }
 
+.gameSearchBar {
+    background-color: #ebebeb;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gameSearchBar .form-control {
+    width: 70%;
+    display: inline-block;
+}
+
+.gameSearchBar > .inlineblock {
+    width: 33%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.gameTitleBackground {
+    height: 285px;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 0px;
+    color: white;
+}  
+.gameTitleBackground h1 { text-shadow: 1px 2px 4px black; }
+
+.aboutGame {
+    padding: 20px 20px;
+}
+
+.aboutGame > .gameShots img{
+    width: 100%;
+    margin: 10px 0px;
+}
+
 .thumbnail {
     border-color: #acacac;
 }
