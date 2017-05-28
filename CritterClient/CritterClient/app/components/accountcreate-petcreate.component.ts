@@ -28,8 +28,22 @@ export class AccountCreatePetComponent implements OnInit {
     ngOnInit() {
         this.user = Application.getApp().user;
         if (this.userIsValid()) {
-            this.species = Application.getApp().petSpecies;
-            this.colors = Application.getApp().petColors;
+         //   this.species = Application.getApp().petSpecies;
+            // this.colors = Application.getApp().petColors;
+            this.species = [];
+            this.species.push({ petSpeciesConfigID: 1, petTypeName: "Cat", imagePathWithoutModifiers: "", speciesDescription: "" });
+            this.species.push({ petSpeciesConfigID: 2, petTypeName: "Dog", imagePathWithoutModifiers: "", speciesDescription: "" });
+            this.species.push({ petSpeciesConfigID: 3, petTypeName: "Doug", imagePathWithoutModifiers: "", speciesDescription: "" });
+            this.species.push({ petSpeciesConfigID: 4, petTypeName: "Dug", imagePathWithoutModifiers: "", speciesDescription: "" });
+            this.species.push({ petSpeciesConfigID: 5, petTypeName: "Butt", imagePathWithoutModifiers: "", speciesDescription: "" });
+            this.species.push({ petSpeciesConfigID: 6, petTypeName: "Fosh", imagePathWithoutModifiers: "", speciesDescription: "" });
+
+            this.colors = [];
+            this.colors.push({ petColorConfigID: 1, petColorName: "Yelow", patternPath: "" });
+            this.colors.push({ petColorConfigID: 2, petColorName: "Reds", patternPath: "" });
+            this.colors.push({ petColorConfigID: 3, petColorName: "Blr", patternPath: "" });
+            this.colors.push({ petColorConfigID: 4, petColorName: "Grin", patternPath: "" });
+
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
