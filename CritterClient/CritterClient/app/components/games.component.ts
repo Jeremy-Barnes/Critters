@@ -33,6 +33,7 @@ export class GamesComponent implements OnInit {
                 var gth = new GameThumbnail();
                 gth.gameDescription = "sdfsd";
                 gth.gameName = "sdfsdf";
+                gth.gameIconPath = "http://thatgamecompany.com/wp-content/themes/thatgamecompany/_include/img/journey/journey-game-screenshot-13.jpg"
                 gth.gameThumbnailConfigID = 2;
                 self.games.push(gth);
                 for (var i = 0; i < self.games.length; i++) {

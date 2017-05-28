@@ -16,18 +16,27 @@
                     </p>
                     <span class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></span>
                 </div>
-                <div class="col-md-6">
-                    <img src="{{specialGame.gameIconPath}}" />
+                <div class="col-md-6 centered">
+                    <div class="imgCenterer">
+                        <span class="imgCenterHelper"></span> <!--necessary garbage see  https://stackoverflow.com/a/7310398/4885507 -->
+                        <img class="framed centeredImg" src="{{specialGame.gameIconPath}}" />
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div *ngFor="let game of games">
-            <!--TODO paginate-->
-            <div (click)="selectGame(game)">
-                <h2>{{game.gameName}}</h2>
-                <img src="{{game.gameIconPath}}" />
-                <p>{{game.gameDescription}}</p>
+        <div class="row">
+            <p> SEARCHBAR LEL </p>
+        </div>
+        <div class="row">
+            <div class="col-md-4" *ngFor="let game of games">
+                <!--TODO paginate-->
+                <div class="card" (click)="selectGame(game)">
+                    <div class="cardMain inlineblock">
+                        <img src="{{game.gameIconPath}}" />
+                    </div>
+                    <div class="gameTitle"> <h2>{{game.gameName}}</h2> </div>
+                    <!--<p>{{game.gameDescription}}</p>-->
+                </div>
             </div>
         </div>
     </div>
