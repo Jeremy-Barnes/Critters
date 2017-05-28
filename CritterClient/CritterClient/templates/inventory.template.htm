@@ -1,46 +1,49 @@
-﻿<h1>Inventory I guess!</h1>
-<div class="inlineblock">
-    <!----------------------DETAIL VIEW------------------>
-    <div id="viewItemDetail" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-sm" role="document">
-            <div *ngIf="activeItemGroup.length > 0" class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
-                    <h1>{{activeItemGroup[0].description.itemName}}</h1>
-                </div>
-                <div>
-                    <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
-                        <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
-                    </select>
-                </div>
-               
+﻿<div class="container-fluid">
+    <h1>Inventory I guess!</h1>
+</div>
+<div class="container">
+    <div class="inlineblock">
+        <!----------------------DETAIL VIEW------------------>
+        <div id="viewItemDetail" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div *ngIf="activeItemGroup.length > 0" class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                        <h1>{{activeItemGroup[0].description.itemName}}</h1>
+                    </div>
+                    <div>
+                        <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
+                            <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
+                        </select>
+                    </div>
+
                     {{activeItemGroup[0].description.itemDescription}}
-                <input type="button" (click)="submitItem()" value="Submit" />
-            </div>
-        </div>
-    </div>
-
-
-
-    <!----------------------MAIN VIEW------------------>
-    <div id="mainView">
-        <div id="inbox">
-            {{inventory.count}} Items
-            <br />
-            <div *ngFor="let item of inventory">
-                <div (click)="viewItem(item)"  data-target="#viewItemDetail">
-                    <div class="itemTitle">
-                        {{item.inventoryItemsGrouped[0].description.itemName}} <br />
-                    </div>
-                    <div class="itemTitle">
-                        Qty: {{item.inventoryItemsGrouped.length}}
-                    </div>
+                    <input type="button" (click)="submitItem()" value="Submit" />
                 </div>
-                <br /><br />
             </div>
-            <input type="button" (click)="debug()" value="Debug" />
         </div>
+
+
+        <!----------------------MAIN VIEW------------------>
+        <div id="mainView">
+            <div id="inbox">
+                {{inventory.count}} Items
+                <br />
+                <div *ngFor="let item of inventory">
+                    <div (click)="viewItem(item)" data-target="#viewItemDetail">
+                        <div class="itemTitle">
+                            {{item.inventoryItemsGrouped[0].description.itemName}} <br />
+                        </div>
+                        <div class="itemTitle">
+                            Qty: {{item.inventoryItemsGrouped.length}}
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+                <input type="button" (click)="debug()" value="Debug" />
+            </div>
+        </div>
+
+
     </div>
-
-
 </div>

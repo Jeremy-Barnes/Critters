@@ -12,6 +12,13 @@ export class GamesComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
     activeGame: GameThumbnail = new GameThumbnail();
+    specialGame: GameThumbnail = {
+        gameDescription : "Halo: Combat Evolved takes place in a science fiction universe created by Bungie Studios. According to the story, the realization of faster-than-light travel has allowed the human race to colonize other planets after the overpopulation of Earth. A keystone of these efforts is the planet Reach, an interstellar naval yard and a hub of scientific and military activity.",
+        gameIconPath: "http://k22.kn3.net/0CE906C3D.png",
+        gameName : "Halo: Combat Evolved",
+        gameThumbnailConfigID : 1,
+        gameURL : "google.com"
+    };
     games: GameThumbnail[];
     playGame: boolean = false;
     isFull = false;

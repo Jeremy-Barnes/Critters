@@ -20,21 +20,26 @@ body {
 #contentwrap {
     width:100%;
     position: absolute;
-}
-
-ng-component > :not(.page-title) {
-    padding-left: 15px;
-    padding-right: 15px;
+    min-height: 100%;
 }
 
 @media(min-width:768px) {
-    #contentwrap { /*wraps the container fluid so that we get 12 columns NEXT TO the sidebar*/
+    #contentwrap { /*wraps the container so that we get 12 columns NEXT TO the sidebar*/
         position: relative;
     }
-    #main { /* id main is the html element with padding to make the sidebar/containerfluid play nice */
+    #main { /* id main is the html element with padding to make the sidebar/container play nice */
         padding-left:260px;
         margin-bottom:-80px;
     }
+}
+
+.container {
+    margin-left: 0px;
+    padding-left: 30px;
+    padding-right: 15px;
+}
+.container-fluid {
+    padding:0px !important;
 }
 
 .sidebar a, .navbar a {
@@ -76,8 +81,19 @@ img {
     width: 100%;
 }
 
+.card {
+    border: 1px solid #acacac;
+    border-radius: 5px;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
+    padding-bottom: 20px;
+}
+
+#specialGame {
+    margin-top: 20px;
+}
+
 .thumbnail {
-    border-color: #ebebeb;
+    border-color: #acacac;
 }
 
 a.thumbnail:hover, .thumbnail:focus, .thumbnail:active {
@@ -140,10 +156,6 @@ a:hover, a:focus {color: #0F8DBA;}
 }
 .centered {
     text-align: center;
-}
-.container-fluid {
-    height: 100%;
-    padding: 0px;
 }
 
 .passwordMismatch {
@@ -233,6 +245,7 @@ select .placeholder {
     border: none;
     color: white;
     background-color: #12a6da;
+    padding-right:120px;
 }
 .menu-expand {
     background-image: none;
@@ -381,10 +394,10 @@ iframe {
 }
 
 .exit-fullscreen {
-    position:fixed;
+    position:fixed !important;
     top:0;
     left:0;
-    z-index: 999999;
+    z-index: 999999 !important;
 }
 
 .gameHolder {

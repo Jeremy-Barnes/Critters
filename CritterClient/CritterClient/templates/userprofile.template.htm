@@ -1,11 +1,12 @@
-﻿<div class="col-xs-12 col-sm-9">
-    <h1>You are viewing {{viewUser.userName}}'s profile!</h1>
-    <p>Name: {{viewUser.firstName}} {{viewUser.lastName}}</p>
-    <p>Username: {{viewUser.userName}}</p>
-    <p>Gender: {{viewUser.sex}}</p>
-    <p>Birthday: {{viewUser.birthdate}}</p>
-    <p>Location: {{viewUser.city}}, {{viewUser.state}} {{viewUser.country}}</p>
+﻿<div class="container">
+    <div class="col-xs-12 col-sm-9">
+        <h1>You are viewing {{viewUser.userName}}'s profile!</h1>
+        <p>Name: {{viewUser.firstName}} {{viewUser.lastName}}</p>
+        <p>Username: {{viewUser.userName}}</p>
+        <p>Gender: {{viewUser.sex}}</p>
+        <p>Birthday: {{viewUser.birthdate}}</p>
+        <p>Location: {{viewUser.city}}, {{viewUser.state}} {{viewUser.country}}</p>
 
-
-    <input type="button" (click)="sendFriend()" value="Be friends with this user!" />
+        <input type="button" (click)="sendFriend()" value="Be friends with this user!" />
+    </div>    
 </div>
