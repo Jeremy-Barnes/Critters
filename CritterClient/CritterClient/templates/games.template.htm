@@ -42,8 +42,8 @@
         <div class="row">
             <div class="col-md-4" *ngFor="let game of games">
                 <!--TODO paginate-->
-                <div class="card" (click)="selectGame(game)">
-                    <div class="cardMain inlineblock">
+                <div class="card gameCard" (click)="selectGame(game)">
+                    <div class="cardMain">
                         <img src="{{game.gameIconPath}}" />
                     </div>
                     <div class="gameTitle"> <h2>{{game.gameName}}</h2> </div>
