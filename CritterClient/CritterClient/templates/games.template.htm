@@ -14,7 +14,7 @@
                     <p>
                         {{specialGame.gameDescription}}
                     </p>
-                    <span class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></span>
+                    <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="fa fa-play-circle-o"></i></span>
                 </div>
                 <div class="col-md-6 centered">
                     <div class="imgCenterer">
@@ -47,7 +47,6 @@
                         <img src="{{game.gameIconPath}}" />
                     </div>
                     <div class="gameTitle"> <h2>{{game.gameName}}</h2> </div>
-                    <!--<p>{{game.gameDescription}}</p>-->
                 </div>
             </div>
         </div>
@@ -102,7 +101,7 @@
         <h1>{{activeGame.gameName}}</h1>
 
         <div id="gameBind"></div>
-        <div class="gameHolder centered"><iframe src="http://409cf50d.ngrok.io/CritterGames/SpaceInvaders/" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}"></iframe></div>
+        <div class="gameHolder centered"><iframe [src]="this.domSanitizer.bypassSecurityTrustResourceUrl(activeGame.gameURL)" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
 
         <p (click)="toggleFull()">Go full!</p>
         <a [hidden]="!this.isFull" class="btn btn-danger btn-sm exit-fullscreen" (click)="toggleFull()">Exit Fullscreen</a>
