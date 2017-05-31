@@ -47,6 +47,11 @@ body {
     margin-top: 20px;
 }
 
+.page-title > .row {
+    margin: 0px;
+    padding: 0px;
+}
+
 .sidebar a, .navbar a {
     color:#ffffff;
 }
@@ -219,7 +224,7 @@ a:hover, a:focus {color: #0F8DBA;}
 .page-title * {
     margin-left: 15px;
 }
-.page-title > * {
+.page-title * {
     margin-top: 0px;
 }
 .nav-tabs {
@@ -292,6 +297,19 @@ a:hover, a:focus {color: #0F8DBA;}
         display:block;
         padding-bottom:10px;
     }
+}
+
+
+.text-breadcrumb {
+    font-weight: bold;
+    font-size: 16px;
+    padding-top: 15px;
+}
+
+.text-breadcrumb > a {
+    text-decoration: underline;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 /*
@@ -473,7 +491,6 @@ select .placeholder {
     overflow: hidden;
     z-index: 999999;
 }
-
 iframe {
     width: 100%;
     height: 100%;
@@ -486,9 +503,12 @@ iframe {
     z-index: 999999 !important;
 }
 
+.go-fullscreen {
+    width:30%;
+}
+
 .gameHolder {
-    width:800px;
-    height: 600px;
+    height: 800px;
 }
 
 [hidden],template{display:none !important}

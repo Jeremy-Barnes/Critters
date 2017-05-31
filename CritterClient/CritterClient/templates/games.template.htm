@@ -95,15 +95,24 @@
 
 <div id="activeGame"  [hidden]="activeGame.gameName==null || !playGame">
     <div class="container-fluid">
-        <div class="btn btn-primary" (click)="togglePlayGame()">Back!</div>
-        <a class="btn btn-primary" routerLink="/games">Back to Games!</a>
-
-        <h1>{{activeGame.gameName}}</h1>
-
+        <div class="page-title">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>{{activeGame.gameName}}</h1>
+                </div>
+                <div class="col-md-3 text-breadcrumb"> <a routerLink="/games">Games</a> > <a href="javascript:void(0)" (click)="togglePlayGame()">{{activeGame.gameName}}</a> > Play</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
         <div id="gameBind"></div>
-        <div class="gameHolder centered"><iframe [src]="this.domSanitizer.bypassSecurityTrustResourceUrl(activeGame.gameURL)" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="gameHolder"><iframe [src]="this.domSanitizer.bypassSecurityTrustResourceUrl(activeGame.gameURL)" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
+                <p class="btn btn-danger btn-md go-fullscreen center-block" (click)="toggleFull()">Fullscreen!</p>
 
-        <p (click)="toggleFull()">Go full!</p>
+            </div>
+        </div>
         <a [hidden]="!this.isFull" class="btn btn-danger btn-sm exit-fullscreen" (click)="toggleFull()">Exit Fullscreen</a>
 
         <div align="center" id="embed-html"></div>
