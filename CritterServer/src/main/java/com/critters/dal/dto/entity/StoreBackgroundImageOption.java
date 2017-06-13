@@ -1,14 +1,19 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Jeremy on 3/2/2017.
  */
-public class StoreBackgroundImageOption {
+@Entity
+@Table(name="storeBackgroundImageOptions")
+public class StoreBackgroundImageOption extends DTO {
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name="increment", strategy = "increment")

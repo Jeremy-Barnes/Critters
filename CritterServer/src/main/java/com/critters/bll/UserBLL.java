@@ -1,6 +1,5 @@
 package com.critters.bll;
 
-import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class UserBLL {
 
-	static final Logger logger = LoggerFactory.getLogger(UserBLL.class);
+	static final Logger logger = LoggerFactory.getLogger("application");
 
 
 	public static List<User> searchUsers(String searchString){
@@ -53,6 +52,7 @@ public class UserBLL {
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
 		} catch(Exception e) {
+			logger.error("User creation failed for user " + user.toString(), e);
 			throw e;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
@@ -73,7 +73,8 @@ public class UserBLL {
 			} else {
 				return null;
 			}
-		} catch(PersistenceException ex) {
+		} catch (PersistenceException ex) {
+			logger.debug("Login failed for selector " + selector + "and validator " + validator, ex);
 			return null;
 		} finally {
 			entityManager.close();
@@ -81,7 +82,7 @@ public class UserBLL {
 	}
 
 	public static User getUser(String email, String password, boolean login) {
-		logger.debug("Email: " + email + " Password: " + password);
+		logger.debug("Logging in with Email: " + email + " Password: " + password);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
 		try {
@@ -103,9 +104,10 @@ public class UserBLL {
 			}
 			return user;
 		} catch(NoResultException nrex) {//no user found
+			logger.error("Login failed for " + email, nrex);
 			return null;
 		} catch (Exception ex) {
-			logger.error("Login failed for " + email, ex);
+			logger.error("A weird error occurred when logging in " + email, ex);
 			return null;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
@@ -118,7 +120,6 @@ public class UserBLL {
 	public static User getUser(int id) {
 			User user = wipeSensitiveFields(getFullUser(id));
 			return user;
-
 	}
 
 	public static List<User> searchForUser(String searchTerm) {
@@ -146,7 +147,6 @@ public class UserBLL {
 			sessionUser.setUserImagePath(null);
 			changeUser.setUserImagePath(null);
 		}
-
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
@@ -189,9 +189,8 @@ public class UserBLL {
 			for (Pet pet : user.getPets()) {
 				PetBLL.abandonPet(pet);
 			}
-		} catch(Exception e){
-			logger.error("Delete user failed", user, e);
-			e.printStackTrace();
+		} catch (Exception e){
+			logger.error("Delete user failed id:" + user.getUserID() + " email: " + user.getEmailAddress(), e);
 		}
 	}
 
@@ -227,7 +226,6 @@ public class UserBLL {
 	}
 
 	public static boolean isEmailAddressValid(String email){
-
 		boolean valid = true;
 		valid = (email != null && !email.isEmpty()); //todo: content filter
 		if(valid) {
@@ -284,7 +282,6 @@ public class UserBLL {
 
 	protected static void verifyUserInventoryIsLoaded(User user){
 		user.initializeInventory();
-
 	}
 
 	public static UserImageOption getUserImageOption(int id){ //todo caching
@@ -293,6 +290,7 @@ public class UserBLL {
 			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id).getSingleResult();
 			return image;
 		} catch (PersistenceException ex) {
+			logger.debug("No such image option found with id " + id, ex);
 			return null; //no image found
 		} finally {
 			entityManager.close();
@@ -305,6 +303,7 @@ public class UserBLL {
 			UserImageOption[] images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
 			return images;
 		} catch (PersistenceException ex) {
+			logger.debug("No image options found", ex);
 			return null; //no images found
 		} finally {
 			entityManager.close();
@@ -324,7 +323,7 @@ public class UserBLL {
 			user.setPassword(hashStr);
 			user.setSalt(saltStr);
 		} catch (GeneralSecurityException ex) {
-			ex.printStackTrace();
+			logger.error("Could not run scrypt!", ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		}
 	}
@@ -340,6 +339,7 @@ public class UserBLL {
 			user.setTokenSelector(UUID.randomUUID().toString());
 			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
 		} catch (GeneralSecurityException ex) {
+			logger.error("Could not run scrypt!", ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 		} //shouldn't ever happen
@@ -352,6 +352,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashedCookieValidator = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
+			logger.error("Could not run scrypt!", ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -365,6 +366,7 @@ public class UserBLL {
 			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
 			hashStrConfirm = new String(Base64.encode(hashByte));
 		} catch (GeneralSecurityException ex) {
+			logger.error("Could not run scrypt!", ex);
 			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
 		} catch (UnsupportedEncodingException ex) {
 			return false;
@@ -378,6 +380,7 @@ public class UserBLL {
 			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
 			return user;
 		} catch (PersistenceException ex) {
+			logger.debug("No active user found with id " + id, ex);
 			return null; //no user found
 		} finally {
 			entityManager.close();

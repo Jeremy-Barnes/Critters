@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class GameBLL {
 
-	static final Logger logger = LoggerFactory.getLogger(GameBLL.class);
+	static final Logger logger = LoggerFactory.getLogger("application");
 
 
 	public static GamesInfo getGames(){

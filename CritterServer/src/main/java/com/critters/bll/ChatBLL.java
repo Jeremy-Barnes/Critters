@@ -2,11 +2,12 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
-
 import com.critters.dal.dto.Notification;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.container.AsyncResponse;
@@ -17,7 +18,6 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 public class ChatBLL {
 
 	private static Map<Integer, AsyncResponse> listeners = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+	static final Logger logger = LoggerFactory.getLogger("application");
 
 	public static void createPoll(int userId, AsyncResponse asyncResponse){
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
@@ -62,6 +63,9 @@ public class ChatBLL {
 				Message wiped = wipeSensitiveDetails(mail);
 				notify(message.getRecipient().getUserID(), wiped, null);
 				return wiped;
+			} catch(Exception e) {
+				logger.error("Could not send message to user " + message.toString() + "\n" + user.toString(), e);
+				throw e;
 			} finally {
 				if(entityManager.getTransaction().isActive()){
 					entityManager.getTransaction().rollback();
@@ -69,6 +73,7 @@ public class ChatBLL {
 				entityManager.close();
 			}
 		} else {
+			logger.info("An invalid cookie was supplied for user " + user.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
@@ -139,6 +144,9 @@ public class ChatBLL {
 		try {
 			entityManager.merge(m);
 			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			logger.error("Could not delete message " + messageID + " for user " + user.toString(), e);
+			throw e;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();

@@ -2,12 +2,16 @@ package com.critters.dal.dto.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Jeremy on 3/2/2017.
  */
+@Entity
+@Table(name="userImageOptions")
 public class UserImageOption {
 
 	@Id

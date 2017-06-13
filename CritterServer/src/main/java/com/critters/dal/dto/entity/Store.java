@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="storeConfigs")
-public class Store {
+public class Store extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")

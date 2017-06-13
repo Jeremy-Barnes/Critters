@@ -1,6 +1,6 @@
 <configuration>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="APPLICATION-LOG" class="ch.qos.logback.core.FileAppender">
         <file>./CritterDiagnostics.log</file>
         <append>true</append>
         <immediateFlush>true</immediateFlush>
@@ -9,6 +9,18 @@
         </encoder>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>./backgroundNoise.log</file>
+        <append>true</append>
+        <immediateFlush>false</immediateFlush>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="application" level="ALL" additivity="false">
+        <appender-ref ref="APPLICATION-LOG"/>
+    </logger>
     <root level="ALL">
         <appender-ref ref="FILE" />
     </root>

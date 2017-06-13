@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="pets")
-public class Pet {
+public class Pet extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -97,7 +98,7 @@ public class Pet {
 
 	@Entity
 	@Table(name = "petcolorconfigs")
-	public static class PetColor {
+	public static class PetColor extends DTO {
 		@Id
 		int petColorConfigID;
 		String petColorName;
@@ -138,7 +139,7 @@ public class Pet {
 
 	@Entity
 	@Table(name = "petspeciesconfigs")
-	public static class PetSpecies {
+	public static class PetSpecies extends DTO {
 		@Id
 		int petSpeciesConfigID;
 		String petTypeName;

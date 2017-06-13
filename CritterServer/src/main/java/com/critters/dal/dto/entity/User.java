@@ -1,16 +1,13 @@
 package com.critters.dal.dto.entity;
 
 import com.critters.bll.UserBLL;
+import com.critters.dal.dto.DTO;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
-import javax.mail.Store;
 import javax.persistence.*;
-import java.lang.reflect.Array;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="users")
-public class User {
+public class User extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")

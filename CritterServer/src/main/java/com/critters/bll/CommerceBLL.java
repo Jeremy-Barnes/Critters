@@ -3,6 +3,9 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
@@ -19,6 +22,8 @@ import java.util.stream.Stream;
  */
 public class CommerceBLL {
 
+	static final Logger logger = LoggerFactory.getLogger("application");
+
 	public static void changeItemsPrice(Item[] items, User user) {
 		List<Item> streamableItems = Arrays.asList(items);
 		UserBLL.verifyUserInventoryIsLoaded(user);
@@ -34,7 +39,18 @@ public class CommerceBLL {
 								  });
 				entityManager.merge(user);
 				entityManager.getTransaction().commit();
+			} catch(Exception e) {
+				String itemArray = "";
+				List<Item> listItems = Arrays.asList(items);
+				for(Item item : listItems){
+					itemArray += "\n" + item.toString();
+				}
+				logger.error("Could not alter price of one of these items " + itemArray, e);
+				throw e;
 			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
 				entityManager.close();
 			}
 		}
@@ -55,7 +71,18 @@ public class CommerceBLL {
 				});
 				entityManager.merge(user);
 				entityManager.getTransaction().commit();
+			}  catch(Exception e) {
+				String itemArray = "";
+				List<Item> listItems = Arrays.asList(items);
+				for(Item item : listItems){
+					itemArray += "\n" + item.toString();
+				}
+				logger.error("Could not put one of these items in the store " + itemArray + " user:" + user.toString() , e);
+				throw e;
 			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
 				entityManager.close();
 			}
 		}
@@ -87,7 +114,18 @@ public class CommerceBLL {
 					entityManager.merge(user);
 					if(owner != null) entityManager.merge(owner);
 					entityManager.getTransaction().commit();
+				}  catch(Exception e) {
+					String itemArray = "";
+					List<Item> listItems = Arrays.asList(items);
+					for(Item item : listItems){
+						itemArray += "\n" + item.toString();
+					}
+					logger.error("Could transfer one of these items to the new owner " + user.toString()  + "\n" + itemArray, e);
+					throw e;
 				} finally {
+					if(entityManager.getTransaction().isActive()){
+						entityManager.getTransaction().rollback();
+					}
 					entityManager.close();
 				}
 			} else {
@@ -138,9 +176,15 @@ public class CommerceBLL {
 			entityManager.getTransaction().commit();
 			return store;
 		} catch(Exception e) {
-			entityManager.getTransaction().rollback();
+			logger.error("Something went wrong creating this store " + store.toString()
+					+ " with this background " + background.toString()
+					+ " with this clerk " + clerk.toString()
+					+ " for this user " + owner.toString(), e);
 			throw e;
 		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 
@@ -171,9 +215,15 @@ public class CommerceBLL {
 			entityManager.getTransaction().commit();
 			return store;
 		} catch(Exception e) {
-			entityManager.getTransaction().rollback();
+			logger.error("Something went wrong updating this store " + store.toString()
+								 + " with this background " + background.toString()
+								 + " with this clerk " + clerk.toString()
+								 + " for this user " + owner.toString(), e);
 			throw e;
 		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
 			entityManager.close();
 		}
 
@@ -217,6 +267,7 @@ public class CommerceBLL {
 			List<NPCStoreRestockConfig> cfgs = entityManager.createQuery("from NPCStoreRestockConfig").getResultList();
 			return cfgs;
 		} catch (Exception ex){
+			logger.debug("Couldn't get restock configs", ex);
 			return null;
 		} finally {
 			entityManager.close();
@@ -270,7 +321,8 @@ public class CommerceBLL {
 				entityManager.persist(i);
 			});
 			entityManager.getTransaction().commit();
-		} catch(Exception e) {
+		}  catch(Exception e) {
+			logger.error("Something went wrong during this restock " + restock.toString(), e);
 			throw e;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
