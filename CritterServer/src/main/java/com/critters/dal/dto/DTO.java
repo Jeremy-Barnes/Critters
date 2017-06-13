@@ -8,8 +8,6 @@ import java.io.StringWriter;
  * Created by Jeremy on 6/6/2017.
  */
 public class DTO {
-
-
 	protected Class type;
 
 	public DTO() {

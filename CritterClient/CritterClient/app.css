@@ -20,19 +20,36 @@ body {
 #contentwrap {
     width:100%;
     position: absolute;
+    min-height: 100%;
 }
-#contentwrap > * {
-     padding-left: 15px;
-     padding-right: 15px;
-}
+
 @media(min-width:768px) {
-    #contentwrap { /*wraps the container fluid so that we get 12 columns NEXT TO the sidebar*/
+    #contentwrap { /*wraps the container so that we get 12 columns NEXT TO the sidebar*/
         position: relative;
     }
-    #main { /* id main is the html element with padding to make the sidebar/containerfluid play nice */
+    #main { /* id main is the html element with padding to make the sidebar/container play nice */
         padding-left:260px;
         margin-bottom:-80px;
     }
+}
+
+.container {
+    margin-left: 0px;
+    padding-left: 30px;
+    padding-right: 15px;
+}
+.container-fluid {
+    padding:0px !important;
+}
+
+.row {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.page-title > .row {
+    margin: 0px;
+    padding: 0px;
 }
 
 .sidebar a, .navbar a {
@@ -43,6 +60,25 @@ img {
     max-width: 100%;
     height: auto;
     display: inline-block;
+}
+
+
+/* necessary garbage, see - https://stackoverflow.com/a/7310398/4885507 */
+.imgCenterer {
+    height: 350px;      /* equals max image height */
+    /*width: 160px;*/
+    white-space: nowrap;
+    text-align: center; margin: 1em 0;
+}
+
+.imgCenterHelper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.centeredImg {
+    vertical-align: middle;
 }
 
 .full-width {
@@ -74,8 +110,81 @@ img {
     width: 100%;
 }
 
+.framed {
+    border: 1px solid #acacac;
+    border-radius: 5px;
+}
+
+.card {
+    border: 1px solid #acacac;
+    border-radius: 5px;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
+}
+
+.cardMain {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.gameCard {
+    height: 200px;
+}
+
+.gameCard img {
+    width: 100%;
+}
+
+.gameTitle {
+    float:left;
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+    transform: translateY(-100%);
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    text-shadow: 1px 2px 4px black; 
+    text-align: right;
+    padding: 0px 20px;
+}
+
+.gameSearchBar {
+    background-color: #ebebeb;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gameSearchBar .form-control {
+    width: 70%;
+    display: inline-block;
+}
+
+.gameSearchBar > .inlineblock {
+    width: 33%;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.gameTitleBackground {
+    height: 285px;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 0px;
+    color: white;
+}  
+.gameTitleBackground h1 { text-shadow: 1px 2px 4px black; }
+
+.aboutGame {
+    padding: 20px 20px;
+}
+
+.aboutGame > .gameShots img{
+    width: 100%;
+    margin: 10px 0px;
+}
+
 .thumbnail {
-    border-color: #ebebeb;
+    border-color: #acacac;
 }
 
 a.thumbnail:hover, .thumbnail:focus, .thumbnail:active {
@@ -100,6 +209,7 @@ h4 { font-size: 16px; }
     h1 { font-size:30px;}
 }
 
+
 a {color: #12a6da;}
 
 a:hover, a:focus {color: #0F8DBA;}
@@ -108,14 +218,13 @@ a:hover, a:focus {color: #0F8DBA;}
     background-color: #ebebeb;
     border-bottom: 1px solid #acacac;
     width:100%;
-    margin-left: -15px;
     padding-top: 30px;
     padding-bottom: 20px;
 }
 .page-title * {
     margin-left: 15px;
 }
-.page-title > * {
+.page-title * {
     margin-top: 0px;
 }
 .nav-tabs {
@@ -138,10 +247,6 @@ a:hover, a:focus {color: #0F8DBA;}
 }
 .centered {
     text-align: center;
-}
-.container-fluid {
-    height: 100%;
-    padding: 0px;
 }
 
 .passwordMismatch {
@@ -194,12 +299,25 @@ a:hover, a:focus {color: #0F8DBA;}
     }
 }
 
+
+.text-breadcrumb {
+    font-weight: bold;
+    font-size: 16px;
+    padding-top: 15px;
+}
+
+.text-breadcrumb > a {
+    text-decoration: underline;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 /*
  * Forms
  * --------------------------------------------------
  */
 
-form input {
+form input, form select {
     margin-bottom:20px;
 }
 
@@ -217,6 +335,10 @@ form input {
     -webkit-box-shadow: 0px 0px 8px rgba(18, 166, 218, 0.25);
 }
 
+select .placeholder {
+    color: #acacac!important;
+}
+
 /*
  * Navs
  * --------------------------------------------------
@@ -227,6 +349,7 @@ form input {
     border: none;
     color: white;
     background-color: #12a6da;
+    padding-right:120px;
 }
 .menu-expand {
     background-image: none;
@@ -368,6 +491,27 @@ form input {
     overflow: hidden;
     z-index: 999999;
 }
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.exit-fullscreen {
+    position:fixed !important;
+    top:0;
+    left:0;
+    z-index: 999999 !important;
+}
+
+.go-fullscreen {
+    width:30%;
+}
+
+.gameHolder {
+    height: 800px;
+}
+
+[hidden],template{display:none !important}
 
 /*
  * Button Styling
@@ -388,6 +532,13 @@ form input {
     padding: 22px 36px;
 }
 
+@media(max-width:768px) {
+    .btn-lg {
+        font-size: 24px;
+        padding: 11px 18px;
+    }
+}
+
 .btn-sm {
     font-size: 12px;
     padding: 5px 10px;
@@ -398,64 +549,96 @@ form input {
     padding: 1px 5px;
 }
 
-.btn-default {
+.btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active:hover {
     background-color: #EBEBEB;
     border-color: #ACACAC;
 }
 
-.btn-primary {
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary:active:hover {
     background-color: #12a6da;
     border-color: #12a6da;
 }
 
-.btn-success {
+.btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active:hover {
     background-color: #68BD45;
     border-color: #68BD45;
 }
 
-.btn-warning {
+.btn-warning, .btn-warning:hover, .btn-warning:focus, .btn-warning:active:hover {
     background-color: #FFAE35;
     border-color: #FFAE35
 }
 
-.btn-danger {
+.btn-danger, .btn-danger:hover, .btn-danger:focus, .btn-danger:active:hover {
     background-color: #EB5050;
     border-color: #EB5050;
 }
 
-.btn-link {
+.btn-link, .btn-link:hover, .btn-link:focus, .btn-link:active:hover {
     color: #12a6da;
-}
-
-.btn-default:hover, .btn-default:focus {
-    background-color: #D9D9D9;
-    border-color: #ACACAC;
-}
-
-.btn-primary:hover, .btn-primary:focus {
-    background-color: #0F8DBA;
-    border-color: #0F8DBA;
-}
-
-.btn-success:hover, .btn-success:focus {
-    background-color: #59A13B;
-    border-color: #59A13B;
-}
-
-.btn-warning:hover, .btn-warning:focus {
-    background-color: #FF942D;
-    border-color: #FF942D;
-}
-
-.btn-danger:hover, .btn-danger:focus {
-    background-color: #C84444;
-    border-color: #C84444;
-}
-
-.btn-link:hover, .btn-link:focus {
-    color: #0F8DBA;
 }
 
 .btn i.fa {
     padding-right:5px;
+}
+
+/* Button Hover Animation */
+.btn {
+	position: relative;
+	z-index: 1;
+	-webkit-backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+}
+
+.btn::before {
+	content: '';
+	z-index: -1;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -.75em;
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 50%;
+	background: rgba(0,0,0,.15);
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	-webkit-transition: -webkit-transform 0.25s, opacity 0.15s;
+	transition: transform 0.25s, opacity 0.15s;
+	-webkit-transition-timing-function: cubic-bezier(0.7,0,0.9,1);
+	transition-timing-function: cubic-bezier(0.7,0,0.9,1);
+    opacity: 0;
+}
+
+.btn:hover::before, .btn:focus::before {
+	opacity: 1;
+    -webkit-transform: scale3d(15, 15, 1);
+	transform: scale3d(15, 15, 1);
+}
+
+.btn:active {
+    position: relative;
+    top:1px;
+}
+.btn:focus, .btn:active:hover {
+    outline:0;
+}
+
+/*
+ * Modal Styling
+ * --------------------------------------------------
+ */
+
+.modal-header, .modal-footer {
+    border: none;
+}
+
+.modal-body {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.modal-sm {
+    width: 400px;
 }

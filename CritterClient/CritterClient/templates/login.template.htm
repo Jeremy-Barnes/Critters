@@ -1,18 +1,20 @@
-﻿<div id="log-in" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
-                <h1 class="text-center">Log In</h1>
-            </div>
-            <form class="modal-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-                <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
-                <input type="password" name="password" [(ngModel)]="user.password" placeholder="password" required />
-                <button type="submit">Login</button>
-            </form>
+﻿<div class="container">
+    <div id="log-in" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                    <h1 class="text-center">Log In</h1>
+                </div>
+                <form class="modal-body" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                    <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+                    <input class="form-control" type="password" name="password" [(ngModel)]="user.password" placeholder="password" required />
+                    <button class="btn btn-primary btn-block" type="submit">Login</button>
+                </form>
 
-            <div class="modal-footer">
-                <p class="text-center">Don't have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#sign-up">Sign Up.</a></p>
+                <div class="modal-footer">
+                    <p class="text-center">Don't have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#sign-up">Sign Up.</a></p>
+                </div>
             </div>
         </div>
     </div>

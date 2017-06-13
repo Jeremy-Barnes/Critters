@@ -192,13 +192,13 @@ export class Application {
         }
     }
 
-  public static getGames() {
-      if(Application.getApp().games.length = 0){
-        ServiceMethods.getGames().done((games: GamesInfo) => {
-            Application.getApp().games.length = 0;
-            Application.getApp().games.push(...games.games);
-        });
-      }
+    public static getGames(): JQueryPromise<GamesInfo> {
+        if (Application.getApp().games.length = 0) {
+            return ServiceMethods.getGames().done((games: GamesInfo) => {
+                Application.getApp().games.length = 0;
+                Application.getApp().games.push(...games.games);
+            });
+        } else return jQuery.Deferred().resolve(null);
     }
 
 }

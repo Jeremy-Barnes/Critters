@@ -1,66 +1,71 @@
-﻿<form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
+<div class="container-fluid">
     <div class="page-title">
         <h1>Pick A Pet!</h1>
     </div>
-    <ol class="breadcrumb">
-        <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div>Account Info</a></li>
-        <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div>User Details</a></li>
-        <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">3</div>Create A Pet</li>
-    </ol>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Select your pet's color</h2>
-        </div>
-        <div *ngFor="let color of colors">
-            <div class="col-md-3">
-                <a class="thumbnail">
-                    <img src="https://i.imgflip.com/1gjc7j.jpg" (click)="colorChange(color)" />
-                </a>
+</div>
+<div class="container">
+    <form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
+
+        <ol class="breadcrumb">
+            <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div>Account Info</a></li>
+            <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div>User Details</a></li>
+            <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">3</div>Create A Pet</li>
+        </ol>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Select your pet's color</h2>
             </div>
-        </div>
-        </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Select your pet's species</h2>
-        </div>
-        <div *ngFor="let specie of species">
-            <div class="col-md-3 centered" [ngClass]="{'whitefade': specie == activeSpecies}" (click)="onPetSelect(specie)">
-                <a class="specieRepeater inlineblock thumbnail full-width" >
-                    <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
-                    <b>{{specie.petTypeName}}</b>
-                </a>
-                <div class="specieSelect centered" *ngIf="specie == activeSpecies">
-                    <div class="btn btn-primary"><i class="fa fa-info-circle"></i>Info</div>
-                    <div class="btn btn-success"><i class="fa fa-check-circle"></i>Select</div>
+            <div *ngFor="let color of colors">
+                <div class="col-md-3">
+                    <a class="thumbnail">
+                        <img src="https://i.imgflip.com/1gjc7j.jpg" (click)="colorChange(color)" />
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Customize your pet</h2>
-        </div>
-        <div class="col-md-3">
-
-            <p *ngIf="petAndColorSelected"> <b>{{petName}}</b> the <b>{{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</b></p>
-        </div>
-        <div class="col-md-6">
-            <div class="radio">
-                <label class="radio-inline">
-                    <input type="radio" value="Female" name="sexSelect" [(ngModel)]="activeSex"> Female
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="Male" name="sexSelect" [(ngModel)]="activeSex"> Male
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="Other" name="sexSelect" [(ngModel)]="activeSex"> Other
-                </label>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Select your pet's species</h2>
             </div>
-            <input class="form-control" type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
-
-            <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
-            <input class="btn btn-primary" [disabled]="!petAndColorSelected" type="submit" value="CREATE!" />
+            <div *ngFor="let specie of species">
+                <div class="col-md-3 centered" [ngClass]="{'whitefade': specie == activeSpecies}" (click)="onPetSelect(specie)">
+                    <a class="specieRepeater inlineblock thumbnail full-width">
+                        <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
+                        <b>{{specie.petTypeName}}</b>
+                    </a>
+                    <div class="specieSelect centered" *ngIf="specie == activeSpecies">
+                        <div class="btn btn-primary"><i class="fa fa-info-circle"></i>Info</div>
+                        <div class="btn btn-success"><i class="fa fa-check-circle"></i>Select</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>Customize your pet</h2>
+            </div>
+            <div class="col-md-3">
 
-</form>
+                <p *ngIf="petAndColorSelected"> <b>{{petName}}</b> the <b>{{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</b></p>
+            </div>
+            <div class="col-md-6">
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" value="Female" name="sexSelect" [(ngModel)]="activeSex"> Female
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="Male" name="sexSelect" [(ngModel)]="activeSex"> Male
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="Other" name="sexSelect" [(ngModel)]="activeSex"> Other
+                    </label>
+                </div>
+                <input class="form-control" type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
+
+                <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
+                <input class="btn btn-primary" [disabled]="!petAndColorSelected" type="submit" value="CREATE!" />
+            </div>
+        </div>
+
+    </form>
+</div>
