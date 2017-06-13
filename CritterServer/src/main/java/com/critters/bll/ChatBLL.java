@@ -4,6 +4,7 @@ import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
 import com.critters.dal.dto.Notification;
 import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 import org.slf4j.Logger;
@@ -42,10 +43,15 @@ public class ChatBLL {
 	}
   
 	public static void notify(int userId, Message message, Friendship friendRequest){
+		logger.trace("Notifying user " + userId + "of " + message + " " + friendRequest);
 		if(listeners.containsKey(userId)) {
+			logger.trace("User " + userId + " found in listeners map");
 			Notification notification = new Notification(message, friendRequest);
-			listeners.get(userId).resume(notification);
+			listeners.get(userId).resume(Response.status(Response.Status.FOUND).entity(notification).build());
 			listeners.remove(userId);
+		} else {
+			logger.trace("User " + userId + " not found in listeners map " + listeners.keySet());
+
 		}
 	}
 
@@ -54,7 +60,7 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-				Message mail = new Message(user, message.getRecipient(), false, true, true, Calendar.getInstance().getTime(), message.getMessageText(),
+				Message mail = new Message(user, message.getRecipient(), false, true, true, false, Calendar.getInstance().getTime(), message.getMessageText(),
 										   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 				entityManager.persist(mail);
 				entityManager.getTransaction().commit();
@@ -78,17 +84,12 @@ public class ChatBLL {
 		}
 	}
 
-	public static List<Message> getMail(int userID, boolean unreadOnly) {
+	public static List<Message> getMail(int userID, boolean undeliveredOnly) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = unreadOnly ?
-					entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id and read = false").setParameter("id", userID).getResultList()
+			List<Message> mail = undeliveredOnly ?
+					entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id and delivered = false").setParameter("id", userID).getResultList()
 					: entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id").setParameter("id", userID).getResultList();
-
-			entityManager.getTransaction().begin();
-			mail.forEach(m->m.setRead(true));
-			mail.forEach(m->entityManager.merge(m));
-			entityManager.getTransaction().commit();
 			mail.forEach(m -> wipeSensitiveDetails(m));
 			return mail;
 		} finally {
@@ -121,7 +122,6 @@ public class ChatBLL {
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(mail.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
@@ -153,6 +153,44 @@ public class ChatBLL {
 			}
 			entityManager.close();
 		}
+	}
+
+	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) {
+		messages.forEach(m -> m.setDelivered(true));
+		messages = updateMessages(messages);
+		messages.forEach(m -> wipeSensitiveDetails(m));
+		return messages;
+	}
+
+	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser){
+		messages.forEach(m -> m.setRead(true));
+		messages = updateMessages(messages);
+		messages.forEach(m -> wipeSensitiveDetails(m));
+		return messages;
+	}
+
+	private static List<Message> updateMessages(List<Message> messages){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			for(Message m : messages) {
+				entityManager.merge(m);
+			}
+			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			String messageArray = "";
+			for(Message message : messages){
+				messageArray += "\n" + message.toString();
+			}
+			logger.error("Could not update messages " + messageArray, e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+		return messages;
 	}
 
 	private static Message wipeSensitiveDetails(Message message) {
