@@ -2,13 +2,17 @@ package com.critters.dal.dto.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Jeremy on 3/2/2017.
  */
-public class StoreClerkImageOption {
+@Entity
+@Table(name="storeClerkImageOptions")
+public class StoreClerkImageOption extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
