@@ -2,6 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.ChatBLL;
 import com.critters.dal.dto.Conversation;
+import com.critters.dal.dto.MessageRequest;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 
@@ -79,5 +80,35 @@ public class ChatService extends AjaxService {
 		}
 		ChatBLL.deleteMessage(messageId, loggedInUser);
 		return Response.status(Response.Status.OK).build();
+	}
+
+	@POST
+	@Path("/markMessagesDelivered")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response markMessagesDelivered(JAXBElement<MessageRequest> message) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		MessageRequest msg = message.getValue();
+		msg.messages = ChatBLL.markMessagesDelivered(msg.messages, loggedInUser);
+		return Response.status(Response.Status.OK).entity(msg).build();
+	}
+
+	@POST
+	@Path("/markMessagesRead")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response markMessagesRead(JAXBElement<MessageRequest> message) throws GeneralSecurityException, UnsupportedEncodingException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		MessageRequest msg = message.getValue();
+		msg.messages = ChatBLL.markMessagesRead(msg.messages, loggedInUser);
+		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 }
