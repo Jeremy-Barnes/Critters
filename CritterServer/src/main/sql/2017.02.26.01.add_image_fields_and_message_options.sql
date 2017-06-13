@@ -27,3 +27,7 @@ CREATE TABLE storeBackgroundImageOptions(
     storeClerkImageOptionID SERIAL NOT NULL PRIMARY KEY,
     imagePath VARCHAR(200) NOT NULL
 );
+
+ALTER TABLE gameThumbnailConfigs add column bannerImagePath varchar(200) not null;
+ALTER TABLE gameThumbnailConfigs add column thumbnailImagePath1 varchar(200) not null;
+ALTER TABLE gameThumbnailConfigs add column thumbnailImagePath2 varchar(200) not null;
