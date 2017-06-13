@@ -1,9 +1,12 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 /**
@@ -11,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="gameThumbnailConfigs")
-public class GameThumbnail {
+public class GameThumbnail extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -21,12 +24,19 @@ public class GameThumbnail {
 	private String gameDescription;
 	private String gameIconPath;
 	private String gameURL;
+	private String bannerImagePath;
+	private String thumbnailImagePath1;
+	private String thumbnailImagePath2;
 
-	public GameThumbnail(String gameName, String gameDescription, String gameIconPath, String gameURL) {
+	public GameThumbnail(String gameName, String gameDescription, String gameIconPath, String gameURL, String bannerImagePath,
+						 String thumbnailImagePath1, String thumbnailImagePath2) {
 		this.gameName = gameName;
 		this.gameDescription = gameDescription;
 		this.gameIconPath = gameIconPath;
 		this.gameURL = gameURL;
+		this.bannerImagePath = bannerImagePath;
+		this.thumbnailImagePath1 = thumbnailImagePath1;
+		this.thumbnailImagePath2 = thumbnailImagePath2;
 	}
 
 	public GameThumbnail(){
@@ -72,5 +82,27 @@ public class GameThumbnail {
 		this.gameURL = gameURL;
 	}
 
+	public String getBannerImagePath() {
+		return bannerImagePath;
+	}
 
+	public void setBannerImagePath(String bannerImagePath) {
+		this.bannerImagePath = bannerImagePath;
+	}
+
+	public String getThumbnailImagePath1() {
+		return thumbnailImagePath1;
+	}
+
+	public void setThumbnailImagePath1(String thumbnailImagePath1) {
+		this.thumbnailImagePath1 = thumbnailImagePath1;
+	}
+
+	public String getThumbnailImagePath2() {
+		return thumbnailImagePath2;
+	}
+
+	public void setThumbnailImagePath2(String thumbnailImagePath2) {
+		this.thumbnailImagePath2 = thumbnailImagePath2;
+	}
 }

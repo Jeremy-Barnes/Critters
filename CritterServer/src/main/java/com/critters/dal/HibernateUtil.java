@@ -2,6 +2,8 @@ package com.critters.dal;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -13,13 +15,14 @@ public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
 	private static final EntityManagerFactory entityManagerFactory;
+	static final Logger logger = LoggerFactory.getLogger(HibernateUtil.class);
 
 	static {
 		try {
 			sessionFactory = new Configuration().configure().buildSessionFactory();
 			entityManagerFactory = Persistence.createEntityManagerFactory("com.critters");
 		} catch (Throwable ex) {
-			System.err.println("Initial SessionFactory creation failed." + ex);
+			logger.error("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

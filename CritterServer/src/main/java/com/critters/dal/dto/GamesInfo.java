@@ -5,7 +5,7 @@ import com.critters.dal.dto.entity.GameThumbnail;
 /**
  * Created by Jeremy on 2/25/2017.
  */
-public class GamesInfo {
+public class GamesInfo extends DTO {
 	public GameThumbnail[] games;
 	public GameThumbnail featuredGame;
 }

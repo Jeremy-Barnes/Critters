@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Jeremy on 1/17/2017.
  */
 @XmlRootElement
-public class Notification {
+public class Notification extends DTO {
 	public List<Message> messages;
 	public List<Friendship> friendRequests;
 

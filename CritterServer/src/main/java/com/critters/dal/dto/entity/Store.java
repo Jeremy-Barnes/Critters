@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="storeConfigs")
-public class Store {
+public class Store extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -21,15 +22,19 @@ public class Store {
 	private Integer ownerId;
 	private String description;
 	private String name;
+	private String storeClerkImagePath;
+	private String storeBackgroundImagePath;
 
 	@Transient
 	private List<Item> storeStock;
 
-	public Store(int storeConfigID, Integer ownerId, String name, String description) {
+	public Store(int storeConfigID, Integer ownerId, String name, String description, String storeClerkImagePath, String storeBackgroundImagePath) {
 		this.storeConfigID = storeConfigID;
 		this.ownerId = ownerId;
 		this.name = name;
 		this.description = description;
+		this.storeClerkImagePath = storeClerkImagePath;
+		this.storeBackgroundImagePath = storeBackgroundImagePath;
 	}
 
 	public Store() {}
@@ -64,6 +69,22 @@ public class Store {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getStoreBackgroundImagePath() {
+		return storeBackgroundImagePath;
+	}
+
+	public void setStoreBackgroundImagePath(String storeBackgroundImagePath) {
+		this.storeBackgroundImagePath = storeBackgroundImagePath;	
+	}
+	
+	public String getStoreClerkImagePath() {
+		return storeClerkImagePath;
+	}
+
+	public void setStoreClerkImagePath(String storeClerkImagePath) {
+		this.storeClerkImagePath = storeClerkImagePath;
 	}
 
 	public List<Item> getStoreStock() {

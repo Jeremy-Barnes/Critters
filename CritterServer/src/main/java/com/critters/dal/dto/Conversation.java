@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Jeremy on 1/17/2017.
  */
 @XmlRootElement
-public class Conversation {
+public class Conversation extends DTO {
 	public List<Message> messages;
 	public List<User> participants;
 

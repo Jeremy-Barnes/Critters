@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="messages")
-public class Message {
+public class Message extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -28,6 +29,9 @@ public class Message {
 	private User recipient;
 
 	private boolean read;
+	private boolean showSender;
+	private boolean showRecipient;
+	private boolean delivered;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateSent;
 
@@ -42,10 +46,13 @@ public class Message {
 	@JoinColumn(name = "parentMessageID")
 	private Message parentMessage;
 
-	public Message(User sender, User recipient, boolean read, Date dateSent, String messageText, String messageSubject, Message rootMessage, Message parentMessage) {
+	public Message(User sender, User recipient, boolean read, boolean showSender, boolean showRecipient, boolean delivered, Date dateSent, String messageText, String messageSubject, Message rootMessage, Message parentMessage) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.read = read;
+		this.showSender = showSender;
+		this.showRecipient = showRecipient;
+		this.delivered = delivered;
 		this.dateSent = dateSent;
 		this.messageText = messageText;
 		this.messageSubject = messageSubject;
@@ -55,12 +62,36 @@ public class Message {
 
 	public Message(){}
 
+	public boolean getShowSender() {
+		return showSender;
+	}
+
+	public void setShowSender(boolean showSender) {
+		this.showSender = showSender;
+	}
+	
+	public boolean getShowRecipient() {
+		return showRecipient;
+	}
+
+	public void setShowRecipient(boolean showRecipient) {
+		this.showRecipient = showRecipient;
+	}
+	
 	public boolean isRead() {
 		return read;
 	}
 
 	public void setRead(boolean read) {
 		this.read = read;
+	}
+
+	public boolean isDelivered() {
+		return read;
+	}
+
+	public void setDelivered(boolean delivered) {
+		this.delivered = delivered;
 	}
 
 	public String getMessageText() {

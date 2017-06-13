@@ -22,9 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.security.GeneralSecurityException;
-import java.util.Calendar;
 
 /**
  * Created by Jeremy on 8/22/2016.
@@ -51,14 +49,12 @@ public class MetaService extends AjaxService {
 	@Path("/pollForNotifications")
 	@GET
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
-		BackgroundJobManager.printLine("enter poll for notifications " + Calendar.getInstance().getTime());
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());
 		} else {
 			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 		}
-		BackgroundJobManager.printLine("leave pollfornotifications " + Calendar.getInstance().getTime());
 	}
 
 	@GET
@@ -75,8 +71,9 @@ public class MetaService extends AjaxService {
 	@Path("/searchUsers/{searchStr}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchUsers(@PathParam("searchStr") String searchStr) throws JAXBException, GeneralSecurityException, IOException {
-		return Response.status(200).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
-				new GenericEntity<User[]>(UserBLL.searchForUser(searchStr).toArray(new User[0]), User[].class)).build();
+		SearchResponse results = new SearchResponse();
+		results.users = UserBLL.searchForUser(searchStr).toArray(new User[0]);
+		return Response.status(200).entity(results).build();
 	}
 
 	@GET

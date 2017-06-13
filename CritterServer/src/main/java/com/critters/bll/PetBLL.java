@@ -3,6 +3,8 @@ package com.critters.bll;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -12,15 +14,24 @@ import java.util.List;
  */
 public class PetBLL {
 
+	static final Logger logger = LoggerFactory.getLogger("application");
+
 	public static Pet createPet(Pet pet, User owner){
 		pet.setOwnerID(owner.getUserID());
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
-
-		entityManager.persist(pet);
-
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		try {
+			entityManager.persist(pet);
+			entityManager.getTransaction().commit();
+		}catch(Exception e) {
+			logger.error("Pet creation failed for pet " + pet.toString(), e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
 		return pet;
 	}
 
@@ -34,9 +45,17 @@ public class PetBLL {
 	public static void updatePet(Pet pet){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
-		entityManager.merge(pet);
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		try {
+			entityManager.merge(pet);
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			logger.error("Pet update failed for pet " + pet.toString(), e);
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
 	}
 
 	public static List<Pet.PetSpecies> getPetSpecies() {

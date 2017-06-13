@@ -27,8 +27,8 @@ public class UserService extends AjaxService{
 	@Path("/createUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(JAXBElement<CreateAccountRequest> jsonRequest)  throws UnsupportedEncodingException, JAXBException {
-		CreateAccountRequest request = jsonRequest.getValue();
+	public Response createUser(JAXBElement<AccountInformationRequest> jsonRequest)  throws UnsupportedEncodingException, JAXBException {
+		AccountInformationRequest request = jsonRequest.getValue();
 
 		boolean emailAvailable = true;
 		boolean userNameAvailable = true;
@@ -98,15 +98,16 @@ public class UserService extends AjaxService{
 	@Path("/changeUserInformation")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response changeUserInformation(JAXBElement<User> jsonUser) throws JAXBException, IOException {
-		User user = jsonUser.getValue();
+	public Response changeUserInformation(JAXBElement<AccountInformationRequest> jsonRequest) throws JAXBException, IOException {
+		AccountInformationRequest request = jsonRequest.getValue();
+		User user = request.user;
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		user.setIsActive(true);
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 		try {
-			user = UserBLL.updateUser(user, loggedInUser);
+			user = UserBLL.updateUser(user, loggedInUser, request.imageChoice);
 		} catch(InvalidPropertyException e){
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
