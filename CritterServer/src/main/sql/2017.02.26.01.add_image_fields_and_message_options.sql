@@ -31,3 +31,5 @@ CREATE TABLE storeBackgroundImageOptions(
 ALTER TABLE gameThumbnailConfigs add column bannerImagePath varchar(200) not null;
 ALTER TABLE gameThumbnailConfigs add column thumbnailImagePath1 varchar(200) not null;
 ALTER TABLE gameThumbnailConfigs add column thumbnailImagePath2 varchar(200) not null;
+
+ALTER TABLE messages ADD COLUMN delivered boolean not null;

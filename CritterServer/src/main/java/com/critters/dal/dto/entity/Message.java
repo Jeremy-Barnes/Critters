@@ -31,6 +31,7 @@ public class Message extends DTO {
 	private boolean read;
 	private boolean showSender;
 	private boolean showRecipient;
+	private boolean delivered;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateSent;
 
@@ -45,12 +46,13 @@ public class Message extends DTO {
 	@JoinColumn(name = "parentMessageID")
 	private Message parentMessage;
 
-	public Message(User sender, User recipient, boolean read, boolean showSender, boolean showRecipient, Date dateSent, String messageText, String messageSubject, Message rootMessage, Message parentMessage) {
+	public Message(User sender, User recipient, boolean read, boolean showSender, boolean showRecipient, boolean delivered, Date dateSent, String messageText, String messageSubject, Message rootMessage, Message parentMessage) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.read = read;
 		this.showSender = showSender;
 		this.showRecipient = showRecipient;
+		this.delivered = delivered;
 		this.dateSent = dateSent;
 		this.messageText = messageText;
 		this.messageSubject = messageSubject;
@@ -82,6 +84,14 @@ public class Message extends DTO {
 
 	public void setRead(boolean read) {
 		this.read = read;
+	}
+
+	public boolean isDelivered() {
+		return read;
+	}
+
+	public void setDelivered(boolean delivered) {
+		this.delivered = delivered;
 	}
 
 	public String getMessageText() {
