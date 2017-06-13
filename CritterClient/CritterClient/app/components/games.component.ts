@@ -19,7 +19,10 @@ export class GamesComponent implements OnInit {
         gameIconPath: "http://k22.kn3.net/0CE906C3D.png",
         gameName : "Halo: Combat Evolved",
         gameThumbnailConfigID : 1,
-        gameURL : "google.com"
+        gameURL: "google.com",
+        bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
+        thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
+        thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
     };
     games: GameThumbnail[];
     playGame: boolean = false;
@@ -45,7 +48,10 @@ export class GamesComponent implements OnInit {
                     gameIconPath: "http://k22.kn3.net/0CE906C3D.png",
                     gameName: "Halo: Combat Evolved",
                     gameThumbnailConfigID: 1,
-                    gameURL: "http://www.homestarrunner.com"
+                    gameURL: "http://www.homestarrunner.com",
+                    bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
+                    thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
+                    thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
                 });
 
                 for (var i = 0; i < self.games.length; i++) {
@@ -77,7 +83,10 @@ export class GamesComponent implements OnInit {
             gameIconPath: "http://k22.kn3.net/0CE906C3D.png",
             gameName: "Halo: Combat Evolved",
             gameThumbnailConfigID: 1,
-            gameURL: "http://www.homestarrunner.com/"
+            gameURL: "http://www.homestarrunner.com/",
+            bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
+            thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
+            thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
         });
     }
 
