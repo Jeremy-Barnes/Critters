@@ -1,20 +1,22 @@
 ﻿<form (ngSubmit)="onSubmit()" #accountUpdateForm="ngForm">
-    <h1>Update Your Account!</h1>
-    <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
-    <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
-    <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
-    <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
-    <input type="date" name="birthdate" placeholder="birthday (MM/DD/YYYY)" [(ngModel)]="user.birthdate" required />
-    <input type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
-    <input type="text" name="lastName" placeholder="last name" [(ngModel)]="user.lastName" required />
-    <input type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
-    <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
-    <input type="text" name="country" placeholder="country" [(ngModel)]="user.country" required />
-    <input type="text" name="postcode" placeholder="postcode" [(ngModel)]="user.postcode" required />
-    <select name="sexSelect" [(ngModel)]="user.sex">
-        <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
-    </select>
-
-    <input type="submit" value="Change It"/>
-
+    <div class="container-fluid">
+        <h1>Update Your Account!</h1>
+    </div>
+    <div class="container">
+        <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+        <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
+        <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
+        <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
+        <input type="date" name="birthdate" placeholder="birthday (MM/DD/YYYY)" [(ngModel)]="user.birthdate" required />
+        <input type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
+        <input type="text" name="lastName" placeholder="last name" [(ngModel)]="user.lastName" required />
+        <input type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
+        <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
+        <input type="text" name="country" placeholder="country" [(ngModel)]="user.country" required />
+        <input type="text" name="postcode" placeholder="postcode" [(ngModel)]="user.postcode" required />
+        <select name="sexSelect" [(ngModel)]="user.sex">
+            <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
+        </select>
+        <input type="submit" value="Change It" />
+    </div>
 </form>

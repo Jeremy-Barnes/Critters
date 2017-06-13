@@ -1,20 +1,24 @@
 ﻿<form (ngSubmit)="onSubmit()" #petCreateForm="ngForm">
-    <h1>Add A New Pet</h1>
-    <div *ngFor="let specie of species"> 
-        Species: {{specie.petTypeName}} <br /> 
-        <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
-        <select name="colorSelect" [(ngModel)]="activeColorObject" (ngModelChange)="onChange($event)">
-            <option *ngFor="let color of colors" [ngValue]="color" >{{color.petColorName}}</option>
-        </select>
-        <input type="button" value="This one!" (click)="onPetSelect(specie)"/>
-        <br /> <br />
+    <div class="container-fluid">
+       <h1>Add A New Pet</h1>
     </div>
-    Enter your pet's Name: 
-    <input type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
-    <br />
-    <select name="sexSelect" [(ngModel)]="activeSex" (ngModelChange)="onChange($event)">
-        <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
-    </select>
-    <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
-    <input [disabled]="!petAndColorSelected" type="submit" value="Sign Up"/>
+    <div class="container">
+        <div *ngFor="let specie of species">
+            Species: {{specie.petTypeName}} <br />
+            <img src="../img/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
+            <select name="colorSelect" [(ngModel)]="activeColorObject" (ngModelChange)="onChange($event)">
+                <option *ngFor="let color of colors" [ngValue]="color">{{color.petColorName}}</option>
+            </select>
+            <input type="button" value="This one!" (click)="onPetSelect(specie)" />
+            <br /> <br />
+        </div>
+        Enter your pet's Name:
+        <input type="text" name="petName" placeholder="pet name" [(ngModel)]="petName" required />
+        <br />
+        <select name="sexSelect" [(ngModel)]="activeSex" (ngModelChange)="onChange($event)">
+            <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
+        </select>
+        <p *ngIf="petAndColorSelected"> {{petName}} the {{activeColorObject.petColorName}} {{activeSpecies.petTypeName}}</p>
+        <input [disabled]="!petAndColorSelected" type="submit" value="Sign Up" />
+    </div>
 </form>

@@ -57,6 +57,10 @@ const appRoutes: Routes = [
         component: InventoryComponent
     },
     {
+        path: 'games/:id',
+        component: GamesComponent
+    },
+    {
         path: 'games',
         component: GamesComponent
     }

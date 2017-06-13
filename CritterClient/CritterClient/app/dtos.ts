@@ -90,6 +90,15 @@ export class StoreInformationRequest {
     clerkImage: StoreClerkImageOption;
 }
 
+export class MessageRequest {
+    user: User;
+    messages: Message[];
+}
+
+export class ItemRequest {
+    user: User;
+    items: Item[];
+}
 
 export class Message {
     messageID: number;
@@ -102,6 +111,9 @@ export class Message {
     parentMessage: Message;
     showSender: boolean;
     showRecipient: boolean;
+    read: boolean;
+    delivered: boolean;
+
 }
 
 export class Conversation {
@@ -162,6 +174,9 @@ export class GameThumbnail {
     gameDescription: string;
     gameIconPath: string;
     gameURL: string;
+    bannerImagePath: string;
+    thumbnailImagePath1: string;
+	thumbnailImagePath2: string;
 }
 
 export class GamesInfo {
@@ -182,4 +197,9 @@ export class StoreBackgroundImageOption {
 export class UserImageOption {
     userImageOptionID: number;
     imagePath: string;
+}
+
+export class SearchResponse {
+    users: User[];
+    items: Item[];
 }
