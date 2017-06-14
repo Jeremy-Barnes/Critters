@@ -1,6 +1,6 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail } from './dtos'
+import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest } from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://3f0f4da5.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -126,6 +126,18 @@ export class ServiceMethods {
 
     public static getMailbox(): JQueryPromise<Conversation[]> {
         return ServiceMethods.doAjax("getMailbox", "chat", null, "GET");
+    }
+
+    public static setDelievered(request: MessageRequest): JQueryPromise<void> {
+        return ServiceMethods.doAjax("markMessagesDelivered", "chat", null);
+    }
+
+    public static setReceived(request: MessageRequest): JQueryPromise<void> {
+        return ServiceMethods.doAjax("markMessagesRead", "chat", null);
+    }
+
+    public static deleteMessage(messageId: number): JQueryPromise<void> {
+        return ServiceMethods.doAjax("deleteMail", "chat", messageId, "GET");
     }
 
     /************** Inventory Stuff **************/

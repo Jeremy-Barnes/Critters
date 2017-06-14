@@ -33,7 +33,7 @@
                               [autocomplete-local-func]="searchFriends" [autocomplete-remote-func]="searchUsers" (result-out)="onItemSelected($event)"></autocomplete>
             <span *ngIf="composeToFriend != null">{{composeToFriend.userName}} <a (click)="deselctComposeFriend()">X</a></span>
             <br />
-            Subject: <input type="text" [(ngModel)]="newMessage.Subject" /> <br />
+            Subject: <input type="text" [(ngModel)]="newMessage.messageSubject" /> <br />
 
             Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br />
             <input type="button" (click)="sendMessage()" value="Send" />
