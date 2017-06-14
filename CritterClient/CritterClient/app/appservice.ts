@@ -112,10 +112,6 @@ export class Application {
         });
     }
 
-    private static checkNotifications() {
-        Application.getApp().alerts.length = 0;
-    }
-
     public static getMailbox() {
         ServiceMethods.getMailbox().done((conversations: Conversation[]) => {
             var user = Application.getApp().user;
