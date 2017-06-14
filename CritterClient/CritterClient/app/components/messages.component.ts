@@ -69,6 +69,7 @@ export class MessageComponent implements OnInit {
 
     viewDetail(viewMessage: Conversation) {
         this.activeConversation = viewMessage.messages;
+        Application.markMessagesRead(this.activeConversation.filter(m => !m.delivered && m.recipient.userID == this.user.userID))
     }
 
     sendMessage() {
