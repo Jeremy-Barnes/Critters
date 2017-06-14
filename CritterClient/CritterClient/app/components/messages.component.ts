@@ -81,6 +81,7 @@ export class MessageComponent implements OnInit {
             this.newMessage.recipient = this.composeToFriend;
         }
         Application.sendMessage(this.newMessage);
+        this.newMessage = null;
     }
 
     acceptRequest(friendRequest: Friendship) {
