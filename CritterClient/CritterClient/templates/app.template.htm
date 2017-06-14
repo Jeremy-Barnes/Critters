@@ -7,7 +7,7 @@
                 <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
                 <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
-            <div *ngIf="app.loggedIn">
+            <div [hidden]="!app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
                 <div> here are alerts</div>
                 <div class="inlineblock">alert length {{alerts.length}}</div>
