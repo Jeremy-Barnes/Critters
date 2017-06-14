@@ -47,7 +47,7 @@ public class ChatBLL {
 		if(listeners.containsKey(userId)) {
 			logger.trace("User " + userId + " found in listeners map");
 			Notification notification = new Notification(message, friendRequest);
-			listeners.get(userId).resume(Response.status(Response.Status.FOUND).entity(notification).build());
+			listeners.get(userId).resume(Response.status(Response.Status.OK).entity(notification).build());
 			listeners.remove(userId);
 		} else {
 			logger.trace("User " + userId + " not found in listeners map " + listeners.keySet());
@@ -101,8 +101,8 @@ public class ChatBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			List<Message> mail = entityManager.createQuery("from Message where " +
-																   "((senderUserId = :id and showSender) or " +
-																   "(recipientUserId = :id and showRecipient)) and parentMessageId is null").setParameter("id", userID).getResultList();
+																   "((senderUserId = :id and showSender = true) or " +
+																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where rootMessageId in :ids")
 													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
