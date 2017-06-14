@@ -61,12 +61,12 @@ export class AutocompleteList {
                     this.secondSearchNeeded = false;
                     this.callSearchFunction();
                 } else {
-                    this.resultList.push(...results);
+                    this.resultList.push(...results.filter(a => this.resultList.indexOf(a) == -1 ));
                 }
             });
 
             this.localSearchFunction(this.inputSearchTerm).then((results) => {
-                this.resultList.push(...results);
+                this.resultList.push(...results.filter(a => this.resultList.indexOf(a) == -1));
             });
         }
     }
