@@ -16,19 +16,19 @@
             <div class="col-md-6">
                 <div class="radio">
                     <label class="radio-inline">
-                        <input type="radio" name="optionsRadios" value="Female">
+                        <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="female">
                         Female
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="optionsRadios" value="Male">
+                        <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="male">
                         Male
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="optionsRadios" value="Other">
+                        <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="other">
                         Other
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="optionsRadios" value="Prefer not to say">
+                        <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="Prefer not to say">
                         Prefer not to say
                     </label>
                 </div>
