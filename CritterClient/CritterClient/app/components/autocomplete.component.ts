@@ -1,4 +1,6 @@
 ﻿import {Component, Output, Input, EventEmitter} from "@angular/core";
+import { Comparable } from '../dtos'
+
 
 @Component({
     selector: "<autocomplete></autocomplete>",
@@ -8,15 +10,15 @@
                </div>`
 })
 export class AutocompleteList {
-    public resultList: { resultText: string, resultData: any }[] = [];
+    public resultList: { resultText: string, resultData: Comparable }[] = [];
     private refreshTimer: any = undefined;
     private searching = false;
     private secondSearchNeeded = false;
     private inputSearchTerm: string;
     private searchTextModel: string;
 
-    @Input("autocomplete-local-func") public localSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
-    @Input("autocomplete-remote-func") public remoteSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: any }>>;
+    @Input("autocomplete-local-func") public localSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: Comparable }>>;
+    @Input("autocomplete-remote-func") public remoteSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: Comparable }>>;
 
     @Output("result-out") public selected = new EventEmitter();
 
@@ -39,7 +41,7 @@ export class AutocompleteList {
     }
 
 
-    public onClick(item: { text: string, data: any }) {
+    public onClick(item: { text: string, data: Comparable }) {
         this.selected.emit(item);
         this.clearResultList();
     }
@@ -61,7 +63,7 @@ export class AutocompleteList {
                     this.secondSearchNeeded = false;
                     this.callSearchFunction();
                 } else {
-                    this.resultList.push(...results.filter(a => this.resultList.indexOf(a) == -1 ));
+                    this.resultList.push(...results.filter(a => this.resultList.find(r => r.resultData.isSame(a.resultData))? true : false ));
                 }
             });
 
