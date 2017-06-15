@@ -95,6 +95,7 @@ export class Application {
             app.user.set(retUser);
             app.loggedIn = true;
             Application.startLongPolling();
+            Application.getNotifications();
             prepDisplayAfterLogin();
         });
     }
@@ -109,6 +110,16 @@ export class Application {
             Application.startLongPolling();
         }).fail((x) => {
             Application.startLongPolling();
+        });
+    }
+
+    public static getNotifications() {
+        ServiceMethods.getUnreadMail().done((messages: Message[]) => {
+            var note: Notification = new Notification();
+            note.messages = messages;
+            var user: User = Application.getApp().user;
+            note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+            Application.getApp().alerts.push(note);
         });
     }
 
