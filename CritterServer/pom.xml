@@ -86,6 +86,11 @@
       <version>7.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+       <groupId>ch.qos.logback</groupId>
+       <artifactId>logback-classic</artifactId>
+       <version>1.0.13</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>api</finalName>

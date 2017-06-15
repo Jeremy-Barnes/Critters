@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="pets")
-public class Pet {
+public class Pet extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -97,16 +98,18 @@ public class Pet {
 
 	@Entity
 	@Table(name = "petcolorconfigs")
-	public static class PetColor {
+	public static class PetColor extends DTO {
 		@Id
 		int petColorConfigID;
 		String petColorName;
+		String patternPath;
 
 		public PetColor(){}
 
-		public PetColor(int petColorConfigID, String petColorName) {
+		public PetColor(int petColorConfigID, String petColorName, String patternPath) {
 			this.petColorConfigID = petColorConfigID;
 			this.petColorName = petColorName;
+			this.patternPath = patternPath;
 		}
 
 		public int getPetColorConfigID() {
@@ -124,20 +127,33 @@ public class Pet {
 		public void setPetColorName(String petColorName) {
 			this.petColorName = petColorName;
 		}
+		
+		public String getPatternPath() {
+			return patternPath;
+		}
+
+		public void setPatternPath(String patternPath) {
+			this.patternPath = patternPath;
+		}
 	}
 
 	@Entity
 	@Table(name = "petspeciesconfigs")
-	public static class PetSpecies {
+	public static class PetSpecies extends DTO {
 		@Id
 		int petSpeciesConfigID;
 		String petTypeName;
+		String imagePathWithoutModifiers;
+		String speciesDescription;
+
 
 		public PetSpecies(){}
 
-		public PetSpecies(int petSpeciesConfigID, String petTypeName) {
+		public PetSpecies(int petSpeciesConfigID, String petTypeName, String imagePathWithoutModifiers, String speciesDescription) {
 			this.petSpeciesConfigID = petSpeciesConfigID;
 			this.petTypeName = petTypeName;
+			this.speciesDescription = speciesDescription;
+			this.imagePathWithoutModifiers = imagePathWithoutModifiers;
 		}
 
 		public int getPetSpeciesConfigID() {
@@ -154,6 +170,22 @@ public class Pet {
 
 		public void setPetTypeName(String petTypeName) {
 			this.petTypeName = petTypeName;
+		}
+		
+		public String getImagePathWithoutModifiers() {
+			return imagePathWithoutModifiers;
+		}
+
+		public void setImagePathWithoutModifiers(String imagePathWithoutModifiers) {
+			this.imagePathWithoutModifiers = imagePathWithoutModifiers;
+		}
+		
+		public String getSpeciesDescription() {
+			return speciesDescription;
+		}
+
+		public void setSpeciesDescription(String speciesDescription) {
+			this.speciesDescription = speciesDescription;
 		}
 	}
 }

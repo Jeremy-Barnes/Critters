@@ -1,5 +1,6 @@
 package com.critters.dal.dto.entity;
 
+import com.critters.dal.dto.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="inventoryitems")
-public class Item {
+public class Item extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -76,12 +77,13 @@ public class Item {
 
 	@Entity
 	@Table(name="itemconfigs")
-	public static class ItemDescription {
+	public static class ItemDescription extends DTO {
 
 		@Id
 		int itemConfigID;
 		String itemName;
 		String itemDescription;
+		String imagePath;
 
 		@ManyToOne
 		@JoinColumn(name="itemClass", updatable = false)
@@ -93,10 +95,11 @@ public class Item {
 
 		public ItemDescription(){}
 
-		public ItemDescription(int itemConfigID, String itemName, String itemDescription) {
+		public ItemDescription(int itemConfigID, String itemName, String itemDescription, String imagePath) {
 			this.itemConfigID = itemConfigID;
 			this.itemName = itemName;
 			this.itemDescription = itemDescription;
+			this.imagePath = imagePath;
 		}
 
 		public int getItemConfigID() {
@@ -123,6 +126,14 @@ public class Item {
 			this.itemDescription = itemDescription;
 		}
 
+		public String getImagePath() {
+			return imagePath;
+		}
+
+		public void setImagePath(String imagePath) {
+			this.imagePath = imagePath;
+		}
+
 		public ItemClassification getItemClass() {
 			return itemClass;
 		}
@@ -144,7 +155,7 @@ public class Item {
 
 	@Entity
 	@Table(name="itemClassifications")
-	public static class ItemClassification {
+	public static class ItemClassification extends DTO {
 		@Id
 		int itemClassificationID;
 		String name;
@@ -175,7 +186,7 @@ public class Item {
 
 	@Entity
 	@Table(name="itemRarityTypes")
-	public static class ItemRarityType {
+	public static class ItemRarityType extends DTO {
 		@Id
 		int itemRarityTypeID;
 		String name;

@@ -17,7 +17,7 @@
                         No new notifications!
                     </div>
                     <a routerLink="/messages">Go to Mailbox!</a>
-                    <div *ngIf="alerts != null">
+                    <div *ngIf="alerts != null" (blur)="clearAlerts()">
                         <div *ngFor="let note of alerts">
                             <div *ngFor="let msg of note.messages">
                                 todo apptemplate

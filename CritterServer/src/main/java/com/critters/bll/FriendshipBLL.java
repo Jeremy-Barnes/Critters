@@ -4,6 +4,8 @@ import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.User;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.io.UnsupportedEncodingException;
@@ -15,21 +17,31 @@ import java.util.Calendar;
  */
 public class FriendshipBLL {
 
+	static final Logger logger = LoggerFactory.getLogger("application");
+
 	public static Friendship createFriendship(User requester, User requestee, User loggedInUser) throws GeneralSecurityException, UnsupportedEncodingException {
 		if(loggedInUser.getUserID() == (requester.getUserID())){
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			entityManager.getTransaction().begin();
-
 			Friendship request = new Friendship(loggedInUser, requestee, false, Calendar.getInstance().getTime());
-			entityManager.persist(request);
-			entityManager.getTransaction().commit();
-			entityManager.refresh(request);
-			entityManager.close();
+			try {
+				entityManager.persist(request);
+				entityManager.getTransaction().commit();
+				entityManager.refresh(request);
+			} catch(Exception e) {
+				logger.error("Friendship creation failed for friendship " + request.toString(), e);
+				throw e;
+			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
+				entityManager.close();
+			}
 			Friendship wiped = wipeSensitiveDetails(request);
 			ChatBLL.notify(request.getRequested().getUserID(), null, wiped);
 			return wiped;
-
 		} else {
+			logger.info("An invalid cookie was supplied for user " + loggedInUser.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 
@@ -40,17 +52,28 @@ public class FriendshipBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
 			entityManager.getTransaction().begin();
-			Friendship dbReq = (Friendship) entityManager.createQuery("from Friendship where requesterUserID = :req and requestedUserID = :friend")
-														 .setParameter("req", request.getRequester().getUserID()).setParameter("friend", request.getRequested().getUserID())
-														 .getSingleResult();
-			dbReq.setAccepted(true);
-			entityManager.getTransaction().commit();
-			entityManager.close();
+			Friendship dbReq;
+			try {
+				dbReq = (Friendship) entityManager.createQuery("from Friendship where requesterUserID = :req and requestedUserID = :friend")
+															 .setParameter("req", request.getRequester().getUserID()).setParameter("friend", request.getRequested().getUserID())
+															 .getSingleResult();
+				dbReq.setAccepted(true);
+				entityManager.getTransaction().commit();
+			} catch(Exception e) {
+				logger.error("Friendship failed to accept " + request.toString(), e);
+				throw e;
+			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
+				entityManager.close();
+			}
 			Friendship wiped = wipeSensitiveDetails(dbReq);
 			ChatBLL.notify(request.getRequester().getUserID(), null, wiped);
 			return wiped;
 
 		} else {
+			logger.info("An invalid cookie was supplied for user " + user.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
@@ -59,6 +82,7 @@ public class FriendshipBLL {
 		if(user.getUserID() == request.getRequested().getUserID()) {
 			deleteFriendRequestWithIDs(request.getRequester().getUserID(), request.getRequested().getUserID());
 		} else {
+			logger.info("An invalid cookie was supplied for user " + user.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
@@ -67,6 +91,7 @@ public class FriendshipBLL {
 		if(user.getUserID() == request.getRequester().getUserID()) {
 			deleteFriendRequestWithIDs(request.getRequester().getUserID(), request.getRequested().getUserID());
 		} else {
+			logger.info("An invalid cookie was supplied for user " + user.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
@@ -75,6 +100,7 @@ public class FriendshipBLL {
 		if(friendship.isAccepted() && (loggedInUser.getUserID() == friendship.getRequested().getUserID() || loggedInUser.getUserID() == friendship.getRequester().getUserID())){
 			deleteFriendRequestWithIDs(friendship.getRequester().getUserID(), friendship.getRequested().getUserID());
 		} else {
+			logger.info("An invalid cookie was supplied for user " + loggedInUser.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
@@ -83,12 +109,21 @@ public class FriendshipBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
 		entityManager.getTransaction().begin();
-		Friendship dbReq = (Friendship) entityManager.createQuery("from Friendship where requesterUserID = :req and requestedUserID = :friend")
-													 .setParameter("req", requesterID).setParameter("friend", requestedID)
-													 .getSingleResult();
-		entityManager.remove(dbReq);
-		entityManager.getTransaction().commit();
-		entityManager.close();
+		try {
+			Friendship dbReq = (Friendship) entityManager.createQuery("from Friendship where requesterUserID = :req and requestedUserID = :friend")
+														 .setParameter("req", requesterID).setParameter("friend", requestedID)
+														 .getSingleResult();
+			entityManager.remove(dbReq);
+			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			logger.error("Could not delete friend request with requester ID " + requesterID + " and requested ID " + requestedID, e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
 	}
 
 	private static Friendship wipeSensitiveDetails(Friendship f){

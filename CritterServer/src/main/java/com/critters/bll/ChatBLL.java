@@ -2,11 +2,13 @@ package com.critters.bll;
 
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
-
 import com.critters.dal.dto.Notification;
 import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.ws.rs.container.AsyncResponse;
@@ -17,7 +19,6 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 public class ChatBLL {
 
 	private static Map<Integer, AsyncResponse> listeners = Collections.synchronizedMap(new HashMap<Integer, AsyncResponse>());
+	static final Logger logger = LoggerFactory.getLogger("application");
 
 	public static void createPoll(int userId, AsyncResponse asyncResponse){
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
@@ -39,12 +41,17 @@ public class ChatBLL {
 		asyncResponse.setTimeout(30, TimeUnit.SECONDS);
 		listeners.put(userId, asyncResponse);
 	}
-
+  
 	public static void notify(int userId, Message message, Friendship friendRequest){
+		logger.trace("Notifying user " + userId + "of " + message + " " + friendRequest);
 		if(listeners.containsKey(userId)) {
+			logger.trace("User " + userId + " found in listeners map");
 			Notification notification = new Notification(message, friendRequest);
-			listeners.get(userId).resume(notification);
+			listeners.get(userId).resume(Response.status(Response.Status.OK).entity(notification).build());
 			listeners.remove(userId);
+		} else {
+			logger.trace("User " + userId + " not found in listeners map " + listeners.keySet());
+
 		}
 	}
 
@@ -53,7 +60,7 @@ public class ChatBLL {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
-				Message mail = new Message(user, message.getRecipient(), false, Calendar.getInstance().getTime(), message.getMessageText(),
+				Message mail = new Message(user, message.getRecipient(), false, true, true, false, Calendar.getInstance().getTime(), message.getMessageText(),
 										   message.getMessageSubject(), message.getRootMessage(), message.getParentMessage());
 				entityManager.persist(mail);
 				entityManager.getTransaction().commit();
@@ -61,44 +68,48 @@ public class ChatBLL {
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
 				notify(message.getRecipient().getUserID(), wiped, null);
-        return wiped;
+				return wiped;
+			} catch(Exception e) {
+				logger.error("Could not send message to user " + message.toString() + "\n" + user.toString(), e);
+				throw e;
 			} finally {
+				if(entityManager.getTransaction().isActive()){
+					entityManager.getTransaction().rollback();
+				}
 				entityManager.close();
 			}
 		} else {
+			logger.info("An invalid cookie was supplied for user " + user.toString());
 			throw new GeneralSecurityException("Invalid cookie supplied");
 		}
 	}
 
-	public static List<Message> getMail(int userID, boolean unreadOnly) {
+	public static List<Message> getMail(int userID, boolean undeliveredOnly) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = unreadOnly ?
-					entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id and read = false").setParameter("id", userID).getResultList()
+			List<Message> mail = undeliveredOnly ?
+					entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id and delivered = false").setParameter("id", userID).getResultList()
 					: entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id").setParameter("id", userID).getResultList();
-
-			entityManager.getTransaction().begin();
-			mail.forEach(m->m.setRead(true));
-			mail.forEach(m->entityManager.merge(m));
-			entityManager.getTransaction().commit();
 			mail.forEach(m -> wipeSensitiveDetails(m));
 			return mail;
 		} finally {
 			entityManager.close();
-    }
+		}
 	}
-
 
 	public static List<Conversation> getConversations(int userID) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = entityManager.createQuery("from Message where (senderUserId = :id or recipientUserId = :id) and parentMessageId is null").setParameter("id", userID).getResultList();
+			List<Message> mail = entityManager.createQuery("from Message where " +
+																   "((senderUserId = :id and showSender = true) or " +
+																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where rootMessageId in :ids")
 													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
+			mailChildren.removeIf(m -> (m.getSender().getUserID() == userID && !m.getShowSender()) || (m.getSender().getUserID() == userID && !m.getShowSender()));
 			return buildConversations(mail, mailChildren);
 		} finally {
-		entityManager.close();
+			entityManager.close();
 		}
 	}
 
@@ -111,7 +122,6 @@ public class ChatBLL {
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				entityManager.detach(mail);
 				Message wiped = wipeSensitiveDetails(mail);
-				notify(mail.getRecipient().getUserID(), wiped, null);
 				return wiped;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
@@ -119,6 +129,68 @@ public class ChatBLL {
 		} finally {
 			entityManager.close();
 		}
+	}
+
+	public static void deleteMessage(int messageID, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+		Message m = getMessage(messageID, user);
+		if(m.getSender().getUserID() == user.getUserID()){
+			m.setShowSender(false);
+		}
+		if(m.getRecipient().getUserID() == user.getUserID()){
+			m.setShowRecipient(false);
+		}
+
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			entityManager.merge(m);
+			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			logger.error("Could not delete message " + messageID + " for user " + user.toString(), e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+	}
+
+	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) {
+		messages.forEach(m -> m.setDelivered(true));
+		messages = updateMessages(messages);
+		messages.forEach(m -> wipeSensitiveDetails(m));
+		return messages;
+	}
+
+	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser){
+		messages.forEach(m -> m.setRead(true));
+		messages = updateMessages(messages);
+		messages.forEach(m -> wipeSensitiveDetails(m));
+		return messages;
+	}
+
+	private static List<Message> updateMessages(List<Message> messages){
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			for(Message m : messages) {
+				entityManager.merge(m);
+			}
+			entityManager.getTransaction().commit();
+		} catch(Exception e) {
+			String messageArray = "";
+			for(Message message : messages){
+				messageArray += "\n" + message.toString();
+			}
+			logger.error("Could not update messages " + messageArray, e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+		return messages;
 	}
 
 	private static Message wipeSensitiveDetails(Message message) {

@@ -1,16 +1,13 @@
 package com.critters.dal.dto.entity;
 
 import com.critters.bll.UserBLL;
+import com.critters.dal.dto.DTO;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.collection.internal.PersistentBag;
 
-import javax.mail.Store;
 import javax.persistence.*;
-import java.lang.reflect.Array;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="users")
-public class User {
+public class User extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -30,8 +27,8 @@ public class User {
 	private String emailAddress;
 	private String password;
 	private String sex;
-	@Temporal(TemporalType.DATE)
-	private Date birthdate;
+	private int birthDay;
+	private int birthMonth;
 	private String salt;
 	private String city;
 	private String state;
@@ -41,6 +38,8 @@ public class User {
 	private String tokenValidator;
 	private int critterbuxx;
 	private boolean isActive;
+	private String userImagePath;
+
 
 	@OneToMany
 	@JoinColumn(name="requesteruserid")
@@ -62,9 +61,9 @@ public class User {
 	@JoinColumn(name="ownerid")
 	private List<com.critters.dal.dto.entity.Store> store;
 
-	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, Date birthdate,
+	public User(int userID, String userName, String firstName, String lastName, String emailAddress, String password, String sex, int birthMonth, int birthDay,
 				String salt, String city, String state, String country, String postcode, String tokenSelector, String tokenValidator,
-				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive, List<com.critters.dal.dto.entity.Store> store) {
+				int critterbuxx, List<Friendship> friends, List<Friendship> friendsOf, boolean isActive, List<com.critters.dal.dto.entity.Store> store, String userImagePath) {
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -72,7 +71,8 @@ public class User {
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.sex = sex;
-		this.birthdate = birthdate;
+		this.birthMonth = birthMonth;
+		this.birthDay = birthDay;
 		this.salt = salt;
 		this.city = city;
 		this.state = state;
@@ -85,6 +85,7 @@ public class User {
 		this.friendsOf = friendsOf;
 		this.isActive = isActive;
 		this.store = store;
+		this.userImagePath = userImagePath;
 	}
 
 	public User(User copyUser) {
@@ -92,21 +93,23 @@ public class User {
 		this.userName = copyUser.userName;
 		this.firstName = copyUser.firstName;
 		this.lastName = copyUser.lastName;
-		this.emailAddress = copyUser.emailAddress;
-		this.password = copyUser.password;
+		this.emailAddress = copyUser.emailAddress;//todo should this really be copied?
+		this.password = copyUser.password;//todo should this really be copied?
 		this.sex = copyUser.sex;
-		this.birthdate = copyUser.birthdate;
-		this.salt = copyUser.salt;
+		this.birthDay = copyUser.birthDay;
+		this.birthMonth = copyUser.birthMonth;
+		this.salt = copyUser.salt;//todo should this really be copied?
 		this.city = copyUser.city;
 		this.state = copyUser.state;
 		this.country = copyUser.country;
 		this.postcode = copyUser.postcode;
-		this.tokenSelector = copyUser.tokenSelector;
-		this.tokenValidator = copyUser.tokenValidator;
+		this.tokenSelector = copyUser.tokenSelector; //todo should this really be copied?
+		this.tokenValidator = copyUser.tokenValidator;//todo should this really be copied?
 		this.critterbuxx = copyUser.critterbuxx;
 		this.isActive = copyUser.isActive;
 		this.friends = null;
 		this.friendsOf = null;
+		this.userImagePath = copyUser.userImagePath;
 	}
 
 	public User(){}
@@ -159,12 +162,20 @@ public class User {
 		this.password = password;
 	}
 
-	public Date getBirthdate() {
-		return birthdate;
+	public int getBirthMonth() {
+		return birthMonth;
 	}
 
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
+	public void setBirthMonth(int birthMonth) {
+		this.birthMonth = birthMonth;
+	}
+	
+	public int getBirthDay() {
+		return birthDay;
+	}
+
+	public void setBirthDay(int birthDay) {
+		this.birthDay = birthDay;
 	}
 
 	public String getSalt() {
@@ -246,6 +257,15 @@ public class User {
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+	
+	public String getUserImagePath() {
+		return userImagePath;
+	}
+
+	public void setUserImagePath(String userImagePath) {
+		this.userImagePath = userImagePath;
+	}
+
 
 	public List<Friendship> getFriends() {
 		List<Friendship> frnds = new ArrayList();
@@ -281,8 +301,8 @@ public class User {
 		}
 	}
 
-	public void setPets(List<Pet> zoo) {
-		this.pets = zoo;
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
 	}
 
 	public List<Item> getInventory() {
@@ -312,11 +332,9 @@ public class User {
 		Hibernate.initialize(inventory);
 	}
 
-
   	public void initializeInventory(){
 		this.setInventory(UserBLL.getUserInventory(this));
 	}
-
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){
 		if((inventory instanceof PersistentBag && ((PersistentBag)inventory).wasInitialized()) || inventory instanceof ArrayList) {
@@ -337,7 +355,8 @@ public class User {
 		this.emailAddress = null;
 		this.password = null;
 		this.sex = null;
-		this.birthdate = null;
+		this.birthDay = -1;
+		this.birthMonth = -1;
 		this.salt = null;
 		this.city = null;
 		this.state = null;

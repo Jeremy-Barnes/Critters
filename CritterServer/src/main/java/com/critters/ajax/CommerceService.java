@@ -2,6 +2,7 @@ package com.critters.ajax;
 
 import com.critters.bll.CommerceBLL;
 import com.critters.dal.dto.ItemRequest;
+import com.critters.dal.dto.StoreInformationRequest;
 import com.critters.dal.dto.entity.Store;
 
 import com.critters.dal.dto.entity.User;
@@ -51,7 +52,6 @@ public class CommerceService extends AjaxService {
 			return Response.status(Response.Status.OK).build();
 		}
 	}
-
 
 	@POST
 	@Path("/setInventoryItemStorePrice")
@@ -108,13 +108,13 @@ public class CommerceService extends AjaxService {
 	@Path("/createStore")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createStore(JAXBElement<Store> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
+	public Response createStore(JAXBElement<StoreInformationRequest> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-		Store request = jsonRequest.getValue();
+		StoreInformationRequest request = jsonRequest.getValue();
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			return Response.status(Response.Status.OK).entity(CommerceBLL.createStore(request, loggedInUser)).build();
+			return Response.status(Response.Status.OK).entity(CommerceBLL.createStore(request.store, request.backgroundImage, request.clerkImage, loggedInUser)).build();
 		}
 	}
 
@@ -122,13 +122,13 @@ public class CommerceService extends AjaxService {
 	@Path("/editStore")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editStore(JAXBElement<Store> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
+	public Response editStore(JAXBElement<StoreInformationRequest> jsonRequest) throws JAXBException, IOException, InvalidPropertyException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-		Store request = jsonRequest.getValue();
+		StoreInformationRequest request = jsonRequest.getValue();
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			return Response.status(Response.Status.OK).entity(CommerceBLL.editStore(request, loggedInUser)).build();
+			return Response.status(Response.Status.OK).entity(CommerceBLL.editStore(request.store, request.backgroundImage, request.clerkImage,loggedInUser)).build();
 		}
 	}
 

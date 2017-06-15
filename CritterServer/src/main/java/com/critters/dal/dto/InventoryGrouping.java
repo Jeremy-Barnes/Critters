@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Jeremy on 1/17/2017.
  */
 @XmlRootElement
-public class InventoryGrouping {
+public class InventoryGrouping extends DTO {
 	public List<Item> inventoryItemsGrouped;
 
 	public InventoryGrouping(List<Item> itemsGrouped) {
