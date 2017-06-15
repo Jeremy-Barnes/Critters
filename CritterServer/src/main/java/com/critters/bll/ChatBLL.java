@@ -141,6 +141,7 @@ public class ChatBLL {
 		}
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
 		try {
 			entityManager.merge(m);
 			entityManager.getTransaction().commit();
@@ -172,7 +173,7 @@ public class ChatBLL {
 	private static List<Message> updateMessages(List<Message> messages){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-
+			entityManager.getTransaction().begin();
 			for(Message m : messages) {
 				entityManager.merge(m);
 			}
