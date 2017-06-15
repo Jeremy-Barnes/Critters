@@ -129,11 +129,11 @@ export class ServiceMethods {
     }
 
     public static setDelievered(request: MessageRequest): JQueryPromise<void> {
-        return ServiceMethods.doAjax("markMessagesDelivered", "chat", null);
+        return ServiceMethods.doAjax("markMessagesDelivered", "chat", request);
     }
 
     public static setReceived(request: MessageRequest): JQueryPromise<void> {
-        return ServiceMethods.doAjax("markMessagesRead", "chat", null);
+        return ServiceMethods.doAjax("markMessagesRead", "chat", request);
     }
 
     public static deleteMessage(messageId: number): JQueryPromise<void> {

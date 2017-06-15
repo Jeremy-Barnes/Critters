@@ -11,8 +11,7 @@
                 <div class="inlineblock">{{user.userName}}</div>
                 <div> here are alerts</div>
                 <div class="inlineblock">alert length {{alerts.length}}</div>
-
-                <button class="messageslink" data-toggle="popover" (click)="deliverAlerts()" title="Notifications">Messages!</button>
+                <button class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()" title="Notifications">Messages!</button>
                 <div class="notifications-bubble hide">
                     <div *ngIf="alerts == null || alerts.length == 0">
                         No new notifications!

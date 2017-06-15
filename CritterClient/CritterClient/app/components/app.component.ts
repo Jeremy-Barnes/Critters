@@ -16,10 +16,11 @@ export class AppComponent implements OnInit {
 
     deliverAlerts() {
         Application.markAlertsDelivered(this.alerts);
+        (<any>$('.messageslink')).popover().on("hidden.bs.popover", () => this.clearAlerts()); //isn't Javascript gross as hell?
     }
 
     clearAlerts() {
         this.alerts.length = 0;
-        $('.messageslink').each(() => (<any>$(this)).popover('hide'));
+        $('.messageslink').each(() => (<any>$(this)).popover('hide')); //:(
     }
 }
