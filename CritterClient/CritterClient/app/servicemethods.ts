@@ -140,6 +140,10 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("deleteMail", "chat", messageId, "GET");
     }
 
+    public static getUnreadMail(): JQueryPromise<Message[]> {
+        return ServiceMethods.doAjax("getUnreadMail", "chat", null, "GET");
+    }
+
     /************** Inventory Stuff **************/
     public static getInventory(request: User): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("getInventory", "users", request);
