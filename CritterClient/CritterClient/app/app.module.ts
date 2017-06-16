@@ -19,7 +19,7 @@ import { AutocompleteList } from './components/autocomplete.component'
 import { ErrorComponent } from './components/error.component'
 import { InventoryComponent} from './components/inventory.component'
 import { GamesComponent} from './components/games.component'
-import { LimitToPipe } from './limitTo.pipe'
+import { LimitToPipe } from './limitto.pipe'
 
 
 @NgModule({
