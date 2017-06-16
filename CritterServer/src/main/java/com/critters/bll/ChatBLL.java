@@ -92,6 +92,9 @@ public class ChatBLL {
 					: entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id").setParameter("id", userID).getResultList();
 			mail.forEach(m -> wipeSensitiveDetails(m));
 			return mail;
+		}catch(Exception e) {
+			logger.error("Something went wrong with mail for user " + userID, e);
+			return null;
 		} finally {
 			entityManager.close();
 		}
@@ -108,7 +111,10 @@ public class ChatBLL {
 													  .getResultList();
 			mailChildren.removeIf(m -> (m.getSender().getUserID() == userID && !m.getShowSender()) || (m.getSender().getUserID() == userID && !m.getShowSender()));
 			return buildConversations(mail, mailChildren);
-		} finally {
+		} catch(Exception e) {
+			logger.error("Something went wrong with messages for user " + userID, e);
+			return null;
+		} finally{
 			entityManager.close();
 		}
 	}
@@ -126,6 +132,9 @@ public class ChatBLL {
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
 			}
+		} catch(Exception e) {
+			logger.error("Something went wrong with retrieval for message " + id + " for user " + user.getUserID(), e);
+			return null;
 		} finally {
 			entityManager.close();
 		}
