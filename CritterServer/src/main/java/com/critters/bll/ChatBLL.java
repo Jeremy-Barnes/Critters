@@ -88,7 +88,7 @@ public class ChatBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			List<Message> mail = undeliveredOnly ?
-					entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id and delivered = false").setParameter("id", userID).getResultList()
+					entityManager.createQuery("from Message where recipientUserId = :id and delivered = false").setParameter("id", userID).getResultList()
 					: entityManager.createQuery("from Message where senderUserId = :id or recipientUserId = :id").setParameter("id", userID).getResultList();
 			mail.forEach(m -> wipeSensitiveDetails(m));
 			return mail;

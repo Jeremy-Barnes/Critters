@@ -115,11 +115,13 @@ export class Application {
 
     public static getNotifications() {
         ServiceMethods.getUnreadMail().done((messages: Message[]) => {
-            var note: Notification = new Notification();
-            note.messages = messages;
-            var user: User = Application.getApp().user;
-            note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
-            Application.getApp().alerts.push(note);
+            if (messages != null && messages.length != 0) {
+                var note: Notification = new Notification();
+                note.messages = messages;
+                var user: User = Application.getApp().user;
+                note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                Application.getApp().alerts.push(note);
+            }
         });
     }
 
@@ -178,14 +180,16 @@ export class Application {
 
     public static markMessagesRead(messages: Message[]) {
         messages.forEach(m => m.read = true);
-        ServiceMethods.setReceived({ messages : messages, user : Application.getApp().user });
+        if (messages.length > 0)
+            ServiceMethods.setReceived({ messages : messages, user : Application.getApp().user });
     }
 
     public static markAlertsDelivered(alerts: Notification[]) {
         var messages : Message[] = [];
         alerts.filter(a => a.messages != null).forEach(a => a.messages.filter(m => m.recipient.userID == Application.getApp().user.userID).forEach(m => messages.push(m)));
         messages.forEach(m => m.delivered = true);
-        ServiceMethods.setDelievered({ messages: messages, user: Application.getApp().user });
+        if (messages.length > 0)
+            ServiceMethods.setDelievered({ messages: messages, user: Application.getApp().user });
     }
 
     public static searchFriends(searchTerm: string) {

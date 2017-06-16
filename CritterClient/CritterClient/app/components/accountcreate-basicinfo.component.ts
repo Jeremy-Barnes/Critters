@@ -19,7 +19,7 @@ export class AccountCreateBasicInfoComponent {
         { number: 9, name: "September" }, { number: 10, name: "October" }, { number: 11, name: "November" }, { number: 12, name: "December" }]
     days : number[] = [];
 
-    constructor(private router: Router) { alert('wow') }
+    constructor(private router: Router) {}
 
     ngOnInit() { this.user = Application.getApp().user }
 

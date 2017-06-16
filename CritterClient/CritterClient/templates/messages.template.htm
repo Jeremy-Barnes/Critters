@@ -13,7 +13,7 @@
                 <p>{{message.messageText}}</p>
                 <input type="button" (click)="reply(message)" value="reply" /> <input type="button" (click)="deleteConversation(message)" value="Delete Message" />
 
-                <div id="reply" *ngIf="replyMessage != null && replyMessage.messageID == message.messageID">
+                <div id="reply" *ngIf="replyMessage != null && newMessage!=null && replyMessage.messageID == message.messageID">
                     Subject: <input type="text" [(ngModel)]="newMessage.messageSubject" /> <br />
                     Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br />
                     <input type="button" (click)="sendMessage()" value="Send" />
