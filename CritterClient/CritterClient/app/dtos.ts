@@ -1,4 +1,4 @@
-﻿export class User {
+﻿export class User implements Comparable {
     userID: number = 0;
     userName: string = "";
     firstName: string = "";
@@ -43,6 +43,11 @@
         this.pets = user.pets;
         this.isActive = user.isActive;
 
+    }
+
+    public isSame(compareUser: User) {
+        if (compareUser.userID == this.userID) return true;
+        return false;
     }
 }
 
@@ -202,4 +207,8 @@ export class UserImageOption {
 export class SearchResponse {
     users: User[];
     items: Item[];
+}
+
+export interface Comparable {
+    isSame(compareObject: Comparable): boolean;
 }

@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -95,6 +95,7 @@ export class Application {
             app.user.set(retUser);
             app.loggedIn = true;
             Application.startLongPolling();
+            Application.getNotifications();
             prepDisplayAfterLogin();
         });
     }
@@ -112,22 +113,46 @@ export class Application {
         });
     }
 
-    private static checkNotifications() {
-        Application.getApp().alerts.length = 0;
+    public static getNotifications() {
+        ServiceMethods.getUnreadMail().done((messages: Message[]) => {
+            if (messages != null && messages.length != 0) {
+                var note: Notification = new Notification();
+                note.messages = messages;
+                var user: User = Application.getApp().user;
+                note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                Application.getApp().alerts.push(note);
+            }
+        });
     }
 
     public static getMailbox() {
         ServiceMethods.getMailbox().done((conversations: Conversation[]) => {
             var user = Application.getApp().user;
-            var sentmsgs : Message[] = [];
-            for (var i = 0; i < conversations.length; i++) {
+            var sentmsgs: Message[] = [];
+            var alerts: Notification[] = [];
+            var recConvos: Conversation[] = [];
+
+            //PROCESS THE CONVERSATIONS FOR INBOX PURPOSES
+            //future me: you could have done all this with a *very pretty* lambda but it would have required processing this array 3 times - notifications, inbox, sent box.
+            //This is more efficient. Here's what could have been:
+            //inbox.push(...(conversations.filter(c => c.messages.findIndex(m => m.recipient.userID == user.userID) != -1)))
+
+            for (var i = 0; i < conversations.length; i++) { //all conversations
                 let conv = conversations[i];
-                for (var j = 0; j < conv.messages.length; j++) {
+                let notReceived = true;
+                for (var j = 0; j < conv.messages.length; j++) { //each message in conversation
                     let message = conv.messages[j];
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
+                    } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean
+                        notReceived = false;
+                        recConvos.push(conv);
+                        if (message.recipient.userID == user.userID && !message.delivered) {
+                            alerts.push({ messages: [message], friendRequests: null });
+                        }
                     }
-                    for (var k = 0; k < conv.participants.length; k++) {
+
+                    for (var k = 0; k < conv.participants.length; k++) { //all participants in this conversation - setting up objects that are omitted for over-wire serialization
                         let participant = conv.participants[k];
                         if (message.recipient.userID == participant.userID) {
                             message.recipient = (participant);
@@ -139,15 +164,32 @@ export class Application {
                     message.dateSent = new Date(<any>message.dateSent);
                 }
             }
+
+
             Application.getApp().sentbox.length = 0;
             Application.getApp().inbox.length = 0;
             Application.getApp().sentbox.push(...sentmsgs);
-            Application.getApp().inbox.push(...conversations);
+            Application.getApp().inbox.push(...recConvos);
+            Application.getApp().alerts.push(...alerts);
         });
     }
 
     public static sendMessage(msg: Message) {
         ServiceMethods.sendMessage(msg);
+    }
+
+    public static markMessagesRead(messages: Message[]) {
+        messages.forEach(m => m.read = true);
+        if (messages.length > 0)
+            ServiceMethods.setReceived({ messages : messages, user : Application.getApp().user });
+    }
+
+    public static markAlertsDelivered(alerts: Notification[]) {
+        var messages : Message[] = [];
+        alerts.filter(a => a.messages != null).forEach(a => a.messages.filter(m => m.recipient.userID == Application.getApp().user.userID).forEach(m => messages.push(m)));
+        messages.forEach(m => m.delivered = true);
+        if (messages.length > 0)
+            ServiceMethods.setDelievered({ messages: messages, user: Application.getApp().user });
     }
 
     public static searchFriends(searchTerm: string) {

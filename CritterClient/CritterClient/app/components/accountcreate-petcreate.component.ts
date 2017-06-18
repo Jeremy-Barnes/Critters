@@ -37,8 +37,6 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     onSubmit() {
-        alert("Successful account creation");
-
         var self = this;
         var pet = new Pet();
         pet.petName = this.petName;

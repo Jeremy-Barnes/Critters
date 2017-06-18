@@ -7,24 +7,23 @@
                 <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
                 <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
-            <div *ngIf="app.loggedIn">
+            <div [hidden]="!app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
                 <div> here are alerts</div>
-                <div class="inlineblock">alert length {{alerts.length}}</div>
-
-                <button class="messageslink" data-toggle="popover" title="Notifications">Messages!</button>
+                <div class="inlineblock" *ngIf="alerts.length > 0">Ping! Alerts!</div>
+                <button class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()" title="Notifications">Messages!</button>
                 <div class="notifications-bubble hide">
                     <div *ngIf="alerts == null || alerts.length == 0">
                         No new notifications!
                     </div>
                     <a routerLink="/messages">Go to Mailbox!</a>
-                    <div *ngIf="alerts != null">
+                    <div *ngIf="alerts != null" (blur)="clearAlerts()">
                         <div *ngFor="let note of alerts">
                             <div *ngFor="let msg of note.messages">
-                                todo apptemplate
+                                <p>New message from {{msg.sender.firstName}} - {{msg.subject | limitTo:8 }}</p>
                             </div>
                             <div *ngFor="let friend of note.friendRequests">
-                                todo apptemplate
+                                <p>{{friend.requester.firstName}} {{friend.requester.lastName}} wants to be your friend!</p>
                             </div>
                         </div>
                     </div>
