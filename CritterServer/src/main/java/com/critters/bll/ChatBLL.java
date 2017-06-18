@@ -107,7 +107,7 @@ public class ChatBLL {
 																   "((senderUserId = :id and showSender = true) or " +
 																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where ((senderUserId = :id and showSender = true) or " +
-																		   "(recipientUserId = :id and showRecipient = true)) rootMessageId in :ids")
+																		   "(recipientUserId = :id and showRecipient = true)) and rootMessageId in :ids")
 													  .setParameter("id", userID).setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
 			return buildConversations(mail, mailChildren);
@@ -141,7 +141,7 @@ public class ChatBLL {
 		try {
 			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where  messageID in :ids").setParameter("ids", ids).getResultList();
 			for (Message m : mail) {
-				if((user.getUserID() == m.getSender().getUserID()) ||(user.getUserID() == m.getRecipient().getUserID())) {
+				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
 					throw new GeneralSecurityException("Invalid cookie supplied");
 				}
 			}
