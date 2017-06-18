@@ -103,6 +103,7 @@ public class ChatBLL {
 	public static List<Conversation> getConversations(int userID) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
+			entityManager.flush();
 			List<Message> mail = entityManager.createQuery("from Message where " +
 																   "((senderUserId = :id and showSender = true) or " +
 																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
