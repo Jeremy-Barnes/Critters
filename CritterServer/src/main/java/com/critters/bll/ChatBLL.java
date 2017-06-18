@@ -7,6 +7,8 @@ import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import org.hibernate.CacheMode;
+import org.hibernate.annotations.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +107,7 @@ public class ChatBLL {
 		try {
 			List<Message> mail = entityManager.createQuery("from Message where " +
 																   "((senderUserId = :id and showSender = true) or " +
-																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
+																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH).setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where ((senderUserId = :id and showSender = true) or " +
 																		   "(recipientUserId = :id and showRecipient = true)) and rootMessageId in :ids")
 													  .setParameter("id", userID).setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
