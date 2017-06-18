@@ -37,9 +37,15 @@ public class PetBLL {
 
 	public static List<Pet> getPets(User user){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet> pets = entityManager.createQuery("from Pet where ownerID = :id").setParameter("id", user.getUserID()).getResultList();
-		entityManager.close();
-		return pets;
+		try {
+			List<Pet> pets = entityManager.createQuery("from Pet where ownerID = :id").setParameter("id", user.getUserID()).getResultList();
+			return pets;
+		} catch (Exception e){
+			logger.error("NO PETS FOR user " + user.getUserID(), e);
+			return null;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	public static void updatePet(Pet pet){
@@ -60,16 +66,28 @@ public class PetBLL {
 
 	public static List<Pet.PetSpecies> getPetSpecies() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet.PetSpecies> options = entityManager.createQuery("from Pet$PetSpecies").getResultList();
-		entityManager.close();
-		return options;
+		try {
+			List<Pet.PetSpecies> options = entityManager.createQuery("from Pet$PetSpecies").getResultList();
+			return options;
+		} catch(Exception e) {
+			logger.error("SOMEHOW THERE ARE NO SPECIES", e);
+			return null;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	public static List<Pet.PetColor> getPetColors() {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Pet.PetColor> options = entityManager.createQuery("from Pet$PetColor").getResultList();
-		entityManager.close();
-		return options;
+		try {
+			List<Pet.PetColor> options = entityManager.createQuery("from Pet$PetColor").getResultList();
+			return options;
+		} catch(Exception e) {
+			logger.error("SOMEHOW THERE ARE NO COLORS", e);
+			return null;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	public static void abandonPet(Pet pet){
@@ -82,9 +100,13 @@ public class PetBLL {
 		valid = (petName != null && !petName.isEmpty()); //todo: content filter
 		if(valid) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from pets where petName = ?1)")
-													.setParameter(1, petName)
-													.getSingleResult();
+			try {
+				valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from pets where petName = ?1)")
+												.setParameter(1, petName)
+												.getSingleResult();
+			} catch(Exception e) {
+				logger.error("This pet name so shit it blew up the server? " + petName, e);
+			}
 			entityManager.close();
 		}
 		return valid;
