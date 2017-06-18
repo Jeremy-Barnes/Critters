@@ -119,7 +119,7 @@ public class ChatBLL {
 		}
 	}
 
-	private static Message getMessage(int id, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static Message getMessage(int id, User user) throws GeneralSecurityException, UnsupportedEncodingException {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			Message mail = (Message) entityManager.createQuery("from Message where messageID = :id").setParameter("id", id).getSingleResult();
