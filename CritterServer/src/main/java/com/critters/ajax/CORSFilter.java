@@ -15,7 +15,7 @@ public class CORSFilter implements ContainerResponseFilter {
 	@Override
 	public void filter(ContainerRequestContext request,
 					   ContainerResponseContext response) throws IOException {
-		response.getHeaders().add("Access-Control-Allow-Origin", "http://142f42a8.ngrok.io");
+		response.getHeaders().add("Access-Control-Allow-Origin", "http://0c7a5243.ngrok.io");
 		response.getHeaders().add("Access-Control-Allow-Credentials", "true");
 		response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
 		response.getHeaders().add("Access-Control-Allow-Headers",  "origin, content-type, accept, authorization, selectorvalidator, Cookie, Content-Type, critters");
