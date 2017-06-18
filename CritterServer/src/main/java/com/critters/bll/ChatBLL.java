@@ -7,6 +7,8 @@ import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import org.hibernate.CacheMode;
+import org.hibernate.annotations.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
