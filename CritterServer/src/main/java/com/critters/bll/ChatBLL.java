@@ -141,7 +141,7 @@ public class ChatBLL {
 		try {
 			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where  messageID in :ids").setParameter("ids", ids).getResultList();
 			for (Message m : mail) {
-				if((user.getUserID() == m.getSender().getUserID()) ||(user.getUserID() == m.getRecipient().getUserID())) {
+				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
 					throw new GeneralSecurityException("Invalid cookie supplied");
 				}
 			}
