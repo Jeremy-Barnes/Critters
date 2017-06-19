@@ -74,10 +74,12 @@ export class MessageComponent implements OnInit {
 
     sendMessage() {
         this.newMessage.sender = this.user;
+        this.newMessage.dateSent = new Date(Date.now());
         if (this.replyMessage != null) {
             this.newMessage.parentMessage = this.replyMessage;
             this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
             this.newMessage.recipient = this.replyMessage.sender;
+            this.activeConversation.push(this.newMessage);
         } else {
             this.newMessage.recipient = this.composeToFriend;
         }
@@ -102,7 +104,6 @@ export class MessageComponent implements OnInit {
             resolve(Application.searchFriends(searchTerm));
         });
     }
-
 
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {

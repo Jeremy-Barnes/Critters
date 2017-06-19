@@ -19,8 +19,10 @@
                     <a routerLink="/messages">Go to Mailbox!</a>
                     <div *ngIf="alerts != null" (blur)="clearAlerts()">
                         <div *ngFor="let note of alerts">
+                            
                             <div *ngFor="let msg of note.messages">
-                                <p>New message from {{msg.sender.firstName}} - {{msg.subject | limitTo:8 }}</p>
+                                <p>New message from {{msg.sender.firstName}}</p>
+                                <p *ngIf="msg.messageSubject != null || msg.messageSubject.length > 0">{{msg.messageSubject | limitTo:15 }}</p>
                             </div>
                             <div *ngFor="let friend of note.friendRequests">
                                 <p>{{friend.requester.firstName}} {{friend.requester.lastName}} wants to be your friend!</p>
