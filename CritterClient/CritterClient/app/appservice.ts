@@ -116,11 +116,16 @@ export class Application {
     public static getNotifications() {
         ServiceMethods.getUnreadMail().done((messages: Message[]) => {
             if (messages != null && messages.length != 0) {
-                var note: Notification = new Notification();
-                note.messages = messages;
+                var notes: Notification[] = [];
+                for(let i = 0; i < messages.length; i++) {
+                    notes.push({ messages: [messages[i]], friendRequests: null });
+                }
                 var user: User = Application.getApp().user;
-                note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
-                Application.getApp().alerts.push(note);
+                var frReqs =  user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                for(let i = 0; i < frReqs.length; i++) {
+                    notes.push({ messages: null, friendRequests: [frReqs[i]]});
+                }
+                Application.getApp().alerts.push(...notes);
             }
         });
     }
