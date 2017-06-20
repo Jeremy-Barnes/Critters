@@ -640,6 +640,8 @@ iframe {
     top: -130%;
     right: 0px;
     text-align: center;
+    font-weight:bold;
+    font-size:14pt;
 }
 
 .notificationCircle > * {
