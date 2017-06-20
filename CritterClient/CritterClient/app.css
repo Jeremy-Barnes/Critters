@@ -625,6 +625,28 @@ iframe {
     outline:0;
 }
 
+.messageslink {
+    position: relative;
+}
+
+
+.notificationCircle {
+    background: #ffae35;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    padding-bottom: 5px;
+    position: absolute;
+    top: -130%;
+    right: 0px;
+    text-align: center;
+}
+
+.notificationCircle > * {
+    position: relative;
+    top: -10%;
+}
+
 /*
  * Modal Styling
  * --------------------------------------------------

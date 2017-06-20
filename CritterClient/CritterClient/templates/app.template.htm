@@ -9,9 +9,7 @@
             </div>
             <div [hidden]="!app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
-                <div> here are alerts</div>
-                <div class="inlineblock" *ngIf="alerts.length > 0">Ping! Alerts!</div>
-                <button class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()" title="Notifications">Messages!</button>
+                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()" title="Notifications"><img src="/img/horrible clion_octarine.png"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
                 <div class="notifications-bubble hide">
                     <div *ngIf="alerts == null || alerts.length == 0">
                         No new notifications!
