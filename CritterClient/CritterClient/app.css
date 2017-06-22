@@ -649,6 +649,37 @@ iframe {
     top: -10%;
 }
 
+.popover-repeater {
+    border-top: 1px solid #acacac;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.notification-header {
+    width: 100%;
+    text-align: center;
+    font-size: 18px; 
+    padding: 5px 0px;
+
+}
+
+.notifications-bubble {
+    border-radius: 0px;
+    width:375px;
+    margin: 0px;
+}
+
+.popover {
+    max-width: 500px;
+    padding: 0px;
+    border-radius: 0px;
+    border: 1px solid #acacac;
+}
+
+.popover-content {
+    padding: 0px;
+}
+
 /*
  * Modal Styling
  * --------------------------------------------------

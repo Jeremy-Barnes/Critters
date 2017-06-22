@@ -9,21 +9,27 @@
             </div>
             <div [hidden]="!app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
-                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()" title="Notifications"><img src="/img/horrible clion_octarine.png"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
-                <div class="notifications-bubble hide">
-                    <div *ngIf="alerts == null || alerts.length == 0">
-                        No new notifications!
-                    </div>
-                    <a routerLink="/messages">Go to Mailbox!</a>
-                    <div *ngIf="alerts != null" (blur)="clearAlerts()">
-                        <div *ngFor="let note of alerts">
-                            
-                            <div *ngFor="let msg of note.messages">
-                                <p>New message from {{msg.sender.firstName}}</p>
-                                <p *ngIf="msg.messageSubject != null || msg.messageSubject.length > 0">{{msg.messageSubject | limitTo:15 }}</p>
+                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()"><img src="/img/horrible clion_octarine.png"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
+                <div class="notifications-bubble-container hide">
+                    <div class="notifications-bubble">
+                        <div class="notification-header">
+                            <a routerLink="/messages">Go to Mailbox!</a>
+                            <div *ngIf="alerts == null || alerts.length == 0">
+                                No new notifications!
                             </div>
-                            <div *ngFor="let friend of note.friendRequests">
-                                <p>{{friend.requester.firstName}} {{friend.requester.lastName}} wants to be your friend!</p>
+                        </div>
+                       
+                        <div *ngIf="alerts != null" > <!----(blur)="clearAlerts()">-->
+                            <div class="popover-repeater" *ngFor="let note of alerts">
+                                <div *ngFor="let msg of note.messages">
+                                    <div>
+                                        <p><b>{{msg.sender.userName}}</b> sent you a message <span style="float:right">{{msg.dateSent | date:'yMdjm'}}</span></p>
+                                        <p *ngIf="msg.messageSubject != null || msg.messageSubject.length > 0">{{msg.messageSubject | limitTo:15 }}</p>
+                                    </div>
+                                </div>
+                                <div *ngFor="let friend of note.friendRequests">
+                                    <div><p>{{friend.requester.firstName}} {{friend.requester.lastName}} wants to be your friend!</p></div>
+                                </div>
                             </div>
                         </div>
                     </div>

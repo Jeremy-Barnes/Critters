@@ -45,7 +45,6 @@ export class AccountCreatePetComponent implements OnInit {
         pet.sex = this.activeSex;
 
         Application.submitUserAccountCreationRequest(this.user, pet).then((u: User) => {
-            this.user.set(u);
             let link = ['/'];
             self.router.navigate(link);
         }).fail((error: JQueryXHR) => {

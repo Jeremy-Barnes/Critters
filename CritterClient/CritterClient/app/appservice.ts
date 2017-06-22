@@ -38,11 +38,15 @@ export class Application {
         var createRequest = new AccountInformationRequest();
         createRequest.pet = pet;
         createRequest.user = user;
-        return ServiceMethods.createUser(createRequest);
+        return ServiceMethods.createUser(createRequest).done((u: User) => {
+            Application.getApp().user.set(u);
+        });
     }
 
     public static submitCreatePet(pet: Pet): JQueryPromise<Pet> {
-        return ServiceMethods.createPet(pet);
+        return ServiceMethods.createPet(pet).done((p: Pet) => {
+            Application.getApp().user.pets.push(p);
+        });
     }
 
     public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {

@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser'
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { User, GameThumbnail, GamesInfo } from '../dtos'
 import {Application} from "../appservice"
-import 'rxjs/add/operator/switchMap';
+import '../../node_modules/rxjs/add/operator/switchMap';
 
 @Component({
     templateUrl: "../../templates/games.template.htm"
@@ -32,9 +32,10 @@ export class GamesComponent implements OnInit {
 
         this.user = this.app.user;
         var self = this;
-        this.route.params
-            .switchMap((params: Params) => {
+        //cast only so VS will quit complaining about not being able to find switchMap EVEN THOUGH IT COMPILES JUST FINE
+        (<any>this.route.params).switchMap((params: Params) => {
                 self.resolveGames();
+            //todo remove this test data
                 var gth = new GameThumbnail();
                 gth.gameDescription = "sdfsd";
                 gth.gameName = "sdfsdf";
@@ -53,15 +54,15 @@ export class GamesComponent implements OnInit {
                     thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
                     thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
                 });
-
+            //todo remove test data above
                 for (var i = 0; i < self.games.length; i++) {
                     if (self.games[i].gameThumbnailConfigID == params['id']) return Promise.resolve(self.games[i]);
                 }
                 return Promise.resolve(self.activeGame);
 
             }).subscribe(
-            game => {
-                self.activeGame = game
+            (game: GameThumbnail) => {
+                self.activeGame = game;
             }
         );
     }
@@ -108,18 +109,4 @@ export class GamesComponent implements OnInit {
         var self = this;
         return Application.getGames().done(() => { self.games = self.app.games; });
     }
-
-
-    //findGame(id: number): Promise<GameThumbnail> {
-    //    var self = this;
-    //    return new Promise(resolve => {
-    //        resolve(() => {
-    //            for (var i = 0; i < self.games.length; i++) {
-    //                if (self.games[i].gameThumbnailConfigID == id) return self.games[i];
-    //            }
-    //            return null;
-    //        });
-    //    });
-    //}
-
 }
