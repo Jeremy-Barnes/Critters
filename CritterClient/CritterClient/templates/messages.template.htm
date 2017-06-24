@@ -4,7 +4,6 @@
     </div>
 </div>
 <div class="container">
-    <div class="inlineblock">
         <!----------------------CONVERSATION VIEW------------------>
         <div id="viewDetail" *ngIf="activeConversation!=null">
             Conversation view
@@ -57,27 +56,31 @@
                 <div id="inbox" class="tab-pane fade in active">
                     {{messages.length}} Conversations <input type="button" (click)="composeNewMessage()" value="New Message" />
                     <br />
-                    <div *ngFor="let conversation of messages">
-                        <div class="messageSubject">
-                            {{conversation.messages[0].messageSubject}}
-                            <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div>
-                        </div>
-                        <div>
-                            <span><input type="checkbox" [(ngModel)]="conversation.delete" /></span>
-                            <span>
-                                From:
-                                <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
-                                    {{conversation.messages[0].sender.userName}}
-                                </a> | {{conversation.messages[0].dateSent.toLocaleString()}}
-                            </span>
-                        </div>
-                        <input type="button" (click)="viewDetail(conversation)" value="View More" />
-                        <input type="button" (click)="deleteConversation(conversation.messages)" value="Delete Message" />
-                        <br />
-                    </div>
+                    <table class="table">
+                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages">
+                            <td><input type="checkbox" class="roundCheckbox" [(ngModel)]="conversation.delete" /></td>
+                            <td class="inlineblock messageUser">
+                                <span>
+                                    <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
+                                        {{conversation.messages[0].sender.userName}}
+                                    </a>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="messageSubject inlineblock">
+                                    {{conversation.messages[0].messageSubject | limitTo:50}}
+                                    <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
+                                </div>
+                                {{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}
+                            </td>
+                            <td>
+                                {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}
+                            </td>
+                                <!--<input type="button" (click)="viewDetail(conversation)" value="View More" />
+                <input type="button" (click)="deleteConversation(conversation.messages)" value="Delete Message" />-->
 
-                    <input type="submit" value="Select All" />
-                    <input type="submit" value="Delete" />
+                        </tr>
+                    </table>
                 </div>
 
 
@@ -129,5 +132,4 @@
 
             </div>
         </div>
-    </div>
 </div>    
