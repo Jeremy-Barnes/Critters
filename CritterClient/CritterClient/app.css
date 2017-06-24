@@ -37,6 +37,7 @@ body {
     margin-left: 0px;
     padding-left: 30px;
     padding-right: 15px;
+    padding-top: 20px;
 }
 
 @media(max-width:767px) {
@@ -50,8 +51,7 @@ body {
 }
 
 .row {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .page-title > .row {
@@ -144,18 +144,6 @@ img {
     min-height: 100%;
 }
 
-/*.gameTitle {
-    float:left;
-    position: relative;
-    z-index: 1000;
-    width: 100%;
-    transform: translateY(-100%);
-    background-color: rgba(0,0,0,.5);
-    color: white;
-    text-shadow: 1px 2px 4px black; 
-    text-align: right;
-    padding: 0px 20px;
-}*/
 .gameTitle {
     
     position: absolute;
@@ -254,16 +242,37 @@ a:hover, a:focus {color: #0F8DBA;}
     width: 100%;
     height: 45px;
 }
-.messageSubject {
-    background-color: #12a6da;
-    font-size: 20px;
-    width: 870px !important;
-}
+
+
 .messageUser {
     text-decoration: none !important;
     font-weight: bold;
     color: black;
+    width: 200px;
 }
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    border-color: #acacac;
+    border-width: 1px;
+    padding: 20px 0px;
+}
+tr td:nth-child(1) {
+    padding-left: 10px !important;
+}
+
+table {
+    border: 1px solid #acacac;
+}
+.messagePreview { 
+    padding: 15px 3px;
+}
+
+.messagePreview .messageSubject, .messagePreview .messageUser {
+    font-weight: bold;
+}
+.read {
+    font-weight: normal !important;
+}
+
 .inlineblock {
     display: inline-block !important;
 }
@@ -290,7 +299,6 @@ a:hover, a:focus {color: #0F8DBA;}
     background-color: #acacac;
 }
 .breadcrumb {
-    margin-top: 20px;
     margin-bottom: 20px;
     background-color: transparent;
     padding-left: 0px;
@@ -650,7 +658,6 @@ iframe {
 .messageslink {
     position: relative;
 }
-
 
 .notificationCircle {
     background: #ffae35;
