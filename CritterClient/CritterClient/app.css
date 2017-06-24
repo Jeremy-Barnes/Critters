@@ -243,17 +243,20 @@ a:hover, a:focus {color: #0F8DBA;}
     height: 45px;
 }
 
-
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    border: none;
+    padding: 20px 0px;
+}
 .messageUser {
     text-decoration: none !important;
     font-weight: bold;
     color: black;
     width: 200px;
 }
-.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+tr {
+    border-bottom: 1px solid;
     border-color: #acacac;
     border-width: 1px;
-    padding: 20px 0px;
 }
 tr td:nth-child(1) {
     padding-left: 10px !important;
@@ -264,6 +267,12 @@ table {
 }
 .messagePreview { 
     padding: 15px 3px;
+}
+.buttons {
+    padding: 30px 0px;
+}
+.buttons button {
+    margin-right: 15px;
 }
 
 .messagePreview .messageSubject, .messagePreview .messageUser {

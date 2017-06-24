@@ -18,7 +18,8 @@ export class MessageComponent implements OnInit {
     replyMessage: Message;
     newMessage: Message;
     composeToFriend: User;
-
+    selectedConversations: Conversation[] = [];
+    selectedMessages: Message[] = [];
     pendingFriendRequests: Friendship[];
     outstandingFriendRequests: Friendship[];
 
