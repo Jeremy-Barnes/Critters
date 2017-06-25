@@ -151,8 +151,8 @@ export class Application {
                 let notReceived = true;
                 for (var j = 0; j < conv.messages.length; j++) { //each message in conversation
                     let message = conv.messages[j];
-                    message.delete = false;
-                    conv.delete = false;
+                    message.selected = false;
+                    conv.selected = false;
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
                     } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean
@@ -185,8 +185,10 @@ export class Application {
         });
     }
 
-    public static sendMessage(msg: Message) {
-        ServiceMethods.sendMessage(msg);
+    public static sendMessage(msg: Message): JQueryPromise<Message> {
+       return ServiceMethods.sendMessage(msg).done((message: Message) => {
+            Application.getApp().sentbox.push(message);
+        });
     }
 
     public static markMessagesRead(messages: Message[]) {

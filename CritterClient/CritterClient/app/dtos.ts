@@ -118,12 +118,14 @@ export class Message {
     showRecipient: boolean;
     read: boolean;
     delivered: boolean;
+    selected: boolean = false;
 
 }
 
 export class Conversation {
     messages: Message[];
     participants: User[];
+    selected: boolean = false;
 }
 
 export class Notification {

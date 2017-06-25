@@ -43,6 +43,7 @@ export class MessageComponent implements OnInit {
 
     composeNewMessage() {
         this.newMessage = new Message();
+        this.newMessage.selected = false;
     }
 
     isUnread(conversation: Conversation) {
@@ -64,9 +65,31 @@ export class MessageComponent implements OnInit {
         this.newMessage = null;
     }
 
-    deleteConversation(...message: Message[]) {
+    deleteConversation(messages: Message[]) {
         alert("this one doesn't work yet, make the server op for it, dummy");
     }
+
+    markUnread(messages: Message[]) {
+        alert("this one doesn't work yet, make the server op for it, dummy");
+        messages.forEach(m => m.read = true);
+    }
+
+    affectSelectedInbox(deleteMessages: boolean) {
+        for (let i = 0; i < this.messages.length; i++) {
+            let conversation = this.messages[i];
+            if (conversation.selected) deleteMessages ? this.deleteConversation(conversation.messages) : this.markUnread(conversation.messages);
+        }
+    }
+
+    affectSelectedSentbox(deleteMessages: boolean) {
+        let updates: Message[] = [];
+        for (let i = 0; i < this.sentMessages.length; i++) {
+            let message = this.sentMessages[i];
+            if (message.selected) updates.push(message);
+        }
+        deleteMessages ? this.deleteConversation(updates) : this.markUnread(updates);
+    }
+    
 
     replyLatest() {
         this.reply(this.activeConversation[this.activeConversation.length-1]);
@@ -80,6 +103,7 @@ export class MessageComponent implements OnInit {
     sendMessage() {
         this.newMessage.sender = this.user;
         this.newMessage.dateSent = new Date(Date.now());
+        this.newMessage.selected = false;
         if (this.replyMessage != null) {
             this.newMessage.parentMessage = this.replyMessage;
             this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
@@ -88,7 +112,9 @@ export class MessageComponent implements OnInit {
         } else {
             this.newMessage.recipient = this.composeToFriend;
         }
-        Application.sendMessage(this.newMessage);
+        var self = this;
+        var newMessagePersist: Message = this.newMessage;
+        Application.sendMessage(this.newMessage).done((message: Message) => newMessagePersist.messageID = message.messageID);
         this.newMessage = null;
     }
 

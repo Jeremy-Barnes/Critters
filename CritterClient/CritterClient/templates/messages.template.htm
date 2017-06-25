@@ -67,7 +67,7 @@
                         <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages; let i = index">
                             <td> 
                                 <div class ="circlecheckbox">
-                                    <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.delete" name="" /> 
+                                    <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.selected" name="" /> 
                                     <label [attr.for]="'inboxCheckbox' + i" >
                                         <i class="fa fa-check-circle fa-2"></i>
                                     </label >
@@ -116,7 +116,7 @@
                         <tr class="messagePreview" *ngFor="let message of sentMessages; let i = index">
                             <td>
                                 <div class="circlecheckbox">
-                                    <input type="checkbox" value="1" [(ngModel)]="message.delete" [attr.id]="'sentCheckbox' + i" name="" />
+                                    <input type="checkbox" value="1" [(ngModel)]="message.selected" [attr.id]="'sentCheckbox' + i" name="" />
                                     <label [attr.for]="'sentCheckbox' + i">
                                         <i class="fa fa-check-circle fa-2"></i>
                                     </label>
