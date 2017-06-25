@@ -151,6 +151,8 @@ export class Application {
                 let notReceived = true;
                 for (var j = 0; j < conv.messages.length; j++) { //each message in conversation
                     let message = conv.messages[j];
+                    message.delete = false;
+                    conv.delete = false;
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
                     } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean

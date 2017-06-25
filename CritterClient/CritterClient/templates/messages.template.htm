@@ -64,8 +64,15 @@
                     </div>
 
                     <table class="table">
-                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages">
-                            <td><input type="checkbox" class="roundCheckbox" [(ngModel)]="conversation.delete" /></td>
+                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages; let i = index">
+                            <td> 
+                                <div class ="circlecheckbox">
+                                    <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.delete" name="" /> 
+                                    <label [attr.for]="'inboxCheckbox' + i" >
+                                        <i class="fa fa-check-circle fa-2"></i>
+                                    </label >
+                                </div>
+                            </td>
                             <td class="inlineblock messageUser">
                                 <span>
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
@@ -106,8 +113,15 @@
                     </div>
 
                     <table class="table">
-                        <tr class="messagePreview" *ngFor="let message of sentMessages">
-                            <td><input type="checkbox" class="roundCheckbox" [(ngModel)]="message.delete" /></td>
+                        <tr class="messagePreview" *ngFor="let message of sentMessages; let i = index">
+                            <td>
+                                <div class="circlecheckbox">
+                                    <input type="checkbox" value="1" [(ngModel)]="message.delete" [attr.id]="'sentCheckbox' + i" name="" />
+                                    <label [attr.for]="'sentCheckbox' + i">
+                                        <i class="fa fa-check-circle fa-2"></i>
+                                    </label>
+                                </div>
+                            </td>
                             <td class="inlineblock messageUser">
                                 <span>
                                     <a [routerLink]="['/viewUser/', message.recipient.userID]" class="messageUser">

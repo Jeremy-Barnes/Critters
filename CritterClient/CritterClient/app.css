@@ -664,10 +664,37 @@ iframe {
     outline:0;
 }
 
+/* Circle Checkbox */
+.circlecheckbox > input[type=checkbox]{
+   	visibility: hidden;
+}
+.circlecheckbox {
+	width: 22px;
+	height: 22px;
+    border:3px solid #acacac;
+	border-radius: 100%;
+	position: relative;
+}
+.circlecheckbox > label {
+	width: 22px;
+	height: 22px;
+    font-size: 26px;
+	border-radius: 100%;
+	cursor: pointer;
+	position: absolute;
+	top: -5px;
+	left: -3px;
+}
+.circlecheckbox > input[type=checkbox]:checked + label > .fa {
+    color: #68bd45;
+}
+.circlecheckbox > label > .fa {
+    color:transparent;
+}
+
 .messageslink {
     position: relative;
 }
-
 .notificationCircle {
     background: #ffae35;
     width: 22px;
