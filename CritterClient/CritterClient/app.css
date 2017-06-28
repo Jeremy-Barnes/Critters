@@ -763,3 +763,52 @@ iframe {
         width: 400px;
     }
 }
+
+/*
+ * User Thumbnail
+ * --------------------------------------------------
+ */
+
+.userThumb {
+    background: #ebebeb;
+    border-radius: 100%;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #acacac;
+    margin-right: 10px;
+}
+
+
+/*
+ * Messaging
+ * --------------------------------------------------
+ */
+
+.messagePreview td {
+    vertical-align: middle !important;
+}
+
+@media (max-width: 767px) {
+    .messageSubject, .messageText, .messageDate {
+        font-size: 14px;
+    }
+
+    .messagePreview tr {
+        padding: 10px;
+    }
+
+    .messagePreview td {
+        display: block !important;
+        float: left;
+        padding: 0 0 5px 0 !important;
+    }
+
+    .messageDate {
+        float: right;
+    }
+
+    .userThumb {
+        width: 30px;
+        height: 30px;
+    }
+}
