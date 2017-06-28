@@ -1,5 +1,13 @@
 ﻿<div class="container-fluid">
-    <h1>Inventory I guess!</h1>
+    <div class="page-title">
+        <h1>Inventory</h1>
+        <div>
+            <input type="text" [(ngModel)]="searchText" /> <button class="btn btn-primary" (click)="searchGames()">search</button>
+            <select name="gameSort" [(ngModel)]="activeSortBy" (ngModelChange)="onChange($event)">
+                <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort}}</option>
+            </select>
+        </div>
+    </div>
 </div>
 <div class="container">
     <div class="inlineblock">
@@ -26,21 +34,35 @@
 
         <!----------------------MAIN VIEW------------------>
         <div id="mainView">
-            <div id="inbox">
-                {{inventory.count}} Items
-                <br />
-                <div *ngFor="let item of inventory">
-                    <div (click)="viewItem(item)" data-target="#viewItemDetail">
-                        <div class="itemTitle">
-                            {{item.inventoryItemsGrouped[0].description.itemName}} <br />
-                        </div>
-                        <div class="itemTitle">
-                            Qty: {{item.inventoryItemsGrouped.length}}
-                        </div>
+            <div>
+                <div class="buttons">
+                    <button class="btn btn-primary">bulk select</button>
+                    <div class="conditionalButtons inlineblock">
+                        <!--<button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                        <button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>-->
                     </div>
-                    <br /><br />
                 </div>
-                <input type="button" (click)="debug()" value="Debug" />
+ 
+                <div class="row">
+                    <div class="col-md-4" *ngFor="let item of inventory; let i = index">
+                        <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
+                            <div class="circlecheckbox" (click)="selectItem($event, item)">
+                                <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
+                                <label [attr.for]="'inventoryCheckbox' + i">
+                                    <i class="fa fa-check-circle fa-2"></i>
+                                </label>
+                            </div>
+                            <img class="framed centeredImg" src="../img/dog_octarine.png" />
+                            <div class="itemTitle">
+                                {{item.inventoryItemsGrouped[0].description.itemName}} <br />
+                            </div>
+                            <div>
+                                Qty: {{item.inventoryItemsGrouped.length}}
+                            </div>
+                        </div>
+                        <br /><br />
+                    </div>
+                </div>
             </div>
         </div>
 
