@@ -32,6 +32,12 @@ export class InventoryComponent implements OnInit {
     ngOnInit() {
     }
 
+    selectItem($event: any, item: InventoryGrouping) {
+        $event.stopPropagation();
+        (<any>item).selected = !(<any>item).selected;
+        return false;
+    }
+
     debug() {
         alert(this.user);
         alert(Application.getApp());
