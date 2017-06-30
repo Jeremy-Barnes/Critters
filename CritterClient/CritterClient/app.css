@@ -142,7 +142,7 @@ img {
 .itemCard {
     position: relative;
     height: 270px;
-    min-width: 270px;
+    width: 270px;
     padding: 20px 0px;
     text-align: center;
 }
@@ -152,12 +152,13 @@ img {
 }
 
 .itemCard img {
-    width: 55%;
+    width: 60%;
     margin-bottom: 15px;
 }
 
 .itemCard .circlecheckbox {
     margin-top: -12px;
+    margin-bottom: -12px;
     margin-left: 10px;
 	width: 22px;
 	height: 22px;
@@ -174,6 +175,42 @@ img {
 	position: absolute;
 	top: -5px;
 	left: -3px;
+}
+
+#viewItemDetail * {
+    display: block;
+}
+#viewItemDetail img{
+    width: 100%;
+}
+#viewItemDetail h2 {
+    margin-top: 0px;
+}
+@media(min-width:768px) {
+    #viewItemDetail .modal-md {
+        width: 700px;
+    }
+}
+@media(max-width:767px) {
+    #viewItemDetail {
+        text-align: center;
+        vertical-align: central;
+    }
+    #viewItemDetail .btn,  #viewItemDetail select {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #viewItemDetail p {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+}
+#viewItemDetail .btn-primary, #viewItemDetail select  {
+    margin-bottom: 20px;
+} #viewItemDetail .btn-primary, #viewItemDetail select , #viewItemDetail p {
+    max-width: 400px;
+    width: 100%;
 }
 
 .gameCard img {
