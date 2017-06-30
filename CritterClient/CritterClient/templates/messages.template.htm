@@ -73,6 +73,13 @@
                                     </label >
                                 </div>
                             </td>
+                            <td class="inlineblock messageUserThumb">
+                                <span>
+                                    <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]">
+                                        <img src="/img/horrible clion_red.png" class="userThumb" />
+                                    </a>
+                                </span>
+                            </td>
                             <td class="inlineblock messageUser">
                                 <span>
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
@@ -85,9 +92,9 @@
                                     {{conversation.messages[0].messageSubject | limitTo:50}}
                                     <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
                                 </div>
-                                {{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}
-                            </td>
-                            <td class="inlineblock">
+                                <div class="messageText">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
+</td>
+                            <td class="inlineblock" class="messageDate">
                                 {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}
                             </td>
                         </tr>
