@@ -26,16 +26,18 @@
         </div>
         <div class="row">
             <div class="col-md-12 card gameSearchBar">
-                <h2 class="inlineblock">Find a Game</h2>
-                <div class="inlineblock">
-                    <input type="text" class="form-control" placeholder="keyword search"/> <div class="btn btn-md btn-primary">search</div>
-                </div>
-                <div class="inlineblock">
-                    <select class="form-control inlineblock" name="gameCategory">
-                        <option class="placeholder" value="" disabled selected>Category</option>
-                        <option *ngFor="let category of categories" [ngValue]="category">{{category}}</option>
-                    </select>
-                    <div class="btn btn-md btn-primary">search</div>
+                <div class="row">
+                    <div class="col-lg-4"><h2>Find a Game</h2></div>
+                    <div class="col-md-6 col-lg-4 form-inline">
+                        <input type="text" class="form-control" placeholder="keyword search" /> <div class="btn btn-md btn-primary">search</div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 form-inline">
+                        <select class="form-control" name="gameCategory">
+                            <option class="placeholder" value="" disabled selected>Category</option>
+                            <option *ngFor="let category of categories" [ngValue]="category">{{category}}</option>
+                        </select>
+                        <div class="btn btn-md btn-primary">search</div>
+                    </div>
                 </div>
             </div>
         </div>
