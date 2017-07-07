@@ -46,6 +46,20 @@ export class MessageComponent implements OnInit {
         this.newMessage.selected = false;
     }
 
+    selectMessage($event: any, item: Message) {
+        $event.stopPropagation();
+        (<any>item).selected = !(<any>item).selected;
+        (<any>item).selected ? this.selectedMessages.push(item) : this.selectedMessages.splice(this.selectedMessages.indexOf(item), 1);
+        return false;
+    }
+
+    selectConversation($event: any, item: Conversation) {
+        $event.stopPropagation();
+        (<any>item).selected = !(<any>item).selected;
+        (<any>item).selected ? this.selectedConversations.push(item) : this.selectedConversations.splice(this.selectedConversations.indexOf(item), 1);
+        return false;
+    }
+
     isUnread(conversation: Conversation) {
         return conversation.messages.filter(m => !m.read && m.recipient.userID == this.user.userID).length > 0
     }

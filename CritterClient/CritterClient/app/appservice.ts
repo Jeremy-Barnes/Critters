@@ -236,6 +236,7 @@ export class Application {
         ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
             var user = Application.getApp().user;
             Application.getApp().inventory.length = 0;
+            inventory.forEach(i => i.selected = false);
             Application.getApp().inventory.push(...inventory);
         });
     }

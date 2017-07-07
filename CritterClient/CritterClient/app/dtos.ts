@@ -173,6 +173,7 @@ export class ItemRarityType {
 
 export class InventoryGrouping {
     inventoryItemsGrouped: Item[];
+    selected: boolean = false;
 }
 
 export class GameThumbnail {

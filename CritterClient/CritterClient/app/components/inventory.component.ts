@@ -11,21 +11,18 @@ import {Application} from "../appservice"
 export class InventoryComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
-    alerts: Notification[];
 
     inventory: InventoryGrouping[];
     activeItemGroup: Item[] = [];
-    composeToFriend: User;
+    selectedItems: InventoryGrouping[] = [];
     itemActions: { id: number, text: string }[] = [];
     selectedAction: { id: number, text: string } = null;
 
     private defaultActions = [{ id: 0, text: "Move to Shop"}, {id: 1, text: "Discard Item"}]
 
-
     constructor(private route: ActivatedRoute) {
         Application.getInventory();
         this.user = this.app.user;
-        this.alerts = this.app.alerts;
         this.inventory = this.app.inventory;
     }
 
@@ -35,13 +32,8 @@ export class InventoryComponent implements OnInit {
     selectItem($event: any, item: InventoryGrouping) {
         $event.stopPropagation();
         (<any>item).selected = !(<any>item).selected;
+        (<any>item).selected ? this.selectedItems.push(item) : this.selectedItems.splice(this.selectedItems.indexOf(item), 1);
         return false;
-    }
-
-    debug() {
-        alert(this.user);
-        alert(Application.getApp());
-        var ap2 = Application.getApp();
     }
 
     viewItem(viewItem: InventoryGrouping) {
@@ -56,19 +48,6 @@ export class InventoryComponent implements OnInit {
 
     submitItem() {
         Application.submitInventoryAction(this.selectedAction.id, this.activeItemGroup);
-
-    //    this.newMessage.sender = this.user;
-    //    if (this.replyMessage != null) {
-    //        this.newMessage.parentMessage = this.replyMessage;
-    //        this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
-    //        this.newMessage.recipient = this.replyMessage.sender;
-    //    }
-    //    Application.sendMessage(this.newMessage);
-    }
-
-
-    acceptRequest(friendRequest: Item[]) {
-      //  Application.acceptFriendRequest(friendRequest);
     }
 
     public searchFriends(searchTerm: string) {
@@ -76,7 +55,6 @@ export class InventoryComponent implements OnInit {
             resolve(Application.searchFriends(searchTerm));
         });
     }
-
 
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {
@@ -96,10 +74,7 @@ export class InventoryComponent implements OnInit {
     }
 
     public onItemSelected(result: { resultText: string, resultData: User }) {
-        this.composeToFriend = result.resultData;
+       // this.composeToFriend = result.resultData;
     }
 
-    public deselctComposeFriend() {
-        this.composeToFriend = null;
-    }
 }
