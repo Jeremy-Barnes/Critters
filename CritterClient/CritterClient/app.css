@@ -33,11 +33,35 @@ body {
     }
 }
 
+@media all and (min-width: 768px) {
+    .container {
+        width: 490px;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .container {
+        width: 710px;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .container {
+        width: 910px;
+    }
+}
+
+@media all and (min-width: 1460px) {
+    .container {
+        width: 1170px;
+    }
+}
+
 .container {
     margin-left: 0px;
     padding-left: 30px;
-    padding-right: 15px;
-    padding-top: 20px;
+    padding-right: 30px;
+    padding-top: 30px;
 }
 
 @media(max-width:767px) {
@@ -132,15 +156,19 @@ img {
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
 }
 
-.cardMain {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+#specialGame .card {
+    padding: 30px;
 }
 
-.gameCard {
-    position:relative;
-    height: 200px;
+div.card16x9 {
+	width: 100%;
+	padding-bottom: 56.25%; /* 16:9 */
+	position: relative;
+}
+
+div.card16x9 > div {
+	position: absolute;
+	top: 0; bottom: 0; left: 0; right: 0;
 }
 
 
@@ -234,9 +262,15 @@ img {
       display: inline-block;
   }
 
+
+.gameCard {
+    margin-bottom: 30px;
+    cursor: pointer;
+}
+
 .gameCard img {
     width: 100%;
-    min-height: 100%;
+    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
 }
 
 .gameTitle {
@@ -333,7 +367,7 @@ a:hover, a:focus {color: #0F8DBA;}
     padding-bottom: 20px;
 }
 .page-title * {
-    margin-left: 15px;
+    margin-left: 30px;
 }
 .page-title * {
     margin-top: 0px;
@@ -464,7 +498,7 @@ form input, form select {
 .form-control {
     border: 1px solid #acacac;
     padding: 10px 14px;
-    height: auto;
+    height: 44px;
     font-size: inherit;
     border-radius: 5px;
 }
@@ -914,29 +948,7 @@ iframe {
     }
 }
 
-@media all and (min-width: 768px) {
-    .container {
-        width: 490px;
-    }
-}
 
-@media all and (min-width: 992px) {
-    .container {
-        width: 710px;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .container {
-        width: 910px;
-    }
-}
-
-@media all and (min-width: 1460px) {
-    .container {
-        width: 1170px;
-    }
-}
 
 
 

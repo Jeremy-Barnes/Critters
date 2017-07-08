@@ -7,36 +7,42 @@
     
     <div class="container">
         <div id="specialGame" class="row">
-            <div class="col-md-12 card">
-                <div class="col-md-6">
-                    <h2>Daily Double</h2>
-                    <p>Earn double cbuxx when you play {{specialGame.gameName}}</p>
-                    <p>
-                        {{specialGame.gameDescription}}
-                    </p>
-                    <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="fa fa-play-circle-o"></i></span>
-                </div>
-                <div class="col-md-6 centered">
-                    <div class="imgCenterer">
-                        <span class="imgCenterHelper"></span> <!--necessary garbage see  https://stackoverflow.com/a/7310398/4885507 -->
-                        <img class="framed centeredImg" src="{{specialGame.gameIconPath}}" />
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Daily Double</h2>
+                            <p>Earn double cbuxx when you play {{specialGame.gameName}}</p>
+                            <p>
+                                {{specialGame.gameDescription}}
+                            </p>
+                            <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="fa fa-play-circle-o"></i></span>
+                        </div>
+                        <div class="col-md-6 centered">
+                            <div class="imgCenterer">
+                                <span class="imgCenterHelper"></span> <!--necessary garbage see  https://stackoverflow.com/a/7310398/4885507 -->
+                                <img class="framed centeredImg" src="{{specialGame.gameIconPath}}" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 card gameSearchBar">
-                <div class="row">
-                    <div class="col-lg-4"><h2>Find a Game</h2></div>
-                    <div class="col-md-6 col-lg-4 form-inline">
-                        <input type="text" class="form-control" placeholder="keyword search" /> <div class="btn btn-md btn-primary">search</div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 form-inline">
-                        <select class="form-control" name="gameCategory">
-                            <option class="placeholder" value="" disabled selected>Category</option>
-                            <option *ngFor="let category of categories" [ngValue]="category">{{category}}</option>
-                        </select>
-                        <div class="btn btn-md btn-primary">search</div>
+            <div class="col-md-12">
+                <div class="card gameSearchBar">
+                    <div class="row">
+                        <div class="col-lg-4"><h2>Find a Game</h2></div>
+                        <div class="col-md-6 col-lg-4 form-inline">
+                            <input type="text" class="form-control" placeholder="keyword search" /> <div class="btn btn-primary">search</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 form-inline">
+                            <select class="form-control" name="gameCategory">
+                                <option class="placeholder" value="" disabled selected>Category</option>
+                                <option *ngFor="let category of categories" [ngValue]="category">{{category}}</option>
+                            </select>
+                            <div class="btn btn-primary">search</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,10 +51,8 @@
             <div class="col-md-4" *ngFor="let game of games">
                 <!--TODO paginate-->
                 <div class="card gameCard" (click)="selectGame(game)">
-                    <div class="cardMain">
-                        <img src="{{game.gameIconPath}}" />
-                    </div>
-                    <div class="gameTitle"> <h2>{{game.gameName}}</h2> </div>
+                    <div class="card16x9"><div><img src="{{game.gameIconPath}}" style="height: 100%;"><div class="gameTitle"> <h2>{{game.gameName}}</h2> </div></div></div>
+                    
                 </div>
             </div>
         </div>
