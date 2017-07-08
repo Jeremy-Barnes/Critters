@@ -20,23 +20,29 @@
         <!----------------------DETAIL VIEW------------------>
         <div id="viewItemDetail" class="modal fade" role="dialog">
             <div class="modal-dialog modal-md" role="document">
-                <div *ngIf="activeItemGroup.length > 0" class="modal-content">
+                <div *ngIf="activeItem" class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-6"><img class="framed" src="{{activeItemGroup[0].description.imagePath}}" /></div>
-                            <div class="col-sm-6">
-                                <h2>{{activeItemGroup[0].description.itemName}}</h2>
-                                <p>{{activeItemGroup[0].description.itemDescription}} -1 this is awful. Basically, you set the width to 100% and then the margin to -50. But is causes other problems, like the button rises above the containing element, and doesn't work well with resizing. </p>
-                                <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
-                                    <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
-                                </select>
-                                <spinner [minimumValue]="0" [maximumValue]="activeItemGroup.length" (result-out)="selectedQuantityChange($event)"></spinner>
-                                <button class="btn-primary btn" (click)="submitItem()">submit</button>
-                                <button class="btn-default btn">cancel</button>
+                        <div *ngIf="activeItem.inventoryItemsGrouped.length > 0 && !actionCompleted">
+                            <div class="row">
+                                <div class="col-sm-6"><img class="framed" src="{{activeItem.inventoryItemsGrouped[0].description.imagePath}}" /></div>
+                                <div class="col-sm-6">
+                                    <h2>{{activeItem.inventoryItemsGrouped[0].description.itemName}}</h2>
+                                    <p>{{activeItem.inventoryItemsGrouped[0].description.itemDescription}} -1 this is awful. Basically, you set the width to 100% and then the margin to -50. But is causes other problems, like the button rises above the containing element, and doesn't work well with resizing. </p>
+                                    <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
+                                        <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
+                                    </select>
+                                    <spinner [minimumValue]="0" [maximumValue]="activeItem.inventoryItemsGrouped.length" (result-out)="selectedQuantityChange($event)"></spinner>
+                                    <button class="btn-primary btn" (click)="submitItem()">submit</button>
+                                    <button class="btn-default btn">cancel</button>
+                                </div>
                             </div>
+                        </div>
+                        <div *ngIf="actionCompleted">
+                            <h2>Action Complete</h2>
+                            <p>{{statusText}}</p>
                         </div>
                     </div>
                 </div>

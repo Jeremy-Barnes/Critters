@@ -137,7 +137,15 @@ export class ServiceMethods {
     }
 
     public static deleteMessage(messageId: number): JQueryPromise<void> {
-        return ServiceMethods.doAjax("deleteMail", "chat", messageId, "GET");
+        return ServiceMethods.doAjax("deleteMessage", "chat", messageId, "GET");
+    }
+
+    public static deleteMail(user: User, messageIds: number[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("deleteMail", "chat", { user: user, messages: messageIds });
+    }
+
+    public static setUnread(user: User, messageIds: number[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("setUnread", "chat", { user: user, messages: messageIds });
     }
 
     public static getUnreadMail(): JQueryPromise<Message[]> {

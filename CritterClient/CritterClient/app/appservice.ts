@@ -205,6 +205,14 @@ export class Application {
             ServiceMethods.setDelievered({ messages: messages, user: Application.getApp().user });
     }
 
+    public static massDeleteMessages(messages: Message[]) {
+        ServiceMethods.deleteMail(Application.getApp().user, messages.map(m => m.messageID)).done(() => { });
+    }
+
+    public static massSetUnread(messages: Message[]) {
+        ServiceMethods.setUnread(Application.getApp().user, messages.map(m => m.messageID)).done(() => { });
+    }
+
     public static searchFriends(searchTerm: string) {
         searchTerm = searchTerm.toLowerCase();
         var app = Application.getApp();
@@ -241,11 +249,28 @@ export class Application {
         });
     }
 
-    public static submitInventoryAction(actionCode: number, items: Item[]) {
-        switch (actionCode) {
-            case 0: ServiceMethods.moveInventoryItemToStore(this.getApp().user, items); break;
-            case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
-        }
+    public static moveItemsToStore(items: Item[], containingGroup: InventoryGrouping) {
+        return ServiceMethods.moveInventoryItemToStore(this.getApp().user, items).done((i: InventoryGrouping[]) => {
+            items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                var inventory = Application.getApp().inventory;
+                inventory.splice(inventory.indexOf(containingGroup), 1);
+            }
+        });
+    }
+
+    public static moveItemsToGarbage(items: Item[], containingGroup: InventoryGrouping): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.discardInventoryItems(this.getApp().user, items).done((i: InventoryGrouping[]) => {
+            items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                var inventory = Application.getApp().inventory;
+                inventory.splice(inventory.indexOf(containingGroup), 1);
+            }
+        });
     }
 
     public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {

@@ -513,6 +513,10 @@ select .placeholder {
     color: #acacac!important;
 }
 
+select.ng-pristine {
+    color: #acacac!important;
+}
+
 /*
  * Navs
  * --------------------------------------------------

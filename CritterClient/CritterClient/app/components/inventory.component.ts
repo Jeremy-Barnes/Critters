@@ -12,25 +12,29 @@ export class InventoryComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
 
+    /**** View State Controllers ***/
     inventory: InventoryGrouping[];
-    activeItemGroup: Item[] = [];
+    activeItem: InventoryGrouping;
     selectedQuantity: number = 0;
 
     selectedItems: InventoryGrouping[] = [];
     bulkSelect: boolean = false;
 
     searchText: string = "";
-    fullInventoryStoredForSearch: InventoryGrouping[] = [];
 
     itemActions: { id: number, text: string }[] = [];
     selectedAction: { id: number, text: string } = null;
-   
+    actionCompleted: boolean = false;
+    statusText: string = "";
+
+    /******** Logical Storage ******/
+    fullInventoryStoredForSearch: InventoryGrouping[] = [];
 
     sorts: { id: number, text: string }[] = [{ id: 1, text: "Name (A-Z)" }, { id: 2, text: "Name (Z-A)" }, { id: 3, text: "Quantity (High-Low)" }, { id: 4, text: "Quantity (Low-High)" },
         { id: 5, text: "Rarity (High-Low)" }, { id: 6, text: "Rarity (Low-High)" }, { id: 7, text: "Group by type" }]
     activeSortBy: { id: number, text: string } = null;
     private defaultActions = [{ id: 0, text: "Move to Shop" }, { id: 1, text: "Discard Item" }]
-    private contextActions = [{id: 2, classes: [1], text: "Feed Item To Pet"}]
+    private contextActions = [{ id: 2, classes: [1], text: "Feed to Pet" }, { id: 3, classes: [4], text: "Equip to Pet" }, { id: 4, classes: [2], text: "Play with toy" }]
 
     constructor(private route: ActivatedRoute) {
         Application.getInventory();
@@ -63,20 +67,46 @@ export class InventoryComponent implements OnInit {
     }
 
     viewItem(viewItem: InventoryGrouping) {
-        this.activeItemGroup.length = 0;
-        this.activeItemGroup.push(...viewItem.inventoryItemsGrouped);
+        this.actionCompleted = false;
+        this.activeItem = viewItem;
         this.selectedQuantity = 0;
 
-        //todo get context sensitive actions based on item type
         this.itemActions.length = 0;
-        this.itemActions.push(this.defaultActions[0]);
-        this.itemActions.push(this.defaultActions[1]);
+        this.itemActions.push(...this.defaultActions);
+        this.itemActions.push(...this.contextActions.filter((act) => act.classes.indexOf(this.activeItem.inventoryItemsGrouped[0].description.itemClass.itemClassificationID) >= 0));
 
         (<any>$("#viewItemDetail")).modal('show'); //I'm not happy about this either.
     }
 
     submitItem() {
-        Application.submitInventoryAction(this.selectedAction.id, this.activeItemGroup);
+        var items: Item[] = [];
+        if (this.selectedQuantity == 0) {
+            //do nothing, complain. showComplaint()
+            alert("No no");
+        } else {
+            if (this.activeItem.inventoryItemsGrouped.length == this.selectedQuantity) {
+                items = [];
+                items.push(...this.activeItem.inventoryItemsGrouped);
+            } else {
+                items = this.activeItem.inventoryItemsGrouped.slice(0, this.selectedQuantity);
+            }
+            var promise: any;
+            switch (this.selectedAction.id) {
+                case 0: promise = Application.moveItemsToStore(items, this.activeItem);
+                    this.statusText = this.selectedQuantity + " " + items[0].description.itemName + (this.selectedQuantity == 1 ? " " : "s ") + "moved to your shop!";
+                    break;
+                case 1: promise = Application.moveItemsToGarbage(items, this.activeItem);
+                    this.statusText = this.selectedQuantity + " " + items[0].description.itemName +(this.selectedQuantity == 1 ? " " : "s ") + "discarded!";
+                    break;
+                case 2: alert("Nom nom"); break;
+                case 3: alert("SHIIIIING"); break;
+                case 4: alert("what fun"); break;
+            }
+            var self = this;
+            promise.done((group: InventoryGrouping) => {
+                self.actionCompleted = true;
+            });
+        } 
     }
 
     onChangeSort(event: any) {

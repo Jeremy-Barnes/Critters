@@ -81,6 +81,7 @@ export class MessageComponent implements OnInit {
 
     deleteConversation(messages: Message[]) {
         alert("this one doesn't work yet, make the server op for it, dummy");
+        Application.massDeleteMessages(messages);
     }
 
     markUnread(messages: Message[]) {
@@ -113,6 +114,10 @@ export class MessageComponent implements OnInit {
     viewDetail(viewMessage: Conversation) {
         this.activeConversation = viewMessage.messages;
         Application.markMessagesRead(this.activeConversation.filter(m => !m.read && m.recipient.userID == this.user.userID))
+    }
+
+    viewSentDetail(message: Message) {
+        this.activeConversation = [message];
     }
 
     sendMessage() {
