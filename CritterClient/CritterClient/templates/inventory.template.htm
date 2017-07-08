@@ -1,11 +1,17 @@
 ﻿<div class="container-fluid">
     <div class="page-title">
-        <h1>Inventory</h1>
-        <div>
-            <input type="text" [(ngModel)]="searchText" /> <button class="btn btn-primary" (click)="searchGames()">search</button>
-            <select name="gameSort" [(ngModel)]="activeSortBy" (ngModelChange)="onChange($event)">
-                <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort}}</option>
-            </select>
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>Inventory</h1>
+            </div>
+            <div class="col-sm-3 searchBoxHolder">
+                <input type="text" [(ngModel)]="searchText" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
+            </div>
+            <div class="col-sm-2 sortBoxHolder">
+                <select name="gameSort" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+                    <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
@@ -27,6 +33,7 @@
                                 <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
                                     <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
                                 </select>
+                                <spinner [minimumValue]="0" [maximumValue]="activeItemGroup.length" (result-out)="selectedQuantityChange($event)"></spinner>
                                 <button class="btn-primary btn" (click)="submitItem()">submit</button>
                                 <button class="btn-default btn">cancel</button>
                             </div>
@@ -43,9 +50,9 @@
 
 
                 <div class="buttons">
-                    <button class="btn btn-primary">bulk select</button>
-                    <div class="conditionalButtons inlineblock">
-                        <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
+                    <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
+                    <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
+                        <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
                         <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-envelope-open-o"></i> move</button>
                     </div>
                 </div>
@@ -53,7 +60,9 @@
                 <div class="row">
                     <div class="col-md-3" *ngFor="let item of inventory; let i = index">
                         <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
-                            <div class="circlecheckbox" (click)="selectItem($event, item)">
+                            <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
+                            </div>
+                            <div *ngIf="bulkSelect" class="circlecheckbox" (click)="selectItem($event, item)">
                                 <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
                                 <label [attr.for]="'inventoryCheckbox' + i">
                                     <i class="fa fa-check-circle"></i>

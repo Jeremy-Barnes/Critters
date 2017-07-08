@@ -20,6 +20,7 @@ import { ErrorComponent } from './components/error.component'
 import { InventoryComponent} from './components/inventory.component'
 import { GamesComponent} from './components/games.component'
 import { LimitToPipe } from './limitto.pipe'
+import { Spinner } from './components/spinner.component'
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { LimitToPipe } from './limitto.pipe'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

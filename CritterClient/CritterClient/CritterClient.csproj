@@ -78,6 +78,7 @@
     <TypeScriptCompile Include="app\components\error.component.ts" />
     <TypeScriptCompile Include="app\components\inventory.component.ts" />
     <TypeScriptCompile Include="app\components\messages.component.ts" />
+    <TypeScriptCompile Include="app\components\spinner.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />

@@ -248,6 +248,10 @@ export class Application {
         }
     }
 
+    public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.searchInventory(searchTerm);
+    }
+
     public static getGames(): JQueryPromise<GamesInfo> {
         if (Application.getApp().games.length = 0) {
             return ServiceMethods.getGames().done((games: GamesInfo) => {

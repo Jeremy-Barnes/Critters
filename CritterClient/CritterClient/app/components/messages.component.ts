@@ -89,21 +89,22 @@ export class MessageComponent implements OnInit {
     }
 
     affectSelectedInbox(deleteMessages: boolean) {
-        for (let i = 0; i < this.messages.length; i++) {
-            let conversation = this.messages[i];
-            if (conversation.selected) deleteMessages ? this.deleteConversation(conversation.messages) : this.markUnread(conversation.messages);
+        if (deleteMessages) {
+            var deletes: Message[] = [];
+            this.selectedConversations.forEach(p => deletes.push(...p.messages));
+            this.deleteConversation(deletes);
+        } else {
+            var unreads: Message[] = [];
+            this.selectedConversations.forEach(p => unreads.push(...p.messages));
+            this.markUnread(unreads);
         }
     }
 
     affectSelectedSentbox(deleteMessages: boolean) {
-        let updates: Message[] = [];
-        for (let i = 0; i < this.sentMessages.length; i++) {
-            let message = this.sentMessages[i];
-            if (message.selected) updates.push(message);
+        if (deleteMessages) {
+            this.deleteConversation(this.selectedMessages);
         }
-        deleteMessages ? this.deleteConversation(updates) : this.markUnread(updates);
     }
-    
 
     replyLatest() {
         this.reply(this.activeConversation[this.activeConversation.length-1]);

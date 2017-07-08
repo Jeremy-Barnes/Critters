@@ -58,8 +58,8 @@
                         <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
                         <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
                         <div class="conditionalButtons inlineblock">
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(true)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(false)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
                         </div>
                     </div>
 
@@ -93,7 +93,7 @@
                                     <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
                                 </div>
                                 <div class="messageText">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
-</td>
+                            </td>
                             <td class="inlineblock" class="messageDate">
                                 {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}
                             </td>
@@ -104,8 +104,8 @@
                         <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
                         <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
                         <div class="conditionalButtons inlineblock">
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(true)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(false)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                         <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
                         <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
                         <div class="conditionalButtons inlineblock">
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedSentbox(true)" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
                         </div>
                     </div>
 
@@ -153,7 +153,7 @@
                         <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
                         <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
                         <div class="conditionalButtons inlineblock">
-                            <button class="btn btn-default" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedSentbox(true)" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
                         </div>
                     </div>
                 </div>

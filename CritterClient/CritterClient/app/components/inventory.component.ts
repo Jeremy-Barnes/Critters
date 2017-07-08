@@ -17,7 +17,15 @@ export class InventoryComponent implements OnInit {
     selectedItems: InventoryGrouping[] = [];
     itemActions: { id: number, text: string }[] = [];
     selectedAction: { id: number, text: string } = null;
+    fullInventoryStoredForSearch: InventoryGrouping[] = [];
+    searchText: string = "";
+    bulkSelect: boolean = false;
+    selectedQuantity: number = 0;
+   
 
+    sorts: { id: number, text: string }[] = [{ id: 1, text: "Name (A-Z)" }, { id: 2, text: "Name (Z-A)" }, { id: 3, text: "Quantity (High-Low)" }, { id: 4, text: "Quantity (Low-High)" },
+        { id: 5, text: "Rarity (High-Low)" }, { id: 6, text: "Rarity (Low-High)" }, { id: 7, text: "Group by type" }]
+    activeSortBy: { id: number, text: string } = null;
     private defaultActions = [{ id: 0, text: "Move to Shop"}, {id: 1, text: "Discard Item"}]
 
     constructor(private route: ActivatedRoute) {
@@ -36,13 +44,27 @@ export class InventoryComponent implements OnInit {
         return false;
     }
 
+    toggleBulk() {
+        this.bulkSelect = !this.bulkSelect;
+        if (!this.bulkSelect) {
+            this.selectedItems = null;
+        }
+    }
+
+    selectedQuantityChange(value: number) {
+        this.selectedQuantity = value;
+    }
+
     viewItem(viewItem: InventoryGrouping) {
         this.activeItemGroup.length = 0;
         this.activeItemGroup.push(...viewItem.inventoryItemsGrouped);
+        this.selectedQuantity = 0;
+
+        //todo get context sensitive actions based on item type
         this.itemActions.length = 0;
         this.itemActions.push(this.defaultActions[0]);
-        //todo get context sensitive actions based on item type
         this.itemActions.push(this.defaultActions[1]);
+
         (<any>$("#viewItemDetail")).modal('show'); //I'm not happy about this either.
     }
 
@@ -50,31 +72,53 @@ export class InventoryComponent implements OnInit {
         Application.submitInventoryAction(this.selectedAction.id, this.activeItemGroup);
     }
 
-    public searchFriends(searchTerm: string) {
-        return new Promise((resolve) => {
-            resolve(Application.searchFriends(searchTerm));
+    onChangeSort(event: any) {
+        this.activeSortBy = event;
+        var self = this;
+        this.inventory.sort((a, b) => {
+            switch (self.activeSortBy.id) {
+                case SortType.NameAsc: return a.inventoryItemsGrouped[0].description.itemName > b.inventoryItemsGrouped[0].description.itemName ? 1 :
+                    a.inventoryItemsGrouped[0].description.itemName < b.inventoryItemsGrouped[0].description.itemName ? -1 : 0;
+                case SortType.NameDesc: return a.inventoryItemsGrouped[0].description.itemName > b.inventoryItemsGrouped[0].description.itemName ? -1 :
+                    a.inventoryItemsGrouped[0].description.itemName < b.inventoryItemsGrouped[0].description.itemName ? 1 : 0;
+                case SortType.QtyAsc: return a.inventoryItemsGrouped.length < b.inventoryItemsGrouped.length ? 1 :
+                    a.inventoryItemsGrouped.length > b.inventoryItemsGrouped.length ? -1 : 0;
+                case SortType.QtyDesc: return a.inventoryItemsGrouped.length > b.inventoryItemsGrouped.length ? 1 :
+                    a.inventoryItemsGrouped.length < b.inventoryItemsGrouped.length ? -1 : 0;
+                case SortType.RarityAsc: return a.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID < b.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID ? 1 :
+                    a.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID > b.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID ? -1 : 0;
+                case SortType.RarityDesc: return a.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID > b.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID ? 1 :
+                    a.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID < b.inventoryItemsGrouped[0].description.rarity.itemRarityTypeID ? -1 : 0;
+                case SortType.Type: a.inventoryItemsGrouped[0].description.itemClass.itemClassificationID > b.inventoryItemsGrouped[0].description.itemClass.itemClassificationID ? 1 :
+                    a.inventoryItemsGrouped[0].description.itemClass.itemClassificationID < b.inventoryItemsGrouped[0].description.itemClass.itemClassificationID ? -1 : 0;
+            }
+            return 0;
         });
     }
 
-    public searchUsers(searchTerm: string) {
-        return new Promise((resolve) => {
-            Application.searchUsers(searchTerm).done((results: User[]) => {
-                var resultsForDisplay: { resultText: string, resultData: User }[] = [];
-                for (var i = 0; i < results.length; i++) {
-                    var resultData = results[i];
-
-                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
-                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
-                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
-                    resultsForDisplay.push({ resultText, resultData });
-                }
-                resolve(resultsForDisplay);
-            });
+    public searchItems(searchTerm: string) {
+        this.fullInventoryStoredForSearch.push(...this.inventory);
+        var self = this;
+        //do some kind of loading icon TODO
+        Application.searchInventory(searchTerm).done((results: InventoryGrouping[]) => { //todo resolve loading icon
+            self.inventory.length = 0;
+            self.inventory.push(...results);
         });
     }
 
-    public onItemSelected(result: { resultText: string, resultData: User }) {
-       // this.composeToFriend = result.resultData;
+    public dismissSearch() {
+        this.inventory.length = 0;
+        this.inventory.push(...this.fullInventoryStoredForSearch);
     }
 
+}
+
+enum SortType {
+    NameAsc = 1,
+    NameDesc,
+    QtyAsc,
+    QtyDesc,
+    RarityAsc,
+    RarityDesc,
+    Type
 }
