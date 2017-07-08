@@ -151,7 +151,7 @@ img {
     padding-right: 0px;
 }
 .searchBoxHolder > input {
-    width: 70%;
+    width: 70% !important;
 }
 .sortBoxHolder {
     margin-left: 0px;

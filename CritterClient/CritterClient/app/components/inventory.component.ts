@@ -14,19 +14,23 @@ export class InventoryComponent implements OnInit {
 
     inventory: InventoryGrouping[];
     activeItemGroup: Item[] = [];
+    selectedQuantity: number = 0;
+
     selectedItems: InventoryGrouping[] = [];
+    bulkSelect: boolean = false;
+
+    searchText: string = "";
+    fullInventoryStoredForSearch: InventoryGrouping[] = [];
+
     itemActions: { id: number, text: string }[] = [];
     selectedAction: { id: number, text: string } = null;
-    fullInventoryStoredForSearch: InventoryGrouping[] = [];
-    searchText: string = "";
-    bulkSelect: boolean = false;
-    selectedQuantity: number = 0;
    
 
     sorts: { id: number, text: string }[] = [{ id: 1, text: "Name (A-Z)" }, { id: 2, text: "Name (Z-A)" }, { id: 3, text: "Quantity (High-Low)" }, { id: 4, text: "Quantity (Low-High)" },
         { id: 5, text: "Rarity (High-Low)" }, { id: 6, text: "Rarity (Low-High)" }, { id: 7, text: "Group by type" }]
     activeSortBy: { id: number, text: string } = null;
-    private defaultActions = [{ id: 0, text: "Move to Shop"}, {id: 1, text: "Discard Item"}]
+    private defaultActions = [{ id: 0, text: "Move to Shop" }, { id: 1, text: "Discard Item" }]
+    private contextActions = [{id: 2, classes: [1], text: "Feed Item To Pet"}]
 
     constructor(private route: ActivatedRoute) {
         Application.getInventory();
@@ -35,6 +39,7 @@ export class InventoryComponent implements OnInit {
     }
 
     ngOnInit() {
+
     }
 
     selectItem($event: any, item: InventoryGrouping) {
@@ -47,7 +52,9 @@ export class InventoryComponent implements OnInit {
     toggleBulk() {
         this.bulkSelect = !this.bulkSelect;
         if (!this.bulkSelect) {
-            this.selectedItems = null;
+            this.selectedItems.forEach(s => s.selected = false);
+            this.selectedItems.length = 0;
+
         }
     }
 

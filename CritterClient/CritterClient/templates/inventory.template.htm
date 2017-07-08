@@ -4,11 +4,11 @@
             <div class="col-sm-6">
                 <h1>Inventory</h1>
             </div>
-            <div class="col-sm-3 searchBoxHolder">
-                <input type="text" [(ngModel)]="searchText" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
+            <div class="col-sm-3 searchBoxHolder form-inline">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword search" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
             </div>
-            <div class="col-sm-2 sortBoxHolder">
-                <select name="gameSort" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+            <div class="col-sm-2 sortBoxHolder form-inline">
+                <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
             </div>
@@ -47,8 +47,6 @@
         <!----------------------MAIN VIEW------------------>
         <div id="mainView">
             <div>
-
-
                 <div class="buttons">
                     <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
                     <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
