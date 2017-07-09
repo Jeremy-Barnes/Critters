@@ -18,7 +18,8 @@ export class MessageComponent implements OnInit {
     replyMessage: Message;
     newMessage: Message;
     composeToFriend: User;
-
+    selectedConversations: Conversation[] = [];
+    selectedMessages: Message[] = [];
     pendingFriendRequests: Friendship[];
     outstandingFriendRequests: Friendship[];
 
@@ -42,6 +43,25 @@ export class MessageComponent implements OnInit {
 
     composeNewMessage() {
         this.newMessage = new Message();
+        this.newMessage.selected = false;
+    }
+
+    selectMessage($event: any, item: Message) {
+        $event.stopPropagation();
+        (<any>item).selected = !(<any>item).selected;
+        (<any>item).selected ? this.selectedMessages.push(item) : this.selectedMessages.splice(this.selectedMessages.indexOf(item), 1);
+        return false;
+    }
+
+    selectConversation($event: any, item: Conversation) {
+        $event.stopPropagation();
+        (<any>item).selected = !(<any>item).selected;
+        (<any>item).selected ? this.selectedConversations.push(item) : this.selectedConversations.splice(this.selectedConversations.indexOf(item), 1);
+        return false;
+    }
+
+    isUnread(conversation: Conversation) {
+        return conversation.messages.filter(m => !m.read && m.recipient.userID == this.user.userID).length > 0
     }
 
     returnToOverview() {
@@ -59,8 +79,32 @@ export class MessageComponent implements OnInit {
         this.newMessage = null;
     }
 
-    deleteConversation(...message: Message[]) {
+    deleteConversation(messages: Message[]) {
         alert("this one doesn't work yet, make the server op for it, dummy");
+        Application.massDeleteMessages(messages);
+    }
+
+    markUnread(messages: Message[]) {
+        alert("this one doesn't work yet, make the server op for it, dummy");
+        messages.forEach(m => m.read = true);
+    }
+
+    affectSelectedInbox(deleteMessages: boolean) {
+        if (deleteMessages) {
+            var deletes: Message[] = [];
+            this.selectedConversations.forEach(p => deletes.push(...p.messages));
+            this.deleteConversation(deletes);
+        } else {
+            var unreads: Message[] = [];
+            this.selectedConversations.forEach(p => unreads.push(...p.messages));
+            this.markUnread(unreads);
+        }
+    }
+
+    affectSelectedSentbox(deleteMessages: boolean) {
+        if (deleteMessages) {
+            this.deleteConversation(this.selectedMessages);
+        }
     }
 
     replyLatest() {
@@ -69,19 +113,28 @@ export class MessageComponent implements OnInit {
 
     viewDetail(viewMessage: Conversation) {
         this.activeConversation = viewMessage.messages;
-        Application.markMessagesRead(this.activeConversation.filter(m => !m.delivered && m.recipient.userID == this.user.userID))
+        Application.markMessagesRead(this.activeConversation.filter(m => !m.read && m.recipient.userID == this.user.userID))
+    }
+
+    viewSentDetail(message: Message) {
+        this.activeConversation = [message];
     }
 
     sendMessage() {
         this.newMessage.sender = this.user;
+        this.newMessage.dateSent = new Date(Date.now());
+        this.newMessage.selected = false;
         if (this.replyMessage != null) {
             this.newMessage.parentMessage = this.replyMessage;
             this.newMessage.rootMessage = this.replyMessage.rootMessage != null ? this.replyMessage.rootMessage : this.activeConversation[0];
             this.newMessage.recipient = this.replyMessage.sender;
+            this.activeConversation.push(this.newMessage);
         } else {
             this.newMessage.recipient = this.composeToFriend;
         }
-        Application.sendMessage(this.newMessage);
+        var self = this;
+        var newMessagePersist: Message = this.newMessage;
+        Application.sendMessage(this.newMessage).done((message: Message) => newMessagePersist.messageID = message.messageID);
         this.newMessage = null;
     }
 
@@ -102,7 +155,6 @@ export class MessageComponent implements OnInit {
             resolve(Application.searchFriends(searchTerm));
         });
     }
-
 
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {

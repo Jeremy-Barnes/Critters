@@ -37,12 +37,9 @@ export class CreatePetComponent implements OnInit {
         pet.petSpecies = this.activeSpecies;
         pet.sex = this.activeSex;
 
-        Application.submitCreatePet(pet).then((p: Pet) => {
-            this.user.pets.push(p);
-        }).fail((error: JQueryXHR) => {
+        Application.submitCreatePet(pet).fail((error: JQueryXHR) => {
             alert("Error text received from server (do something with this later): \n\n" + error.responseText)
         });
-
         return false;
     }
 

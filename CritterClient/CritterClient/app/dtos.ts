@@ -118,12 +118,14 @@ export class Message {
     showRecipient: boolean;
     read: boolean;
     delivered: boolean;
+    selected: boolean = false;
 
 }
 
 export class Conversation {
     messages: Message[];
     participants: User[];
+    selected: boolean = false;
 }
 
 export class Notification {
@@ -134,7 +136,7 @@ export class Notification {
 export class Store {
     storeConfigID: number;
     ownerId: number;
-    storeStock: Item[];
+    storeStock: InventoryGrouping[];
     description: string;
     name: string;
     storeClerkImagePath: string;
@@ -171,6 +173,7 @@ export class ItemRarityType {
 
 export class InventoryGrouping {
     inventoryItemsGrouped: Item[];
+    selected: boolean = false;
 }
 
 export class GameThumbnail {

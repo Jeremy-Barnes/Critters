@@ -30,4 +30,8 @@ export class UserProfileComponent implements OnInit {
     sendFriend() {
         Application.sendFriendRequest(this.user.userID, this.viewUser.userID);
     }
+
+    sendMessage() {
+        alert("TODO");
+    }
 }

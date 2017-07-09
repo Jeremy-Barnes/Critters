@@ -1,8 +1,9 @@
-﻿<div class="container-fluid page-title">
-    <h1>Messaging I guess!</h1>
+﻿<div class="container-fluid">
+    <div class="page-title">
+        <h1>Mail</h1>
+    </div>
 </div>
-<div class="container">
-    <div class="inlineblock">
+<div class="container-fluid container-maxWidth">
         <!----------------------CONVERSATION VIEW------------------>
         <div id="viewDetail" *ngIf="activeConversation!=null">
             Conversation view
@@ -26,7 +27,6 @@
         </div>
 
 
-
         <!----------------------COMPOSE VIEW------------------>
         <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
             To: <autocomplete *ngIf="composeToFriend == null"
@@ -41,8 +41,6 @@
         </div>
 
 
-
-
         <!----------------------MAIN VIEW------------------>
         <div id="mainView" *ngIf="activeConversation==null && newMessage == null">
             <ul class="nav nav-tabs">
@@ -53,48 +51,108 @@
             <div class="tab-content">
 
                 <div id="inbox" class="tab-pane fade in active">
-                    {{messages.length}} Conversations <input type="button" (click)="composeNewMessage()" value="New Message" />
-                    <br />
-                    <div *ngFor="let conversation of messages">
-                        <div class="messageSubject">
-                            {{conversation.messages[0].messageSubject}}
-                            <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div>
+                    <div class="buttons">
+                        <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
+                        <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
+                        <div class="conditionalButtons inlineblock">
+                            <button class="btn btn-default" (click)="affectSelectedInbox(true)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(false)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
                         </div>
-                        <div>
-                            <span><input type="checkbox" [(ngModel)]="conversation.delete" /></span>
-                            <span>
-                                From:
-                                <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
-                                    {{conversation.messages[0].sender.userName}}
-                                </a> | {{conversation.messages[0].dateSent.toLocaleString()}}
-                            </span>
-                        </div>
-                        <input type="button" (click)="viewDetail(conversation)" value="View More" />
-                        <input type="button" (click)="deleteConversation(conversation.messages)" value="Delete Message" />
-                        <br />
                     </div>
 
-                    <input type="submit" value="Select All" />
-                    <input type="submit" value="Delete" />
+                    <table class="table">
+                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages; let i = index">
+                            <td> 
+                                <div class="circlecheckbox" (click)="selectConversation($event, conversation)">
+                                    <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.selected" name="" /> 
+                                    <label [attr.for]="'inboxCheckbox' + i" >
+                                        <i class="fa fa-check-circle"></i>
+                                    </label >
+                                </div>
+                            </td>
+                            <td (click)="viewDetail(conversation)" class="inlineblock messageUserThumb">
+                                <span>
+                                    <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]">
+                                        <img src="/img/horrible clion_red.png" class="userThumb" />
+                                    </a>
+                                </span>
+                            </td>
+                            <td (click)="viewDetail(conversation)" class="inlineblock messageUser">
+                                <span>
+                                    <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
+                                        {{conversation.messages[0].sender.userName}}
+                                    </a>
+                                </span>
+                            </td>
+                            <td class="inlineblock" (click)="viewDetail(conversation)">
+                                <div class="messageSubject inlineblock">
+                                    {{conversation.messages[0].messageSubject | limitTo:50}}
+                                    <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
+                                </div>
+                                <div class="messageText">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
+                            </td>
+                            <td class="inlineblock messageDate" (click)="viewDetail(conversation)">
+                                {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="buttons">
+                        <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
+                        <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
+                        <div class="conditionalButtons inlineblock">
+                            <button class="btn btn-default" (click)="affectSelectedInbox(true)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                            <button class="btn btn-default" (click)="affectSelectedInbox(false)" [ngClass]="{'hide' : selectedConversations.length == 0 }"><i class="fa fa-envelope-open-o"></i> mark as unread</button>
+                        </div>
+                    </div>
                 </div>
 
-
                 <div id="sent" class="tab-pane fade in">
-                    {{sentMessages.length}} Sent Messages
-                    <div *ngFor="let message of sentMessages">
-                        <div class="messageSubject">{{message.messageSubject}}</div>
-                        <div>
-                            <span><input type="checkbox" [(ngModel)]="message.delete" /></span>
-                            <span>
-                                From:
-                                <a [routerLink]="['/viewUser/', message.sender.userID]" class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}
-                            </span>
+                    <div class="buttons">
+                        <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
+                        <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
+                        <div class="conditionalButtons inlineblock">
+                            <button class="btn btn-default" (click)="affectSelectedSentbox(true)" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
                         </div>
-                        <br />
                     </div>
 
-                    <input type="submit" value="Select All" />
-                    <input type="submit" value="Delete" />
+                    <table class="table">
+                        <tr class="messagePreview" *ngFor="let message of sentMessages; let i = index">
+                            <td>
+                                <div class="circlecheckbox" (click)="selectMessage($event, message)">
+                                    <input type="checkbox" value="1" [(ngModel)]="message.selected" [attr.id]="'sentCheckbox' + i" name="" />
+                                    <label [attr.for]="'sentCheckbox' + i">
+                                        <i class="fa fa-check-circle fa-2"></i>
+                                    </label>
+                                </div>
+                            </td>
+                            <td (click)="viewSentDetail(message)" class="inlineblock messageUser">
+                                <span>
+                                    <a [routerLink]="['/viewUser/', message.recipient.userID]" class="messageUser">
+                                        To: {{message.recipient.userName}}
+                                    </a>
+                                </span>
+                            </td>
+                            <td (click)="viewSentDetail(message)" class="inlineblock">
+                                <div class="messageSubject inlineblock">
+                                    {{message.messageSubject | limitTo:50}}
+                                    <div *ngIf="message.messageSubject == null || message.messageSubject.length == 0"> [No Subject] </div> —
+                                </div>
+                                {{message.messageText | limitTo:120 }}
+                            </td>
+                            <td (click)="viewSentDetail(message)" class="inlineblock">
+                                {{message.dateSent | date:'short'}}
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="buttons">
+                        <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
+                        <button class="btn btn-default" (click)="selectAll()"><i class="fa fa-check-circle"></i> select all</button>
+                        <div class="conditionalButtons inlineblock">
+                            <button class="btn btn-default" (click)="affectSelectedSentbox(true)" [ngClass]="{'hide' : selectedMessages.length == 0 }"><i class="fa fa-trash-o"></i> delete</button>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -124,8 +182,6 @@
                         <br />
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
 </div>    

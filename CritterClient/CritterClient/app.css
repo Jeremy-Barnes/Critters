@@ -33,18 +33,61 @@ body {
     }
 }
 
+/*@media all and (min-width: 768px) {
+    .container {
+        width: 490px;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .container {
+        width: 710px;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .container {
+        width: 910px;
+    }
+}
+
+@media all and (min-width: 1460px) {
+    .container {
+        width: 1170px;
+    }
+}
+
+
+
 .container {
     margin-left: 0px;
     padding-left: 30px;
-    padding-right: 15px;
+    padding-right: 30px;
+    padding-top: 30px;
 }
+
+@media(max-width:767px) {
+    .container {
+        padding-left: 15px;
+    }
+}    */
+
 .container-fluid {
     padding:0px !important;
 }
 
+.container-maxWidth {
+    max-width: 1170px;
+    margin-left: 0;
+    padding: 30px !important;
+}
+
 .row {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.card .row {
+    margin-bottom: 0;
 }
 
 .page-title > .row {
@@ -53,7 +96,12 @@ body {
 }
 
 .sidebar a, .navbar a {
-    color:#ffffff;
+    color: #ffffff;
+}
+
+.navbar-header .btn-link:hover, .navbar-header .btn-link:focus, .navbar-header .btn-link:active {
+    color: #FFAE35;
+    text-decoration: none;
 }
 
 img {
@@ -61,7 +109,6 @@ img {
     height: auto;
     display: inline-block;
 }
-
 
 /* necessary garbage, see - https://stackoverflow.com/a/7310398/4885507 */
 .imgCenterer {
@@ -110,6 +157,11 @@ img {
     width: 100%;
 }
 
+.whiteText { 
+    color: white;
+
+}
+
 .framed {
     border: 1px solid #acacac;
     border-radius: 5px;
@@ -121,48 +173,203 @@ img {
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
 }
 
-.cardMain {
+#specialGame .card {
+    padding: 30px;
+}
+
+div.card16x9 {
+	width: 100%;
+	padding-bottom: 56.25%; /* 16:9 */
+	position: relative;
+}
+
+div.card16x9 > div {
+	position: absolute;
+	top: 0; bottom: 0; left: 0; right: 0;
+}
+
+
+.searchBoxHolder > input {
+    min-width: 100px !important;
+}
+
+.sortBoxHolder > select {
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+}
+
+.itemCard {
+    position: relative;
+    height: 270px;
+    width: 270px;
+    padding: 20px 0px;
+    text-align: center;
+}
+
+.itemTitle {
+    font-weight: bold;
+}
+
+.itemCard img {
+    width: 60%;
+    margin-bottom: 15px;
+}
+
+.checkBoxPlaceholder {
+    margin-top: -12px;
+    margin-bottom: -12px;
+    margin-left: 10px;
+    width: 22px;
+	height: 22px;
+	position: relative;
+}
+.itemCard .circlecheckbox {
+    margin-top: -12px;
+    margin-bottom: -12px;
+    margin-left: 10px;
+}
+
+#viewItemDetail * {
+    display: block;
+}
+#viewItemDetail img{
+    width: 100%;
+}
+#viewItemDetail h2 {
+    margin-top: 0px;
+}
+@media(min-width:768px) {
+    #viewItemDetail .modal-md {
+        width: 700px;
+    }
+}
+@media(max-width:767px) {
+    #viewItemDetail {
+        text-align: center;
+        vertical-align: central;
+    }
+    #viewItemDetail .btn,  #viewItemDetail select {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #viewItemDetail p {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+}
+#viewItemDetail .btn-primary, #viewItemDetail select  {
+    margin-bottom: 20px;
+} #viewItemDetail .btn-primary, #viewItemDetail select , #viewItemDetail p {
+    max-width: 400px;
+    width: 100%;
+}
+#viewItemDetail .itemSpinner * {
+    width: auto;
+    display: inline-block;
+}
+
+.shopkeep {
+    border: 5px white solid;
+    height: 220px;
+    width: 220px;
+}
+
+.shopTitle .imgCenterer {
+    height: 300px;
+    text-align: left;
+}
+.shopTitle {
+    min-height: 300px;
+}
+@media (max-width:992px) {
+    .shopTitle img {
+        width: 100px;
+        height: 100px;
+    }
+    .shopTitle h2 {
+        text-align: center;
+    }
+    .shopTitle .form-inline {
+        display: none;    
+    }
+    .shopTitle .imgCenterer {
+        height: 100px;
+        text-align: center;
+    }
+}
+@media (min-width: 993px) {
+      #mainView > .form-inline {
+        display: none;
+    }
+}
+.buySpinner {
+    width: 100%;
+    padding: 0px !important;
+}
+.buySpinner div + div {
+    border-left: 1px solid #59a13b;
+    padding: 10px 0px 10px 10px;
+    width: 35px;
+}
+.buySpinner .buyLabel {
+    width: 70%;
+    padding: 10px 0px 10px 10px;
+}
+/*.shopTitle .foot {
+    width: 100%;
+    position: absolute;
+    bottom: 25px;
+    left: 0px;
+}*/
+.searchBoxHolder > p {
+    font-weight: bold;
 }
 
 .gameCard {
-    height: 200px;
+    margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .gameCard img {
     width: 100%;
+    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
 }
 
 .gameTitle {
-    float:left;
-    position: relative;
+    
+    position: absolute;
     z-index: 1000;
     width: 100%;
-    transform: translateY(-100%);
     background-color: rgba(0,0,0,.5);
     color: white;
     text-shadow: 1px 2px 4px black; 
     text-align: right;
     padding: 0px 20px;
+    left: 0px;
+    bottom: 0px;
 }
 
 .gameSearchBar {
     background-color: #ebebeb;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 30px 30px 0;
 }
 
-.gameSearchBar .form-control {
-    width: 70%;
+.gameSearchBar h2 {
+    margin-top: 6px;
+}
+
+.gameSearchBar input[type=text], .gameSearchBar select {
+    width: 66.66% !important;
     display: inline-block;
 }
 
-.gameSearchBar > .inlineblock {
-    width: 33%;
-    margin-bottom: 20px;
-    margin-top: 20px;
+.gameSearchBar .btn {
+    width: 30%;
+    display: inline-block;
+}
+
+.gameSearchBar .form-inline {
+    margin-bottom: 30px;
 }
 
 .gameTitleBackground {
@@ -202,7 +409,7 @@ h1, h2 { font-family: 'Bubblegum Sans';}
 
 h1 { font-size: 48px; }
 h2 { font-size: 30px; }
-h3 { font-size: 18px; }
+h3 { font-size: 18px; font-weight: bold; }
 h4 { font-size: 16px; }
 
 @media (max-width:767px) {
@@ -221,7 +428,10 @@ a:hover, a:focus {color: #0F8DBA;}
     padding-top: 30px;
     padding-bottom: 20px;
 }
-.page-title * {
+.page-title > * {
+    margin-left: 30px;
+}
+.page-title > .row {
     margin-left: 15px;
 }
 .page-title * {
@@ -232,16 +442,46 @@ a:hover, a:focus {color: #0F8DBA;}
     width: 100%;
     height: 45px;
 }
-.messageSubject {
-    background-color: #12a6da;
-    font-size: 20px;
-    width: 870px !important;
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    border: none;
+    padding: 20px 0px;
 }
 .messageUser {
     text-decoration: none !important;
     font-weight: bold;
     color: black;
+    width: 200px;
 }
+tr {
+    border-bottom: 1px solid;
+    border-color: #acacac;
+    border-width: 1px;
+}
+tr td:nth-child(1) {
+    padding-left: 10px !important;
+}
+
+table {
+    border: 1px solid #acacac;
+}
+.messagePreview { 
+    padding: 15px 3px;
+}
+.buttons {
+    padding: 30px 0px;
+}
+.buttons button {
+    margin-right: 15px;
+}
+
+.messagePreview .messageSubject, .messagePreview .messageUser {
+    font-weight: bold;
+}
+.read {
+    font-weight: normal !important;
+}
+
 .inlineblock {
     display: inline-block !important;
 }
@@ -268,7 +508,6 @@ a:hover, a:focus {color: #0F8DBA;}
     background-color: #acacac;
 }
 .breadcrumb {
-    margin-top: 20px;
     margin-bottom: 20px;
     background-color: transparent;
     padding-left: 0px;
@@ -324,7 +563,7 @@ form input, form select {
 .form-control {
     border: 1px solid #acacac;
     padding: 10px 14px;
-    height: auto;
+    height: 44px;
     font-size: inherit;
     border-radius: 5px;
 }
@@ -335,7 +574,19 @@ form input, form select {
     -webkit-box-shadow: 0px 0px 8px rgba(18, 166, 218, 0.25);
 }
 
+.input-sm {
+    font-size: 12px;
+    padding: 5px 10px;
+    height: 30px;
+    line-height: 1.5;
+}
+}
+
 select .placeholder {
+    color: #acacac!important;
+}
+
+select.ng-pristine {
     color: #acacac!important;
 }
 
@@ -349,7 +600,7 @@ select .placeholder {
     border: none;
     color: white;
     background-color: #12a6da;
-    padding-right:120px;
+    padding-right: 30px;
 }
 .menu-expand {
     background-image: none;
@@ -418,13 +669,27 @@ select .placeholder {
     padding-right: 15px;
 }
 
-#sidebar-nav li:hover .nav-icon, #sidebar-nav:focus .nav-icon, #sidebar-nav:active .nav-icon {
+#sidebar-nav li:hover .nav-icon, #sidebar-nav li:focus .nav-icon, #sidebar-nav li:active .nav-icon {
     transform: rotate(-10deg);
 }
 
 #sidebar-nav ul a, #sidebar-nav ul a:hover, #sidebar-nav ul a:focus {
     color: #ffffff;
     text-decoration: none;
+}
+
+#sidebar-nav a:hover {
+    color: #FFAE35;
+}
+
+.sidebarSearch {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 30px;
+}
+
+.sidebarSearch input {
+    width: 155px !important;;
 }
 
 .sidebar {
@@ -542,11 +807,22 @@ iframe {
 .btn-sm {
     font-size: 12px;
     padding: 5px 10px;
+    line-height: 1.5;
+}
+
+.btn .fa {
+    line-height: inherit;
 }
 
 .btn-xs {
     font-size: 12px;
     padding: 1px 5px;
+}
+
+.btn-icon-round {
+    width: 64px;
+    height: 64px;
+    border-radius: 100%;
 }
 
 .btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active:hover {
@@ -591,7 +867,7 @@ iframe {
     overflow: hidden;
 }
 
-.btn::before {
+.btn:not(.btn-link)::before{
 	content: '';
 	z-index: -1;
 	position: absolute;
@@ -611,7 +887,7 @@ iframe {
     opacity: 0;
 }
 
-.btn:hover::before, .btn:focus::before {
+.btn:not(.btn-link):hover::before, .btn:not(.btn-link):focus::before {
 	opacity: 1;
     -webkit-transform: scale3d(15, 15, 1);
 	transform: scale3d(15, 15, 1);
@@ -623,6 +899,87 @@ iframe {
 }
 .btn:focus, .btn:active:hover {
     outline:0;
+}
+
+/* Circle Checkbox */
+.circlecheckbox > input[type=checkbox]{
+   	visibility: hidden;
+}
+.circlecheckbox {
+	width: 22px;
+	height: 22px;
+    border:3px solid #acacac;
+	border-radius: 100%;
+	position: relative;
+}
+.circlecheckbox > label {
+	width: 22px;
+	height: 22px;
+    font-size: 26px;
+	border-radius: 100%;
+	cursor: pointer;
+	position: absolute;
+	top: -5px;
+	left: -3px;
+}
+.circlecheckbox > input[type=checkbox]:checked + label > .fa {
+    color: #68bd45;
+}
+.circlecheckbox > label > .fa {
+    color:transparent;
+}
+
+.messageslink {
+    position: relative;
+}
+.notificationCircle {
+    background: #ffae35;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    padding-bottom: 5px;
+    position: absolute;
+    top: -130%;
+    right: 0px;
+    text-align: center;
+    font-weight:bold;
+    font-size:14pt;
+}
+
+.notificationCircle > * {
+    position: relative;
+    top: -10%;
+}
+
+.popover-repeater {
+    border-top: 1px solid #acacac;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.notification-header {
+    width: 100%;
+    text-align: center;
+    font-size: 18px; 
+    padding: 5px 0px;
+
+}
+
+.notifications-bubble {
+    border-radius: 0px;
+    width:375px;
+    margin: 0px;
+}
+
+.popover {
+    max-width: 500px;
+    padding: 0px;
+    border-radius: 0px;
+    border: 1px solid #acacac;
+}
+
+.popover-content {
+    padding: 0px;
 }
 
 /*
@@ -638,7 +995,116 @@ iframe {
     padding-left: 30px;
     padding-right: 30px;
 }
-
-.modal-sm {
-    width: 400px;
+@media(min-width:768px) {
+    .modal-sm {
+        width: 400px;
+    }
 }
+
+/*
+ * User Profile
+ * --------------------------------------------------
+ */
+
+.userThumb {
+    background: #ebebeb;
+    border-radius: 100%;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #acacac;
+}
+
+.userThumbLg {
+    width: 100px;
+    height: 100px;
+}
+
+.profileCard .userThumb {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: -50px;
+    left: 50%;
+}
+
+.bg-white {
+    background: #ffffff;
+}
+
+.profileUserInfo {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+.profileCard {
+    padding: 50px 30px 30px;
+}
+
+.profileBio {
+    padding-top: 30px;
+}
+@media (max-width: 767px) {
+    .profileCard {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+}
+
+
+.row.vertical-divider {
+  overflow: hidden;
+}
+.row.vertical-divider div[class^="col-"] + div[class^="col-"] { 
+    padding-bottom: 100px; 
+    margin-bottom: -100px; 
+    border-left: 1px solid #acacac; 
+    padding-left: 30px;
+}
+
+.petCard {
+    padding: 30px;
+    text-align: center;
+}
+
+.petCard img {
+    margin-bottom: 15px;
+}
+
+/*
+ * Messaging
+ * --------------------------------------------------
+ */
+
+.messagePreview td {
+    vertical-align: middle !important;
+}
+
+@media (max-width: 767px) {
+    .messageSubject, .messageText, .messageDate {
+        font-size: 14px;
+    }
+
+    .messagePreview tr {
+        padding: 10px;
+    }
+
+    .messagePreview td {
+        display: block !important;
+        float: left;
+        padding: 0 0 5px 0 !important;
+    }
+
+    .messageDate {
+        float: right;
+    }
+
+    .userThumb {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
+
+
+
+
