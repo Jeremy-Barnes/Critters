@@ -1,6 +1,6 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest } from './dtos'
+import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest, ItemRequest } from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://3f0f4da5.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -117,6 +117,10 @@ export class ServiceMethods {
     /************** Store Stuff **************/
     public static getStorefront(storeId: number): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
+    }
+
+    public static purchaseInventoryItemFromStore(request: ItemRequest): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("purchaseInventoryItemFromStore", "commerce", request);
     }
 
     /************** Chat Stuff **************/

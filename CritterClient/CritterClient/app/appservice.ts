@@ -290,5 +290,19 @@ export class Application {
         return ServiceMethods.getStorefront(id);
     }
 
-    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null;}
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
+
+    public static purchaseItem(items: Item[]) {
+        var app = Application.getApp();
+        return ServiceMethods.purchaseInventoryItemFromStore({
+            user: app.user, items: items
+        }).done(() => {
+            items.forEach(i => {
+                i.ownerId = app.user.userID;
+                i.price = null;
+                i.containingStoreId = null;
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == i.description.itemConfigID).inventoryItemsGrouped.push(i)
+            });
+        });
+    }
 }
