@@ -38,11 +38,15 @@ export class Application {
         var createRequest = new AccountInformationRequest();
         createRequest.pet = pet;
         createRequest.user = user;
-        return ServiceMethods.createUser(createRequest);
+        return ServiceMethods.createUser(createRequest).done((u: User) => {
+            Application.getApp().user.set(u);
+        });
     }
 
     public static submitCreatePet(pet: Pet): JQueryPromise<Pet> {
-        return ServiceMethods.createPet(pet);
+        return ServiceMethods.createPet(pet).done((p: Pet) => {
+            Application.getApp().user.pets.push(p);
+        });
     }
 
     public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {
@@ -116,11 +120,16 @@ export class Application {
     public static getNotifications() {
         ServiceMethods.getUnreadMail().done((messages: Message[]) => {
             if (messages != null && messages.length != 0) {
-                var note: Notification = new Notification();
-                note.messages = messages;
+                var notes: Notification[] = [];
+                for(let i = 0; i < messages.length; i++) {
+                    notes.push({ messages: [messages[i]], friendRequests: null });
+                }
                 var user: User = Application.getApp().user;
-                note.friendRequests = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
-                Application.getApp().alerts.push(note);
+                var frReqs =  user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                for(let i = 0; i < frReqs.length; i++) {
+                    notes.push({ messages: null, friendRequests: [frReqs[i]]});
+                }
+                Application.getApp().alerts.push(...notes);
             }
         });
     }
@@ -142,6 +151,8 @@ export class Application {
                 let notReceived = true;
                 for (var j = 0; j < conv.messages.length; j++) { //each message in conversation
                     let message = conv.messages[j];
+                    message.selected = false;
+                    conv.selected = false;
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
                     } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean
@@ -174,8 +185,10 @@ export class Application {
         });
     }
 
-    public static sendMessage(msg: Message) {
-        ServiceMethods.sendMessage(msg);
+    public static sendMessage(msg: Message): JQueryPromise<Message> {
+       return ServiceMethods.sendMessage(msg).done((message: Message) => {
+            Application.getApp().sentbox.push(message);
+        });
     }
 
     public static markMessagesRead(messages: Message[]) {
@@ -190,6 +203,14 @@ export class Application {
         messages.forEach(m => m.delivered = true);
         if (messages.length > 0)
             ServiceMethods.setDelievered({ messages: messages, user: Application.getApp().user });
+    }
+
+    public static massDeleteMessages(messages: Message[]) {
+        ServiceMethods.deleteMail(Application.getApp().user, messages.map(m => m.messageID)).done(() => { });
+    }
+
+    public static massSetUnread(messages: Message[]) {
+        ServiceMethods.setUnread(Application.getApp().user, messages.map(m => m.messageID)).done(() => { });
     }
 
     public static searchFriends(searchTerm: string) {
@@ -223,15 +244,37 @@ export class Application {
         ServiceMethods.getInventory(Application.getApp().user).done((inventory: InventoryGrouping[]) => {
             var user = Application.getApp().user;
             Application.getApp().inventory.length = 0;
+            inventory.forEach(i => i.selected = false);
             Application.getApp().inventory.push(...inventory);
         });
     }
 
-    public static submitInventoryAction(actionCode: number, items: Item[]) {
-        switch (actionCode) {
-            case 0: ServiceMethods.moveInventoryItemToStore(this.getApp().user, items); break;
-            case 1: case 0: ServiceMethods.discardInventoryItems(this.getApp().user, items); break;  
-        }
+    public static moveItemsToStore(items: Item[], containingGroup: InventoryGrouping) {
+        return ServiceMethods.moveInventoryItemToStore(this.getApp().user, items).done((i: InventoryGrouping[]) => {
+            items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                var inventory = Application.getApp().inventory;
+                inventory.splice(inventory.indexOf(containingGroup), 1);
+            }
+        });
+    }
+
+    public static moveItemsToGarbage(items: Item[], containingGroup: InventoryGrouping): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.discardInventoryItems(this.getApp().user, items).done((i: InventoryGrouping[]) => {
+            items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                var inventory = Application.getApp().inventory;
+                inventory.splice(inventory.indexOf(containingGroup), 1);
+            }
+        });
+    }
+
+    public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.searchInventory(searchTerm);
     }
 
     public static getGames(): JQueryPromise<GamesInfo> {
@@ -243,4 +286,9 @@ export class Application {
         } else return jQuery.Deferred().resolve(null);
     }
 
+    public static getStore(id: number): JQueryPromise<Store> {
+        return ServiceMethods.getStorefront(id);
+    }
+
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null;}
 }

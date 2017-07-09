@@ -4,10 +4,18 @@ import { Comparable } from '../dtos'
 
 @Component({
     selector: "<autocomplete></autocomplete>",
-    template: `<input type="text" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
-				<div class="search-results" *ngFor="let item of resultList">
-                    <a (click)="onClick(item)">{{item.resultText}}</a>
-               </div>`
+    template: `<div style="position: relative" class="inlineblock"><input type="text" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
+                <div *ngIf="searchTextModel != null && searchTextModel.length > 0">
+				    <div class="popover bottom" style="display: block; position: absolute; top: 25px; left: 0px; width: 300px;" >
+                        <div class="arrow" style="top: -10px; left: 20px;"></div>
+                        <div class="popover-content">
+                            <div style="font-size: 12pt;" class="popover-repeater" *ngFor="let item of resultList">
+                                <b><a (click)="onClick(item)">{{item.resultText}}</a></b>
+                            </div>
+                        </div>
+                    </div>
+                </div></div>`
+    
 })
 export class AutocompleteList {
     public resultList: { resultText: string, resultData: Comparable }[] = [];
@@ -58,17 +66,20 @@ export class AutocompleteList {
             this.searching = true;
 
             this.remoteSearchFunction(this.inputSearchTerm).then((results) => {
+                
                 this.searching = false;
                 if (this.secondSearchNeeded) {
                     this.secondSearchNeeded = false;
                     this.callSearchFunction();
                 } else {
-                    this.resultList.push(...results.filter(a => this.resultList.find(r => r.resultData.isSame(a.resultData))? true : false ));
+                    if (results != null && results.length > 0)
+                        this.resultList.push(...results.filter(a => this.resultList.find(r => r.resultData.isSame(a.resultData))? true : false ));
                 }
             });
 
             this.localSearchFunction(this.inputSearchTerm).then((results) => {
-                this.resultList.push(...results.filter(a => this.resultList.indexOf(a) == -1));
+                if (results != null && results.length > 0)
+                    this.resultList.push(...results.filter(a => this.resultList.indexOf(a) == -1)); 
             });
         }
     }

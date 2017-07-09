@@ -1,29 +1,27 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Item, ItemDescription, InventoryGrouping } from '../dtos'
+import { User, Notification, Item, ItemDescription, InventoryGrouping, Store } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
-    templateUrl: "../../templates/inventory.template.htm"
+    templateUrl: "../../templates/store.template.htm"
 })
 
-export class InventoryComponent implements OnInit {
+export class StoreComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
 
     /**** View State Controllers ***/
-    inventory: InventoryGrouping[];
+    viewStore: Store = new Store();
+    inventory: InventoryGrouping[] = [];
     activeItem: InventoryGrouping;
     selectedQuantity: number = 0;
 
-    selectedItems: InventoryGrouping[] = [];
     bulkSelect: boolean = false;
 
     searchText: string = "";
 
-    itemActions: { id: number, text: string }[] = [];
-    selectedAction: { id: number, text: string } = null;
     actionCompleted: boolean = false;
     statusText: string = "";
 
@@ -37,29 +35,18 @@ export class InventoryComponent implements OnInit {
     private contextActions = [{ id: 2, classes: [1], text: "Feed to Pet" }, { id: 3, classes: [4], text: "Equip to Pet" }, { id: 4, classes: [2], text: "Play with toy" }]
 
     constructor(private route: ActivatedRoute) {
-        Application.getInventory();
+        var self = this;
+        this.route.params.forEach((params: Params) => {
+            let id = parseFloat(params['id']);
+            Application.getStore(id).done((store: Store) => {
+                self.viewStore = store;
+                self.inventory = store.storeStock;
+            });
+        });
         this.user = this.app.user;
-        this.inventory = this.app.inventory;
     }
 
     ngOnInit() {
-
-    }
-
-    selectItem($event: any, item: InventoryGrouping) {
-        $event.stopPropagation();
-        (<any>item).selected = !(<any>item).selected;
-        (<any>item).selected ? this.selectedItems.push(item) : this.selectedItems.splice(this.selectedItems.indexOf(item), 1);
-        return false;
-    }
-
-    toggleBulk() {
-        this.bulkSelect = !this.bulkSelect;
-        if (!this.bulkSelect) {
-            this.selectedItems.forEach(s => s.selected = false);
-            this.selectedItems.length = 0;
-
-        }
     }
 
     selectedQuantityChange(value: number) {
@@ -71,14 +58,20 @@ export class InventoryComponent implements OnInit {
         this.activeItem = viewItem;
         this.selectedQuantity = 0;
 
-        this.itemActions.length = 0;
-        this.itemActions.push(...this.defaultActions);
-        this.itemActions.push(...this.contextActions.filter((act) => act.classes.indexOf(this.activeItem.inventoryItemsGrouped[0].description.itemClass.itemClassificationID) >= 0));
-
         (<any>$("#viewItemDetail")).modal('show'); //I'm not happy about this either.
     }
 
-    submitItem() {
+    increment() {
+        if (this.selectedQuantity < this.activeItem.inventoryItemsGrouped.length)
+        this.selectedQuantity = this.selectedQuantity + 1;
+    }
+
+    decrement() {
+        if (this.selectedQuantity > 0)
+        this.selectedQuantity = this.selectedQuantity - 1;
+    }
+
+    buy() {
         var items: Item[] = [];
         if (this.selectedQuantity == 0) {
             //do nothing, complain. showComplaint()
@@ -91,22 +84,14 @@ export class InventoryComponent implements OnInit {
                 items = this.activeItem.inventoryItemsGrouped.slice(0, this.selectedQuantity);
             }
             var promise: any;
-            switch (this.selectedAction.id) {
-                case 0: promise = Application.moveItemsToStore(items, this.activeItem);
-                    this.statusText = this.selectedQuantity + " " + items[0].description.itemName + (this.selectedQuantity == 1 ? " " : "s ") + "moved to your shop!";
-                    break;
-                case 1: promise = Application.moveItemsToGarbage(items, this.activeItem);
-                    this.statusText = this.selectedQuantity + " " + items[0].description.itemName +(this.selectedQuantity == 1 ? " " : "s ") + "discarded!";
-                    break;
-                case 2: alert("Nom nom"); break;
-                case 3: alert("SHIIIIING"); break;
-                case 4: alert("what fun"); break;
-            }
+           // promise = Application.buyItems(items, this.activeItem);
+            this.statusText = this.selectedQuantity + " " + items[0].description.itemName + (this.selectedQuantity == 1 ? " " : "s ") + "discarded!";
+            
             var self = this;
             promise.done((group: InventoryGrouping) => {
                 self.actionCompleted = true;
             });
-        } 
+        }
     }
 
     onChangeSort(event: any) {
@@ -137,7 +122,7 @@ export class InventoryComponent implements OnInit {
         this.fullInventoryStoredForSearch.push(...this.inventory);
         var self = this;
         //do some kind of loading icon TODO
-        Application.searchInventory(searchTerm).done((results: InventoryGrouping[]) => { //todo resolve loading icon
+        Application.searchStore(searchTerm).done((results: InventoryGrouping[]) => { //todo resolve loading icon
             self.inventory.length = 0;
             self.inventory.push(...results);
         });

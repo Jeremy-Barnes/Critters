@@ -50,6 +50,7 @@
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
     <Content Include="templates\games.template.htm" />
+    <Content Include="templates\store.template.htm" />
     <Content Include="templates\inventory.template.htm" />
     <Content Include="templates\error.template.htm" />
     <Content Include="templates\messages.template.htm" />
@@ -78,6 +79,8 @@
     <TypeScriptCompile Include="app\components\error.component.ts" />
     <TypeScriptCompile Include="app\components\inventory.component.ts" />
     <TypeScriptCompile Include="app\components\messages.component.ts" />
+    <TypeScriptCompile Include="app\components\spinner.component.ts" />
+    <TypeScriptCompile Include="app\components\store.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />

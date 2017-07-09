@@ -115,8 +115,8 @@ export class ServiceMethods {
     }
 
     /************** Store Stuff **************/
-    public static getStorefront(request: Store): JQueryPromise<Store> {
-        return ServiceMethods.doAjax("getStorefront", "commerce", request);
+    public static getStorefront(storeId: number): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
     }
 
     /************** Chat Stuff **************/
@@ -137,7 +137,15 @@ export class ServiceMethods {
     }
 
     public static deleteMessage(messageId: number): JQueryPromise<void> {
-        return ServiceMethods.doAjax("deleteMail", "chat", messageId, "GET");
+        return ServiceMethods.doAjax("deleteMessage", "chat", messageId, "GET");
+    }
+
+    public static deleteMail(user: User, messageIds: number[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("deleteMail", "chat", { user: user, messages: messageIds });
+    }
+
+    public static setUnread(user: User, messageIds: number[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("markMessagesUnread", "chat", { user: user, messages: messageIds });
     }
 
     public static getUnreadMail(): JQueryPromise<Message[]> {
@@ -155,6 +163,10 @@ export class ServiceMethods {
 
     public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
+    }
+
+    public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {
+        return ServiceMethods.doAjax("searchInventory", "users", searchTerm, "GET");
     }
 }
 

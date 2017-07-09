@@ -18,7 +18,7 @@ function prepDisplayAfterLogin() {
         container: 'body',
         html: true,
         content: function () {
-            return $(this).next('.notifications-bubble').html();
+            return $(this).next('.notifications-bubble-container').html();
         }
     });
 }
