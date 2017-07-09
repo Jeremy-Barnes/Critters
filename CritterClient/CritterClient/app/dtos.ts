@@ -136,7 +136,7 @@ export class Notification {
 export class Store {
     storeConfigID: number;
     ownerId: number;
-    storeStock: Item[];
+    storeStock: InventoryGrouping[];
     description: string;
     name: string;
     storeClerkImagePath: string;

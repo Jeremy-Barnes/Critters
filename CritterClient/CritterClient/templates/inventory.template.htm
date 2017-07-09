@@ -4,84 +4,84 @@
             <div class="col-sm-6">
                 <h1>Inventory</h1>
             </div>
-            <div class="col-sm-3 searchBoxHolder">
-                <input type="text" [(ngModel)]="searchText" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
+            <div class="col-sm-3 searchBoxHolder form-inline">
+                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword search" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
             </div>
-            <div class="col-sm-2 sortBoxHolder">
-                <select name="gameSort" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+            <div class="col-sm-2 sortBoxHolder form-inline">
+                <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
             </div>
         </div>
     </div>
 </div>
+
 <div class="container-fluid container-maxWidth">
-    <div class="inlineblock">
-        <!----------------------DETAIL VIEW------------------>
-        <div id="viewItemDetail" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-md" role="document">
-                <div *ngIf="activeItemGroup.length > 0" class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
-                    </div>
-                    <div class="modal-body">
+    <!----------------------DETAIL VIEW------------------>
+    <div id="viewItemDetail" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-md" role="document">
+            <div *ngIf="activeItem" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="activeItem.inventoryItemsGrouped.length > 0 && !actionCompleted">
                         <div class="row">
-                            <div class="col-sm-6"><img class="framed" src="{{activeItemGroup[0].description.imagePath}}" /></div>
+                            <div class="col-sm-6"><img class="framed" src="{{activeItem.inventoryItemsGrouped[0].description.imagePath}}" /></div>
                             <div class="col-sm-6">
-                                <h2>{{activeItemGroup[0].description.itemName}}</h2>
-                                <p>{{activeItemGroup[0].description.itemDescription}} -1 this is awful. Basically, you set the width to 100% and then the margin to -50. But is causes other problems, like the button rises above the containing element, and doesn't work well with resizing. </p>
+                                <h2>{{activeItem.inventoryItemsGrouped[0].description.itemName}}</h2>
+                                <p>{{activeItem.inventoryItemsGrouped[0].description.itemDescription}} -1 this is awful. Basically, you set the width to 100% and then the margin to -50. But is causes other problems, like the button rises above the containing element, and doesn't work well with resizing. </p>
                                 <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
                                     <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
                                 </select>
-                                <spinner [minimumValue]="0" [maximumValue]="activeItemGroup.length" (result-out)="selectedQuantityChange($event)"></spinner>
+                                <spinner [minimumValue]="0" [maximumValue]="activeItem.inventoryItemsGrouped.length" (result-out)="selectedQuantityChange($event)"></spinner>
                                 <button class="btn-primary btn" (click)="submitItem()">submit</button>
                                 <button class="btn-default btn">cancel</button>
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="actionCompleted">
+                        <h2>Action Complete</h2>
+                        <p>{{statusText}}</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-
-        <!----------------------MAIN VIEW------------------>
-        <div id="mainView">
-            <div>
-
-
-                <div class="buttons">
-                    <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
-                    <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
-                        <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
-                        <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-envelope-open-o"></i> move</button>
-                    </div>
-                </div>
+    <!----------------------MAIN VIEW------------------>
+    <div id="mainView">
+        <div class="buttons">
+            <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
+            <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
+                <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
+                <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-envelope-open-o"></i> move</button>
+            </div>
+        </div>
  
-                <div class="row">
-                    <div class="col-md-3" *ngFor="let item of inventory; let i = index">
-                        <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
-                            <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
-                            </div>
-                            <div *ngIf="bulkSelect" class="circlecheckbox" (click)="selectItem($event, item)">
-                                <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
-                                <label [attr.for]="'inventoryCheckbox' + i">
-                                    <i class="fa fa-check-circle"></i>
-                                </label>
-                            </div>
-                            <img class="framed centeredImg" src="{{item.inventoryItemsGrouped[0].description.imagePath}}" />
-                            <div class="itemTitle">
-                                {{item.inventoryItemsGrouped[0].description.itemName}} <br />
-                            </div>
-                            <div>
-                                Qty: {{item.inventoryItemsGrouped.length}}
-                            </div>
-                        </div>
-                        <br /><br />
+        <div class="row">
+            <div class="col-md-3" *ngFor="let item of inventory; let i = index">
+                <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
+                    <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
+                    </div>
+                    <div *ngIf="bulkSelect" class="circlecheckbox" (click)="selectItem($event, item)">
+                        <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
+                        <label [attr.for]="'inventoryCheckbox' + i">
+                            <i class="fa fa-check-circle"></i>
+                        </label>
+                    </div>
+                    <img class="framed centeredImg" src="{{item.inventoryItemsGrouped[0].description.imagePath}}" />
+                    <div class="itemTitle">
+                        {{item.inventoryItemsGrouped[0].description.itemName}} <br />
+                    </div>
+                    <div>
+                        Qty: {{item.inventoryItemsGrouped.length}}
                     </div>
                 </div>
-
-
+                <br /><br />
             </div>
         </div>
+
+
     </div>
 </div>

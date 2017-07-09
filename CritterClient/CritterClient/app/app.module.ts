@@ -21,6 +21,7 @@ import { InventoryComponent} from './components/inventory.component'
 import { GamesComponent} from './components/games.component'
 import { LimitToPipe } from './limitto.pipe'
 import { Spinner } from './components/spinner.component'
+import { StoreComponent } from './components/store.component'
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { Spinner } from './components/spinner.component'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner, StoreComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

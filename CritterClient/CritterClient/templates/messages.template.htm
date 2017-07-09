@@ -27,7 +27,6 @@
         </div>
 
 
-
         <!----------------------COMPOSE VIEW------------------>
         <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
             To: <autocomplete *ngIf="composeToFriend == null"
@@ -40,8 +39,6 @@
             <input type="button" (click)="sendMessage()" value="Send" />
             <input type="button" (click)="cancelCompose()" value="Stop Editing" />
         </div>
-
-
 
 
         <!----------------------MAIN VIEW------------------>
@@ -73,28 +70,28 @@
                                     </label >
                                 </div>
                             </td>
-                            <td class="inlineblock messageUserThumb">
+                            <td (click)="viewDetail(conversation)" class="inlineblock messageUserThumb">
                                 <span>
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]">
                                         <img src="/img/horrible clion_red.png" class="userThumb" />
                                     </a>
                                 </span>
                             </td>
-                            <td class="inlineblock messageUser">
+                            <td (click)="viewDetail(conversation)" class="inlineblock messageUser">
                                 <span>
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]" class="messageUser">
                                         {{conversation.messages[0].sender.userName}}
                                     </a>
                                 </span>
                             </td>
-                            <td class="inlineblock">
+                            <td class="inlineblock" (click)="viewDetail(conversation)">
                                 <div class="messageSubject inlineblock">
                                     {{conversation.messages[0].messageSubject | limitTo:50}}
                                     <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
                                 </div>
                                 <div class="messageText">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
                             </td>
-                            <td class="inlineblock" class="messageDate">
+                            <td class="inlineblock messageDate" (click)="viewDetail(conversation)">
                                 {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}
                             </td>
                         </tr>
@@ -129,21 +126,21 @@
                                     </label>
                                 </div>
                             </td>
-                            <td class="inlineblock messageUser">
+                            <td (click)="viewSentDetail(message)" class="inlineblock messageUser">
                                 <span>
                                     <a [routerLink]="['/viewUser/', message.recipient.userID]" class="messageUser">
                                         To: {{message.recipient.userName}}
                                     </a>
                                 </span>
                             </td>
-                            <td class="inlineblock">
+                            <td (click)="viewSentDetail(message)" class="inlineblock">
                                 <div class="messageSubject inlineblock">
                                     {{message.messageSubject | limitTo:50}}
                                     <div *ngIf="message.messageSubject == null || message.messageSubject.length == 0"> [No Subject] </div> —
                                 </div>
                                 {{message.messageText | limitTo:120 }}
                             </td>
-                            <td class="inlineblock">
+                            <td (click)="viewSentDetail(message)" class="inlineblock">
                                 {{message.dateSent | date:'short'}}
                             </td>
                         </tr>
@@ -185,7 +182,6 @@
                         <br />
                     </div>
                 </div>
-
             </div>
         </div>
 </div>    

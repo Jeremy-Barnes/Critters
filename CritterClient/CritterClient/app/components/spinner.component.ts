@@ -24,7 +24,6 @@ export class Spinner {
         this.value = "0";
     }
 
-
     validate() {
         if (isNaN(<any>this.value)) {
             this.value = "0";
