@@ -5,7 +5,7 @@
         </div>
     </div>
     
-    <div class="container">
+    <div class="container-fluid container-maxWidth">
         <div id="specialGame" class="row">
             <div class="col-md-12">
                 <div class="card ">
@@ -61,7 +61,7 @@
 
 
 <div id="activeGameDescription" [hidden]="activeGame.gameName==null || playGame">
-    <div class="container">
+    <div class="container-fluid container-maxWidth">
         <div class="row">
             <div class="col-md-12">
                 <div class="card gameTitleBackground" [ngStyle]="{'background-image': 'url(' + activeGame.gameIconPath + ')'}">
@@ -110,7 +110,7 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid container-maxWidth">
         <div id="gameBind"></div>
         <div class="row">
             <div class="col-md-12">

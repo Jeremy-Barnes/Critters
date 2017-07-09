@@ -1,12 +1,48 @@
-﻿<div class="container">
-    <div class="col-xs-12 col-sm-9">
-        <h1>You are viewing {{viewUser.userName}}'s profile!</h1>
-        <p>Name: {{viewUser.firstName}} {{viewUser.lastName}}</p>
-        <p>Username: {{viewUser.userName}}</p>
-        <p>Gender: {{viewUser.sex}}</p>
-        <p>Birthday: {{viewUser.birthdate}}</p>
-        <p>Location: {{viewUser.city}}, {{viewUser.state}} {{viewUser.country}}</p>
-
-        <input type="button" (click)="sendFriend()" value="Be friends with this user!" />
-    </div>    
+﻿<div class="container-fluid container-maxWidth">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card profileUserInfo" style="background: rgba(8,158,210,1) linear-gradient(to bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%) /*TODO: allow user to choose gradient*/">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="card bg-white profileCard">
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <img src="/img/horrible clion.png" class="userThumb userThumbLg" />
+                                    <h1>{{viewUser.userName}}</h1>
+                                    <h3>{{viewUser.firstName}} {{viewUser.lastName}}</h3>
+                                    <hr />
+                                    <button type="button" (click)="sendMessage()" value="Send message!" class="btn btn-primary btn-icon-round" alt="Send message!"><img src="/img/speech-bubble.svg" /></button>
+                                    <button type="button" (click)="sendFriend()" value="Add friend!" class="btn btn-primary btn-icon-round" alt="Add friend!"><img src="/img/plus.svg" /></button>
+                                </div>
+                            </div>
+                            <div class="row profileBio vertical-divider">
+                                <div class="col-md-6">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                </div>
+                                <div class="col-md-6">
+                                    <p>
+                                        <strong>Location:</strong> {{viewUser.city}}, {{viewUser.state}} {{viewUser.country}}<br />
+                                        <strong>Birthday:</strong> {{viewUser.birthdate}}<br />
+                                        <strong>Gender:</strong> {{viewUser.sex}}<br /><br />
+                                        <strong>Last logged in:</strong> Today<br />
+                                        <strong>Started playing:</strong> August 27, 2017
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-lg-3" *ngFor="let loopPet of viewUser.pets">
+            <div class="card petCard" (click)="selectGame(game)">
+                <img src="{{loopPet.petSpecies.imagePathWithoutModifiers}}">
+                <p><strong>{{loopPet.petName}}</strong><br />
+                the {{loopPet.petColor.petColorName}} {{loopPet.petSpecies.petTypeName}}</p>
+            </div>
+        </div>
+    </div>
 </div>

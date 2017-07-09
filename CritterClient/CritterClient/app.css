@@ -33,7 +33,7 @@ body {
     }
 }
 
-@media all and (min-width: 768px) {
+/*@media all and (min-width: 768px) {
     .container {
         width: 490px;
     }
@@ -57,6 +57,8 @@ body {
     }
 }
 
+
+
 .container {
     margin-left: 0px;
     padding-left: 30px;
@@ -68,10 +70,16 @@ body {
     .container {
         padding-left: 15px;
     }
-}
+}    */
 
 .container-fluid {
     padding:0px !important;
+}
+
+.container-maxWidth {
+    max-width: 1170px;
+    margin-left: 0;
+    padding: 30px !important;
 }
 
 .row {
@@ -88,7 +96,12 @@ body {
 }
 
 .sidebar a, .navbar a {
-    color:#ffffff;
+    color: #ffffff;
+}
+
+.navbar-header .btn-link:hover, .navbar-header .btn-link:focus, .navbar-header .btn-link:active {
+    color: #FFAE35;
+    text-decoration: none;
 }
 
 img {
@@ -347,7 +360,7 @@ h1, h2 { font-family: 'Bubblegum Sans';}
 
 h1 { font-size: 48px; }
 h2 { font-size: 30px; }
-h3 { font-size: 18px; }
+h3 { font-size: 18px; font-weight: bold; }
 h4 { font-size: 16px; }
 
 @media (max-width:767px) {
@@ -509,6 +522,14 @@ form input, form select {
     -webkit-box-shadow: 0px 0px 8px rgba(18, 166, 218, 0.25);
 }
 
+.input-sm {
+    font-size: 12px;
+    padding: 5px 10px;
+    height: 30px;
+    line-height: 1.5;
+}
+}
+
 select .placeholder {
     color: #acacac!important;
 }
@@ -523,7 +544,7 @@ select .placeholder {
     border: none;
     color: white;
     background-color: #12a6da;
-    padding-right:120px;
+    padding-right: 30px;
 }
 .menu-expand {
     background-image: none;
@@ -592,13 +613,27 @@ select .placeholder {
     padding-right: 15px;
 }
 
-#sidebar-nav li:hover .nav-icon, #sidebar-nav:focus .nav-icon, #sidebar-nav:active .nav-icon {
+#sidebar-nav li:hover .nav-icon, #sidebar-nav li:focus .nav-icon, #sidebar-nav li:active .nav-icon {
     transform: rotate(-10deg);
 }
 
 #sidebar-nav ul a, #sidebar-nav ul a:hover, #sidebar-nav ul a:focus {
     color: #ffffff;
     text-decoration: none;
+}
+
+#sidebar-nav a:hover {
+    color: #FFAE35;
+}
+
+.sidebarSearch {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 30px;
+}
+
+.sidebarSearch input {
+    width: 155px !important;;
 }
 
 .sidebar {
@@ -716,11 +751,22 @@ iframe {
 .btn-sm {
     font-size: 12px;
     padding: 5px 10px;
+    line-height: 1.5;
+}
+
+.btn .fa {
+    line-height: inherit;
 }
 
 .btn-xs {
     font-size: 12px;
     padding: 1px 5px;
+}
+
+.btn-icon-round {
+    width: 64px;
+    height: 64px;
+    border-radius: 100%;
 }
 
 .btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active:hover {
@@ -765,7 +811,7 @@ iframe {
     overflow: hidden;
 }
 
-.btn::before {
+.btn:not(.btn-link)::before{
 	content: '';
 	z-index: -1;
 	position: absolute;
@@ -785,7 +831,7 @@ iframe {
     opacity: 0;
 }
 
-.btn:hover::before, .btn:focus::before {
+.btn:not(.btn-link):hover::before, .btn:not(.btn-link):focus::before {
 	opacity: 1;
     -webkit-transform: scale3d(15, 15, 1);
 	transform: scale3d(15, 15, 1);
@@ -900,7 +946,7 @@ iframe {
 }
 
 /*
- * User Thumbnail
+ * User Profile
  * --------------------------------------------------
  */
 
@@ -910,9 +956,62 @@ iframe {
     width: 48px;
     height: 48px;
     border: 1px solid #acacac;
-    margin-right: 10px;
 }
 
+.userThumbLg {
+    width: 100px;
+    height: 100px;
+}
+
+.profileCard .userThumb {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: -50px;
+    left: 50%;
+}
+
+.bg-white {
+    background: #ffffff;
+}
+
+.profileUserInfo {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+.profileCard {
+    padding: 50px 30px 30px;
+}
+
+.profileBio {
+    padding-top: 30px;
+}
+@media (max-width: 767px) {
+    .profileCard {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+}
+
+
+.row.vertical-divider {
+  overflow: hidden;
+}
+.row.vertical-divider div[class^="col-"] + div[class^="col-"] { 
+    padding-bottom: 100px; 
+    margin-bottom: -100px; 
+    border-left: 1px solid #acacac; 
+    padding-left: 30px;
+}
+
+.petCard {
+    padding: 30px;
+    text-align: center;
+}
+
+.petCard img {
+    margin-bottom: 15px;
+}
 
 /*
  * Messaging
