@@ -4,7 +4,6 @@ import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.Conversation;
 import com.critters.dal.dto.Notification;
 import com.critters.dal.dto.entity.Friendship;
-import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
 import org.hibernate.CacheMode;
@@ -16,7 +15,6 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.TimeoutHandler;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -57,8 +55,8 @@ public class ChatBLL {
 		}
 	}
 
-	public static Message sendMessage(Message message, User user) throws GeneralSecurityException, UnsupportedEncodingException {
-		if (user.getUserID() == (message.getSender().getUserID())) {
+	public static Message sendMessage(Message message, User user) throws GeneralSecurityException {
+		if(user.getUserID() == (message.getSender().getUserID())) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
 				entityManager.getTransaction().begin();
@@ -107,7 +105,7 @@ public class ChatBLL {
 		try {
 			List<Message> mail = entityManager.createQuery("from Message where " +
 																   "((senderUserId = :id and showSender = true) or " +
-																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
+																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH).setParameter("id", userID).getResultList();
 			List<Message> mailChildren = entityManager.createQuery("from Message where ((senderUserId = :id and showSender = true) or " +
 																		   "(recipientUserId = :id and showRecipient = true)) and rootMessageId in :ids").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH)
 													  .setParameter("id", userID).setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
@@ -121,11 +119,11 @@ public class ChatBLL {
 		}
 	}
 
-	public static Message getMessage(int id, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static Message getMessage(int id, User user) throws GeneralSecurityException {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			Message mail = (Message) entityManager.createQuery("from Message where messageID = :id").setParameter("id", id).getSingleResult();
-			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
+			if(user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				return mail;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
@@ -138,10 +136,10 @@ public class ChatBLL {
 		}
 	}
 
-	private static List<Message> getMessages(List<Integer> ids, User user) throws GeneralSecurityException {
+	private static List<Message> getMessages(List<Integer> messageIds, User user) throws GeneralSecurityException {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where  messageID in :ids").setParameter("ids", ids).getResultList();
+			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where messageId in :ids").setParameter("ids", messageIds).getResultList();
 			for (Message m : mail) {
 				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
 					throw new GeneralSecurityException("Invalid cookie supplied");
@@ -149,14 +147,42 @@ public class ChatBLL {
 			}
 			return mail;
 		} catch(Exception e) {
-			logger.error("Something went wrong with retrieval for messages for user " + user.getUserID(), e);
+			logger.error("Something went wrong with retrieval for messages", e);
 			return null;
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static void deleteMessage(int messageID, User user) throws GeneralSecurityException, UnsupportedEncodingException {
+	public static void deleteMessages(List<Integer> messageIDs, User user) throws GeneralSecurityException {
+		List<Message> messages = getMessages(messageIDs, user);
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
+		try {
+			for(Message m : messages) {
+				if(m.getSender().getUserID() == user.getUserID()) {
+					m.setShowSender(false);
+				} else if(m.getRecipient().getUserID() == user.getUserID()) {
+					m.setShowRecipient(false);
+				} else {
+					return;
+				}
+
+				entityManager.merge(m);
+				entityManager.getTransaction().commit();
+			}
+		} catch(Exception e) {
+			logger.error("Could not delete messages for user " + user.toString(), e);
+			throw e;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+	}
+
+	public static void deleteMessage(int messageID, User user) throws GeneralSecurityException {
 		Message m = getMessage(messageID, user);
 		if(m.getSender().getUserID() == user.getUserID()){
 			m.setShowSender(false);
@@ -182,9 +208,13 @@ public class ChatBLL {
 	}
 
 	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
-		messages = ChatBLL.getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
-		if(messages != null) {
-			messages.forEach(m -> m.setDelivered(true));
+			messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+			if(messages != null) {
+				for (Message m : messages) {
+					if(m.getRecipient().getUserID() == loggedInUser.getUserID())
+						m.setDelivered(true);
+				}
+
 			messages = updateMessages(messages);
 			messages.forEach(m -> wipeSensitiveDetails(m));
 		}
@@ -192,9 +222,25 @@ public class ChatBLL {
 	}
 
 	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
-		messages = ChatBLL.getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+		messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
 		if(messages != null) {
-			messages.forEach(m -> m.setRead(true));
+			for (Message m : messages) {
+				if(m.getRecipient().getUserID() == loggedInUser.getUserID())
+					m.setRead(true);
+			}
+			messages = updateMessages(messages);
+			messages.forEach(m -> wipeSensitiveDetails(m));
+		}
+		return messages;
+	}
+
+	public static List<Message> markMessagesUnread(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+		messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+		if(messages != null) {
+			for (Message m : messages) {
+				if(m.getRecipient().getUserID() == loggedInUser.getUserID())
+					m.setRead(false);
+			}
 			messages = updateMessages(messages);
 			messages.forEach(m -> wipeSensitiveDetails(m));
 		}

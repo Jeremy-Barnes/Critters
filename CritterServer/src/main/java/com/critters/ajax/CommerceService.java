@@ -8,10 +8,7 @@ import com.critters.dal.dto.entity.Store;
 import com.critters.dal.dto.entity.User;
 
 import javax.resource.spi.InvalidPropertyException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
@@ -132,12 +129,11 @@ public class CommerceService extends AjaxService {
 		}
 	}
 
-	@POST
-	@Path("/getStorefront")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@GET
+	@Path("/getStorefront/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response viewStore(JAXBElement<Store> jsonRequest) throws JAXBException {
-		Store copiedStore = super.serializeDeepCopy(CommerceBLL.getStore(jsonRequest.getValue()), Store.class);
+	public Response viewStore(@PathParam("id") int id) throws JAXBException {
+		Store copiedStore = super.serializeDeepCopy(CommerceBLL.getStore(id), Store.class);
 		return Response.status(Response.Status.OK).entity(copiedStore).build();
 
 	}
