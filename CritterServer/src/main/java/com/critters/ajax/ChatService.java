@@ -10,8 +10,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,7 +24,7 @@ public class ChatService extends AjaxService {
 	@Path("/sendMessage")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sendMessage(JAXBElement<Message> message) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response sendMessage(JAXBElement<Message> message) throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -39,7 +39,7 @@ public class ChatService extends AjaxService {
 	@GET
 	@Path("/getMessage/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMessage(@PathParam("id") int id) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response getMessage(@PathParam("id") int id) throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -50,7 +50,7 @@ public class ChatService extends AjaxService {
 	@GET
 	@Path("/getMailbox")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMailbox() throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response getMailbox() throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -62,7 +62,7 @@ public class ChatService extends AjaxService {
 	@GET
 	@Path("/getUnreadMail")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUnreadMail() throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response getUnreadMail() throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -71,9 +71,9 @@ public class ChatService extends AjaxService {
 	}
 
 	@GET
-	@Path("/deleteMail/{id}")
+	@Path("/deleteMessage/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteMail(@PathParam("id") int messageId) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response deleteMail(@PathParam("id") int messageId) throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -86,7 +86,7 @@ public class ChatService extends AjaxService {
 	@Path("/markMessagesDelivered")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response markMessagesDelivered(JAXBElement<MessageRequest> message) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response markMessagesDelivered(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -101,7 +101,7 @@ public class ChatService extends AjaxService {
 	@Path("/markMessagesRead")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response markMessagesRead(JAXBElement<MessageRequest> message) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response markMessagesRead(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
@@ -109,6 +109,36 @@ public class ChatService extends AjaxService {
 
 		MessageRequest msg = message.getValue();
 		msg.messages = ChatBLL.markMessagesRead(msg.messages, loggedInUser);
+		return Response.status(Response.Status.OK).entity(msg).build();
+	}
+
+	@POST
+	@Path("/deleteMail")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteMessages(JAXBElement<MessageRequest> message) throws GeneralSecurityException{
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		MessageRequest msg = message.getValue();
+		ChatBLL.deleteMessages(msg.messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+		return Response.status(Response.Status.OK).build();
+	}
+
+	@POST
+	@Path("/markMessagesUnread")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response markMessagesUnread(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
+		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
+		if(loggedInUser == null) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
+		}
+
+		MessageRequest msg = message.getValue();
+		msg.messages = ChatBLL.markMessagesUnread(msg.messages, loggedInUser);
 		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 }

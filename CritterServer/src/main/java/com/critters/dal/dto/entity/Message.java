@@ -87,7 +87,7 @@ public class Message extends DTO {
 	}
 
 	public boolean isDelivered() {
-		return read;
+		return delivered;
 	}
 
 	public void setDelivered(boolean delivered) {

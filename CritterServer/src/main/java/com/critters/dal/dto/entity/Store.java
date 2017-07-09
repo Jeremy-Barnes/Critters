@@ -1,9 +1,12 @@
 package com.critters.dal.dto.entity;
 
 import com.critters.dal.dto.DTO;
+import com.critters.dal.dto.InventoryGrouping;
+import com.sun.xml.internal.ws.developer.Serialization;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 
@@ -26,7 +29,10 @@ public class Store extends DTO {
 	private String storeBackgroundImagePath;
 
 	@Transient
-	private List<Item> storeStock;
+	private List<InventoryGrouping> storeStock;
+	@Transient
+	@XmlTransient
+	private transient List<Item> storeStockDecomposed;
 
 	public Store(int storeConfigID, Integer ownerId, String name, String description, String storeClerkImagePath, String storeBackgroundImagePath) {
 		this.storeConfigID = storeConfigID;
@@ -87,12 +93,20 @@ public class Store extends DTO {
 		this.storeClerkImagePath = storeClerkImagePath;
 	}
 
-	public List<Item> getStoreStock() {
+	public List<InventoryGrouping> getStoreStock() {
 		return storeStock;
 	}
 
-	public void setStoreStock(List<Item> stock) {
+	public void setStoreStock(List<InventoryGrouping> stock) {
 		this.storeStock = stock;
+	}
+	@XmlTransient
+	public List<Item> getStoreStockDecomposed() {
+		return storeStockDecomposed;
+	}
+	@XmlTransient
+	public void setStoreStockDecomposed(List<Item> stock) {
+		this.storeStockDecomposed = stock;
 	}
 
 }
