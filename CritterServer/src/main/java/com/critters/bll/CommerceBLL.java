@@ -229,15 +229,16 @@ public class CommerceBLL {
 
 	}
 
-	public static Store getStore(Store store){
+	public static Store getStore(int storeID){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			Store dbStore = (Store) entityManager.createQuery("from Store where storeConfigID = :id").setParameter("id", store.getStoreConfigID()).getSingleResult();
+			Store dbStore = (Store) entityManager.createQuery("from Store where storeConfigID = :id").setParameter("id", storeID).getSingleResult();
 			List<Item> stock = entityManager
 					.createQuery("from Item where containingStoreId = :id and price != null")
-					.setParameter("id", store.getStoreConfigID())
+					.setParameter("id", storeID)
 					.getResultList();
-			dbStore.setStoreStock(stock);
+			dbStore.setStoreStock(groupItems(stock));
+			dbStore.setStoreStockDecomposed(stock);
 			return dbStore;
 		} catch (PersistenceException ex) {
 			return null; //no items found
@@ -275,8 +276,7 @@ public class CommerceBLL {
 	}
 
 	public static void restock(NPCStoreRestockConfig restock){
-		List<Item> stock = restock.getStore().getStoreStock();
-
+		List<Item> stock = restock.getStore().getStoreStockDecomposed();
 		int totalInStock = -1;
 		if(stock == null || stock.size() == 0) {
 			totalInStock = 0;
