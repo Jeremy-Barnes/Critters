@@ -97,7 +97,6 @@ img {
     display: inline-block;
 }
 
-
 /* necessary garbage, see - https://stackoverflow.com/a/7310398/4885507 */
 .imgCenterer {
     height: 350px;      /* equals max image height */
@@ -145,6 +144,11 @@ img {
     width: 100%;
 }
 
+.whiteText { 
+    color: white;
+
+}
+
 .framed {
     border: 1px solid #acacac;
     border-radius: 5px;
@@ -172,21 +176,10 @@ div.card16x9 > div {
 }
 
 
-.searchBoxHolder {
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-}
 .searchBoxHolder > input {
-    width: 70% !important;
+    min-width: 100px !important;
 }
-.sortBoxHolder {
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-}
+
 .sortBoxHolder > select {
     width: 100%;
 }
@@ -257,11 +250,67 @@ div.card16x9 > div {
     max-width: 400px;
     width: 100%;
 }
-  #viewItemDetail .itemSpinner * {
-      width: auto;
-      display: inline-block;
-  }
+#viewItemDetail .itemSpinner * {
+    width: auto;
+    display: inline-block;
+}
 
+.shopkeep {
+    border: 5px white solid;
+    height: 220px;
+    width: 220px;
+}
+
+.shopTitle .imgCenterer {
+    height: 300px;
+    text-align: left;
+}
+.shopTitle {
+    min-height: 300px;
+}
+@media (max-width:992px) {
+    .shopTitle img {
+        width: 100px;
+        height: 100px;
+    }
+    .shopTitle h2 {
+        text-align: center;
+    }
+    .shopTitle .form-inline {
+        display: none;    
+    }
+    .shopTitle .imgCenterer {
+        height: 100px;
+        text-align: center;
+    }
+}
+@media (min-width: 993px) {
+      #mainView > .form-inline {
+        display: none;
+    }
+}
+.buySpinner {
+    width: 100%;
+    padding: 0px !important;
+}
+.buySpinner div + div {
+    border-left: 1px solid #59a13b;
+    padding: 10px 0px 10px 10px;
+    width: 35px;
+}
+.buySpinner .buyLabel {
+    width: 70%;
+    padding: 10px 0px 10px 10px;
+}
+/*.shopTitle .foot {
+    width: 100%;
+    position: absolute;
+    bottom: 25px;
+    left: 0px;
+}*/
+.searchBoxHolder > p {
+    font-weight: bold;
+}
 
 .gameCard {
     margin-bottom: 30px;
@@ -366,8 +415,11 @@ a:hover, a:focus {color: #0F8DBA;}
     padding-top: 30px;
     padding-bottom: 20px;
 }
-.page-title * {
+.page-title > * {
     margin-left: 30px;
+}
+.page-title > .row {
+    margin-left: 15px;
 }
 .page-title * {
     margin-top: 0px;

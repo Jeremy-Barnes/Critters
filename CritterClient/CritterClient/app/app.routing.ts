@@ -12,6 +12,7 @@ import { UserProfileComponent } from './components/userprofile.component';
 import { MessageComponent } from './components/messages.component';
 import { InventoryComponent } from './components/inventory.component';
 import { GamesComponent } from './components/games.component';
+import { StoreComponent } from './components/store.component';
 
 
 const appRoutes: Routes = [
@@ -63,7 +64,11 @@ const appRoutes: Routes = [
     {
         path: 'games',
         component: GamesComponent
-    }
+    },
+    {
+        path: 'store/:id',
+        component: StoreComponent
+    },
 ];
 
 @NgModule({

@@ -286,4 +286,9 @@ export class Application {
         } else return jQuery.Deferred().resolve(null);
     }
 
+    public static getStore(id: number): JQueryPromise<Store> {
+        return ServiceMethods.getStorefront(id);
+    }
+
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null;}
 }

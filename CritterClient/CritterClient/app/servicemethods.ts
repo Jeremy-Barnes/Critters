@@ -115,8 +115,8 @@ export class ServiceMethods {
     }
 
     /************** Store Stuff **************/
-    public static getStorefront(request: Store): JQueryPromise<Store> {
-        return ServiceMethods.doAjax("getStorefront", "commerce", request);
+    public static getStorefront(storeId: number): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
     }
 
     /************** Chat Stuff **************/
@@ -145,7 +145,7 @@ export class ServiceMethods {
     }
 
     public static setUnread(user: User, messageIds: number[]): JQueryPromise<void> {
-        return ServiceMethods.doAjax("setUnread", "chat", { user: user, messages: messageIds });
+        return ServiceMethods.doAjax("markMessagesUnread", "chat", { user: user, messages: messageIds });
     }
 
     public static getUnreadMail(): JQueryPromise<Message[]> {
