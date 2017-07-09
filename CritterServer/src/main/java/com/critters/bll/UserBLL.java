@@ -194,13 +194,15 @@ public class UserBLL {
 		}
 	}
 
-	public static User wipeSensitiveFields(User user) {
+	public static User wipeSensitiveFields(User user){ return wipeSensitiveFields(user, false);}
+
+	public static User wipeSensitiveFields(User user, boolean ignoreMoney) {
 		user.setSalt("");
 		user.setPassword("");
 		user.setTokenSelector("");
 		user.setTokenValidator("");
 		user.setEmailAddress("");
-		user.setCritterbuxx(0);
+		if(!ignoreMoney) user.setCritterbuxx(0);
 		user.setInventory(null);
 		if(user.getFriends()!= null)
 			for(Friendship friend: user.getFriends()){
@@ -255,10 +257,9 @@ public class UserBLL {
 	public static void discardInventoryItems(Item[] items, User user){
 		List<Item> streamableItems = Arrays.asList(items);
 		List<Integer> ids = streamableItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
-		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
 
 		verifyUserInventoryIsLoaded(user);
-
+		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
 		if(resultant != null && resultant.length == items.length) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {

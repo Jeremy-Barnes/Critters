@@ -77,7 +77,7 @@ public class UserService extends AjaxService{
 		return Response.status(Response.Status.OK)
 					   .cookie(createUserCookies(copiedUser))
 					   .header("JSESSIONID", httpRequest.getSession().getId())
-					   .entity(UserBLL.wipeSensitiveFields(copiedUser)).build();
+					   .entity(UserBLL.wipeSensitiveFields(copiedUser, true)).build();
 	}
 
 	@POST

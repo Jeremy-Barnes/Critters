@@ -93,7 +93,9 @@ public class CommerceBLL {
 		List<Item> streamableItems = Arrays.asList(dbItems);
 
 		user = UserBLL.getFullUser(user.getUserID());
-		User owner  = UserBLL.getFullUser(dbItems[0].getOwnerId());
+		User owner = null; //could be an NPC!
+		if(dbItems[0].getOwnerId() != null)
+			owner  = UserBLL.getFullUser(dbItems[0].getOwnerId());
 		UserBLL.verifyUserInventoryIsLoaded(user);
 
 		if(dbItems != null && streamableItems.stream().allMatch(is -> is.getPrice() != null)) {
