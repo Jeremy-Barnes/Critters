@@ -292,7 +292,7 @@ export class Application {
 
     public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
 
-    public static purchaseItem(items: Item[]) {
+    public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
         var app = Application.getApp();
         return ServiceMethods.purchaseInventoryItemFromStore({
             user: app.user, items: items
@@ -301,8 +301,18 @@ export class Application {
                 i.ownerId = app.user.userID;
                 i.price = null;
                 i.containingStoreId = null;
-                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == i.description.itemConfigID).inventoryItemsGrouped.push(i)
+                containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
             });
+            if (app.inventory && app.inventory.length > 0)
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                sellerStore.storeStock.splice(sellerStore.storeStock.indexOf(containingGroup), 1);
+            }
+            var totalCost = 0;
+            items.forEach(i => totalCost += i.price);
+            app.user.critterbuxx -= totalCost;
         });
     }
 }

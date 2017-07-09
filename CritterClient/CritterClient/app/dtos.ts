@@ -148,7 +148,7 @@ export class Item {
     ownerId: number;
     storeStock: Item[];
     description: ItemDescription;
-    price: string;
+    price: number;
     containingStoreId: number;
 }
 

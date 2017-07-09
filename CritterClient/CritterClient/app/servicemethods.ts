@@ -119,7 +119,7 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
     }
 
-    public static purchaseInventoryItemFromStore(request: ItemRequest): JQueryPromise<Store> {
+    public static purchaseInventoryItemFromStore(request: ItemRequest): JQueryPromise<void> {
         return ServiceMethods.doAjax("purchaseInventoryItemFromStore", "commerce", request);
     }
 
