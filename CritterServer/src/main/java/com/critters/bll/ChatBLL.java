@@ -7,6 +7,8 @@ import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Item;
 import com.critters.dal.dto.entity.Message;
 import com.critters.dal.dto.entity.User;
+import org.hibernate.CacheMode;
+import org.hibernate.annotations.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,10 +108,10 @@ public class ChatBLL {
 			List<Message> mail = entityManager.createQuery("from Message where " +
 																   "((senderUserId = :id and showSender = true) or " +
 																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setParameter("id", userID).getResultList();
-			List<Message> mailChildren = entityManager.createQuery("from Message where rootMessageId in :ids")
-													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
+			List<Message> mailChildren = entityManager.createQuery("from Message where ((senderUserId = :id and showSender = true) or " +
+																		   "(recipientUserId = :id and showRecipient = true)) and rootMessageId in :ids").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH)
+													  .setParameter("id", userID).setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
-			mailChildren.removeIf(m -> (m.getSender().getUserID() == userID && !m.getShowSender()) || (m.getSender().getUserID() == userID && !m.getShowSender()));
 			return buildConversations(mail, mailChildren);
 		} catch(Exception e) {
 			logger.error("Something went wrong with messages for user " + userID, e);
@@ -123,17 +125,31 @@ public class ChatBLL {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			Message mail = (Message) entityManager.createQuery("from Message where messageID = :id").setParameter("id", id).getSingleResult();
-			mail.setRead(true);
-			entityManager.merge(mail);
 			if ((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
-				entityManager.detach(mail);
-				Message wiped = wipeSensitiveDetails(mail);
-				return wiped;
+				return mail;
 			} else {
 				throw new GeneralSecurityException("Invalid cookie supplied");
 			}
 		} catch(Exception e) {
 			logger.error("Something went wrong with retrieval for message " + id + " for user " + user.getUserID(), e);
+			return null;
+		} finally {
+			entityManager.close();
+		}
+	}
+
+	private static List<Message> getMessages(List<Integer> ids, User user) throws GeneralSecurityException {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where  messageID in :ids").setParameter("ids", ids).getResultList();
+			for (Message m : mail) {
+				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
+					throw new GeneralSecurityException("Invalid cookie supplied");
+				}
+			}
+			return mail;
+		} catch(Exception e) {
+			logger.error("Something went wrong with retrieval for messages for user " + user.getUserID(), e);
 			return null;
 		} finally {
 			entityManager.close();
@@ -165,17 +181,23 @@ public class ChatBLL {
 		}
 	}
 
-	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) {
-		messages.forEach(m -> m.setDelivered(true));
-		messages = updateMessages(messages);
-		messages.forEach(m -> wipeSensitiveDetails(m));
+	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+		messages = ChatBLL.getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+		if(messages != null) {
+			messages.forEach(m -> m.setDelivered(true));
+			messages = updateMessages(messages);
+			messages.forEach(m -> wipeSensitiveDetails(m));
+		}
 		return messages;
 	}
 
-	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser){
-		messages.forEach(m -> m.setRead(true));
-		messages = updateMessages(messages);
-		messages.forEach(m -> wipeSensitiveDetails(m));
+	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+		messages = ChatBLL.getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+		if(messages != null) {
+			messages.forEach(m -> m.setRead(true));
+			messages = updateMessages(messages);
+			messages.forEach(m -> wipeSensitiveDetails(m));
+		}
 		return messages;
 	}
 
