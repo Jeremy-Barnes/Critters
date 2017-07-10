@@ -32,18 +32,22 @@ public class AjaxService {
 		return cookie.split(":");
 	}
 
-	protected <T> T serializeDeepCopy(T object, Class objType) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(objType);
-		Marshaller marshaller = jc.createMarshaller();
-		marshaller.setProperty("eclipselink.media-type", "application/json");
-		marshaller.setProperty("eclipselink.json.include-root", true);
-		StringWriter sw = new StringWriter();
-		marshaller.marshal(object, sw);
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		unmarshaller.setProperty("eclipselink.json.include-root", false);
-		unmarshaller.setProperty(JAXBContextProperties.MEDIA_TYPE, "application/json");
-		T copiedObject = (T)unmarshaller.unmarshal(new StreamSource(new StringReader(sw.toString())), objType).getValue();
-		return copiedObject;
+	protected <T> T serializeDeepCopy(T object, Class objType) {
+		try {
+			JAXBContext jc = JAXBContext.newInstance(objType);
+			Marshaller marshaller = jc.createMarshaller();
+			marshaller.setProperty("eclipselink.media-type", "application/json");
+			marshaller.setProperty("eclipselink.json.include-root", true);
+			StringWriter sw = new StringWriter();
+			marshaller.marshal(object, sw);
+			Unmarshaller unmarshaller = jc.createUnmarshaller();
+			unmarshaller.setProperty("eclipselink.json.include-root", false);
+			unmarshaller.setProperty(JAXBContextProperties.MEDIA_TYPE, "application/json");
+			T copiedObject = (T) unmarshaller.unmarshal(new StreamSource(new StringReader(sw.toString())), objType).getValue();
+			return copiedObject;
+		} catch(JAXBException jaxb) {
+			return null;
+		}
 	}
 
 	protected NewCookie[] createUserCookies(User user){

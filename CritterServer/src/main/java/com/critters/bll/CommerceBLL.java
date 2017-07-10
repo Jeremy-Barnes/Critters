@@ -6,16 +6,11 @@ import com.critters.dal.dto.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
-import javax.persistence.PersistenceException;
-import javax.persistence.StoredProcedureQuery;
+import javax.persistence.*;
 import javax.resource.spi.InvalidPropertyException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-
 
 /**
  * Created by Jeremy on 8/28/2016.
@@ -24,8 +19,9 @@ public class CommerceBLL {
 
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-	public static void changeItemsPrice(Item[] items, User user) {
+	public static void changeItemsPrice(Item[] items, User user) throws Exception {
 		List<Item> streamableItems = Arrays.asList(items);
+
 		UserBLL.verifyUserInventoryIsLoaded(user);
 		Stream<Item> resultant = user.getInventory().parallelStream().filter(i -> streamableItems.stream().anyMatch(si -> si.getInventoryItemId() == i.getInventoryItemId()));//.toArray(Item[]::new);
 		if(resultant != null && resultant.count() == items.length) {
@@ -46,7 +42,7 @@ public class CommerceBLL {
 					itemArray += "\n" + item.toString();
 				}
 				logger.error("Could not alter price of one of these items " + itemArray, e);
-				throw e;
+				throw new Exception("Couldn't alter the price of your items! Contact an admin about this, please.");
 			} finally {
 				if(entityManager.getTransaction().isActive()){
 					entityManager.getTransaction().rollback();
@@ -56,7 +52,7 @@ public class CommerceBLL {
 		}
 	}
 
-	public static void changeItemsStore(Item[] items, User user) {
+	public static void changeItemsStore(Item[] items, User user) throws Exception {
 		UserBLL.verifyUserInventoryIsLoaded(user);
 		List<Item> streamableItems = Arrays.asList(items);
 
@@ -78,7 +74,7 @@ public class CommerceBLL {
 					itemArray += "\n" + item.toString();
 				}
 				logger.error("Could not put one of these items in the store " + itemArray + " user:" + user.toString() , e);
-				throw e;
+				throw new Exception("Couldn't move your items to your store! Contact an admin about this, please.");
 			} finally {
 				if(entityManager.getTransaction().isActive()){
 					entityManager.getTransaction().rollback();
@@ -88,7 +84,7 @@ public class CommerceBLL {
 		}
 	}
 
-	public static void changeItemsOwnerViaPurchase(Item[] items, User user) throws InvalidPropertyException {
+	public static void changeItemsOwnerViaPurchase(Item[] items, User user) throws Exception {
 		Item[] dbItems = getItems(items);
 		List<Item> streamableItems = Arrays.asList(dbItems);
 
@@ -123,7 +119,7 @@ public class CommerceBLL {
 						itemArray += "\n" + item.toString();
 					}
 					logger.error("Could transfer one of these items to the new owner " + user.toString()  + "\n" + itemArray, e);
-					throw e;
+					throw new Exception("Couldn't complete this sale! Contact an admin about this, please.");
 				} finally {
 					if(entityManager.getTransaction().isActive()){
 						entityManager.getTransaction().rollback();
@@ -136,7 +132,7 @@ public class CommerceBLL {
 		}
 	}
 
-	public static Item[] getItems(Item[] items){
+	public static Item[] getItems(Item[] items) throws Exception {
 		List<Item> itemsList = Arrays.asList(items);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 
@@ -146,29 +142,28 @@ public class CommerceBLL {
 											  .getResultList();
 			return dbItems.toArray(new Item[0]);
 		} catch (PersistenceException ex) {
-			return null; //no item found
+			throw new Exception("Something critical went wrong in the database. Please contact an admin, your items should be safe.");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static Store createStore(Store store, StoreBackgroundImageOption background, StoreClerkImageOption clerk, User owner){
+	public static Store createStore(Store store, StoreBackgroundImageOption background, StoreClerkImageOption clerk, User owner) throws Exception {
 		store.setOwnerId(owner.getUserID());
 
-		if(background != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
+		if(background != null) { //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
 			//from User Input. That way porn lies.
 			background = getStoreBackgroundImageOption(background.getStoreBackgroundImageOptionID());
-			store.setStoreBackgroundImagePath(background.getImagePath());
-		} else{
-			store.setStoreBackgroundImagePath(null);
 		}
+		store.setStoreBackgroundImagePath(background != null ? background.getImagePath() : null);
 
-		if(clerk != null){
+
+		if(clerk != null) {//WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
+			//from User Input. That way porn lies.
 			clerk = getStoreClerkImageOption(clerk.getStoreClerkImageOptionID());
-			store.setStoreClerkImagePath(clerk.getImagePath());
-		} else {
-			store.setStoreClerkImagePath(null);
 		}
+		store.setStoreClerkImagePath(clerk != null ? clerk.getImagePath() : null);
+
 
 		//todo contentfilter on store.description and store.name
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -182,33 +177,29 @@ public class CommerceBLL {
 					+ " with this background " + background.toString()
 					+ " with this clerk " + clerk.toString()
 					+ " for this user " + owner.toString(), e);
-			throw e;
+			throw new Exception("Couldn't create your store. Please contact an admin.");
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
 			}
 			entityManager.close();
 		}
-
 	}
 
-	public static Store editStore(Store store, StoreBackgroundImageOption background, StoreClerkImageOption clerk, User owner){
+	public static Store editStore(Store store, StoreBackgroundImageOption background, StoreClerkImageOption clerk, User owner) throws Exception {
 		//todo contentfilter on store.description and store.name
 
-		if(background != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
+		if(background != null) { //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
 			//from User Input. That way porn lies.
 			background = getStoreBackgroundImageOption(background.getStoreBackgroundImageOptionID());
-			store.setStoreBackgroundImagePath(background.getImagePath());
-		} else{
-			store.setStoreBackgroundImagePath(null);
 		}
+		store.setStoreBackgroundImagePath(background != null ? background.getImagePath() : null);
 
-		if(clerk != null){
+		if(clerk != null) {//WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
+			//from User Input. That way porn lies.
 			clerk = getStoreClerkImageOption(clerk.getStoreClerkImageOptionID());
-			store.setStoreClerkImagePath(clerk.getImagePath());
-		} else {
-			store.setStoreClerkImagePath(null);
 		}
+		store.setStoreClerkImagePath(clerk != null ? clerk.getImagePath() : null);
 
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
@@ -221,17 +212,16 @@ public class CommerceBLL {
 								 + " with this background " + background.toString()
 								 + " with this clerk " + clerk.toString()
 								 + " for this user " + owner.toString(), e);
-			throw e;
+			throw new Exception("Couldn't create your store. Please contact an admin.");
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
 			}
 			entityManager.close();
 		}
-
 	}
 
-	public static Store getStore(int storeID){
+	public static Store getStore(int storeID) throws Exception {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			Store dbStore = (Store) entityManager.createQuery("from Store where storeConfigID = :id").setParameter("id", storeID).getSingleResult();
@@ -242,8 +232,10 @@ public class CommerceBLL {
 			dbStore.setStoreStock(groupItems(stock));
 			dbStore.setStoreStockDecomposed(stock);
 			return dbStore;
+		}  catch (NoResultException nrex) {
+			return null;
 		} catch (PersistenceException ex) {
-			return null; //no items found
+			throw new Exception("Something went very wrong getting this store. Contact an admin!");
 		} finally {
 			entityManager.close();
 		}
@@ -271,7 +263,7 @@ public class CommerceBLL {
 			return cfgs;
 		} catch (Exception ex){
 			logger.debug("Couldn't get restock configs", ex);
-			return null;
+			return new ArrayList<NPCStoreRestockConfig>();
 		} finally {
 			entityManager.close();
 		}
@@ -334,49 +326,59 @@ public class CommerceBLL {
 		}
 	}
 
-	public static StoreBackgroundImageOption getStoreBackgroundImageOption(int id){ //todo caching
+	public static StoreBackgroundImageOption getStoreBackgroundImageOption(int id) throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			StoreBackgroundImageOption image = (StoreBackgroundImageOption) entityManager.createQuery("from StoreBackgroundImageOption where storeBackgroundImageOptionID = :id").setParameter("id", id).getSingleResult();
+			StoreBackgroundImageOption image = (StoreBackgroundImageOption) entityManager.createQuery("from StoreBackgroundImageOption where storeBackgroundImageOptionID = :id")
+																						 .setParameter("id", id)
+																						 .getSingleResult();
 			return image;
+		}  catch (NoResultException nrex) {
+			return null;
 		} catch (PersistenceException ex) {
-			return null; //no image found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static StoreBackgroundImageOption[] getStoreBackgroundImageOptions(){ //todo caching
+	public static StoreBackgroundImageOption[] getStoreBackgroundImageOptions() throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			StoreBackgroundImageOption[] images = (StoreBackgroundImageOption[]) entityManager.createQuery("from StoreBackgroundImageOption").getResultList().toArray(new StoreBackgroundImageOption[0]);
+			StoreBackgroundImageOption[] images = (StoreBackgroundImageOption[]) entityManager.createQuery("from StoreBackgroundImageOption")
+																							  .getResultList().toArray(new StoreBackgroundImageOption[0]);
 			return images;
 		} catch (PersistenceException ex) {
-			return null; //no images found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static StoreClerkImageOption getStoreClerkImageOption(int id){ //todo caching
+	public static StoreClerkImageOption getStoreClerkImageOption(int id) throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			StoreClerkImageOption image = (StoreClerkImageOption) entityManager.createQuery("from StoreClerkImageOption where storeClerkImageOptionID = :id").setParameter("id", id).getSingleResult();
+			StoreClerkImageOption image = (StoreClerkImageOption) entityManager.createQuery("from StoreClerkImageOption where storeClerkImageOptionID = :id")
+																			   .setParameter("id", id)
+																			   .getSingleResult();
 			return image;
+		} catch (NoResultException nrex) {
+			return null;
 		} catch (PersistenceException ex) {
-			return null; //no image found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static StoreClerkImageOption[] getStoreClerkImageOptions(){ //todo caching
+	public static StoreClerkImageOption[] getStoreClerkImageOptions() throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			StoreClerkImageOption[] images = (StoreClerkImageOption[]) entityManager.createQuery("from StoreClerkImageOption").getResultList().toArray(new StoreClerkImageOption[0]);
+			StoreClerkImageOption[] images = (StoreClerkImageOption[]) entityManager.createQuery("from StoreClerkImageOption")
+																					.getResultList().toArray(new StoreClerkImageOption[0]);
 			return images;
 		} catch (PersistenceException ex) {
-			return null; //no images found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}

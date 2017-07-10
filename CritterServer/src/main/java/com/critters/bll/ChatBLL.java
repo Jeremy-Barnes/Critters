@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.TimeoutHandler;
 import javax.ws.rs.core.Response;
@@ -19,7 +20,6 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 
 /**
  * Created by Jeremy on 11/29/2016.
@@ -34,6 +34,7 @@ public class ChatBLL {
 			@Override
 			public void handleTimeout(AsyncResponse asyncResponse) {
 				listeners.remove(userId);
+
 				asyncResponse.resume(Response.status(Response.Status.NOT_FOUND)
 											 .entity("Operation time out.").build());
 			}
@@ -55,7 +56,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static Message sendMessage(Message message, User user) throws GeneralSecurityException {
+	public static Message sendMessage(Message message, User user) throws Exception {
 		if(user.getUserID() == (message.getSender().getUserID())) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
@@ -71,7 +72,7 @@ public class ChatBLL {
 				return wiped;
 			} catch(Exception e) {
 				logger.error("Could not send message to user " + message.toString() + "\n" + user.toString(), e);
-				throw e;
+				throw new Exception("Something went wrong with your message. Please contact an admin.");
 			} finally {
 				if(entityManager.getTransaction().isActive()){
 					entityManager.getTransaction().rollback();
@@ -80,11 +81,11 @@ public class ChatBLL {
 			}
 		} else {
 			logger.info("An invalid cookie was supplied for user " + user.toString());
-			throw new GeneralSecurityException("Invalid cookie supplied");
+			throw new GeneralSecurityException("Invalid cookie supplied, try logging out and logging back in.");
 		}
 	}
 
-	public static List<Message> getMail(int userID, boolean undeliveredOnly) {
+	public static List<Message> getMail(int userID, boolean undeliveredOnly) throws Exception {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			List<Message> mail = undeliveredOnly ?
@@ -94,67 +95,59 @@ public class ChatBLL {
 			return mail;
 		}catch(Exception e) {
 			logger.error("Something went wrong with mail for user " + userID, e);
-			return null;
+			throw new Exception("Something went wrong while retrieving mail. Please let an admin know.");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static List<Conversation> getConversations(int userID) {
+	public static List<Conversation> getConversations(int userID) throws Exception {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			List<Message> mail = entityManager.createQuery("from Message where " +
-																   "((senderUserId = :id and showSender = true) or " +
-																   "(recipientUserId = :id and showRecipient = true)) and parentMessageId is null").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH).setParameter("id", userID).getResultList();
+															   "((senderUserId = :id and showSender = true) or " +
+															   "(recipientUserId = :id and showRecipient = true)) " +
+															   "and parentMessageId is null")
+											  .setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH)
+											  .setParameter("id", userID).getResultList();
+
 			List<Message> mailChildren = entityManager.createQuery("from Message where ((senderUserId = :id and showSender = true) or " +
-																		   "(recipientUserId = :id and showRecipient = true)) and rootMessageId in :ids").setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH)
-													  .setParameter("id", userID).setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
+																	   "(recipientUserId = :id and showRecipient = true)) " +
+																	   "and rootMessageId in :ids")
+													  .setHint(QueryHints.CACHE_MODE, CacheMode.REFRESH)
+													  .setParameter("id", userID)
+													  .setParameter("ids", mail.stream().map(Message::getMessageID).collect(Collectors.toList()))
 													  .getResultList();
 			return buildConversations(mail, mailChildren);
 		} catch(Exception e) {
 			logger.error("Something went wrong with messages for user " + userID, e);
-			return null;
+			throw new Exception("Couldn't get your mailbox! Please let an admin know.");
 		} finally{
 			entityManager.close();
 		}
 	}
 
-	public static Message getMessage(int id, User user) throws GeneralSecurityException {
+	public static Message getMessage(int id, User user) throws Exception {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			Message mail = (Message) entityManager.createQuery("from Message where messageID = :id").setParameter("id", id).getSingleResult();
-			if(user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
+			if((user.getUserID() == mail.getSender().getUserID()) || (user.getUserID() == mail.getRecipient().getUserID())) {
 				return mail;
 			} else {
-				throw new GeneralSecurityException("Invalid cookie supplied");
+				throw new GeneralSecurityException("Invalid cookie supplied, try logging out and logging back in.");
 			}
+		} catch(NoResultException nrex){ //no such message
+			logger.debug("Failed to retrieve message for invalid id " + id, nrex);
+			return null;
 		} catch(Exception e) {
 			logger.error("Something went wrong with retrieval for message " + id + " for user " + user.getUserID(), e);
-			return null;
+			throw new Exception("Couldn't retrieve this message.");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	private static List<Message> getMessages(List<Integer> messageIds, User user) throws GeneralSecurityException {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where messageId in :ids").setParameter("ids", messageIds).getResultList();
-			for (Message m : mail) {
-				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
-					throw new GeneralSecurityException("Invalid cookie supplied");
-				}
-			}
-			return mail;
-		} catch(Exception e) {
-			logger.error("Something went wrong with retrieval for messages", e);
-			return null;
-		} finally {
-			entityManager.close();
-		}
-	}
-
-	public static void deleteMessages(List<Integer> messageIDs, User user) throws GeneralSecurityException {
+	public static void deleteMessages(List<Integer> messageIDs, User user) throws Exception {
 		List<Message> messages = getMessages(messageIDs, user);
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
@@ -182,7 +175,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static void deleteMessage(int messageID, User user) throws GeneralSecurityException {
+	public static void deleteMessage(int messageID, User user) throws Exception {
 		Message m = getMessage(messageID, user);
 		if(m.getSender().getUserID() == user.getUserID()){
 			m.setShowSender(false);
@@ -207,7 +200,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) throws Exception {
 			messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
 			if(messages != null) {
 				for (Message m : messages) {
@@ -221,7 +214,7 @@ public class ChatBLL {
 		return messages;
 	}
 
-	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) throws Exception {
 		messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
 		if(messages != null) {
 			for (Message m : messages) {
@@ -234,7 +227,7 @@ public class ChatBLL {
 		return messages;
 	}
 
-	public static List<Message> markMessagesUnread(List<Message> messages, User loggedInUser) throws GeneralSecurityException {
+	public static List<Message> markMessagesUnread(List<Message> messages, User loggedInUser) throws Exception {
 		messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
 		if(messages != null) {
 			for (Message m : messages) {
@@ -247,7 +240,7 @@ public class ChatBLL {
 		return messages;
 	}
 
-	private static List<Message> updateMessages(List<Message> messages){
+	private static List<Message> updateMessages(List<Message> messages) throws Exception {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			entityManager.getTransaction().begin();
@@ -261,7 +254,7 @@ public class ChatBLL {
 				messageArray += "\n" + message.toString();
 			}
 			logger.error("Could not update messages " + messageArray, e);
-			throw e;
+			throw new Exception("Something went wrong while updating these messages. Please let an admin know.");
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
@@ -269,6 +262,24 @@ public class ChatBLL {
 			entityManager.close();
 		}
 		return messages;
+	}
+
+	private static List<Message> getMessages(List<Integer> messageIds, User user) throws Exception {
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		try {
+			List<Message> mail = (List<Message>) entityManager.createQuery("from Message where messageId in :ids").setParameter("ids", messageIds).getResultList();
+			for (Message m : mail) {
+				if(!((user.getUserID() == m.getSender().getUserID()) || (user.getUserID() == m.getRecipient().getUserID()))) {
+					throw new GeneralSecurityException("Invalid cookie supplied, try logging out and logging back in.");
+				}
+			}
+			return mail;
+		} catch(Exception e) {
+			logger.error("Something went wrong with retrieval for messages", e);
+			throw new Exception("Something went wrong while retrieving these messages. Please let an admin know.");
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	private static Message wipeSensitiveDetails(Message message) {
