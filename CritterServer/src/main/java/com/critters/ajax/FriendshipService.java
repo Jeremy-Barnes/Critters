@@ -11,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
-import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 /**
@@ -24,65 +23,88 @@ public class FriendshipService extends AjaxService {
 	@Path("/createFriendship")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createFriendship(JAXBElement<Friendship> jsonRequest) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response createFriendship(JAXBElement<Friendship> jsonRequest) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-
 		Friendship request = jsonRequest.getValue();
-		request = FriendshipBLL.createFriendship(request.getRequester(), request.getRequested(), loggedInUser);
+		try {
+			request = FriendshipBLL.createFriendship(request.getRequester(), request.getRequested(), loggedInUser);
+			return Response.status(Response.Status.OK).entity(request).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 
-		return Response.status(Response.Status.OK).entity(request).build();
 	}
 
 	@POST
 	@Path("/respondToFriendRequest")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateFriendship(JAXBElement<Friendship> request) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response updateFriendship(JAXBElement<Friendship> request) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		Friendship req = request.getValue();
-		if(req.isAccepted()){
-			req = FriendshipBLL.acceptFriendRequest(req, loggedInUser);
-		} else {
-			FriendshipBLL.deleteFriendRequest(req, loggedInUser);
+		try {
+			if (req.isAccepted()) {
+				req = FriendshipBLL.acceptFriendRequest(req, loggedInUser);
+				return Response.status(Response.Status.OK).entity(req).build();
+			} else {
+				FriendshipBLL.deleteFriendRequest(req, loggedInUser);
+				return Response.status(Response.Status.OK).build();
+			}
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-
-		return Response.status(Response.Status.OK).entity(req).build();
 	}
 
 	@POST
 	@Path("/cancelFriendRequest")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response cancelFriendRequest(JAXBElement<Friendship> request) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response cancelFriendRequest(JAXBElement<Friendship> request) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		Friendship req = request.getValue();
-		FriendshipBLL.cancelFriendRequest(req, loggedInUser);
-		return Response.status(Response.Status.OK).build();
+		try {
+			FriendshipBLL.cancelFriendRequest(req, loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		}  catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
 	@Path("/deleteFriendship")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response endFriendship(JAXBElement<Friendship> request) throws GeneralSecurityException, UnsupportedEncodingException {
+	public Response endFriendship(JAXBElement<Friendship> request) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		Friendship req = request.getValue();
-		FriendshipBLL.endFriendship(req, loggedInUser);
-		return Response.status(Response.Status.OK).build();
+		try {
+			FriendshipBLL.endFriendship(req, loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		}  catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 }

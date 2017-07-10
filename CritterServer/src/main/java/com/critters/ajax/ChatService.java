@@ -24,121 +24,174 @@ public class ChatService extends AjaxService {
 	@Path("/sendMessage")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response sendMessage(JAXBElement<Message> message) throws GeneralSecurityException {
+	public Response sendMessage(JAXBElement<Message> message) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		Message msg = message.getValue();
-		msg = ChatBLL.sendMessage(msg, loggedInUser);
-		return Response.status(Response.Status.OK).entity(msg).build();
+		try {
+			msg = ChatBLL.sendMessage(msg, loggedInUser);
+			return Response.status(Response.Status.OK).entity(msg).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 
 	@GET
 	@Path("/getMessage/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMessage(@PathParam("id") int id) throws GeneralSecurityException {
+	public Response getMessage(@PathParam("id") int id) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		return Response.status(Response.Status.OK).entity(ChatBLL.getMessage(id, loggedInUser)).build();
+		try {
+			return Response.status(Response.Status.OK).entity(ChatBLL.getMessage(id, loggedInUser)).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@GET
 	@Path("/getMailbox")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getMailbox() throws GeneralSecurityException {
+	public Response getMailbox() {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		return Response.status(Response.Status.OK).entity(ChatBLL.getConversations(loggedInUser.getUserID()).toArray(new Conversation[0])).build();
+
+		try {
+			return Response.status(Response.Status.OK).entity(ChatBLL.getConversations(loggedInUser.getUserID()).toArray(new Conversation[0])).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 
 	@GET
 	@Path("/getUnreadMail")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUnreadMail() throws GeneralSecurityException {
+	public Response getUnreadMail() {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		return Response.status(Response.Status.OK).entity(ChatBLL.getMail(loggedInUser.getUserID(), true).toArray(new Message[0])).build();
+
+		try {
+			return Response.status(Response.Status.OK).entity(ChatBLL.getMail(loggedInUser.getUserID(), true).toArray(new Message[0])).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@GET
 	@Path("/deleteMessage/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteMail(@PathParam("id") int messageId) throws GeneralSecurityException {
+	public Response deleteMail(@PathParam("id") int messageId) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
-		ChatBLL.deleteMessage(messageId, loggedInUser);
-		return Response.status(Response.Status.OK).build();
+
+		try {
+			ChatBLL.deleteMessage(messageId, loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
 	@Path("/markMessagesDelivered")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response markMessagesDelivered(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
+	public Response markMessagesDelivered(JAXBElement<MessageRequest> message) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		MessageRequest msg = message.getValue();
-		msg.messages = ChatBLL.markMessagesDelivered(msg.messages, loggedInUser);
-		return Response.status(Response.Status.OK).entity(msg).build();
+		try {
+			msg.messages = ChatBLL.markMessagesDelivered(msg.messages, loggedInUser);
+			return Response.status(Response.Status.OK).entity(msg).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
 	@Path("/markMessagesRead")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response markMessagesRead(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
+	public Response markMessagesRead(JAXBElement<MessageRequest> message) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		MessageRequest msg = message.getValue();
-		msg.messages = ChatBLL.markMessagesRead(msg.messages, loggedInUser);
-		return Response.status(Response.Status.OK).entity(msg).build();
+		try {
+			msg.messages = ChatBLL.markMessagesRead(msg.messages, loggedInUser);
+			return Response.status(Response.Status.OK).entity(msg).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
 	@Path("/deleteMail")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteMessages(JAXBElement<MessageRequest> message) throws GeneralSecurityException{
+	public Response deleteMessages(JAXBElement<MessageRequest> message) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		MessageRequest msg = message.getValue();
-		ChatBLL.deleteMessages(msg.messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
-		return Response.status(Response.Status.OK).build();
+		try {
+			ChatBLL.deleteMessages(msg.messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
+			return Response.status(Response.Status.OK).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
 	@Path("/markMessagesUnread")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response markMessagesUnread(JAXBElement<MessageRequest> message) throws GeneralSecurityException {
+	public Response markMessagesUnread(JAXBElement<MessageRequest> message) {
 		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 
 		MessageRequest msg = message.getValue();
-		msg.messages = ChatBLL.markMessagesUnread(msg.messages, loggedInUser);
-		return Response.status(Response.Status.OK).entity(msg).build();
+		try {
+			msg.messages = ChatBLL.markMessagesUnread(msg.messages, loggedInUser);
+			return Response.status(Response.Status.OK).entity(msg).build();
+		} catch (GeneralSecurityException ex) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 }

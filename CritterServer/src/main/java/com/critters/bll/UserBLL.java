@@ -25,11 +25,13 @@ public class UserBLL {
 
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-
 	public static List<User> searchUsers(String searchString){
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		List<User> users = entityManager
-				.createQuery("from User where firstName like :searchTerm or lastName like :searchTerm or userName like :searchTerm or emailAddress like :searchTerm and isActive = true")
+				.createQuery("from User where firstName like :searchTerm " +
+									 "or lastName like :searchTerm or userName like :searchTerm " +
+									 "or emailAddress like :searchTerm " +
+									 "and isActive = true")
 				.setParameter("searchTerm", '%' + searchString + '%')
 				.getResultList();
 		entityManager.close();
@@ -39,7 +41,7 @@ public class UserBLL {
 		return users;
 	}
 
-	public static String createUserReturnUnHashedValidator(User user) throws UnsupportedEncodingException {
+	public static String createUserReturnUnHashedValidator(User user) throws Exception {
 		user.setCritterbuxx(500); //TODO: economics
 		user.setIsActive(true);
 		user.setUserImagePath(getUserImageOption(1).getImagePath());
@@ -51,9 +53,12 @@ public class UserBLL {
 			entityManager.persist(user);
 			entityManager.getTransaction().commit();
 			return validatorUnHashed;
+		} catch(UnsupportedEncodingException us){
+			logger.error("Couldn't create password " + user.getPassword(), us);
+			throw new InvalidPropertyException("Sorry! We only accept passwords with characters in A-Z, a-z and 0-9.");
 		} catch(Exception e) {
 			logger.error("User creation failed for user " + user.toString(), e);
-			throw e;
+			return null;
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
@@ -138,7 +143,7 @@ public class UserBLL {
 		return results;
 	}
 
-	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws UnsupportedEncodingException, InvalidPropertyException {
+	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws Exception {
 		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
 			//from User Input. That way porn lies.
 			imageOption = getUserImageOption(imageOption.getUserImageOptionID());
@@ -174,6 +179,9 @@ public class UserBLL {
 			entityManager.merge(sessionUser);
 			entityManager.getTransaction().commit();
 			return changeUser;
+		} catch(UnsupportedEncodingException us) {
+			logger.error("Couldn't create password " + changeUser.getPassword(), us);
+			throw new InvalidPropertyException("Sorry! We only accept passwords with characters in A-Z, a-z and 0-9.");
 		} finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
@@ -182,7 +190,7 @@ public class UserBLL {
 		}
 	}
 
-	public static void deleteUser(User user) throws InvalidPropertyException {
+	public static boolean deleteUser(User user) {
 		try {
 			user.setIsActive(false);
 			updateUser(user, user, null);
@@ -191,16 +199,20 @@ public class UserBLL {
 			}
 		} catch (Exception e){
 			logger.error("Delete user failed id:" + user.getUserID() + " email: " + user.getEmailAddress(), e);
+			return false;
 		}
+		return true;
 	}
 
-	public static User wipeSensitiveFields(User user) {
+	public static User wipeSensitiveFields(User user){ return wipeSensitiveFields(user, false);}
+
+	public static User wipeSensitiveFields(User user, boolean ignoreMoney) {
 		user.setSalt("");
 		user.setPassword("");
 		user.setTokenSelector("");
 		user.setTokenValidator("");
 		user.setEmailAddress("");
-		user.setCritterbuxx(0);
+		if(!ignoreMoney) user.setCritterbuxx(0);
 		user.setInventory(null);
 		if(user.getFriends()!= null)
 			for(Friendship friend: user.getFriends()){
@@ -255,10 +267,9 @@ public class UserBLL {
 	public static void discardInventoryItems(Item[] items, User user){
 		List<Item> streamableItems = Arrays.asList(items);
 		List<Integer> ids = streamableItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
-		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
 
 		verifyUserInventoryIsLoaded(user);
-
+		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
 		if(resultant != null && resultant.length == items.length) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 			try {
@@ -284,27 +295,31 @@ public class UserBLL {
 		user.initializeInventory();
 	}
 
-	public static UserImageOption getUserImageOption(int id){ //todo caching
+	public static UserImageOption getUserImageOption(int id) throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id).getSingleResult();
+			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id)
+																   .getSingleResult();
 			return image;
+		} catch (NoResultException nrex) {
+			return null;
 		} catch (PersistenceException ex) {
 			logger.debug("No such image option found with id " + id, ex);
-			return null; //no image found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static UserImageOption[] getUserImageOptions(){ //todo caching
+	public static UserImageOption[] getUserImageOptions() throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			UserImageOption[] images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
 			return images;
-		} catch (PersistenceException ex) {
+		}
+		catch (PersistenceException ex) {
 			logger.debug("No image options found", ex);
-			return null; //no images found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
