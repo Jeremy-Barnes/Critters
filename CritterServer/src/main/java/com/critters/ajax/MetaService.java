@@ -3,8 +3,7 @@ package com.critters.ajax;
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.*;
 import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.entity.Pet;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.dto.entity.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -105,7 +104,7 @@ public class MetaService extends AjaxService {
 	@Path("/getUserImageOptions")
 	public Response getUserImageOptions() {
 		try {
-			return Response.status(Response.Status.OK).entity(UserBLL.getUserImageOptions()).build(); //todo this will break
+			return Response.status(Response.Status.OK).entity(new GenericEntity<UserImageOption[]>(UserBLL.getUserImageOptions(), UserImageOption[].class)).build(); //todo this will break
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
@@ -115,7 +114,8 @@ public class MetaService extends AjaxService {
 	@Path("/getShopkeeperImageOptions")
 	public Response getShopKeeperImageOptions() {
 		try {
-			return Response.status(Response.Status.OK).entity(CommerceBLL.getStoreClerkImageOptions()).build(); //todo this will break
+			return Response.status(Response.Status.OK).entity(
+					new GenericEntity<StoreClerkImageOption[]>(CommerceBLL.getStoreClerkImageOptions(), StoreClerkImageOption[].class)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
@@ -125,7 +125,8 @@ public class MetaService extends AjaxService {
 	@Path("/getStoreBackgroundOptions")
 	public Response getStoreBackgroundOptions() {
 		try {
-			return Response.status(Response.Status.OK).entity(CommerceBLL.getStoreBackgroundImageOptions()).build();
+			return Response.status(Response.Status.OK).entity(
+					new GenericEntity<StoreBackgroundImageOption[]>(CommerceBLL.getStoreBackgroundImageOptions(), StoreBackgroundImageOption[].class)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
