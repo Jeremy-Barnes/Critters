@@ -49,6 +49,10 @@ export class Application {
         });
     }
 
+    public static getUserImageOptions() {
+        return ServiceMethods.getUserImageOptions();
+    }
+
     public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {
         return ServiceMethods.changeUserInformation({ user: user, pet: null, imageChoice: image });
     }

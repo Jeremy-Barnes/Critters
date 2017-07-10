@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { User } from '../dtos'
+import { User, UserImageOption } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -9,14 +9,23 @@ import {Application} from "../appservice"
 })
 
 export class AccountFormComponent {
-    user: User;
+    changeImage: boolean = false;
     confirmPassword: string;
+    user: User;
+    images: UserImageOption[] = [];
 
-
-    constructor(private router: Router) { }
+    constructor(private router: Router) {
+        var self = this;
+        Application.getUserImageOptions().done((images: UserImageOption[]) => { self.images.push(...images); });
+    }
 
 
     ngOnInit() { this.user = Application.getApp().user }
+
+    changeImages() {
+        this.changeImage = true;
+        (<any>$("#viewImages")).modal('show'); //I'm not happy about this either.
+    }
 
     onSubmit() {
         var self = this;

@@ -3,6 +3,10 @@
         <h1>Update Your Account!</h1>
     </div>
     <div class="container-fluid container-maxWidth">
+        Here why don't you update your stupid image, dumbo: <button (click)="changeImages()">CLICK</button>
+        <select name="sexSelect" [(ngModel)]="user.sex">
+            <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
+        </select>
         <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
         <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
         <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
@@ -18,5 +22,26 @@
             <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
         </select>
         <input type="submit" value="Change It" />
+
+
+        <div id="viewImages" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md" role="document">
+                <div *ngIf="changeImage" class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;">Image Options!</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div *ngFor="let image of images">
+                                <div class="col-sm-3 col-md-3"><img class="framed img-circle" src="{{image.imagePath}}" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </form>
