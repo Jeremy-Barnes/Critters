@@ -41,7 +41,7 @@ public class UserBLL {
 		return users;
 	}
 
-	public static String createUserReturnUnHashedValidator(User user) throws InvalidPropertyException {
+	public static String createUserReturnUnHashedValidator(User user) throws Exception {
 		user.setCritterbuxx(500); //TODO: economics
 		user.setIsActive(true);
 		user.setUserImagePath(getUserImageOption(1).getImagePath());
@@ -143,7 +143,7 @@ public class UserBLL {
 		return results;
 	}
 
-	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws InvalidPropertyException {
+	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws Exception {
 		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
 			//from User Input. That way porn lies.
 			imageOption = getUserImageOption(imageOption.getUserImageOptionID());
@@ -295,27 +295,31 @@ public class UserBLL {
 		user.initializeInventory();
 	}
 
-	public static UserImageOption getUserImageOption(int id){ //todo caching
+	public static UserImageOption getUserImageOption(int id) throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
-			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id).getSingleResult();
+			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id)
+																   .getSingleResult();
 			return image;
+		} catch (NoResultException nrex) {
+			return null;
 		} catch (PersistenceException ex) {
 			logger.debug("No such image option found with id " + id, ex);
-			return null; //no image found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}
 	}
 
-	public static UserImageOption[] getUserImageOptions(){ //todo caching
+	public static UserImageOption[] getUserImageOptions() throws Exception { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			UserImageOption[] images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
 			return images;
-		} catch (PersistenceException ex) {
+		}
+		catch (PersistenceException ex) {
 			logger.debug("No image options found", ex);
-			return null; //no images found
+			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
 		} finally {
 			entityManager.close();
 		}

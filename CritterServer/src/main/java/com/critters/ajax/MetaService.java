@@ -1,10 +1,7 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
-import com.critters.bll.ChatBLL;
-import com.critters.bll.GameBLL;
-import com.critters.bll.PetBLL;
-import com.critters.bll.UserBLL;
+import com.critters.bll.*;
 import com.critters.dal.dto.SearchResponse;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
@@ -102,6 +99,36 @@ public class MetaService extends AjaxService {
 	@Path("/getGames")
 	public Response getGames() {
 		return Response.status(Response.Status.OK).entity(GameBLL.getGames()).build();
+	}
+
+	@GET
+	@Path("/getUserImageOptions")
+	public Response getUserImageOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(UserBLL.getUserImageOptions()).build(); //todo this will break
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@GET
+	@Path("/getShopkeeperImageOptions")
+	public Response getShopKeeperImageOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(CommerceBLL.getStoreClerkImageOptions()).build(); //todo this will break
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@GET
+	@Path("/getStoreBackgroundOptions")
+	public Response getStoreBackgroundOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(CommerceBLL.getStoreBackgroundImageOptions()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 

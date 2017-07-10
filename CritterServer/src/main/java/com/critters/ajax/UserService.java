@@ -115,6 +115,8 @@ public class UserService extends AjaxService{
 			user = UserBLL.updateUser(user, loggedInUser, request.imageChoice);
 		} catch(InvalidPropertyException e){
 			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 		return Response.status(Response.Status.OK).entity(UserBLL.wipeSensitiveFields(user)).build();
 	}
