@@ -35,7 +35,7 @@ public class Item extends DTO {
 
 	public Item(){}
 
-	public int getOwnerId() {
+	public Integer getOwnerId() {
 		return ownerId;
 	}
 

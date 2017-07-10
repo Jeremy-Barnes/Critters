@@ -2,7 +2,6 @@ package com.critters.dal.dto.entity;
 
 import com.critters.dal.dto.DTO;
 import com.critters.dal.dto.InventoryGrouping;
-import com.sun.xml.internal.ws.developer.Serialization;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

@@ -1,15 +1,10 @@
 package com.critters.ajax;
 
 import com.critters.backgroundservices.BackgroundJobManager;
-import com.critters.bll.ChatBLL;
-import com.critters.bll.GameBLL;
-import com.critters.bll.PetBLL;
-import com.critters.bll.UserBLL;
+import com.critters.bll.*;
 import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.entity.Pet;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.dto.entity.*;
 
-import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,10 +14,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
  * Created by Jeremy on 8/22/2016.
@@ -38,14 +30,6 @@ public class MetaService extends AjaxService {
 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
 	}
 
-	@Path("/logs")
- 	@GET
- 	@Produces("text/plain")
- 	public Response checkLogs() throws FileNotFoundException {
- 		return Response.status(Response.Status.OK).entity(BackgroundJobManager.logs).build();
- 	}
-	
-
 	@Path("/pollForNotifications")
 	@GET
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
@@ -60,7 +44,7 @@ public class MetaService extends AjaxService {
 	@GET
 	@Path("/search/{searchStr}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchData(@PathParam("searchStr") String searchStr) throws JAXBException, GeneralSecurityException, IOException {
+	public Response searchData(@PathParam("searchStr") String searchStr) {
 		SearchResponse results = new SearchResponse();
 		results.users = UserBLL.searchUsers(searchStr).toArray(new User[0]);
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
@@ -70,7 +54,7 @@ public class MetaService extends AjaxService {
 	@GET
 	@Path("/searchUsers/{searchStr}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchUsers(@PathParam("searchStr") String searchStr) throws JAXBException, GeneralSecurityException, IOException {
+	public Response searchUsers(@PathParam("searchStr") String searchStr) {
 		SearchResponse results = new SearchResponse();
 		results.users = UserBLL.searchForUser(searchStr).toArray(new User[0]);
 		return Response.status(200).entity(results).build();
@@ -97,7 +81,7 @@ public class MetaService extends AjaxService {
 	@GET
 	@Path("/getPetSpecies")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPetSpecies() throws JAXBException, IOException, InvalidPropertyException {
+	public Response getPetSpecies() {
 		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
 			   	new GenericEntity<Pet.PetSpecies[]>(PetBLL.getPetSpecies().toArray(new Pet.PetSpecies[0]), Pet.PetSpecies[].class)).build();
 	}
@@ -105,7 +89,7 @@ public class MetaService extends AjaxService {
 	@GET
 	@Path("/getPetColors")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPetColors() throws JAXBException, IOException, InvalidPropertyException {
+	public Response getPetColors() {
 		return Response.status(Response.Status.OK).entity( //do this because MOXy is a garbage serializer and I don't want to mess with the POM tonight
 				new GenericEntity<Pet.PetColor[]>(PetBLL.getPetColors().toArray(new Pet.PetColor[0]), Pet.PetColor[].class)).build();
 	}
@@ -114,6 +98,38 @@ public class MetaService extends AjaxService {
 	@Path("/getGames")
 	public Response getGames() {
 		return Response.status(Response.Status.OK).entity(GameBLL.getGames()).build();
+	}
+
+	@GET
+	@Path("/getUserImageOptions")
+	public Response getUserImageOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(new GenericEntity<UserImageOption[]>(UserBLL.getUserImageOptions(), UserImageOption[].class)).build(); //todo this will break
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@GET
+	@Path("/getShopkeeperImageOptions")
+	public Response getShopKeeperImageOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(
+					new GenericEntity<StoreClerkImageOption[]>(CommerceBLL.getStoreClerkImageOptions(), StoreClerkImageOption[].class)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@GET
+	@Path("/getStoreBackgroundOptions")
+	public Response getStoreBackgroundOptions() {
+		try {
+			return Response.status(Response.Status.OK).entity(
+					new GenericEntity<StoreBackgroundImageOption[]>(CommerceBLL.getStoreBackgroundImageOptions(), StoreBackgroundImageOption[].class)).build();
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 
