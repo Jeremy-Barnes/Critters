@@ -71,8 +71,8 @@
             <a href="/CritterGames/Snake">Snake</a><br />
 
             <div class="sidebarSearch form-inline">
-                <input type="text" placeholder="Search..." class="form-control input-sm" />
-                <button class="btn btn-warning btn-sm"><i class='fa fa-search'></i></button>
+                <input (keyup.enter)="search()" [(ngModel)]="searchString" type="text" placeholder="Search..." class="form-control input-sm" />
+                <button (click)="search()" class="btn btn-warning btn-sm"><i class='fa fa-search'></i></button>
             </div>
             
         </nav>
