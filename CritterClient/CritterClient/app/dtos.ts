@@ -120,6 +120,7 @@ export class Message {
     read: boolean;
     delivered: boolean;
     selected: boolean = false;
+    collapsed: boolean = false;
 
 }
 

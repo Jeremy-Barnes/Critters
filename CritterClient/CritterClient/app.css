@@ -439,12 +439,12 @@ table {
     margin-right: 15px;
 }
 
-.messagePreview .messageSubject, .messagePreview .messageUser {
+.messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
     font-weight: bold;
 }
-.read {
+.read, .read > .messageSubject {
     font-weight: normal !important;
-}
+} 
 
 .inlineblock {
     display: inline-block !important;
@@ -1081,6 +1081,39 @@ iframe {
 
 .messagePreview td {
     vertical-align: middle !important;
+}
+.selectedMessage {
+    background-color: #ebebeb;
+}
+#viewDetail .messageDate {
+    float: right;
+}
+.conversationTitle > h2 {
+    display: inline;
+}
+.conversationTitle > .btn { margin-right: 10px; }
+.conversationTitle > .btn, .subjectBar > .btn{
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+#reply > textarea:focus, #reply > input:focus {
+    border: 2px solid #12a6da;
+}
+#reply > textarea, #reply > input {
+    border: 2px solid #acacac;
+    border-radius: 2px;
+    width: 100%;
+    margin: 20px 0px 0px;
+
+}
+.messageGuts {
+    width: 70%;
+    margin: 20px 0px 20px;
+}
+.messageGuts textarea {
+    height: 170px;
+    margin-bottom: 20px !important;
 }
 
 @media (max-width: 767px) {

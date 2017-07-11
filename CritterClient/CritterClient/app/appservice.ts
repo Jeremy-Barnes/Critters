@@ -30,8 +30,7 @@ export class Application {
     }
 
     public static handleServerError(error: JQueryXHR) {
-        if(error.status != 500)
-            Application.getApp().errorCallback(error.responseText);
+        Application.getApp().errorCallback(error.responseText);
     }
 
     public static submitUserAccountCreationRequest(user: User, pet: Pet) : JQueryPromise<User> {

@@ -6,24 +6,37 @@
 <div class="container-fluid container-maxWidth">
         <!----------------------CONVERSATION VIEW------------------>
         <div id="viewDetail" *ngIf="activeConversation!=null">
-            Conversation view
+            <div class="conversationTitle"><button (click)="returnToOverview()" class="btn btn-default"> <i class="fa fa-long-arrow-left" aria-hidden="true"></i>  </button> <h2>{{activeConversation[0].messageSubject}}</h2> <hr /></div>
             <div *ngFor="let message of activeConversation">
-                <div class="messageSubject">{{message.messageSubject}}</div>
-                <div><span>From: <a class="messageUser">{{message.sender.userName}}</a> | {{message.dateSent.toLocaleString()}}</span></div>
-                <br />
-                <p>{{message.messageText}}</p>
-                <input type="button" (click)="reply(message)" value="reply" /> <input type="button" (click)="deleteConversation(message)" value="Delete Message" />
-
-                <div id="reply" *ngIf="replyMessage != null && newMessage!=null && replyMessage.messageID == message.messageID">
-                    Subject: <input type="text" [(ngModel)]="newMessage.messageSubject" /> <br />
-                    Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br />
-                    <input type="button" (click)="sendMessage()" value="Send" />
-                    <input type="button" (click)="cancelReply()" value="Stop Editing" />
+                <div class="subjectBar">
+                    <span><img class="userThumb" src="{{user.userImagePath}}" /> <a class="messageUser">{{message.sender.userName}}</a></span>
+                    <span class="messageDate">{{message.dateSent.toLocaleString()}} 
+                    <button class="btn btn-default" (click)="toggleHideMessage(message)">
+                        <i class="fa fa-minus" *ngIf="!message.collapsed" aria-hidden="true"></i>
+                        <i class="fa fa-plus" *ngIf="message.collapsed" aria-hidden="true"></i> 
+                    </button>
+                    </span>
+                    <div class="messageSubject">{{message.messageSubject}}</div>
                 </div>
+                <div class="messageGuts" *ngIf="!message.collapsed">
+                    <br />
+                    <p>{{message.messageText}}</p>
+
+                    <button class="btn btn-primary" (click)="reply(message)"><i class="fa fa-reply" aria-hidden="true"></i> Reply  </button>
+                    <button class="btn btn-default" (click)="deleteConversation(message)" ><i class="fa fa-trash-o" aria-hidden="true"></i> delete</button>
+
+                    <div id="reply" *ngIf="replyMessage != null && newMessage!=null && replyMessage.messageID == message.messageID">
+                        <input type="text" [(ngModel)]="newMessage.messageSubject" placeholder="subject" /> <br />
+                        <textarea [(ngModel)]="newMessage.messageText" placeholder="Reply text goes here"></textarea><br />
+                        <button (click)="sendMessage()" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i> Send </button>
+                        <button (click)="cancelReply()" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> cancel </button>
+                    </div>
+                </div>
+                <hr />
+
+                <!--<input type="button" (click)="replyLatest()" value="Reply Latest" />
+                <input type="button" (click)="deleteConversation(activeConversation)" value="Delete Conversation" />-->
             </div>
-            <input type="button" (click)="replyLatest()" value="Reply Latest" />
-            <input type="button" (click)="returnToOverview()" value="Back to Messages" />
-            <input type="button" (click)="deleteConversation(activeConversation)" value="Delete Conversation" />
         </div>
 
 
@@ -61,7 +74,7 @@
                     </div>
 
                     <table class="table">
-                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation) }" *ngFor="let conversation of messages; let i = index">
+                        <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation), 'selectedMessage' : conversation.selected }" *ngFor="let conversation of messages; let i = index">
                             <td> 
                                 <div class="circlecheckbox" (click)="selectConversation($event, conversation)">
                                     <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.selected" name="" /> 
@@ -73,7 +86,7 @@
                             <td (click)="viewDetail(conversation)" class="inlineblock messageUserThumb">
                                 <span>
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]">
-                                        <img src="/img/horrible clion_red.png" class="userThumb" />
+                                        <img  src="{{user.userImagePath}}" class="userThumb" />
                                     </a>
                                 </span>
                             </td>
@@ -89,7 +102,7 @@
                                     {{conversation.messages[0].messageSubject | limitTo:50}}
                                     <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
                                 </div>
-                                <div class="messageText">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
+                                <div class="messageText inlineblock">{{conversation.messages[conversation.messages.length -1].messageText | limitTo:120 }}</div>
                             </td>
                             <td class="inlineblock messageDate" (click)="viewDetail(conversation)">
                                 {{conversation.messages[conversation.messages.length -1].dateSent | date:'short'}}

@@ -29,8 +29,10 @@ export class MessageComponent implements OnInit {
         this.alerts = this.app.alerts;
         this.messages = this.app.inbox;
         this.sentMessages = this.app.sentbox;
-        this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
-        this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
+        if (this.user.friends) {
+            this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
+            this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
+        }
     }
 
     ngOnInit() {
@@ -148,6 +150,14 @@ export class MessageComponent implements OnInit {
 
     cancelRequest(friendRequest: Friendship) {
         Application.cancelFriendRequest(friendRequest);
+    }
+
+    toggleHideMessage(message: Message) {
+        if (message.collapsed) { //not just doing c = !c because not sure how null/undefined reacts with that.
+            message.collapsed = false;
+        } else {
+            message.collapsed = true;
+        }
     }
 
     public searchFriends(searchTerm: string) {
