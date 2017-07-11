@@ -9,7 +9,7 @@
             </div>
             <div [hidden]="!app.loggedIn">
                 <div class="inlineblock">{{user.userName}}</div>
-                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()"><img src="/img/horrible clion_octarine.png"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
+                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()"><img class="userThumb" src="{{user.userImagePath}}"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
                 <div class="notifications-bubble-container hide">
                     <div class="notifications-bubble">
                         <div class="notification-header">

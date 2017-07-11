@@ -3,16 +3,41 @@
         <h1>Update Your Account!</h1>
     </div>
     <div class="container-fluid container-maxWidth">
-        Here why don't you update your stupid image, dumbo: <button (click)="changeImages()">CLICK</button>
-        <select name="sexSelect" [(ngModel)]="user.sex">
-            <option *ngFor="let sex of ['male', 'female', 'other']" [ngValue]="sex">{{sex}}</option>
-        </select>
-        <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
+        Here why don't you update your stupid image, dumbo: <div class="btn btn-primary" (click)="changeImages()">CLICK</div>
+
+        <div class="radio">
+            <label class="radio-inline">
+                <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="female">
+                Female
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="male">
+                Male
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="other">
+                Other
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="optionsRadios" [(ngModel)]="user.sex" value="Prefer not to say">
+                Prefer not to say
+            </label>
+        </div>
+
+        <input type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" />
         <input type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
-        <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" required />
-        <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" required />
-        <input type="date" name="birthdate" placeholder="birthday (MM/DD/YYYY)" [(ngModel)]="user.birthdate" required />
-        <input type="text" name="firstName" placeholder="first name" [(ngModel)]="user.firstName" required />
+        <input type="password" name="password" placeholder="password" [(ngModel)]="user.password" />
+        <input type="password" name="password" placeholder="confirm password" [(ngModel)]="confirmPassword" />
+
+            <select class="form-control" name="birthmonthSelect" [(ngModel)]="user.birthMonth" (ngModelChange)="onChange($event)">
+                <option class="placeholder" value="" disabled selected>Birth Month</option>
+                <option *ngFor="let month of months" [ngValue]="month">{{month.name}}</option>
+            </select>
+            <select class="form-control" name="birthdaySelect" [(ngModel)]="user.birthDay" (ngModelChange)="onChangeDay($event)">
+                <option class="placeholder" value="" disabled selected>Birth Day</option>
+                <option *ngFor="let day of days" [ngValue]="day">{{day}}</option>
+            </select>
+
         <input type="text" name="lastName" placeholder="last name" [(ngModel)]="user.lastName" required />
         <input type="text" name="city" placeholder="city" [(ngModel)]="user.city" required />
         <input type="text" name="state" placeholder="state" [(ngModel)]="user.state" required />
@@ -33,7 +58,9 @@
                     <div class="modal-body">
                         <div class="row">
                             <div *ngFor="let image of images">
-                                <div class="col-sm-3 col-md-3"><img class="framed img-circle" src="{{image.imagePath}}" /></div>
+                                <div class="col-sm-3 col-md-3"  [ngClass]="{'selectedImage': user.userImagePath == image.imagePath}">
+                                    <img (click)="selectImage(image)"  class="img-circle" src="{{image.imagePath}}" />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -33,45 +33,6 @@ body {
     }
 }
 
-/*@media all and (min-width: 768px) {
-    .container {
-        width: 490px;
-    }
-}
-
-@media all and (min-width: 992px) {
-    .container {
-        width: 710px;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .container {
-        width: 910px;
-    }
-}
-
-@media all and (min-width: 1460px) {
-    .container {
-        width: 1170px;
-    }
-}
-
-
-
-.container {
-    margin-left: 0px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
-}
-
-@media(max-width:767px) {
-    .container {
-        padding-left: 15px;
-    }
-}    */
-
 .container-fluid {
     padding:0px !important;
 }
@@ -150,10 +111,13 @@ img {
 }
 
 .specieSelect {
-    float:left ;
+    /*float:left ;
     position: relative;
     z-index: 1000;
-    transform: translateY(-70%);
+    transform: translateY(-70%);*/
+    position: absolute;
+    left: 0px;
+    top: 0px;
     width: 100%;
 }
 
@@ -1144,6 +1108,14 @@ iframe {
     }
 }
 
+.selectedImage {
+    background-color: blue;
+}
+
+#viewImages img {
+    width: 150px;
+    height: 150px;
+}
 
 
 

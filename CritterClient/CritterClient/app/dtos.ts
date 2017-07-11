@@ -42,6 +42,7 @@
         this.friends = user.friends;
         this.pets = user.pets;
         this.isActive = user.isActive;
+        this.userImagePath = user.userImagePath;
 
     }
 
