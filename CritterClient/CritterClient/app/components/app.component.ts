@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
     app: Application = Application.getApp();
     alerts: Notification[];
     displayingAlerts: boolean
+    searchString: string;
     ngOnInit() { this.user = this.app.user; prepDisplay(); this.alerts = this.app.alerts; }
 
     deliverAlerts() {
@@ -22,5 +23,9 @@ export class AppComponent implements OnInit {
     clearAlerts() {
         this.alerts.length = 0;
         $('.messageslink').each(() => (<any>$(this)).popover('hide')); //:(
+    }
+    
+    search(){
+        Application.search(this.searchString).done(()=>{alert("someday, route to a results compoenent with these results.")});
     }
 }
