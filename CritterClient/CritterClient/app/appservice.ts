@@ -238,6 +238,10 @@ export class Application {
         return results;
     }
 
+    public static search(searchString: string) {
+        return searchUsers(searchString);
+    }
+    
     public static searchUsers(searchTerm: string) {
         var app = Application.getApp();
         return ServiceMethods.searchUsers(searchTerm);
