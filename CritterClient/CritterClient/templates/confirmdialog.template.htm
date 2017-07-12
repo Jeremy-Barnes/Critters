@@ -1,0 +1,18 @@
+<div class="container-fluid container-maxWidth">
+    <div id="confirmDialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                    <h1 class="text-center">{{title}}</h1>
+                </div>
+                <form class="modal-body" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                    <p>{{body}}</p>
+                    <button class="btn btn-primary" (click)="confirm()"> Okay </button> <button class="btn btn-default" (click)="reject()"> Okay </button>
+                </form>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
