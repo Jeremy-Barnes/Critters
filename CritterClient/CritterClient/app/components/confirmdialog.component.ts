@@ -19,6 +19,7 @@ export class ConfirmDialogComponent implements OnInit {
     showDialog(title: string, body: string) {
         this.title = title;
         this.string = string;
+        (<any>$("#confirmDialog")).modal('show'); //I'm not happy about this either.
         return this.result.promise();
     }
 
