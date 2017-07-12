@@ -58,6 +58,7 @@
     <Content Include="templates\messages.template.htm" />
     <Content Include="templates\userprofile.template.htm" />
     <Content Include="templates\dashboard.template.htm" />
+    <Content Include="templates\confirmdialog.template.htm" />
     <Content Include="templates\petcreate.template.htm" />
     <Content Include="templates\accountcreate-petcreate.template.htm" />
     <Content Include="templates\accountcreate-userdetail.template.htm" />
@@ -85,6 +86,7 @@
     <TypeScriptCompile Include="app\components\store.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
+    <TypeScriptCompile Include="app\components\confirmdialog.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-userdetail.component.ts" />
