@@ -24,6 +24,7 @@ export class MessageComponent implements OnInit {
     outstandingFriendRequests: Friendship[];
     friends: Friendship[];
     tab: number = 0;
+    loadingTabs = false;
     constructor(private route: ActivatedRoute) {
         Application.getMailbox();
         this.user = this.app.user;
@@ -70,16 +71,22 @@ export class MessageComponent implements OnInit {
         this.activeConversation = null;
         this.replyMessage = null;
         this.newMessage = null;
+        this.composeToFriend = null;
         this.tab = tab;
     }
 
     cancelReply() {
         this.replyMessage = null;
-        this.cancelCompose();
+        this.newMessage = null;
+        this.composeToFriend = null;
     }
 
     cancelCompose() {
         this.newMessage = null;
+        this.loadingTabs = true;
+        this.composeToFriend = null;
+        var tabname = this.tab == 0 ? "inbox" : this.tab == 1 ? "sent" : "friends";
+        (<any>$("#messageTabs a[href=\"#" + tabname + "\"]")).tab('show'); //I'm not happy about this either.
     }
 
     deleteConversation(messages: Message[]) {
