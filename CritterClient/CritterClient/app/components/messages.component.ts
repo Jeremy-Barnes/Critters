@@ -68,26 +68,37 @@ export class MessageComponent implements OnInit {
     }
 
     returnToOverview(tab: number) {
-        this.activeConversation = null;
-        this.replyMessage = null;
-        this.newMessage = null;
-        this.composeToFriend = null;
-        this.tab = tab;
+        if(this.newMessage.messageText != null && this.newMessage.messageText.length > 0) {
+            var self = this;
+            Application.getApp().showDialogCallback("Are you sure?", "You are about to discard your message - your message will be lost if you continue.", null, null).done(okay : boolean => {
+                this.activeConversation = null;
+                this.cancelMessage();
+                this.tab = tab;
+            });
+        } else {
+            this.activeConversation = null;
+		    this.cancelMessage();
+            this.tab = tab;
+        }
     }
 
     cancelReply() {
-        this.replyMessage = null;
-        this.newMessage = null;
-        this.composeToFriend = null;
+        this.cancelMessage();
     }
+	
+	cancelMessage(){
+		this.replyMessage = null;
+		this.newMessage = null;
+		this.composeToFriend = null;
+	}
 
     cancelCompose() {
-        this.newMessage = null;
         this.loadingTabs = true;
-        this.composeToFriend = null;
+        this.cancelMessage();
         var tabname = this.tab == 0 ? "inbox" : this.tab == 1 ? "sent" : "friends";
         (<any>$("#messageTabs a[href=\"#" + tabname + "\"]")).tab('show'); //I'm not happy about this either.
     }
+
 
     deleteConversation(messages: Message[]) {
         alert("this one doesn't work yet, make the server op for it, dummy");
