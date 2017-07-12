@@ -4,13 +4,13 @@ import { Comparable } from '../dtos'
 
 @Component({
     selector: "<autocomplete></autocomplete>",
-    template: `<div style="position: relative" class="inlineblock"><input type="text" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
+    template: `<div style="position: relative" class="inlineblock"><input type="text" placeholder="{{placeholder}}" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
                 <div *ngIf="searchTextModel != null && searchTextModel.length > 0">
 				    <div class="popover bottom" style="display: block; position: absolute; top: 25px; left: 0px; width: 300px;" >
                         <div class="arrow" style="top: -10px; left: 20px;"></div>
                         <div class="popover-content">
                             <div style="font-size: 12pt;" class="popover-repeater" *ngFor="let item of resultList">
-                                <b><a (click)="onClick(item)">{{item.resultText}}</a></b>
+                                <b><a (click)="onClick(item)"><img *ngIf="item.resultData.userImagePath" class="userThumb" src="{{item.resultData.userImagePath}}" />  {{item.resultText}}</a></b>
                             </div>
                         </div>
                     </div>
@@ -27,6 +27,7 @@ export class AutocompleteList {
 
     @Input("autocomplete-local-func") public localSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: Comparable }>>;
     @Input("autocomplete-remote-func") public remoteSearchFunction: (term: string) => Promise<Array<{ resultText: string, resultData: Comparable }>>;
+    @Input("placeholder") public placeholder: string = "";
 
     @Output("result-out") public selected = new EventEmitter();
 

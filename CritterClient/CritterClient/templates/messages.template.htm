@@ -4,65 +4,62 @@
     </div>
 </div>
 <div class="container-fluid container-maxWidth">
-        <!----------------------CONVERSATION VIEW------------------>
-        <div id="viewDetail" *ngIf="activeConversation!=null">
-            <div class="conversationTitle"><button (click)="returnToOverview()" class="btn btn-default"> <i class="fa fa-long-arrow-left" aria-hidden="true"></i>  </button> <h2>{{activeConversation[0].messageSubject}}</h2> <hr /></div>
-            <div *ngFor="let message of activeConversation">
-                <div class="subjectBar">
-                    <span><img class="userThumb" src="{{user.userImagePath}}" /> <a class="messageUser">{{message.sender.userName}}</a></span>
-                    <span class="messageDate">{{message.dateSent.toLocaleString()}} 
-                    <button class="btn btn-default" (click)="toggleHideMessage(message)">
-                        <i class="fa fa-minus" *ngIf="!message.collapsed" aria-hidden="true"></i>
-                        <i class="fa fa-plus" *ngIf="message.collapsed" aria-hidden="true"></i> 
-                    </button>
-                    </span>
-                    <div class="messageSubject">{{message.messageSubject}}</div>
-                </div>
-                <div class="messageGuts" *ngIf="!message.collapsed">
-                    <br />
-                    <p>{{message.messageText}}</p>
-
-                    <button class="btn btn-primary" (click)="reply(message)"><i class="fa fa-reply" aria-hidden="true"></i> Reply  </button>
-                    <button class="btn btn-default" (click)="deleteConversation(message)" ><i class="fa fa-trash-o" aria-hidden="true"></i> delete</button>
-
-                    <div id="reply" *ngIf="replyMessage != null && newMessage!=null && replyMessage.messageID == message.messageID">
-                        <input type="text" [(ngModel)]="newMessage.messageSubject" placeholder="subject" /> <br />
-                        <textarea [(ngModel)]="newMessage.messageText" placeholder="Reply text goes here"></textarea><br />
-                        <button (click)="sendMessage()" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i> Send </button>
-                        <button (click)="cancelReply()" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> cancel </button>
-                    </div>
-                </div>
-                <hr />
-
-                <!--<input type="button" (click)="replyLatest()" value="Reply Latest" />
-                <input type="button" (click)="deleteConversation(activeConversation)" value="Delete Conversation" />-->
-            </div>
-        </div>
-
-
-        <!----------------------COMPOSE VIEW------------------>
-        <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
-            To: <autocomplete *ngIf="composeToFriend == null"
-                              [autocomplete-local-func]="searchFriends" [autocomplete-remote-func]="searchUsers" (result-out)="onItemSelected($event)"></autocomplete>
-            <span *ngIf="composeToFriend != null">{{composeToFriend.userName}} <a (click)="deselctComposeFriend()">X</a></span>
-            <br />
-            Subject: <input type="text" [(ngModel)]="newMessage.messageSubject" /> <br />
-
-            Message: <textarea [(ngModel)]="newMessage.messageText"></textarea><br />
-            <input type="button" (click)="sendMessage()" value="Send" />
-            <input type="button" (click)="cancelCompose()" value="Stop Editing" />
-        </div>
-
-
         <!----------------------MAIN VIEW------------------>
-        <div id="mainView" *ngIf="activeConversation==null && newMessage == null">
+        <div id="messagesMainView">
             <ul class="nav nav-tabs">
-                <li role="presentation" class="active"><a data-toggle="tab" href="#inbox">Inbox</a></li>
-                <li role="presentation"><a data-toggle="tab" href="#sent">Sent</a></li>
-                <li role="presentation"><a data-toggle="tab" href="#friends">Friends</a></li>
+                <li role="presentation" class="active"><a (click)="returnToOverview()" data-toggle="tab" href="#inbox">Inbox</a></li>
+                <li role="presentation"><a (click)="returnToOverview()" data-toggle="tab" href="#sent">Sent</a></li>
+                <li role="presentation"><a data-toggle="tab" href="#friends">Buddies</a></li>
             </ul>
-            <div class="tab-content">
 
+            <!----------------------COMPOSE VIEW------------------>
+            <div id="composeNew" *ngIf="activeConversation==null && newMessage!=null">
+                <div id="compose" class="messageGuts">
+                    <autocomplete [placeholder]="'To...'" *ngIf="composeToFriend == null"
+                                  [autocomplete-local-func]="searchFriends" [autocomplete-remote-func]="searchUsers" (result-out)="onItemSelected($event)">
+                    </autocomplete>
+                    <span *ngIf="composeToFriend != null">{{composeToFriend.userName}} <a (click)="deselctComposeFriend()"><i class="fa fa-times"></i></a></span>
+                    <input type="text" [(ngModel)]="newMessage.messageSubject" placeholder="subject" /> <br />
+                    <textarea [(ngModel)]="newMessage.messageText" placeholder="Message text goes here"></textarea><br />
+                    <button (click)="sendMessage()" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i> Send </button>
+                    <button (click)="cancelCompose()" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> cancel </button>
+                </div>
+
+            </div>
+
+            <!----------------------CONVERSATION VIEW------------------>
+            <div id="viewDetail" *ngIf="activeConversation!=null">
+                <div class="conversationTitle"><button (click)="returnToOverview()" class="btn btn-default"> <i class="fa fa-long-arrow-left" aria-hidden="true"></i>  </button> <h2>{{activeConversation[0].messageSubject}}</h2> <hr /></div>
+                <div *ngFor="let message of activeConversation">
+                    <div class="subjectBar">
+                        <span><img class="userThumb" src="{{user.userImagePath}}" /> <a class="messageUser">{{message.sender.userName}}</a></span>
+                        <span class="messageDate">
+                            {{message.dateSent.toLocaleString()}}
+                            <button class="btn btn-default" (click)="toggleHideMessage(message)">
+                                <i class="fa fa-minus" *ngIf="!message.collapsed" aria-hidden="true"></i>
+                                <i class="fa fa-plus" *ngIf="message.collapsed" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                        <div class="messageSubject">{{message.messageSubject}}</div>
+                    </div>
+                    <div class="messageGuts" *ngIf="!message.collapsed">
+                        <p>{{message.messageText}}</p>
+
+                        <button class="btn btn-primary" (click)="reply(message)"><i class="fa fa-reply" aria-hidden="true"></i> Reply  </button>
+                        <button class="btn btn-default" (click)="deleteConversation(message)"><i class="fa fa-trash-o" aria-hidden="true"></i> delete</button>
+
+                        <div id="reply" *ngIf="replyMessage != null && newMessage!=null && replyMessage.messageID == message.messageID">
+                            <input type="text" [(ngModel)]="newMessage.messageSubject" placeholder="subject" /> <br />
+                            <textarea [(ngModel)]="newMessage.messageText" placeholder="Reply text goes here"></textarea><br />
+                            <button (click)="sendMessage()" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i> Send </button>
+                            <button (click)="cancelReply()" class="btn btn-default"><i class="fa fa-times" aria-hidden="true"></i> cancel </button>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+
+            <div class="tab-content"  *ngIf="activeConversation==null && newMessage == null">
                 <div id="inbox" class="tab-pane fade in active">
                     <div class="buttons">
                         <button class="btn btn-primary" (click)="composeNewMessage()"><i class="fa fa-plus"></i> New Message</button>
@@ -168,9 +165,122 @@
                     </div>
                 </div>
 
-
-
                 <div id="friends" class="tab-pane fade">
+                    <div class="row">
+                        <div id="currentFriends" class="col-md-6 col-sm-12">
+                            <h2>Current Buddies</h2>
+                            <table class="table">
+                                <tr class="messagePreview" [ngClass]="{'selectedMessage' : friend.selected }" *ngFor="let friend of friends; let i = index">
+                                    <td>
+                                        <div class="circlecheckbox" (click)="selectFriendship($event, friend)">
+                                            <input type="checkbox" value="1" [attr.id]="'friendCheckbox' + i" [(ngModel)]="friend.selected" name="" />
+                                            <label [attr.for]="'friendCheckbox' + i">
+                                                <i class="fa fa-check-circle"></i>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="inlineblock messageUserThumb">
+                                        <span *ngIf="friend.requester.userId == user.userId">
+                                            <a [routerLink]="['/viewUser/', friend.requested.userID]">
+                                                <img src="{{friend.requester.userImagePath}}" class="userThumb" />
+                                            </a>
+                                        </span>
+                                        <span *ngIf="friend.requested.userID == user.userID">
+                                            <a [routerLink]="['/viewUser/', friend.requested.userID]">
+                                                <img src="{{friend.requested.userImagePath}}" class="userThumb" />
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td class="inlineblock messageUser" style="width: 60%;">
+                                        <span *ngIf="friend.requester.userID != user.userID">
+                                            <a [routerLink]="['/viewUser/', friend.requester.userID]">
+                                                {{friend.requester.userName}}
+                                            </a>
+                                        </span>
+                                        <span *ngIf="friend.requested.userID != user.userID">
+                                            <a [routerLink]="['/viewUser/', friend.requested.userID]" class="messageUser">
+                                                {{friend.requested.userName}}
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        Send a message link to go here!
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="friendRequests" class="col-md-6 col-sm-12">
+                            <h2>Buddy Requests</h2>
+                            <table class="table">
+                                <tr class="messagePreview" [ngClass]="{'selectedMessage' : friend.selected }" *ngFor="let friend of pendingFriendRequests; let i = index">
+                                    <td>
+                                        <div class="circlecheckbox" (click)="selectFriendship($event, friend)">
+                                            <input type="checkbox" value="1" [attr.id]="'pendfriendCheckbox' + i" [(ngModel)]="friend.selected" name="" />
+                                            <label [attr.for]="'pendfriendCheckbox' + i">
+                                                <i class="fa fa-check-circle"></i>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="inlineblock messageUserThumb">
+                                        <span>
+                                            <a [routerLink]="['/viewUser/', friend.requested.userID]">
+                                                <img src="{{friend.requester.userImagePath}}" class="userThumb" />
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td class="inlineblock messageUser" colspan="3">
+                                        <span>
+                                            <a [routerLink]="['/viewUser/', friend.requester.userID]">
+                                                {{friend.requester.userName}}
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success" (click)="acceptRequest(friend)"> <i class="fa fa-check"></i></button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" (click)="declineRequest(friend)"> <i class="fa fa-times"></i></button>
+                                    </td>
+                                    <td>
+                                        {{friend.dateSent | date:'MMMd' }}
+                                    </td>
+                                </tr>
+                                <tr style="font-weight:bold; background-color:#ebebeb;">
+                                    <td colspan="8">Sent Requests</td>
+                                </tr>
+                                <tr class="messagePreview" [ngClass]="{'selectedMessage' : friend.selected }" *ngFor="let friend of outstandingFriendRequests; let i = index">
+                                    <td>
+                                        <div class="circlecheckbox" (click)="selectFriendship($event, friend)">
+                                            <input type="checkbox" value="1" [attr.id]="'outfriendCheckbox' + i" [(ngModel)]="friend.selected" name="" />
+                                            <label [attr.for]="'outfriendCheckbox' + i">
+                                                <i class="fa fa-check-circle"></i>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="inlineblock messageUserThumb">
+                                        <span>
+                                            <a [routerLink]="['/viewUser/', friend.requested.userID]">
+                                                <img src="{{friend.requested.userImagePath}}" class="userThumb" />
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td colspan="4" class="inlineblock messageUser">
+                                        <span>
+                                            <a [routerLink]="['/viewUser/', friend.requester.userID]">
+                                                {{friend.requested.userName}}
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <input class="btn btn-default" (click)="cancelRequest(friend)" value="Cancel" />
+                                    </td>
+                                    <td>
+                                        {{friend.dateSent | date:'MMMd' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                     These people want to be your friends!
                     <div *ngFor="let friend of pendingFriendRequests">
                         <div class="messageSubject">

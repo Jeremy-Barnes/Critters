@@ -12,7 +12,9 @@ export class Application {
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
     public inventory: InventoryGrouping[] = [];
-
+    public friends: Friendship[] = [];
+    public pendingFriendRequests: Friendship[] = [];
+    public outstandingFriendRequests: Friendship[] = [];
 
     public errorCallback: (text: string) => void;
     public static app: Application = new Application();
@@ -82,17 +84,20 @@ export class Application {
 
     public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
         Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
+        Application.getApp().pendingFriendRequests.splice(Application.getApp().pendingFriendRequests.indexOf(friendRequest), 1);
         friendRequest.accepted = false;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
 
     public static acceptFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().pendingFriendRequests.splice(Application.getApp().pendingFriendRequests.indexOf(friendRequest), 1);
         friendRequest.accepted = true;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
 
     public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
         Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
+        Application.getApp().outstandingFriendRequests.splice(Application.getApp().outstandingFriendRequests.indexOf(friendRequest), 1);
         return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
@@ -100,6 +105,9 @@ export class Application {
         return ServiceMethods.logIn(user).done((retUser: User) => {
             var app = Application.getApp()
             app.user.set(retUser);
+            app.pendingFriendRequests.push(...user.friends.filter(f => !f.accepted && f.requested.userID == user.userID));
+            app.outstandingFriendRequests.push(...user.friends.filter(f => !f.accepted && f.requester.userID == user.userID));
+            app.friends.push(...user.friends.filter(f => f.accepted));
             app.loggedIn = true;
             Application.startLongPolling();
             Application.getNotifications();
@@ -128,7 +136,8 @@ export class Application {
                     notes.push({ messages: [messages[i]], friendRequests: null });
                 }
                 var user: User = Application.getApp().user;
-                var frReqs =  user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                var frReqs = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+
                 for(let i = 0; i < frReqs.length; i++) {
                     notes.push({ messages: null, friendRequests: [frReqs[i]]});
                 }
@@ -158,9 +167,11 @@ export class Application {
                     conv.selected = false;
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
-                    } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean
+                    }
+                    if (notReceived && message.recipient.userID == user.userID) { //rather than processing the whole array to find out if its already saved, track it with a boolean
                         notReceived = false;
-                        recConvos.push(conv);
+
+                        recConvos.push({messages: conv.messages.sort((a, b) => a.dateSent > b.dateSent ? 1 : (b.dateSent > a.dateSent ? -1 : 0)), participants: conv.participants, selected: false });
                         if (message.recipient.userID == user.userID && !message.delivered) {
                             alerts.push({ messages: [message], friendRequests: null });
                         }
@@ -228,9 +239,9 @@ export class Application {
                 if (resultData.userName.toLowerCase().includes(searchTerm) ||
                     resultData.firstName.toLowerCase().includes(searchTerm) ||
                     resultData.lastName.toLowerCase().includes(searchTerm)) {
-                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
-                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
-                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    let resultText = resultData.userName;
+                    let nameString = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") + resultData.lastName;
+                    resultText += (nameString.length > 0 ? " (" + nameString + ")" : "");
                     results.push({ resultText, resultData });
                 }
             }
@@ -239,7 +250,7 @@ export class Application {
     }
 
     public static search(searchString: string) {
-        return searchUsers(searchString);
+        return Application.searchUsers(searchString);
     }
     
     public static searchUsers(searchTerm: string) {

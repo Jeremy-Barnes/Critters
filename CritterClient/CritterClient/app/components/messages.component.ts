@@ -22,17 +22,16 @@ export class MessageComponent implements OnInit {
     selectedMessages: Message[] = [];
     pendingFriendRequests: Friendship[];
     outstandingFriendRequests: Friendship[];
-
+    friends: Friendship[];
     constructor(private route: ActivatedRoute) {
         Application.getMailbox();
         this.user = this.app.user;
+        this.friends = this.app.friends;
+        this.pendingFriendRequests = this.app.pendingFriendRequests;
+        this.outstandingFriendRequests = this.app.outstandingFriendRequests;
         this.alerts = this.app.alerts;
         this.messages = this.app.inbox;
         this.sentMessages = this.app.sentbox;
-        if (this.user.friends) {
-            this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
-            this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
-        }
     }
 
     ngOnInit() {
@@ -190,4 +189,9 @@ export class MessageComponent implements OnInit {
     public deselctComposeFriend() {
         this.composeToFriend = null;
     }
+
+    public selectFriendship($event: any, friend: Friendship) {
+        alert(friend.dateSent);
+    }
+
 }

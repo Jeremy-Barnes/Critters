@@ -111,10 +111,6 @@ img {
 }
 
 .specieSelect {
-    /*float:left ;
-    position: relative;
-    z-index: 1000;
-    transform: translateY(-70%);*/
     position: absolute;
     left: 0px;
     top: 0px;
@@ -262,7 +258,7 @@ div.card16x9 > div {
     }
 }
 @media (min-width: 993px) {
-      #mainView > .form-inline {
+      #shopsMainView > .form-inline {
         display: none;
     }
 }
@@ -411,12 +407,7 @@ a:hover, a:focus {color: #0F8DBA;}
     border: none;
     padding: 20px 0px;
 }
-.messageUser {
-    text-decoration: none !important;
-    font-weight: bold;
-    color: black;
-    width: 200px;
-}
+
 tr {
     border-bottom: 1px solid;
     border-color: #acacac;
@@ -438,7 +429,12 @@ table {
 .buttons button {
     margin-right: 15px;
 }
-
+.messageUser {
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+    width: 200px;
+}
 .messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
     font-weight: bold;
 }
@@ -1085,6 +1081,9 @@ iframe {
 .selectedMessage {
     background-color: #ebebeb;
 }
+#viewDetail, #composeNew {
+    margin-top: 25px;
+}
 #viewDetail .messageDate {
     float: right;
 }
@@ -1097,10 +1096,10 @@ iframe {
     height: 40px;
     text-align: center;
 }
-#reply > textarea:focus, #reply > input:focus {
+.messageGuts > textarea:focus, .messageGuts > input:focus {
     border: 2px solid #12a6da;
 }
-#reply > textarea, #reply > input {
+.messageGuts textarea, .messageGuts input {
     border: 2px solid #acacac;
     border-radius: 2px;
     width: 100%;
@@ -1109,11 +1108,13 @@ iframe {
 }
 .messageGuts {
     width: 70%;
-    margin: 20px 0px 20px;
 }
 .messageGuts textarea {
     height: 170px;
     margin-bottom: 20px !important;
+}
+#viewDetail > .messageGuts {
+    margin: 20px 0px 20px;
 }
 
 @media (max-width: 767px) {
