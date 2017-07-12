@@ -1158,7 +1158,11 @@ iframe {
     height: 150px;
 }
 
-
+.cardHeader{
+    border-bottom: 1px solid #acacac;
+    text-align: left;
+    width: 100%;
+}
 
 
 

@@ -1,0 +1,30 @@
+﻿<div class="container-fluid">
+    <div class="page-title">
+            <h1>Search</h1>
+    </div>
+</div>
+
+<div class="container-fluid container-maxWidth">
+    <!----------------------MAIN VIEW------------------>
+    <div id="searchMainView"> 
+        <b>Search results for '{{searchString}}'</b>
+        <div class="row">
+            <div class="col-md-3" *ngFor="let result of userResults; let i = index">
+                <div class="card" (click)="selectResult(result)" >
+                    <div class="cardHeader"><i class="fa fa-user" aria-hidden="true"></i> user</div>
+                    <div class="centered">
+                        <img class="userThumb" src="{{result.userImagePath}}" />
+                        <div class="itemTitle centered">
+                            {{result.userName}} <br />
+                        </div>
+                        <div>
+                            <p>{{result.firstName}} {{result.lastName}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -23,6 +23,7 @@ import { LimitToPipe } from './limitto.pipe'
 import { Spinner } from './components/spinner.component'
 import { StoreComponent } from './components/store.component'
 import { ConfirmDialogComponent } from './components/confirmdialog.component'
+import { SearchResultsComponent } from './components/searchresults.component'
 
 
 @NgModule({
@@ -33,7 +34,7 @@ import { ConfirmDialogComponent } from './components/confirmdialog.component'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner, StoreComponent, ConfirmDialogComponent],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner, StoreComponent, ConfirmDialogComponent, SearchResultsComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Message, Conversation, Friendship } from '../dtos'
+import { User, Notification, Message, Conversation, Friendship, SearchResponse } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -70,10 +70,12 @@ export class MessageComponent implements OnInit {
     returnToOverview(tab: number) {
         if(this.newMessage.messageText != null && this.newMessage.messageText.length > 0) {
             var self = this;
-            Application.getApp().showDialogCallback("Are you sure?", "You are about to discard your message - your message will be lost if you continue.", null, null).done(okay : boolean => {
-                this.activeConversation = null;
-                this.cancelMessage();
-                this.tab = tab;
+            Application.getApp().showDialogCallback("Are you sure?", "You are about to discard your message - your message will be lost if you continue.", null, null).done((okay: boolean) => {
+                if (okay) {
+                    this.activeConversation = null;
+                    this.cancelMessage();
+                    this.tab = tab;
+                }
             });
         } else {
             this.activeConversation = null;
@@ -195,10 +197,10 @@ export class MessageComponent implements OnInit {
 
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {
-            Application.searchUsers(searchTerm).done((results: User[]) => {
+            Application.searchUsers(searchTerm).done((results: SearchResponse) => {
                 var resultsForDisplay: { resultText: string, resultData: User }[] = [];
-                for (var i = 0; i < results.length; i++) {
-                    var resultData = results[i];
+                for (var i = 0; i < results.users.length; i++) {
+                    var resultData = results.users[i];
 
                     let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
                         (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");

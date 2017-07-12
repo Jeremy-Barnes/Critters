@@ -52,6 +52,7 @@
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
     <Content Include="templates\games.template.htm" />
+    <Content Include="templates\searchresults.template.htm" />
     <Content Include="templates\store.template.htm" />
     <Content Include="templates\inventory.template.htm" />
     <Content Include="templates\error.template.htm" />
@@ -78,6 +79,7 @@
     <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
     <TypeScriptCompile Include="app\components\autocomplete.component.ts" />
+    <TypeScriptCompile Include="app\components\searchresults.component.ts" />
     <TypeScriptCompile Include="app\components\games.component.ts" />
     <TypeScriptCompile Include="app\components\error.component.ts" />
     <TypeScriptCompile Include="app\components\inventory.component.ts" />
