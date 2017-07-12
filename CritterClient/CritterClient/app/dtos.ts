@@ -42,6 +42,7 @@
         this.friends = user.friends;
         this.pets = user.pets;
         this.isActive = user.isActive;
+        this.userImagePath = user.userImagePath;
 
     }
 
@@ -119,6 +120,7 @@ export class Message {
     read: boolean;
     delivered: boolean;
     selected: boolean = false;
+    collapsed: boolean = false;
 
 }
 
@@ -148,7 +150,7 @@ export class Item {
     ownerId: number;
     storeStock: Item[];
     description: ItemDescription;
-    price: string;
+    price: number;
     containingStoreId: number;
 }
 

@@ -26,6 +26,8 @@
     <Content Include="img\cat_blue.png" />
     <Content Include="img\cat_octarine.png" />
     <Content Include="img\cat_red.png" />
+    <Content Include="img\closed-envelope-grey.png" />
+    <Content Include="img\closed-envelope.png" />
     <Content Include="img\horrible clion.png" />
     <Content Include="img\dog.png" />
     <Content Include="img\dog_octarine.png" />
@@ -50,12 +52,14 @@
     <Content Include="Libraries\jquery-ui-1.11.4.min.js" />
     <Content Include="package.json" />
     <Content Include="templates\games.template.htm" />
+    <Content Include="templates\searchresults.template.htm" />
     <Content Include="templates\store.template.htm" />
     <Content Include="templates\inventory.template.htm" />
     <Content Include="templates\error.template.htm" />
     <Content Include="templates\messages.template.htm" />
     <Content Include="templates\userprofile.template.htm" />
     <Content Include="templates\dashboard.template.htm" />
+    <Content Include="templates\confirmdialog.template.htm" />
     <Content Include="templates\petcreate.template.htm" />
     <Content Include="templates\accountcreate-petcreate.template.htm" />
     <Content Include="templates\accountcreate-userdetail.template.htm" />
@@ -75,6 +79,7 @@
     <TypeScriptCompile Include="app\app.routing.ts" />
     <TypeScriptCompile Include="app\appservice.ts" />
     <TypeScriptCompile Include="app\components\autocomplete.component.ts" />
+    <TypeScriptCompile Include="app\components\searchresults.component.ts" />
     <TypeScriptCompile Include="app\components\games.component.ts" />
     <TypeScriptCompile Include="app\components\error.component.ts" />
     <TypeScriptCompile Include="app\components\inventory.component.ts" />
@@ -83,6 +88,7 @@
     <TypeScriptCompile Include="app\components\store.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
+    <TypeScriptCompile Include="app\components\confirmdialog.component.ts" />
     <TypeScriptCompile Include="app\components\petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-petcreate.component.ts" />
     <TypeScriptCompile Include="app\components\accountcreate-userdetail.component.ts" />

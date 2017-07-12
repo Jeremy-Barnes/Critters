@@ -1,6 +1,7 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest } from './dtos'
+import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest, ItemRequest,
+    StoreBackgroundImageOption, StoreClerkImageOption, UserImageOption, SearchResponse} from './dtos'
 
 export class ServiceMethods {
     static baseURL: string = "http://7a0fb046.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -94,7 +95,7 @@ export class ServiceMethods {
 
     /************** Meta Stuff **************/
 
-    public static searchUsers(searchTerm: string): JQueryPromise<User[]> {
+    public static searchUsers(searchTerm: string): JQueryPromise<SearchResponse> {
         return ServiceMethods.doAjax("searchUsers", "meta", searchTerm, "GET");
     }
 
@@ -114,9 +115,25 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("getGames", "meta", "", "GET");
     }
 
+    public static getShopkeeperImageOptions(): JQueryPromise<StoreClerkImageOption[]> {
+        return ServiceMethods.doAjax("getShopkeeperImageOptions", "meta", "", "GET");
+    }
+
+    public static getUserImageOptions(): JQueryPromise<UserImageOption[]> {
+        return ServiceMethods.doAjax("getUserImageOptions", "meta", "", "GET");
+    }
+
+    public static getStoreBackgroundOptions(): JQueryPromise<StoreBackgroundImageOption[]> {
+        return ServiceMethods.doAjax("getStoreBackgroundOptions", "meta", "", "GET");
+    }
+
     /************** Store Stuff **************/
     public static getStorefront(storeId: number): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
+    }
+
+    public static purchaseInventoryItemFromStore(request: ItemRequest): JQueryPromise<void> {
+        return ServiceMethods.doAjax("purchaseInventoryItemFromStore", "commerce", request);
     }
 
     /************** Chat Stuff **************/

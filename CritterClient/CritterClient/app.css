@@ -33,45 +33,6 @@ body {
     }
 }
 
-/*@media all and (min-width: 768px) {
-    .container {
-        width: 490px;
-    }
-}
-
-@media all and (min-width: 992px) {
-    .container {
-        width: 710px;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .container {
-        width: 910px;
-    }
-}
-
-@media all and (min-width: 1460px) {
-    .container {
-        width: 1170px;
-    }
-}
-
-
-
-.container {
-    margin-left: 0px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
-}
-
-@media(max-width:767px) {
-    .container {
-        padding-left: 15px;
-    }
-}    */
-
 .container-fluid {
     padding:0px !important;
 }
@@ -150,10 +111,9 @@ img {
 }
 
 .specieSelect {
-    float:left ;
-    position: relative;
-    z-index: 1000;
-    transform: translateY(-70%);
+    position: absolute;
+    left: 0px;
+    top: 0px;
     width: 100%;
 }
 
@@ -298,7 +258,7 @@ div.card16x9 > div {
     }
 }
 @media (min-width: 993px) {
-      #mainView > .form-inline {
+      #shopsMainView > .form-inline {
         display: none;
     }
 }
@@ -447,12 +407,7 @@ a:hover, a:focus {color: #0F8DBA;}
     border: none;
     padding: 20px 0px;
 }
-.messageUser {
-    text-decoration: none !important;
-    font-weight: bold;
-    color: black;
-    width: 200px;
-}
+
 tr {
     border-bottom: 1px solid;
     border-color: #acacac;
@@ -474,13 +429,18 @@ table {
 .buttons button {
     margin-right: 15px;
 }
-
-.messagePreview .messageSubject, .messagePreview .messageUser {
+.messageUser {
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+    width: 200px;
+}
+.messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
     font-weight: bold;
 }
-.read {
+.read, .read > .messageSubject {
     font-weight: normal !important;
-}
+} 
 
 .inlineblock {
     display: inline-block !important;
@@ -549,6 +509,10 @@ table {
     text-decoration: underline;
     margin-left: 0px;
     margin-right: 0px;
+}
+
+hr {
+    border-color: #acacac;
 }
 
 /*
@@ -911,6 +875,7 @@ iframe {
     border:3px solid #acacac;
 	border-radius: 100%;
 	position: relative;
+    margin-right: 15px;
 }
 .circlecheckbox > label {
 	width: 22px;
@@ -1049,15 +1014,37 @@ iframe {
     }
 }
 
+@media (max-width: 992px) {
+    .row.vertical-divider {
+        overflow: hidden;
+    }
 
-.row.vertical-divider {
-  overflow: hidden;
+    .row.vertical-divider div[class^="col-"] {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .row.vertical-divider div[class^="col-"] + div[class^="col-"] {
+        padding-bottom: 100px;
+        margin-bottom: -100px;
+        border-top: 1px solid #acacac;
+    }
 }
-.row.vertical-divider div[class^="col-"] + div[class^="col-"] { 
-    padding-bottom: 100px; 
-    margin-bottom: -100px; 
-    border-left: 1px solid #acacac; 
-    padding-left: 30px;
+
+@media (min-width: 992px) {
+    .row.vertical-divider {
+        overflow: hidden;
+    }
+    .row.vertical-divider div[class^="col-"] {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .row.vertical-divider div[class^="col-"] + div[class^="col-"] {
+        padding-bottom: 100px;
+        margin-bottom: -100px;
+        border-left: 1px solid #acacac;
+            
+    }
 }
 
 .petCard {
@@ -1069,6 +1056,21 @@ iframe {
     margin-bottom: 15px;
 }
 
+.trophyCase {
+    padding: 30px;
+}
+
+.trophyCard img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+}
+
+.trophyCase h2 {
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
 /*
  * Messaging
  * --------------------------------------------------
@@ -1076,6 +1078,44 @@ iframe {
 
 .messagePreview td {
     vertical-align: middle !important;
+}
+.selectedMessage {
+    background-color: #ebebeb;
+}
+#viewDetail, #composeNew {
+    margin-top: 25px;
+}
+#viewDetail .messageDate {
+    float: right;
+}
+.conversationTitle > h2 {
+    display: inline;
+}
+.conversationTitle > .btn { margin-right: 10px; }
+.conversationTitle > .btn, .subjectBar > .btn{
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+.messageGuts > textarea:focus, .messageGuts > input:focus {
+    border: 2px solid #12a6da;
+}
+.messageGuts textarea, .messageGuts input {
+    border: 2px solid #acacac;
+    border-radius: 2px;
+    width: 100%;
+    margin: 20px 0px 0px;
+
+}
+.messageGuts {
+    width: 70%;
+}
+.messageGuts textarea {
+    height: 170px;
+    margin-bottom: 20px !important;
+}
+#viewDetail > .messageGuts {
+    margin: 20px 0px 20px;
 }
 
 @media (max-width: 767px) {
@@ -1097,14 +1137,32 @@ iframe {
         float: right;
     }
 
-    .userThumb {
+    .messagePreview .userThumb {
         width: 30px;
         height: 30px;
     }
 }
+.tableButtonRight {
+    float:right;
+    padding-right: 25px;
+}
+.tableButtonRight > .btn {
+        max-width: 100px;
+}
+.selectedImage {
+    background-color: blue;
+}
 
+#viewImages img {
+    width: 150px;
+    height: 150px;
+}
 
-
+.cardHeader{
+    border-bottom: 1px solid #acacac;
+    text-align: left;
+    width: 100%;
+}
 
 
 

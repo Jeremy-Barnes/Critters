@@ -13,6 +13,7 @@ import { MessageComponent } from './components/messages.component';
 import { InventoryComponent } from './components/inventory.component';
 import { GamesComponent } from './components/games.component';
 import { StoreComponent } from './components/store.component';
+import { SearchResultsComponent } from './components/searchresults.component';
 
 
 const appRoutes: Routes = [
@@ -68,6 +69,10 @@ const appRoutes: Routes = [
     {
         path: 'store/:id',
         component: StoreComponent
+    },
+    {
+        path: 'search/:searchTerm',
+        component: SearchResultsComponent
     },
 ];
 
