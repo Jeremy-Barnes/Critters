@@ -17,7 +17,7 @@ export class Application {
     public outstandingFriendRequests: Friendship[] = [];
 
     public errorCallback: (text: string) => void;
-    public showDialogCallback: (title: string, text: string) => JQueryDeferred<boolean>;
+    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string) => JQueryDeferred<boolean>;
 
     public static app: Application = new Application();
 

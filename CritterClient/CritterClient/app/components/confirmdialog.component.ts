@@ -11,18 +11,26 @@ import {Application} from "../appservice"
 export class ConfirmDialogComponent implements OnInit {
     title: string;
     body: string;
-    result = $.Deferred();
+    customBodyHTML: string;
+    dangerButtonText: string;
+    result: JQueryDeferred<boolean>;
     ngOnInit() { 
-        Application.getApp().confirmDialogCallback = this.showDialog.bind(this);
+        Application.getApp().showDialogCallback = this.showDialog.bind(this);
     }
     
-    showDialog(title: string, body: string) {
+    showDialog(title: string, body: string, customBodyHTML: string, dangerButtonText: string) {
         this.title = title;
-        this.string = string;
+        this.body = body;
+        this.customBodyHTML = customBodyHTML;
+        this.dangerButtonText = dangerButtonText;
         (<any>$("#confirmDialog")).modal('show'); //I'm not happy about this either.
+        this.result = $.Deferred();
         return this.result.promise();
     }
 
-    accept(){ this.result.resolve(true); }
-    reject(){ this.result.resolve(false); }
+    respond(accept: boolean) {
+        this.result.resolve(accept);
+        (<any>$("#confirmDialog")).modal('hide'); //I'm not happy about this either.
+
+    }
 }
