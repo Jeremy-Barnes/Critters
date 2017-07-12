@@ -11,9 +11,17 @@ import {Application} from "../appservice"
 export class ConfirmDialogComponent implements OnInit {
     title: string;
     body: string;
-    app = Application.getApp();
-    ngOnInit() { this.user = this.app.user }
+    result = $.Deferred();
+    ngOnInit() { 
+        Application.getApp().confirmDialogCallback = this.showDialog.bind(this);
+    }
+    
+    showDialog(title: string, body: string) {
+        this.title = title;
+        this.string = string;
+        return this.result.promise();
+    }
 
-    accept(){}
-    reject(){}
+    accept(){ this.result.resolve(true); }
+    reject(){ this.result.resolve(false); }
 }
