@@ -26,6 +26,8 @@
     <Content Include="img\cat_blue.png" />
     <Content Include="img\cat_octarine.png" />
     <Content Include="img\cat_red.png" />
+    <Content Include="img\closed-envelope-grey.png" />
+    <Content Include="img\closed-envelope.png" />
     <Content Include="img\horrible clion.png" />
     <Content Include="img\dog.png" />
     <Content Include="img\dog_octarine.png" />

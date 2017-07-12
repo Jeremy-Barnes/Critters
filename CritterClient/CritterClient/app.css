@@ -875,6 +875,7 @@ iframe {
     border:3px solid #acacac;
 	border-radius: 100%;
 	position: relative;
+    margin-right: 15px;
 }
 .circlecheckbox > label {
 	width: 22px;
@@ -1141,7 +1142,13 @@ iframe {
         height: 30px;
     }
 }
-
+.tableButtonRight {
+    float:right;
+    padding-right: 25px;
+}
+.tableButtonRight > .btn {
+        max-width: 100px;
+}
 .selectedImage {
     background-color: blue;
 }

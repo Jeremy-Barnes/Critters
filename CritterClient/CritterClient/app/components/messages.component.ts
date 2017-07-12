@@ -23,6 +23,7 @@ export class MessageComponent implements OnInit {
     pendingFriendRequests: Friendship[];
     outstandingFriendRequests: Friendship[];
     friends: Friendship[];
+    tab: number = 0;
     constructor(private route: ActivatedRoute) {
         Application.getMailbox();
         this.user = this.app.user;
@@ -65,10 +66,11 @@ export class MessageComponent implements OnInit {
         return conversation.messages.filter(m => !m.read && m.recipient.userID == this.user.userID).length > 0
     }
 
-    returnToOverview() {
+    returnToOverview(tab: number) {
         this.activeConversation = null;
         this.replyMessage = null;
         this.newMessage = null;
+        this.tab = tab;
     }
 
     cancelReply() {
@@ -157,6 +159,14 @@ export class MessageComponent implements OnInit {
         } else {
             message.collapsed = true;
         }
+    }
+
+    writeMessage(friend: Friendship) {
+        var toUser = friend.requested.userID == this.user.userID ? friend.requester : friend.requested;
+        this.composeNewMessage();
+        this.onItemSelected({
+            resultText: toUser.userName + (toUser.firstName + (toUser.lastName.length > 0 ? " " : "") + toUser.lastName), resultData: toUser
+        });
     }
 
     public searchFriends(searchTerm: string) {
