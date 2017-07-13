@@ -33,5 +33,4 @@ export class AppComponent implements OnInit {
         let link = ['search/' + this.searchString];
         this.router.navigate(link);
     }
-
 }

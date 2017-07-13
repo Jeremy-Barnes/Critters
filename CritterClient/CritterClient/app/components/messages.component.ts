@@ -68,7 +68,7 @@ export class MessageComponent implements OnInit {
     }
 
     returnToOverview(tab: number) {
-        if(this.newMessage.messageText != null && this.newMessage.messageText.length > 0) {
+        if(this.newMessage && this.newMessage.messageText != null && this.newMessage.messageText.length > 0) {
             var self = this;
             Application.getApp().showDialogCallback("Are you sure?", "You are about to discard your message - your message will be lost if you continue.", null, null).done((okay: boolean) => {
                 if (okay) {
