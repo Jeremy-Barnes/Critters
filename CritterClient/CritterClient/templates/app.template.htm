@@ -3,15 +3,16 @@
     <div class="navbar-left navbar-brand"><img src="../img/Logo.svg" /></div>
     <div class="container-fluid">
         <div class="navbar-header navbar-right">
-            <div class="inlineblock" *ngIf="!app.loggedIn">
+            <div class="inlineblock noAccountButtons" *ngIf="!app.loggedIn">
                 <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
                 <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
             <div [hidden]="!app.loggedIn">
-                <div class="inlineblock">{{user.userName}}</div>
-                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
-                    <img src="../img/closed-envelope.png"/> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
-                </a>
+                <div class="messageslink navBox">
+                    <a href="javascript:void(0)" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
+                        <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
+                    </a>
+                </div>
                 <div class="notifications-bubble-container hide">
                     <div class="notifications-bubble">
                         <div class="notification-header">
@@ -35,7 +36,22 @@
                         </div>
                     </div>
                 </div>
-                <a routerLink="/inventory">Inventory!</a>
+
+                <div class="userDropdown navBox">
+                    <button class="headerButton" type="button" id="userMenuClick" data-toggle="collapse" data-target="#userMenu">
+                        {{user.userName}}
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul id="userMenu" class="collapse" role="menu" aria-labelledby="userMenuClick">
+                        <li role="presentation"><a role="menuitem" routerLink="/inventory">Inventory</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/account">Edit Account</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/viewUser/{{user.userID}}">View Profile</a></li>
+                    </ul>
+
+                </div>
+
+                <div class="navBox"> CritterBuxx: {{user.critterbuxx}}</div>
             </div>
         </div>
     </div>

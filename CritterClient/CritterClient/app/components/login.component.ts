@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
         var self = this;
         Application.logIn(this.app.user).then((u: User) => {
             (<any>$("#log-in")).modal('hide'); //I'm not happy about this either.
-        return false;
+            return false;
+        });
     }
 }

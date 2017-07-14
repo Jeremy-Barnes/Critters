@@ -564,6 +564,105 @@ select.ng-pristine {
  * Navs
  * --------------------------------------------------
  */
+/*.userDropdown {
+    right: 100px;
+}*/
+.noAccountButtons {
+    margin-top: 18px;
+}
+
+.navBox {
+    border-left: 1px solid #0f8dba;
+    border-right: 1px solid #0f8dba;
+    height: 80px !important;
+    position: relative;
+    top: -5px;
+    padding: 30px 30px 0px 30px;
+    display: inline-block;
+}
+.navBox + .navBox {
+    right: 11px;
+}
+.navBox:nth-of-type(3) {
+    left: -6px;
+}
+#userMenu {
+    background-color: #4dbce3;
+    position: absolute;
+    right: 0px;
+    left: auto;
+    top: 100%;
+    list-style: none;
+    list-style-position:outside;
+    list-style-image: none;
+    text-align: left;
+    width: 100%;
+    
+}
+.userDropdown button {
+    background: none;
+    border: none;
+    background-color: #12a6da;
+}
+.messageslink {
+    /*padding-top: 25px;*/
+    top: -1px;
+}
+.notificationCircle {
+    background: #ffae35;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    padding-bottom: 5px;
+    position: absolute;
+    top: -130%;
+    right: 0px;
+    text-align: center;
+    font-weight:bold;
+    font-size:14pt;
+}
+
+.notificationCircle > * {
+    position: relative;
+    top: -10%;
+}
+
+.popover-repeater {
+    border-top: 1px solid #acacac;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.notification-header {
+    width: 100%;
+    text-align: center;
+    font-size: 18px; 
+    padding: 5px 0px;
+
+}
+
+.notifications-bubble {
+    border-radius: 0px;
+    width:375px;
+    margin: 0px;
+}
+@media(max-width:767px) {
+    .notifications-bubble {
+       width: 200px;
+    }
+}
+
+.popover {
+    max-width: 500px;
+    padding: 0px;
+    border-radius: 0px;
+    border: 1px solid #acacac;
+}
+
+.popover-content {
+    padding: 0px;
+}
+
 
 .navbar{
     height: 80px;
@@ -582,10 +681,6 @@ select.ng-pristine {
 
 .navbar-brand {
     padding: 24px 33px;
-}
-
-.navbar-right {
-    padding-top: 18px;
 }
 
 .optional-topbar {
@@ -956,64 +1051,6 @@ iframe {
 }
 .circlecheckbox > label > .fa {
     color:transparent;
-}
-
-.messageslink {
-    position: relative;
-}
-.notificationCircle {
-    background: #ffae35;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    padding-bottom: 5px;
-    position: absolute;
-    top: -130%;
-    right: 0px;
-    text-align: center;
-    font-weight:bold;
-    font-size:14pt;
-}
-
-.notificationCircle > * {
-    position: relative;
-    top: -10%;
-}
-
-.popover-repeater {
-    border-top: 1px solid #acacac;
-    width: 100%;
-    padding: 10px 15px;
-}
-
-.notification-header {
-    width: 100%;
-    text-align: center;
-    font-size: 18px; 
-    padding: 5px 0px;
-
-}
-
-.notifications-bubble {
-    border-radius: 0px;
-    width:375px;
-    margin: 0px;
-}
-@media(max-width:767px) {
-    .notifications-bubble {
-       width: 200px;
-    }
-}
-
-.popover {
-    max-width: 500px;
-    padding: 0px;
-    border-radius: 0px;
-    border: 1px solid #acacac;
-}
-
-.popover-content {
-    padding: 0px;
 }
 
 /*
