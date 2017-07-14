@@ -445,9 +445,11 @@ table {
 .read, .read > .messageSubject {
     font-weight: normal !important;
 } 
-
 .inlineblock {
     display: inline-block !important;
+}
+.floatRight {
+    float: right;
 }
 .centered {
     text-align: center;
@@ -595,7 +597,60 @@ select.ng-pristine {
     float: left;
 }
 .optional-topbar > h1 {
-    margin-top: 5px;
+    margin-top: 10px;
+}
+.optional-topbar .fa-search:hover + input, .optional-topbar .fa-search:focus + input, .optional-topbar input:focus, .optional-topbar input:hover {
+    display: inline;
+    width:60%;
+    transition: .5s;
+    border: none;
+    border-bottom: 1px solid white;
+}
+.optional-topbar .fa-search:hover ~ h1, .optional-topbar .fa-search:focus ~ h1, .optional-topbar input:focus ~ h1 {
+    opacity: 0;    
+    transition: .4s;
+}
+.optional-topbar h1 {
+    opacity: 1;
+    transition: .4s;
+}
+.optional-topbar input, .optional-topbar input {
+    display: inline;
+    width:0px;
+    transition: .5s;
+    position: absolute;
+    top: 15px;
+    right: 60px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+}
+.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder{color: white;} .optional-topbar input:-moz-placeholder {color: white;}
+
+
+.optional-topbar input::-webkit-input-placeholder  {
+    color: white;
+}
+
+.optional-topbar .fa-search {
+    position: absolute;
+    top: 16px;
+    right: 50px;
+}
+
+.optional-topbar .messageslink img {
+    width: 20px;
+}
+
+.optional-topbar .fa {
+    font-size: 15px;
+}
+
+.mobileMessagesNotifier {
+    position: absolute;
+    top: 14px;
+    right: 20px;
 }
 
 #sidebar {
@@ -657,7 +712,12 @@ select.ng-pristine {
 }
 
 .sidebarSearch input {
-    width: 155px !important;;
+    width: 155px !important;
+}
+@media(max-width:767px) {
+    .sidebarSearch {
+        display: none;
+    }
 }
 
 .sidebar {
@@ -938,6 +998,11 @@ iframe {
     border-radius: 0px;
     width:375px;
     margin: 0px;
+}
+@media(max-width:767px) {
+    .notifications-bubble {
+       width: 200px;
+    }
 }
 
 .popover {

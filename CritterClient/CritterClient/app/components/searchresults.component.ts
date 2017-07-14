@@ -16,11 +16,8 @@ export class SearchResultsComponent implements OnInit {
     searchOp: JQueryPromise<SearchResponse>;
 
     ngOnInit() {
-
         this.user = this.app.user;
-        var self = this;
-        //cast only so VS will quit complaining about not being able to find switchMap EVEN THOUGH IT COMPILES JUST FINE
-        
+        var self = this;        
     }
 
     constructor(private route: ActivatedRoute, private router: Router, private domSanitizer: DomSanitizer) {
