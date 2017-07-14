@@ -694,7 +694,11 @@ select.ng-pristine {
 .optional-topbar > h1 {
     margin-top: 10px;
 }
-.optional-topbar .fa-search:hover + input, .optional-topbar .fa-search:focus + input, .optional-topbar input:focus, .optional-topbar input:hover {
+.optional-topbar .fa-search:hover + input, 
+.optional-topbar .fa-search:focus + input, 
+.optional-topbar .fa-search:active + input, 
+.optional-topbar input:focus, 
+.optional-topbar input:hover {
     display: inline;
     width:60%;
     transition: .5s;
