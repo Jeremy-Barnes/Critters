@@ -726,9 +726,20 @@ select.ng-pristine {
     top: 16px;
     right: 50px;
 }
-.optional-topbar:active + input,
-.optional-topbar .fa-search:hover + input, 
-.optional-topbar .fa-search:active + input, 
+.optional-topbar:active {
+	background-color: pink;
+}
+
+.optional-topbar .fa-search:hover {
+	background-color: red;
+}
+.optional-topbar .fa-search:active {
+	background-color:orange;
+}
+
+.optional-topbar:active input,
+.optional-topbar .fa-search:hover ~ input, 
+.optional-topbar .fa-search:active ~ input, 
 .optional-topbar input:focus, 
 .optional-topbar input:active {
     display: inline;
