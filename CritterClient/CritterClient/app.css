@@ -726,12 +726,10 @@ select.ng-pristine {
     top: 16px;
     right: 50px;
 }
-
-.optional-topbar .fa-search:focus + input, 
+.optional-topbar:active + input,
 .optional-topbar .fa-search:hover + input, 
 .optional-topbar .fa-search:active + input, 
 .optional-topbar input:focus, 
-.optional-topbar input:hover,
 .optional-topbar input:active {
     display: inline;
     width:60%;
