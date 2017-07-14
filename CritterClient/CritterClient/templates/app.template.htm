@@ -3,13 +3,16 @@
     <div class="navbar-left navbar-brand"><img src="../img/Logo.svg" /></div>
     <div class="container-fluid">
         <div class="navbar-header navbar-right">
-            <div class="inlineblock" *ngIf="!app.loggedIn">
+            <div class="inlineblock noAccountButtons" *ngIf="!app.loggedIn">
                 <button type="button" data-toggle="modal" data-target="#log-in" class="btn btn-warning">Login</button>
                 <a routerLink="/signUp" class="btn btn-link">Sign Up!</a>
             </div>
             <div [hidden]="!app.loggedIn">
-                <div class="inlineblock">{{user.userName}}</div>
-                <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()"><img class="userThumb" src="{{user.userImagePath}}"/> <span class="notificationCircle" [hidden]="alerts.length == 0"><div>{{ alerts.length }}</div></span></a>
+                <div class="messageslink navBox">
+                    <a href="javascript:void(0)" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
+                        <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
+                    </a>
+                </div>
                 <div class="notifications-bubble-container hide">
                     <div class="notifications-bubble">
                         <div class="notification-header">
@@ -18,8 +21,7 @@
                                 No new notifications!
                             </div>
                         </div>
-                       
-                        <div *ngIf="alerts != null" > <!----(blur)="clearAlerts()">-->
+                        <div *ngIf="alerts != null" >
                             <div class="popover-repeater" *ngFor="let note of alerts">
                                 <div *ngFor="let msg of note.messages">
                                     <div>
@@ -34,26 +36,72 @@
                         </div>
                     </div>
                 </div>
-                <a routerLink="/inventory">Inventory!</a>
+
+                <div class="userDropdown navBox">
+                    <button class="headerButton" type="button" id="userMenuClick" data-toggle="collapse" data-target="#userMenu">
+                        {{user.userName}}
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul id="userMenu" class="collapse" role="menu" aria-labelledby="userMenuClick">
+                        <li role="presentation"><a role="menuitem" routerLink="/inventory">Inventory</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/account">Edit Account</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/viewUser/{{user.userID}}">View Profile</a></li>
+                    </ul>
+
+                </div>
+
+                <div class="navBox"> CritterBuxx: {{user.critterbuxx}}</div>
             </div>
         </div>
     </div>
 </nav>
 
-<nav class="centered navbar optional-topbar navbar-fixed-top visible-xs">
+<!--Mobile Navbar-->
+<nav class="navbar optional-topbar navbar-fixed-top visible-xs">
     <button type="button" class="menu-expand collapsed navbar-left inlineblock" data-toggle="offcanvas" data-target="#sidebar">
         <span class="fa fa-bars"></span>
     </button>
+    <span class="fa fa-search"></span><input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..."/>
+
+    <div class="mobileMessagesNotifier" [hidden]="!app.loggedIn">
+        <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
+            <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
+        </a>
+        <div class="notifications-bubble-container hide">
+            <div class="notifications-bubble">
+                <div class="notification-header">
+                    <a routerLink="/messages">Go to Mailbox!</a>
+                    <div *ngIf="alerts == null || alerts.length == 0">
+                        No new notifications!
+                    </div>
+                </div>
+                <div *ngIf="alerts != null">
+                    <div class="popover-repeater" *ngFor="let note of alerts">
+                        <div *ngFor="let msg of note.messages">
+                            <div>
+                                <p><b>{{msg.sender.userName}}</b> sent you a message <span style="float:right">{{msg.dateSent | date:'yMdjm'}}</span></p>
+                                <p *ngIf="msg.messageSubject != null || msg.messageSubject.length > 0">{{msg.messageSubject | limitTo:15 }}</p>
+                            </div>
+                        </div>
+                        <div *ngFor="let friend of note.friendRequests">
+                            <div><p>{{friend.requester.firstName}} {{friend.requester.lastName}} wants to be your friend!</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <h1>CRITTER</h1>
 </nav>
 
-<!--Mobile Navbar-->
 
 <div id="main">
     <div class="sidebar-offcanvas sidebar" id="sidebar">
         <div class="mobileInfopane">
             <div class="inlineblock" *ngIf="!app.loggedIn">
-                <button class="btn btn-warning" type="button" *ngIf="!user.emailAddress.length > 0" data-toggle="modal" data-target="#log-in">Login</button>
+                <button class="btn btn-warning" type="button" *ngIf="!app.loggedIn" data-toggle="modal" data-target="#log-in">Login</button>
                 <a class="btn btn-link" routerLink="/signUp">Sign Up!</a>
             </div>
             <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>

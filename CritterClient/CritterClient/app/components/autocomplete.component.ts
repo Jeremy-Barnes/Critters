@@ -74,7 +74,7 @@ export class AutocompleteList {
                     this.callSearchFunction();
                 } else {
                     if (results != null && results.length > 0)
-                        this.resultList.push(...results.filter(a => this.resultList.find(r => r.resultData.isSame(a.resultData))? true : false ));
+                        this.resultList.push(...results.filter(a => this.resultList.find(r => r.resultData.isSame(a.resultData))? false : true));
                 }
             });
 

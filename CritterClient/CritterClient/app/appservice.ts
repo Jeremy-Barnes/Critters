@@ -16,7 +16,7 @@ export class Application {
     public pendingFriendRequests: Friendship[] = [];
     public outstandingFriendRequests: Friendship[] = [];
 
-    public errorCallback: (text: string) => void;
+    public errorCallback: (text: string) => any;
     public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string) => JQueryDeferred<boolean>;
 
     public static app: Application = new Application();
@@ -237,7 +237,7 @@ export class Application {
             for (var i = 0; i < app.user.friends.length; i++) {
                 var friendship = app.user.friends[i];
                 var resultData = friendship.requested.userID == app.user.userID ? friendship.requester : friendship.requested;
-
+                resultData = $.extend(new User(), resultData);
                 if (resultData.userName.toLowerCase().includes(searchTerm) ||
                     resultData.firstName.toLowerCase().includes(searchTerm) ||
                     resultData.lastName.toLowerCase().includes(searchTerm)) {

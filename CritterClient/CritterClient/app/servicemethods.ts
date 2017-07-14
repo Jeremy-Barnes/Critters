@@ -2,6 +2,7 @@
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
 import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest, ItemRequest,
     StoreBackgroundImageOption, StoreClerkImageOption, UserImageOption, SearchResponse} from './dtos'
+import {Application} from "./appservice"
 
 export class ServiceMethods {
     static baseURL: string = "http://7a0fb046.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
@@ -34,6 +35,7 @@ export class ServiceMethods {
                     ServiceMethods.jsessionID = args.getResponseHeader("JSESSIONID");
                 }
             },
+            error: Application.handleServerError,
             data: type == "POST" ? param : "",
             crossDomain: true,
         };

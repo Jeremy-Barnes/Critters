@@ -201,10 +201,10 @@ export class MessageComponent implements OnInit {
                 var resultsForDisplay: { resultText: string, resultData: User }[] = [];
                 for (var i = 0; i < results.users.length; i++) {
                     var resultData = results.users[i];
-
-                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
-                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
-                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    resultData = $.extend(new User(), resultData);
+                    let resultText = resultData.userName;
+                    let nameString = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") + resultData.lastName;
+                    resultText += (nameString.length > 0 ? " (" + nameString + ")" : "");
                     resultsForDisplay.push({ resultText, resultData });
                 }
                 resolve(resultsForDisplay);
