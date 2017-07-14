@@ -47,6 +47,10 @@ body {
     margin-bottom: 40px;
 }
 
+form .row {
+    margin-bottom: 0;
+}
+
 .card .row {
     margin-bottom: 0;
 }
