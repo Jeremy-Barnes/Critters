@@ -62,7 +62,7 @@
     <button type="button" class="menu-expand collapsed navbar-left inlineblock" data-toggle="offcanvas" data-target="#sidebar">
         <span class="fa fa-bars"></span>
     </button>
-    <span class="fa fa-search"></span><input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..."/>
+    <span onclick="" class="fa fa-search"></span><input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..."/>
 
     <div class="mobileMessagesNotifier" [hidden]="!app.loggedIn">
         <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
