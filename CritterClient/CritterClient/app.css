@@ -729,7 +729,9 @@ select.ng-pristine {
 .optional-topbar:active {
 	background-color: pink;
 }
-
+.optional-topbar:hover {
+	background-color: green;
+}
 .optional-topbar .fa-search:hover {
 	background-color: red;
 }
