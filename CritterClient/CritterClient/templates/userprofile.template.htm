@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-6 col-lg-3" *ngFor="let loopPet of viewUser.pets">
             <div class="card petCard" (click)="selectGame(game)">
-                <img src="{{loopPet.petSpecies.imagePathWithoutModifiers}}">
+                <img src="../img/pets/{{loopPet.petSpecies.petTypeName}}_{{loopPet.petColor.petColorName}}">
                 <p><strong>{{loopPet.petName}}</strong><br />
                 the {{loopPet.petColor.petColorName}} {{loopPet.petSpecies.petTypeName}}</p>
             </div>
