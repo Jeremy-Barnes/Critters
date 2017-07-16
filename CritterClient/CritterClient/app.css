@@ -730,6 +730,7 @@ select.ng-pristine {
     border: none;
     border-bottom: 1px solid white;
     color: white;
+    z-index: 9999;
 }
 .optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder {color: white;} .optional-topbar input:-moz-placeholder {color: white;} .optional-topbar input::-webkit-input-placeholder  {color: white;}
 
