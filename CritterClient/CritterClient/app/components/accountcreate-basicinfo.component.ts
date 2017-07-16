@@ -25,9 +25,10 @@ export class AccountCreateBasicInfoComponent {
     ngOnInit() { this.user = Application.getApp().user }
 
     onSubmit() {
-        let link = ['/signUp-2'];
-        this.router.navigate(link);
-
+        if (this.passwordsMatch) {
+            let link = ['/signUp-2'];
+            this.router.navigate(link);
+        }
         return false;
     }
 

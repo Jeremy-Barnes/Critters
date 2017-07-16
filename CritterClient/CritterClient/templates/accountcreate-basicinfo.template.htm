@@ -19,8 +19,8 @@
                 <input class="form-control" type="email" name="emailAddress" [(ngModel)]="user.emailAddress" placeholder="email address" required />
 
                 <input class="form-control" type="text" name="userName" placeholder="userName" [(ngModel)]="user.userName" required />
-                <input class="form-control" type="password" name="password" placeholder="password" (ngModelChange)="onChangePassword()" [(ngModel)]="user.password" required />
-                <input class="form-control" type="password" name="password" placeholder="confirm password" (ngModelChange)="onChangePassword()" [ngClass]="{'invalidField': !passwordsMatch}" [(ngModel)]="confirmPassword" required />
+                <input class="form-control" type="password" name="password" placeholder="password" (blur)="onChangePassword()" [(ngModel)]="user.password" required />
+                <input class="form-control" type="password" name="password" placeholder="confirm password" (blur)="onChangePassword()" [ngClass]="{'invalidField': !passwordsMatch}" [(ngModel)]="confirmPassword" required />
 
                 <div class="row">
                     <div class="col-sm-6">

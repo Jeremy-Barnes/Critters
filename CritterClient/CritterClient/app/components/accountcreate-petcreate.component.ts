@@ -31,6 +31,7 @@ export class AccountCreatePetComponent implements OnInit {
         if (this.userIsValid()) {
             this.species = Application.getApp().petSpecies;
             this.colors = Application.getApp().petColors;
+            this.colorChange(this.colors[0]);
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
