@@ -14,6 +14,7 @@ export class SearchResultsComponent implements OnInit {
     userResults: User[] = [];
     searchString: string;
     searchOp: JQueryPromise<SearchResponse>;
+    completed: boolean = false;
 
     ngOnInit() {
         this.user = this.app.user;
@@ -23,11 +24,14 @@ export class SearchResultsComponent implements OnInit {
     constructor(private route: ActivatedRoute, private router: Router, private domSanitizer: DomSanitizer) {
         var self = this;
         this.route.params.forEach((params: Params) => {
+            self.completed = false;
             self.searchString = params['searchTerm'];
+            this.searchOp = Application.searchUsers(self.searchString).done((users: SearchResponse) => {
+                self.userResults.push(...users.users);
+                self.completed = true;
+            });
         });
-        this.searchOp = Application.searchUsers(self.searchString).done((users: SearchResponse) => {
-            self.userResults.push(...users.users);
-        });
+       
     }
 
     
