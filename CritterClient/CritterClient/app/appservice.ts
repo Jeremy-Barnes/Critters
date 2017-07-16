@@ -65,7 +65,8 @@ export class Application {
     }
 
     public static getPetColors() {
-        if (Application.getApp().petColors.length == 0) ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
+        if (Application.getApp().petColors.length == 0) return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
+        return $.Deferred().resolve(Application.getApp().petColors);
     }
 
     public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {

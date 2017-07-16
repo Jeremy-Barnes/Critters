@@ -24,14 +24,19 @@ export class AccountCreatePetComponent implements OnInit {
     activeSex: string = "";
     confirmedSpecies = false;
     showOptions = false;
-    constructor(private router: Router) { Application.getPetColors(); Application.getPetSpecies(); }
+    constructor(private router: Router) {
+        var self = this;
+        Application.getPetColors().done(() => {
+            self.colorChange(this.colors[0]);
+        }); 
+        Application.getPetSpecies();
+    }
 
     ngOnInit() {
         this.user = Application.getApp().user;
         if (this.userIsValid()) {
             this.species = Application.getApp().petSpecies;
             this.colors = Application.getApp().petColors;
-            this.colorChange(this.colors[0]);
         } else {
             let link = ['/signUp'];
             this.router.navigate(link);
