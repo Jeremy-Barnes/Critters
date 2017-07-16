@@ -98,6 +98,10 @@ img {
     height:auto;
 }
 
+.invalidField {
+    border: 2px solid #eb5050 !important;
+}
+
 .specieRepeater {
     position: relative;
     display: inline-block;
@@ -123,7 +127,6 @@ img {
 
 .whiteText { 
     color: white;
-
 }
 
 .framed {
@@ -564,13 +567,16 @@ select.ng-pristine {
  * Navs
  * --------------------------------------------------
  */
-/*.userDropdown {
-    right: 100px;
-}*/
+.userDropdownMoble {
+    position: relative;
+    width: 100%;
+}
+#userMenuMobile {
+    width: 100%;
+}
 .noAccountButtons {
     margin-top: 18px;
 }
-
 .navBox {
     border-left: 1px solid #0f8dba;
     border-right: 1px solid #0f8dba;
@@ -586,8 +592,8 @@ select.ng-pristine {
 .navBox:nth-of-type(3) {
     left: -6px;
 }
-#userMenu {
-    background-color: #4dbce3;
+#userMenu, #userMenuMobile {
+    background-color: #12a6da;
     position: absolute;
     right: 0px;
     left: auto;
@@ -597,7 +603,9 @@ select.ng-pristine {
     list-style-image: none;
     text-align: left;
     width: 100%;
-    
+}
+#userMenuClickMobile {
+    padding: 0px;
 }
 .userDropdown button {
     background: none;
@@ -605,7 +613,6 @@ select.ng-pristine {
     background-color: #12a6da;
 }
 .messageslink {
-    /*padding-top: 25px;*/
     top: -1px;
 }
 .notificationCircle {
@@ -694,7 +701,17 @@ select.ng-pristine {
 .optional-topbar > h1 {
     margin-top: 10px;
 }
-.optional-topbar .fa-search:hover ~ h1, .optional-topbar .fa-search:focus ~ h1, .optional-topbar input:focus ~ h1 {
+.optional-topbar .searchHover:hover + input, 
+.optional-topbar .searchHover:focus + input, 
+.optional-topbar input:focus, .optional-topbar input:hover, 
+.optional-topbar .searchHover:active + input {
+    display: inline;
+    width:60%;
+    transition: .5s;
+    border: none;
+    border-bottom: 1px solid white;
+}
+.optional-topbar .searchHover:hover ~ h1, .optional-topbar .searchHover:focus ~ h1, .optional-topbar input:focus ~ h1 {
     opacity: 0;    
     transition: .4s;
 }
@@ -714,17 +731,13 @@ select.ng-pristine {
     border-bottom: 1px solid white;
     color: white;
 }
-.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder{color: white;} .optional-topbar input:-moz-placeholder {color: white;}
+.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder {color: white;} .optional-topbar input:-moz-placeholder {color: white;} .optional-topbar input::-webkit-input-placeholder  {color: white;}
 
-
-.optional-topbar input::-webkit-input-placeholder  {
-    color: white;
-}
-
-.optional-topbar .fa-search {
+ .searchHover {
     position: absolute;
-    top: 16px;
+    top: 6px;
     right: 50px;
+    padding: 10px 10px 10px 10px;
 }
 .optional-topbar:active {
 	background-color: pink;
@@ -770,9 +783,10 @@ select.ng-pristine {
     background-image: url("img/print-pattern.png"), -webkit-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
     background-image: url("img/print-pattern.png"), -o-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
     background-image: url("img/print-pattern.png"), -ms-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
-    background-image: url("img/print-pattern.png"), linear-gradient(to bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#089ed2', endColorstr='#67cd45', Grad*/ientType=0 );
+    background-image: url("img/print-pattern.png"), linear-gradient(top, bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#089ed2', endColorstr='#67cd45', GradientType=0 );
     background-repeat: repeat;
+    color: white;
 }
 #sidebar, #sidebar-placeholder {
     width: 260px;
@@ -868,16 +882,26 @@ select.ng-pristine {
 
 .mobileInfopane {
     padding-top: 20px;
-    padding-left: 33px;
     padding-bottom: 20px;
     border-bottom: 1px solid #fff;
     margin-bottom: 20px;
+    background-color: #12a6da; 
+    width: 100%;
 }
-
+.mobileInfopane > .inlineblock {
+    padding-left: 30px;
+}
+.mobileInfopane ul {
+    padding: 15px;
+}
 @media(min-width:768px) {
     .mobileInfopane {
         display: none;
     }
+}
+.mobileInfopane b{
+    padding-left: 15px;
+
 }
 
 .fullscreen {
@@ -1285,5 +1309,145 @@ iframe {
     width: 100%;
 }
 
+/***LOADING ANIMATION Many thanks to https://codepen.io/DanAndreasson/ *****/
+.cssload-container {
+	width: 117px;
+	margin: 0 auto;
+}
 
+.cssload-circle-1 {
+	height: 117px;
+	width: 117px;
+	background: rgb(97,46,141);
+}
+
+.cssload-circle-2 {
+	height: 97px;
+	width: 97px;
+	background: rgb(194,34,134);
+}
+
+.cssload-circle-3 {
+	height: 78px;
+	width: 78px;
+	background: rgb(234,34,94);
+}
+
+.cssload-circle-4 {
+	height: 58px;
+	width: 58px;
+	background: rgb(237,91,53);
+}
+
+.cssload-circle-5 {
+	height: 39px;
+	width: 39px;
+	background: rgb(245,181,46);
+}
+
+.cssload-circle-6 {
+	height: 19px;
+	width: 19px;
+	background: rgb(129,197,64);
+}
+
+.cssload-circle-7 {
+	height: 10px;
+	width: 10px;
+	background: rgb(0,163,150);
+}
+
+.cssload-circle-8 {
+	height: 5px;
+	width: 5px;
+	background: rgb(22,116,188);
+}
+
+.cssload-circle-1,
+.cssload-circle-2,
+.cssload-circle-3,
+.cssload-circle-4,
+.cssload-circle-5,
+.cssload-circle-6,
+.cssload-circle-7,
+.cssload-circle-8 {
+	border-bottom: none;
+	border-radius: 50%;
+		-o-border-radius: 50%;
+		-ms-border-radius: 50%;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-o-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-ms-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+	animation-name: cssload-spin;
+		-o-animation-name: cssload-spin;
+		-ms-animation-name: cssload-spin;
+		-webkit-animation-name: cssload-spin;
+		-moz-animation-name: cssload-spin;
+	animation-duration: 4600ms;
+		-o-animation-duration: 4600ms;
+		-ms-animation-duration: 4600ms;
+		-webkit-animation-duration: 4600ms;
+		-moz-animation-duration: 4600ms;
+	animation-iteration-count: infinite;
+		-o-animation-iteration-count: infinite;
+		-ms-animation-iteration-count: infinite;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation-iteration-count: infinite;
+	animation-timing-function: linear;
+		-o-animation-timing-function: linear;
+		-ms-animation-timing-function: linear;
+		-webkit-animation-timing-function: linear;
+		-moz-animation-timing-function: linear;
+}
+
+
+
+@keyframes cssload-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@-o-keyframes cssload-spin {
+	from {
+		-o-transform: rotate(0deg);
+	}
+	to {
+		-o-transform: rotate(360deg);
+	}
+}
+
+@-ms-keyframes cssload-spin {
+	from {
+		-ms-transform: rotate(0deg);
+	}
+	to {
+		-ms-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes cssload-spin {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes cssload-spin {
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(360deg);
+	}
+}
 
