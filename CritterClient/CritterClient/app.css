@@ -34,25 +34,31 @@ body {
 }
 
 .container-fluid {
-    padding:0px !important;
+    padding: 0px;
 }
 
 .container-maxWidth {
     max-width: 1170px;
     margin-left: 0;
-    padding: 30px !important;
+    padding: 30px;
 }
 
-.row {
-    margin-bottom: 40px;
+@media (max-width: 767px) {
+    .container-maxWidth {
+        padding: 15px 10px;
+    }
 }
 
-form .row {
-    margin-bottom: 0;
+.row + .row {
+    margin-top: 30px;
 }
 
-.card .row {
-    margin-bottom: 0;
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
 }
 
 .page-title > .row {
@@ -138,10 +144,13 @@ img {
     border: 1px solid #acacac;
     border-radius: 5px;
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
+    padding: 30px;
 }
 
-#specialGame .card {
-    padding: 30px;
+@media (max-width: 767px) {
+    .card {
+        padding: 15px;
+    }
 }
 
 div.card16x9 {
@@ -155,20 +164,8 @@ div.card16x9 > div {
 	top: 0; bottom: 0; left: 0; right: 0;
 }
 
-
-.searchBoxHolder > input {
-    min-width: 100px !important;
-}
-
-.sortBoxHolder > select {
-    width: 100%;
-}
-
 .itemCard {
     position: relative;
-    height: 270px;
-    width: 270px;
-    padding: 20px 0px;
     text-align: center;
 }
 
@@ -177,22 +174,27 @@ div.card16x9 > div {
 }
 
 .itemCard img {
-    width: 60%;
+    width: 150px;
     margin-bottom: 15px;
 }
 
 .checkBoxPlaceholder {
-    margin-top: -12px;
-    margin-bottom: -12px;
-    margin-left: 10px;
+    margin-top: -15px;
+    margin-left: -15px;
     width: 22px;
 	height: 22px;
 	position: relative;
 }
 .itemCard .circlecheckbox {
-    margin-top: -12px;
-    margin-bottom: -12px;
-    margin-left: 10px;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
+@media (max-width: 767px) {
+    .checkBoxPlaceholder, .itemCard .circlecheckbox {
+        margin-top: 0px;
+        margin-left: 0px;
+    }
 }
 
 #viewItemDetail * {
@@ -290,71 +292,6 @@ div.card16x9 > div {
 }*/
 .searchBoxHolder > p {
     font-weight: bold;
-}
-
-.gameCard {
-    margin-bottom: 30px;
-    cursor: pointer;
-}
-
-.gameCard img {
-    width: 100%;
-    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
-}
-
-.gameTitle {
-    
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    background-color: rgba(0,0,0,.5);
-    color: white;
-    text-shadow: 1px 2px 4px black; 
-    text-align: right;
-    padding: 0px 20px;
-    left: 0px;
-    bottom: 0px;
-}
-
-.gameSearchBar {
-    background-color: #ebebeb;
-    padding: 30px 30px 0;
-}
-
-.gameSearchBar h2 {
-    margin-top: 6px;
-}
-
-.gameSearchBar input[type=text], .gameSearchBar select {
-    width: 66.66% !important;
-    display: inline-block;
-}
-
-.gameSearchBar .btn {
-    width: 30%;
-    display: inline-block;
-}
-
-.gameSearchBar .form-inline {
-    margin-bottom: 30px;
-}
-
-.gameTitleBackground {
-    height: 285px;
-    padding-top: 80px;
-    padding-left: 20px;
-    padding-right: 0px;
-    color: white;
-}  
-.gameTitleBackground h1 { text-shadow: 1px 2px 4px black; }
-
-.aboutGame {
-    padding: 20px 20px;
-}
-
-.aboutGame > .gameShots img{
-    width: 100%;
-    margin: 10px 0px;
 }
 
 .thumbnail {
@@ -561,6 +498,10 @@ select .placeholder {
 
 select.ng-pristine {
     color: #acacac!important;
+}
+
+form .row + .row {
+    margin-top: 0;
 }
 
 /*
@@ -910,42 +851,6 @@ select.ng-pristine {
 
 }
 
-.fullscreen {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-    height: 100%;
-    border: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    z-index: 999999;
-}
-iframe {
-    width: 100%;
-    height: 100%;
-}
-
-.exit-fullscreen {
-    position:fixed !important;
-    top:0;
-    left:0;
-    z-index: 999999 !important;
-}
-
-.go-fullscreen {
-    width:30%;
-}
-
-.gameHolder {
-    height: 800px;
-}
-
-[hidden],template{display:none !important}
-
 /*
  * Button Styling
  * --------------------------------------------------
@@ -1118,6 +1023,90 @@ iframe {
 }
 
 /*
+ * Games Pages
+ * --------------------------------------------------
+ */
+
+.gameCard img {
+    width: 100%;
+    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
+}
+
+.gameTitle {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    text-shadow: 1px 2px 4px black; 
+    text-align: right;
+    padding: 0px 20px;
+    left: 0px;
+    bottom: 0px;
+}
+
+.gameTitleBackground {
+    height: 285px;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 0px;
+    color: white;
+}  
+
+.gameSearchBar {
+    background-color: #ebebeb;
+}
+
+.gameSearchBar h2 {
+    margin-top: 6px;
+}
+
+.gameTitleBackground h1 { 
+    text-shadow: 1px 2px 4px black; 
+}
+
+.aboutGame > .gameShots img{
+    width: 100%;
+    margin: 10px 0px;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    z-index: 999999;
+}
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.exit-fullscreen {
+    position:fixed !important;
+    top:0;
+    left:0;
+    z-index: 999999 !important;
+}
+
+.go-fullscreen {
+    width:30%;
+}
+
+.gameHolder {
+    height: 800px;
+}
+
+[hidden],template{display:none !important}
+
+/*
  * User Profile
  * --------------------------------------------------
  */
@@ -1152,7 +1141,7 @@ iframe {
 }
 
 .profileCard {
-    padding: 50px 30px 30px;
+    padding-top: 50px;
 }
 
 .profileBio {
@@ -1160,8 +1149,8 @@ iframe {
 }
 @media (max-width: 767px) {
     .profileCard {
-        margin-left: 30px;
-        margin-right: 30px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 }
 
@@ -1198,17 +1187,8 @@ iframe {
     }
 }
 
-.petCard {
-    padding: 30px;
-    text-align: center;
-}
-
 .petCard img {
     margin-bottom: 15px;
-}
-
-.trophyCase {
-    padding: 30px;
 }
 
 .trophyCard img {
@@ -1218,7 +1198,6 @@ iframe {
 }
 
 .trophyCase h2 {
-    margin-bottom: 30px;
     margin-top: 0;
 }
 
@@ -1288,18 +1267,31 @@ iframe {
 
     .messagePreview td {
         display: block !important;
-        float: left;
         padding: 0 0 5px 0 !important;
     }
 
-    .messageDate {
+    .messagePreview td.messageUser {
+        float: left;
+    }
+
+    .messagePreview td.messageCheckBox {
+        float:right;
+    }
+
+    .messagePreview td.messageDate {
         float: right;
+        font-size:12px;
     }
 
     .messagePreview .userThumb {
         width: 30px;
         height: 30px;
     }
+
+    .messagePreview td.messageContent {
+        float: left;
+    }
+
 }
 .tableButtonRight {
     float:right;

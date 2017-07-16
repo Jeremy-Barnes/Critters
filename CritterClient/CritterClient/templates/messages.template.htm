@@ -72,7 +72,7 @@
 
                     <table class="table">
                         <tr class="messagePreview" [ngClass]="{'read' : !isUnread(conversation), 'selectedMessage' : conversation.selected }" *ngFor="let conversation of messages; let i = index">
-                            <td> 
+                            <td class="messageCheckBox"> 
                                 <div class="circlecheckbox" (click)="selectConversation($event, conversation)">
                                     <input type="checkbox" value="1" [attr.id]="'inboxCheckbox' + i" [(ngModel)]="conversation.selected" name="" /> 
                                     <label [attr.for]="'inboxCheckbox' + i" >
@@ -83,12 +83,12 @@
                             <td (click)="viewDetail(conversation)" class="inlineblock messageUserThumb">
                                 <span *ngIf="conversation.messages[0].sender.userID == user.userID">
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].recipient.userID]">
-                                        <img src="conversation.messages[0].recipient.userImagePath" class="userThumb" />
+                                        <img src="{{conversation.messages[0].recipient.userImagePath}}" class="userThumb" />
                                     </a>
                                 </span>
                                 <span *ngIf="conversation.messages[0].recipient.userID == user.userID">
                                     <a [routerLink]="['/viewUser/', conversation.messages[0].sender.userID]">
-                                        <img src="conversation.messages[0].sender.userImagePath" class="userThumb" />
+                                        <img src="{{conversation.messages[0].sender.userImagePath}}" class="userThumb" />
                                     </a>
                                 </span>
                             </td>
@@ -104,7 +104,7 @@
                                     </a>
                                 </span>
                             </td>
-                            <td class="inlineblock" (click)="viewDetail(conversation)">
+                            <td class="inlineblock messageContent" (click)="viewDetail(conversation)">
                                 <div class="messageSubject inlineblock">
                                     {{conversation.messages[0].messageSubject | limitTo:50}}
                                     <div *ngIf="conversation.messages[0].messageSubject == null || conversation.messages[0].messageSubject.length == 0"> [No Subject] </div> —
