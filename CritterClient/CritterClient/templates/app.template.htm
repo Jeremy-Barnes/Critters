@@ -39,7 +39,7 @@
 
                 <div class="userDropdown navBox">
                     <button class="headerButton" type="button" id="userMenuClick" data-toggle="collapse" data-target="#userMenu">
-                        {{user.userName}}
+                        <b>{{user.userName}}</b>
                         <span class="caret"></span>
                     </button>
 
@@ -51,7 +51,7 @@
 
                 </div>
 
-                <div class="navBox"> CritterBuxx: {{user.critterbuxx}}</div>
+                <div class="navBox"> <b>{{user.critterbuxx}}</b> critterbuxx</div>
             </div>
         </div>
     </div>
@@ -62,8 +62,10 @@
     <button type="button" class="menu-expand collapsed navbar-left inlineblock" data-toggle="offcanvas" data-target="#sidebar">
         <span class="fa fa-bars"></span>
     </button>
-    <span class="fa fa-search"></span><input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..."/>
-
+    <div class="searchHover">
+        <span class="fa fa-search"></span>
+    </div>
+    <input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..." />
     <div class="mobileMessagesNotifier" [hidden]="!app.loggedIn">
         <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
             <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
@@ -104,7 +106,21 @@
                 <button class="btn btn-warning" type="button" *ngIf="!app.loggedIn" data-toggle="modal" data-target="#log-in">Login</button>
                 <a class="btn btn-link" routerLink="/signUp">Sign Up!</a>
             </div>
-            <div *ngIf="app.loggedIn" class="inlineblock">{{user.userName}}</div>
+            <div class="userDropdownMoble" *ngIf="app.loggedIn">
+                <div class="userDropdown">
+                    <button class="headerButton buttonCollapse" type="button" id="userMenuClickMobile" data-toggle="collapse" data-target="#userMenuMobile">
+                        <b>{{user.userName}}</b>
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul id="userMenuMobile" class="collapse" role="menu" aria-labelledby="userMenuClickMobile">
+                        <li role="presentation"><a role="menuitem" routerLink="/inventory">Inventory</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/account">Edit Account</a></li>
+                        <li role="presentation"><a role="menuitem" routerLink="/viewUser/{{user.userID}}">View Profile</a></li>
+                    </ul>
+                </div>
+                <b>{{user.critterbuxx}}</b> critterbuxx
+            </div>
         </div>
 
         <nav id="sidebar-nav">

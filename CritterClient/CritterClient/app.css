@@ -564,13 +564,16 @@ select.ng-pristine {
  * Navs
  * --------------------------------------------------
  */
-/*.userDropdown {
-    right: 100px;
-}*/
+.userDropdownMoble {
+    position: relative;
+    width: 100%;
+}
+#userMenuMobile {
+    width: 100%;
+}
 .noAccountButtons {
     margin-top: 18px;
 }
-
 .navBox {
     border-left: 1px solid #0f8dba;
     border-right: 1px solid #0f8dba;
@@ -586,8 +589,8 @@ select.ng-pristine {
 .navBox:nth-of-type(3) {
     left: -6px;
 }
-#userMenu {
-    background-color: #4dbce3;
+#userMenu, #userMenuMobile {
+    background-color: #12a6da;
     position: absolute;
     right: 0px;
     left: auto;
@@ -597,7 +600,9 @@ select.ng-pristine {
     list-style-image: none;
     text-align: left;
     width: 100%;
-    
+}
+#userMenuClickMobile {
+    padding: 0px;
 }
 .userDropdown button {
     background: none;
@@ -605,7 +610,6 @@ select.ng-pristine {
     background-color: #12a6da;
 }
 .messageslink {
-    /*padding-top: 25px;*/
     top: -1px;
 }
 .notificationCircle {
@@ -694,14 +698,17 @@ select.ng-pristine {
 .optional-topbar > h1 {
     margin-top: 10px;
 }
-.optional-topbar .fa-search:hover + input, .optional-topbar .fa-search:focus + input, .optional-topbar input:focus, .optional-topbar input:hover {
+.optional-topbar .searchHover:hover + input, 
+.optional-topbar .searchHover:focus + input, 
+.optional-topbar input:focus, .optional-topbar input:hover, 
+.optional-topbar .searchHover:active + input {
     display: inline;
     width:60%;
     transition: .5s;
     border: none;
     border-bottom: 1px solid white;
 }
-.optional-topbar .fa-search:hover ~ h1, .optional-topbar .fa-search:focus ~ h1, .optional-topbar input:focus ~ h1 {
+.optional-topbar .searchHover:hover ~ h1, .optional-topbar .searchHover:focus ~ h1, .optional-topbar input:focus ~ h1 {
     opacity: 0;    
     transition: .4s;
 }
@@ -721,17 +728,13 @@ select.ng-pristine {
     border-bottom: 1px solid white;
     color: white;
 }
-.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder{color: white;} .optional-topbar input:-moz-placeholder {color: white;}
+.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder {color: white;} .optional-topbar input:-moz-placeholder {color: white;} .optional-topbar input::-webkit-input-placeholder  {color: white;}
 
-
-.optional-topbar input::-webkit-input-placeholder  {
-    color: white;
-}
-
-.optional-topbar .fa-search {
+ .searchHover {
     position: absolute;
-    top: 16px;
+    top: 6px;
     right: 50px;
+    padding: 10px 10px 10px 10px;
 }
 
 .optional-topbar .messageslink img {
@@ -758,6 +761,7 @@ select.ng-pristine {
     background-image: url("img/print-pattern.png"), linear-gradient(to bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#089ed2', endColorstr='#67cd45', Grad*/ientType=0 );
     background-repeat: repeat;
+    color: white;
 }
 #sidebar, #sidebar-placeholder {
     width: 260px;
@@ -853,16 +857,26 @@ select.ng-pristine {
 
 .mobileInfopane {
     padding-top: 20px;
-    padding-left: 33px;
     padding-bottom: 20px;
     border-bottom: 1px solid #fff;
     margin-bottom: 20px;
+    background-color: #12a6da; 
+    width: 100%;
 }
-
+.mobileInfopane > .inlineblock {
+    padding-left: 30px;
+}
+.mobileInfopane ul {
+    padding: 15px;
+}
 @media(min-width:768px) {
     .mobileInfopane {
         display: none;
     }
+}
+.mobileInfopane b{
+    padding-left: 15px;
+
 }
 
 .fullscreen {
