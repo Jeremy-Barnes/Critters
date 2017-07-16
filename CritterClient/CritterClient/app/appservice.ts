@@ -136,13 +136,13 @@ export class Application {
             if (messages != null && messages.length != 0) {
                 var notes: Notification[] = [];
                 for(let i = 0; i < messages.length; i++) {
-                    notes.push({ messages: [messages[i]], friendRequests: null });
+                    notes.push({ messages: [messages[i]], friendRequests: [] });
                 }
                 var user: User = Application.getApp().user;
                 var frReqs = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
 
                 for(let i = 0; i < frReqs.length; i++) {
-                    notes.push({ messages: null, friendRequests: [frReqs[i]]});
+                    notes.push({ messages: [], friendRequests: [frReqs[i]]});
                 }
                 Application.getApp().alerts.push(...notes);
             }

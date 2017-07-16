@@ -622,16 +622,31 @@ select.ng-pristine {
     border-radius: 50%;
     padding-bottom: 5px;
     position: absolute;
-    top: -130%;
-    right: 0px;
+    top: 20%;
+    left: 60%;
     text-align: center;
     font-weight:bold;
     font-size:14pt;
+    z-index: 9000;
 }
 
 .notificationCircle > * {
     position: relative;
     top: -10%;
+}
+
+.mobileMessagesNotifier {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+}
+.notificationCircleMobile {
+    width: 22px;
+    height: 22px;
+    top: -10px;
+    left: -15px;
+    font-size:14pt;
+    z-index: 9000;
 }
 
 .popover-repeater {
@@ -711,7 +726,11 @@ select.ng-pristine {
     border: none;
     border-bottom: 1px solid white;
 }
-.optional-topbar .searchHover:hover ~ h1, .optional-topbar .searchHover:focus ~ h1, .optional-topbar input:focus ~ h1 {
+.optional-topbar .searchHover:hover ~ h1, 
+.optional-topbar .searchHover:focus ~ h1, 
+.optional-topbar input:focus ~ h1, 
+.optional-topbar input:hover ~ h1, 
+.optional-topbar .searchHover:active ~ h1 {
     opacity: 0;    
     transition: .4s;
 }
@@ -761,12 +780,6 @@ select.ng-pristine {
 
 .optional-topbar .fa {
     font-size: 15px;
-}
-
-.mobileMessagesNotifier {
-    position: absolute;
-    top: 14px;
-    right: 20px;
 }
 
 #sidebar {
@@ -1252,6 +1265,14 @@ iframe {
     height: 170px;
     margin-bottom: 20px !important;
 }
+.messageGuts > p {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
 #viewDetail > .messageGuts {
     margin: 20px 0px 20px;
 }

@@ -16,7 +16,7 @@
                 <h2>Select your pet's color</h2>
             </div>
             <div *ngFor="let color of colors">
-                <div class="col-md-3">
+                <div class="col-md-3 col-xs-3 col-sm-3">
                     <a class="thumbnail">
                         <img style="width: 100%; height: 150px;" src="{{color.patternPath}}" (click)="colorChange(color)" />
                     </a>
