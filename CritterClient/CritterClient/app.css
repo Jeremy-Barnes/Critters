@@ -737,6 +737,19 @@ select.ng-pristine {
     padding: 10px 10px 10px 10px;
 }
 
+.optional-topbar .fa-search:focus + input, 
+.optional-topbar .fa-search:hover + input, 
+.optional-topbar .fa-search:active + input, 
+.optional-topbar input:focus, 
+.optional-topbar input:hover,
+.optional-topbar input:active {
+    display: inline;
+    width:60%;
+    transition: .5s;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
 .optional-topbar .messageslink img {
     width: 20px;
 }

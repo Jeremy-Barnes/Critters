@@ -42,7 +42,6 @@
                         <b>{{user.userName}}</b>
                         <span class="caret"></span>
                     </button>
-
                     <ul id="userMenu" class="collapse" role="menu" aria-labelledby="userMenuClick">
                         <li role="presentation"><a role="menuitem" routerLink="/inventory">Inventory</a></li>
                         <li role="presentation"><a role="menuitem" routerLink="/account">Edit Account</a></li>
@@ -66,6 +65,7 @@
         <span class="fa fa-search"></span>
     </div>
     <input type="text" (keyup.enter)="search()" [(ngModel)]="searchString" placeholder="Search..." />
+
     <div class="mobileMessagesNotifier" [hidden]="!app.loggedIn">
         <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
             <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
