@@ -28,7 +28,8 @@ public abstract class GameController implements Runnable {
 	public volatile Map<String,Threeple<User, Session, GameController>> clientIDToSocketAndUser = Collections.synchronizedMap(new HashMap<String, Threeple<User, Session, GameController>>());
 	public volatile int gameType;
 	Thread gameThread;
-	public volatile boolean notExiting = true;
+	public volatile boolean tickGame = false;
+	public volatile boolean shutDown = false;
 	public HashMap<Integer,Twople<AsyncResponse, String>> wantsToConnectUserIDsToAsyncResponseAndClientID = new HashMap<>();
 	public GameController(){
 		gameThread = new Thread(this);
@@ -44,7 +45,8 @@ public abstract class GameController implements Runnable {
 		gameThread = new Thread(this);
 	}
 
-	public void start(){
+	private void start(){
+		this.tickGame = true;//there probably needs to be some kind of special game initialization stuff here, not sure.
 		gameThread.start();
 	}
 
@@ -54,8 +56,7 @@ public abstract class GameController implements Runnable {
 	public abstract void tick();
 
 	public void run(){
-		while(notExiting) {
-			System.out.println("thread running");
+		while(tickGame) { //todo calculate dT and limit this to only update on a reasonable timescale
 			tick();
 			try {
 				Thread.sleep(200);
@@ -76,27 +77,33 @@ public abstract class GameController implements Runnable {
 		wantsToConnectUserIDsToAsyncResponseAndClientID.put(user.getUserID(), new Twople<AsyncResponse, String>(asyncResponse, clientID));
 	}
 
-	public void respondForConnectPermission(List<Integer> accepted, List<Integer> rejected){
-		if(accepted != null)
-		for(int i : accepted){
-			if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
-				wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.OK).build());
-		}
-		if(rejected != null)
-		for(int i : rejected){
-			if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
-				wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.UNAUTHORIZED).build());
-		}
-	}
-
 	public void resolveHostCommand(SocketGameRequest request){
 		if((request.acceptedUsers != null && request.acceptedUsers.size() > 0) || request.rejectedUsers != null && request.rejectedUsers.size() > 0) {
 			respondForConnectPermission(request.acceptedUsers, request.rejectedUsers);
 		}
+		if(request.endGame || request.endLobby){
+			this.tickGame = false;
+			this.shutDown = request.endLobby; //handled on next tick
+		} else if(request.startGame && !this.tickGame){
+			start();
+		}
+		resolvePlayerCommand(request);
 	}
 
 	public void resolvePlayerCommand(SocketGameRequest request){
-
+//todo broadcast message
 	}
 
+	private void respondForConnectPermission(List<Integer> accepted, List<Integer> rejected){
+		if(accepted != null)
+			for(int i : accepted){
+				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
+					wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.OK).build());
+			}
+		if(rejected != null)
+			for(int i : rejected){
+				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
+					wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+			}
+	}
 }
