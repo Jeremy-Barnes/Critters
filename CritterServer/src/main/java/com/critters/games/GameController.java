@@ -30,7 +30,7 @@ public abstract class GameController implements Runnable {
 	Thread gameThread;
 	public volatile boolean tickGame = false;
 	public volatile boolean shutDown = false;
-	public HashMap<Integer,Twople<AsyncResponse, String>> wantsToConnectUserIDsToAsyncResponseAndClientID = new HashMap<>();
+	public HashMap<Integer,Threeple<AsyncResponse, String, User>> wantsToConnectUserIDsToAsyncResponseAndClientID = new HashMap<>();
 	public GameController(){
 		gameThread = new Thread(this);
 		gameThread.run();
@@ -74,7 +74,7 @@ public abstract class GameController implements Runnable {
 	}
 
 	public void askForConnectPermission(String clientID, User user, AsyncResponse asyncResponse) {
-		wantsToConnectUserIDsToAsyncResponseAndClientID.put(user.getUserID(), new Twople<AsyncResponse, String>(asyncResponse, clientID));
+		wantsToConnectUserIDsToAsyncResponseAndClientID.put(user.getUserID(), new Threeple<AsyncResponse, String, User>(asyncResponse, clientID, user));
 	}
 
 	public void resolveHostCommand(SocketGameRequest request){
@@ -97,8 +97,11 @@ public abstract class GameController implements Runnable {
 	private void respondForConnectPermission(List<Integer> accepted, List<Integer> rejected){
 		if(accepted != null)
 			for(int i : accepted){
-				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
-					wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.OK).build());
+				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i)){
+					Twople<AsyncResponse, String> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
+					user.x.resume(Response.status(Response.Status.OK).build());
+					clientIDToSocketAndUser.put(user.y, new Threeple<User, Session, GameController>(user.z, null, null));
+				}
 			}
 		if(rejected != null)
 			for(int i : rejected){
