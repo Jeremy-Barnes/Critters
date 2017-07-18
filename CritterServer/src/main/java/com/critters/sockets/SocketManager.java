@@ -22,10 +22,17 @@ import java.util.*;
 @ServerEndpoint("/session/{client-id}")
 public class SocketManager {
 
+	/***
+	 * These are the various associations of running multiplayer games. They all represent the same sets of data, but organized differently for faster access based on
+	 * intention. Indexed on clientID, gameType, and gameID.
+	 */
 	private static Map<String,Threeple<User, Session, GameController>> clientIDToSocketUser = Collections.synchronizedMap(new HashMap<String,Threeple<User, Session, GameController>>());
 	private static Map<Integer,List<GameController>> gameTypeToRunningGames = Collections.synchronizedMap(new HashMap<Integer, List<GameController>>());
 	private static Map<String,GameController> gameIDToGame = Collections.synchronizedMap(new HashMap<String, GameController>());
 
+	/***
+	 * Message handler instance variables that are unique to each connected player.
+	 */
 	private GameController currentGame;
 	private User user;
 	private boolean hosting;
@@ -33,15 +40,11 @@ public class SocketManager {
 	@OnMessage
 	public String onMessage(String message, Session session, @PathParam("client-id") String clientId) throws Exception {
 		SocketGameRequest request = Serializer.fromJSON(message, SocketGameRequest.class);
-//			Tuple<User, Session, GameController> tuple = clientIDToSocketUser.get(clientId);
-//			System.out.println(tuple.z.title);
-//			tuple.z.respondForConnectPermission(message);
 		if(hosting) {
 			currentGame.resolveHostCommand(request);
 		} else {
 			currentGame.resolvePlayerCommand(request);
 		}
-
 		return "";
 	}
 
@@ -50,6 +53,7 @@ public class SocketManager {
 		if(clientIDToSocketUser.containsKey(clientId)) {
 			Threeple<User, Session, GameController> tuple = clientIDToSocketUser.get(clientId);
 			if (tuple.z != null) {
+				user = tuple.x;
 				currentGame = tuple.z;
 				currentGame.addUserSocket(clientId, session);
 				hosting = currentGame.hostID.equalsIgnoreCase(clientId);
@@ -66,10 +70,22 @@ public class SocketManager {
 
 	@OnClose
 	public void onClose(Session session, @PathParam("client-id") String clientId) {
-		System.out.println("Socket Closed for " + clientId);
-		clientIDToSocketUser.remove(clientId);
+		if(clientIDToSocketUser.containsKey(clientId)) { //clear them out of the active lists
+			if(currentGame != null){
+				gameIDToGame.remove(currentGame.gameID);
+				gameTypeToRunningGames.get(currentGame.gameType).remove(currentGame);
+			}
+			clientIDToSocketUser.remove(clientId);
+		}
 	}
 
+	/**
+	 * AJAX called, not websocketed
+	 * @param gameType - Integer ID for game type
+	 * @param clientID - host client ID, NOT THE USER ID.
+	 * @param gameName - 2v2 NR 30 Min
+	 * @return The unique gameID that other people can use to connect to your game
+	 */
 	public static String createNewGame(int gameType, String clientID, String gameName){
 		if(clientIDToSocketUser.containsKey(clientID) && gameType >= 0) {
 			Threeple<User, Session, GameController> tuple = clientIDToSocketUser.get(clientID);
@@ -86,19 +102,25 @@ public class SocketManager {
 				gameList.add(gameInstance);
 				gameTypeToRunningGames.put(gameType, gameList);
 			}
-			gameIDToGame.put(gameInstanceID, gameInstance);
 			return gameInstanceID;
 		}
 		return null;
 	}
 
+	/***
+	 * AJAX called, not websocketed
+	 * @param gameInstanceID - Unique game lobby ID to join
+	 * @param clientID - NOT USER ID, client ID of person trying to join game
+	 * @param asyncResponse - AJAX response that will be resumed once host decides if client can join (or not)
+	 */
 	public static void tryToConnect(String gameInstanceID, String clientID, AsyncResponse asyncResponse){
 		if(gameIDToGame.containsKey(gameInstanceID) && clientIDToSocketUser.containsKey(clientID)) {
 			User user = clientIDToSocketUser.get(clientID).x;
 			GameController controller = gameIDToGame.get(gameInstanceID);
-			controller.hostSession.getAsyncRemote().sendText("Can " + user.getUserName() + " play???");
-
 			controller.askForConnectPermission(clientID, user, asyncResponse);
+
+			controller.hostSession.getAsyncRemote().sendText("Can " + user.getUserName() + " play???"); //todo put this into a real thing
+
 		} else {
 			asyncResponse.resume(Response.status(Response.Status.NOT_FOUND).build());
 		}

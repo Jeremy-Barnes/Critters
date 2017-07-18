@@ -46,9 +46,11 @@ public abstract class GameController implements Runnable {
 
 	public void start(){
 		gameThread.start();
-
 	}
 
+	/***
+	 * Game logic tick, advance gamestate
+	 */
 	public abstract void tick();
 
 	public void run(){
