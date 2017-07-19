@@ -1,17 +1,15 @@
 package com.critters.games;
 
 import com.critters.dal.dto.entity.User;
+import com.critters.sockets.Player;
 import com.critters.sockets.SocketGameRequest;
+import com.critters.sockets.SocketManager;
 import com.critters.sockets.Threeple;
 
-import javax.websocket.Session;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jeremy on 7/17/2017.
@@ -22,9 +20,8 @@ public abstract class GameController implements Runnable {
 	public volatile String title;
 	public volatile int gameType;
 
-	public volatile User host;
 	public volatile String hostID;
-	public volatile Session hostSession;
+	public volatile Player host;
 	Thread gameThread;
 
 	//game lifetime variables
@@ -33,19 +30,24 @@ public abstract class GameController implements Runnable {
 	private long lastTime;
 
 	@XmlTransient
-	public volatile Map<String,Threeple<User, Session, GameController>> clientIDToSocketAndUser = Collections.synchronizedMap(new HashMap<String, Threeple<User, Session, GameController>>());
+	public volatile Map<String,Player> clientIDToPlayer = Collections.synchronizedMap(new HashMap<String, Player>());
 	public HashMap<Integer,Threeple<AsyncResponse, String, User>> wantsToConnectUserIDsToAsyncResponseAndClientID = new HashMap<>();
 
-	public GameController(String gameID, String title, User host, String hostClientID, int gameType) {
+	public GameController(String gameID, String title, String hostClientID, int gameType) {
 		this.gameID = gameID;
 		this.title = title;
-		this.host = host;
 		this.hostID = hostClientID;
 		this.gameType = gameType;
 		gameThread = new Thread(this);
 	}
 
 	private void start(){
+		List<Player> playerList = new ArrayList<Player>();
+		playerList.addAll(clientIDToPlayer.values());
+		if(!wantsToConnectUserIDsToAsyncResponseAndClientID.keySet().isEmpty() || clientIDToPlayer.values().contains(null)) {
+			return; //todo warn user someone still wants to join
+		}
+
 		this.tickGame = true;//there probably needs to be some kind of special game initialization stuff here, not sure.
 		gameThread.start();
 	}
@@ -57,7 +59,7 @@ public abstract class GameController implements Runnable {
 
 	public void run(){
 		lastTime = System.currentTimeMillis();
-		long tickMS = 0;
+		long tickMS;
 		while(tickGame) { //todo calculate dT and limit this to only update on a reasonable timescale
 			tickMS = System.currentTimeMillis() - lastTime;
 			lastTime = System.currentTimeMillis();
@@ -71,17 +73,28 @@ public abstract class GameController implements Runnable {
 		}
 	}
 
-	public void addUserSocket(String clientID, Session session){
-		if(clientID.equalsIgnoreCase(hostID)) {
-			hostSession = session;
+	public void addPlayer(Player player){
+		if(player.clientID.equalsIgnoreCase(hostID)) {
+			host = player;
 		}
-		if(hostSession != null && clientIDToSocketAndUser.containsKey(clientID)) {
-			clientIDToSocketAndUser.get(clientID).y = session;
+		if(host != null && clientIDToPlayer.containsKey(player.clientID)) {
+			clientIDToPlayer.put(player.clientID,player);
 		}
 	}
 
 	public void askForConnectPermission(String clientID, User user, AsyncResponse asyncResponse) {
 		wantsToConnectUserIDsToAsyncResponseAndClientID.put(user.getUserID(), new Threeple<AsyncResponse, String, User>(asyncResponse, clientID, user));
+		//host.websocket.getAsyncRemote().sendText("Can " + user.getUserName() + " play???"); //todo put this into a real thing
+		host.websocket.getAsyncRemote().sendText(user.getUserID()+""); //todo put this into a real thing
+
+	}
+
+	public void resolveCommand(SocketGameRequest request, Player player){
+		if(player.clientID.equalsIgnoreCase(hostID)) {
+			resolveHostCommand(request);
+		} else {
+			resolvePlayerCommand(request);
+		}
 	}
 
 	public void resolveHostCommand(SocketGameRequest request){
@@ -111,7 +124,9 @@ public abstract class GameController implements Runnable {
 				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i)){
 					Threeple<AsyncResponse, String, User> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
 					user.x.resume(Response.status(Response.Status.OK).build());
-					clientIDToSocketAndUser.put(user.y, new Threeple<User, Session, GameController>(user.z, null, null));
+					clientIDToPlayer.put(user.y, null);
+					wantsToConnectUserIDsToAsyncResponseAndClientID.remove(user.z.getUserID());
+					SocketManager.clientIDToPlayer.get(user.y).y = this;
 				}
 			}
 		if(rejected != null)
@@ -119,7 +134,7 @@ public abstract class GameController implements Runnable {
 				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i)) {
 					Threeple<AsyncResponse, String, User> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
 					user.x.resume(Response.status(Response.Status.UNAUTHORIZED).build());
-					wantsToConnectUserIDsToAsyncResponseAndClientID.remove(user);
+					wantsToConnectUserIDsToAsyncResponseAndClientID.remove(user.z.getUserID());
 				}
 			}
 	}
