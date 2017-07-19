@@ -3,7 +3,6 @@ package com.critters.games;
 import com.critters.dal.dto.entity.User;
 import com.critters.sockets.SocketGameRequest;
 import com.critters.sockets.Threeple;
-import com.critters.sockets.Twople;
 
 import javax.websocket.Session;
 import javax.ws.rs.container.AsyncResponse;
@@ -21,20 +20,21 @@ public abstract class GameController implements Runnable {
 
 	public volatile String gameID;
 	public volatile String title;
+	public volatile int gameType;
+
 	public volatile User host;
 	public volatile String hostID;
 	public volatile Session hostSession;
+	Thread gameThread;
+
+	//game lifetime variables
+	private volatile boolean tickGame = false;
+	private volatile boolean shutDown = false;
+	private long lastTime;
+
 	@XmlTransient
 	public volatile Map<String,Threeple<User, Session, GameController>> clientIDToSocketAndUser = Collections.synchronizedMap(new HashMap<String, Threeple<User, Session, GameController>>());
-	public volatile int gameType;
-	Thread gameThread;
-	public volatile boolean tickGame = false;
-	public volatile boolean shutDown = false;
 	public HashMap<Integer,Threeple<AsyncResponse, String, User>> wantsToConnectUserIDsToAsyncResponseAndClientID = new HashMap<>();
-	public GameController(){
-		gameThread = new Thread(this);
-		gameThread.run();
-	}
 
 	public GameController(String gameID, String title, User host, String hostClientID, int gameType) {
 		this.gameID = gameID;
@@ -53,14 +53,21 @@ public abstract class GameController implements Runnable {
 	/***
 	 * Game logic tick, advance gamestate
 	 */
-	public abstract void tick();
+	public abstract void tick(long dT);
 
 	public void run(){
+		lastTime = System.currentTimeMillis();
+		long tickMS = 0;
 		while(tickGame) { //todo calculate dT and limit this to only update on a reasonable timescale
-			tick();
+			tickMS = System.currentTimeMillis() - lastTime;
+			lastTime = System.currentTimeMillis();
+			tick(tickMS);
 			try {
-				Thread.sleep(200);
+				Thread.sleep(100);
 			} catch(Exception e){}
+		}
+		if(shutDown){
+			disconnectAllParties();
 		}
 	}
 
@@ -94,19 +101,26 @@ public abstract class GameController implements Runnable {
 //todo broadcast message
 	}
 
+	private void disconnectAllParties(){
+		//todo kick everyone out, close sessions, remove from hashmaps
+	}
+
 	private void respondForConnectPermission(List<Integer> accepted, List<Integer> rejected){
 		if(accepted != null)
 			for(int i : accepted){
 				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i)){
-					Twople<AsyncResponse, String> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
+					Threeple<AsyncResponse, String, User> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
 					user.x.resume(Response.status(Response.Status.OK).build());
 					clientIDToSocketAndUser.put(user.y, new Threeple<User, Session, GameController>(user.z, null, null));
 				}
 			}
 		if(rejected != null)
 			for(int i : rejected){
-				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i))
-					wantsToConnectUserIDsToAsyncResponseAndClientID.get(i).x.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+				if(wantsToConnectUserIDsToAsyncResponseAndClientID.containsKey(i)) {
+					Threeple<AsyncResponse, String, User> user = wantsToConnectUserIDsToAsyncResponseAndClientID.get(i);
+					user.x.resume(Response.status(Response.Status.UNAUTHORIZED).build());
+					wantsToConnectUserIDsToAsyncResponseAndClientID.remove(user);
+				}
 			}
 	}
 }
