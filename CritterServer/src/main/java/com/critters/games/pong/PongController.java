@@ -41,6 +41,7 @@ public class PongController extends GameController {
 		r.startTickingNow = true;
 		r.tickNumber = 0;
 		for(Player p : super.clientIDToPlayer.values()){
+			r.assignedInstanceId = p.physicsComponent.getInstanceID();
 			p.sendMessage(r);
 		}
 	}
