@@ -121,12 +121,12 @@ class GameEngine {
         }
 
         if (this.ballLocation.x <= GameEngine.LEFT_X || this.ballLocation.x >= GameEngine.RIGHT_X) {
-            if ((this.ballLocation.y > this.playerYLocation - GameEngine.PADDLE_LENGTH / 2 &&
-                this.ballLocation.y < this.playerYLocation + GameEngine.PADDLE_LENGTH / 2 &&
+            if ((this.ballLocation.y > this.playerPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
+                this.ballLocation.y < this.playerPaddle.location.y + GameEngine.PADDLE_LENGTH / 2 &&
                 this.ballLocation.x <= GameEngine.LEFT_X) ||
                (this.ballLocation.x >= GameEngine.RIGHT_X &&
-                this.ballLocation.y > this.enemyYLocation - GameEngine.PADDLE_LENGTH / 2 &&
-                this.ballLocation.y < this.enemyYLocation + GameEngine.PADDLE_LENGTH / 2)) {
+                this.ballLocation.y > this.enemyPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
+                this.ballLocation.y < this.enemyPaddle.location.y + GameEngine.PADDLE_LENGTH / 2)) {
                 this.ballLeftV = this.ballLeftV * -1;
             } else {
                 //score!
@@ -135,9 +135,9 @@ class GameEngine {
     }
 
     public movePaddles(elapsedSec: number) {
-        this.playerYLocation -= this.paddleSpeed * this.upvector * elapsedSec;
-        this.playerYLocation += this.paddleSpeed * this.downvector * elapsedSec;
-        this.playerSprite.y = this.unitsToPixelsY(this.playerYLocation);
+        this.playerPaddle.location.y -= this.paddleSpeed * this.upvector * elapsedSec;
+        this.playerPaddle.location.y += this.paddleSpeed * this.downvector * elapsedSec;
+        this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.location.y);
     };
 
     public unitsToPixels(coordinate: Point) {
@@ -169,19 +169,17 @@ class GameEngine {
         PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.W, this.upCallback, this);
         PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.S, this.downCallback, this);
 
-        var startLoc = this.unitsToPixels({ x: GameEngine.LEFT_X, y: GameEngine.TOP_Y / 2 });
-        this.playerYLocation = GameEngine.TOP_Y / 2;
-        this.playerSprite = game.add.sprite(startLoc.x, startLoc.y, 'paddle');
+
+        this.playerSprite = game.add.sprite(0, 0, 'paddle');
         this.playerSprite.anchor.set(.5, .5);
         this.playerSprite.scale.set(.1);
 
-        startLoc = this.unitsToPixels({ x: GameEngine.RIGHT_X, y: GameEngine.TOP_Y / 2 });
-        this.enemySprite = game.add.sprite(startLoc.x, startLoc.y, 'paddle');
+       
+        this.enemySprite = game.add.sprite(0, 0, 'paddle');
         this.enemySprite.anchor.set(.5, .5);
         this.enemySprite.scale.set(.1);
 
         this.ballLocation = { x: 75, y: 50 };
-        //startLoc = this.unitsToPixels(this.ballLocation)
         this.ballSprite = game.add.sprite(startLoc.x, startLoc.y, 'ball');
         this.ballSprite.anchor.set(.5, .5);
         this.ballSprite.scale.set(.25);
