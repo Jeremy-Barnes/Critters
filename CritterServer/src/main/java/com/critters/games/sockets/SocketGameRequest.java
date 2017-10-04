@@ -1,4 +1,4 @@
-package com.critters.sockets;
+package com.critters.games.sockets;
 
 import java.util.List;
 
@@ -13,10 +13,13 @@ public class SocketGameRequest {
 	public boolean startGame;
 	public boolean endGame;
 	public boolean endLobby;
+	public int tickCount;
 
 	/*** Everybody Elements! ***/
 	public String broadCastMessage;
 	public boolean leaveLobby;
+	/*** Movement components ***/
+	public  String[] commands;
 
 	//todo figure out how to transmit game data
 }

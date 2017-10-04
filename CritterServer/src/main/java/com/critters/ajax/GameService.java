@@ -2,7 +2,7 @@ package com.critters.ajax;
 
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.entity.User;
-import com.critters.sockets.SocketManager;
+import com.critters.games.sockets.SocketManager;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

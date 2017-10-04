@@ -1,9 +1,12 @@
-package com.critters.sockets;
+package com.critters.games.sockets;
 
 import com.critters.Utilities.Serializer;
+import com.critters.dal.dto.Twople;
 import com.critters.dal.dto.entity.User;
 import com.critters.games.GameController;
-
+import com.critters.games.GameObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -11,6 +14,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 
 /**
  * Created by Jeremy on 7/19/2017.
@@ -18,10 +22,23 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/session/{client-id}")
 public class Player {
 
+	static final Logger logger = LoggerFactory.getLogger("application");
+
 	User user;
 	public Session websocket;
 	public String clientID;
 	GameController game;
+	public GameObject physicsComponent;
+
+	public void sendMessage(SocketGameResponse response) {
+		String responseSer = Serializer.toJSON(false, response, SocketGameResponse.class);
+		try {
+			websocket.getBasicRemote().sendText(responseSer);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
 
 	@OnOpen
 	public void onOpen(Session session, @PathParam("client-id") String clientId) {
@@ -33,7 +50,6 @@ public class Player {
 				this.clientID = clientId;
 				websocket = session;
 				game.addPlayer(this);
-				//game.addUserSocket(clientId, session);
 				return; //TODO some kind of response to let the client know they are connected
 			}
 		}
@@ -49,7 +65,7 @@ public class Player {
 	public String onMessage(String message, Session session, @PathParam("client-id") String clientId) throws Exception {
 		SocketGameRequest request = Serializer.fromJSON(message, SocketGameRequest.class);
 		game.resolveCommand(request, this);
-		return "";
+		return null;
 	}
 
 	@OnClose

@@ -1,4 +1,4 @@
-package com.critters.sockets;
+package com.critters.dal.dto;
 
 /**
  * Created by Jeremy on 7/17/2017.

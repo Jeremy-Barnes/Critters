@@ -1,8 +1,9 @@
-package com.critters.sockets;
+package com.critters.games.sockets;
 
+import com.critters.dal.dto.Twople;
 import com.critters.dal.dto.entity.User;
 import com.critters.games.GameController;
-import com.critters.games.PongController;
+import com.critters.games.pong.PongController;
 
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.Response;

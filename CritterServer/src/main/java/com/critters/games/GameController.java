@@ -1,10 +1,10 @@
 package com.critters.games;
 
 import com.critters.dal.dto.entity.User;
-import com.critters.sockets.Player;
-import com.critters.sockets.SocketGameRequest;
-import com.critters.sockets.SocketManager;
-import com.critters.sockets.Threeple;
+import com.critters.games.sockets.Player;
+import com.critters.games.sockets.SocketGameRequest;
+import com.critters.games.sockets.SocketManager;
+import com.critters.dal.dto.Threeple;
 
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.Response;
@@ -42,20 +42,21 @@ public abstract class GameController implements Runnable {
 	}
 
 	private void start(){
-		List<Player> playerList = new ArrayList<Player>();
-		playerList.addAll(clientIDToPlayer.values());
+//		List<Player> playerList = new ArrayList<Player>();
+//		playerList.addAll(clientIDToPlayer.values());
 		if(!wantsToConnectUserIDsToAsyncResponseAndClientID.keySet().isEmpty() || clientIDToPlayer.values().contains(null)) {
 			return; //todo warn user someone still wants to join
 		}
 
-		this.tickGame = true;//there probably needs to be some kind of special game initialization stuff here, not sure.
+		this.initializeGame();
+		this.tickGame = true;
 		gameThread.start();
 	}
 
 	/***
 	 * Game logic tick, advance gamestate
 	 */
-	public abstract void tick(long dT);
+	public abstract void tick(int dT);
 
 	public void run(){
 		lastTime = System.currentTimeMillis();
@@ -63,7 +64,7 @@ public abstract class GameController implements Runnable {
 		while(tickGame) { //todo calculate dT and limit this to only update on a reasonable timescale
 			tickMS = System.currentTimeMillis() - lastTime;
 			lastTime = System.currentTimeMillis();
-			tick(tickMS);
+			tick((int)tickMS);
 			try {
 				Thread.sleep(100);
 			} catch(Exception e){}
@@ -80,6 +81,8 @@ public abstract class GameController implements Runnable {
 		if(host != null && clientIDToPlayer.containsKey(player.clientID)) {
 			clientIDToPlayer.put(player.clientID,player);
 		}
+
+		//todo add player in ongoing game??
 	}
 
 	public void askForConnectPermission(String clientID, User user, AsyncResponse asyncResponse) {
@@ -91,13 +94,13 @@ public abstract class GameController implements Runnable {
 
 	public void resolveCommand(SocketGameRequest request, Player player){
 		if(player.clientID.equalsIgnoreCase(hostID)) {
-			resolveHostCommand(request);
+			resolveHostCommand(request, player);
 		} else {
-			resolvePlayerCommand(request);
+			resolvePlayerCommand(request, player);
 		}
 	}
 
-	public void resolveHostCommand(SocketGameRequest request){
+	public void resolveHostCommand(SocketGameRequest request, Player player){
 		if((request.acceptedUsers != null && request.acceptedUsers.size() > 0) || request.rejectedUsers != null && request.rejectedUsers.size() > 0) {
 			respondForConnectPermission(request.acceptedUsers, request.rejectedUsers);
 		}
@@ -107,12 +110,10 @@ public abstract class GameController implements Runnable {
 		} else if(request.startGame && !this.tickGame){
 			start();
 		}
-		resolvePlayerCommand(request);
+		resolvePlayerCommand(request, player);
 	}
 
-	public void resolvePlayerCommand(SocketGameRequest request){
-//todo broadcast message
-	}
+	public abstract void resolvePlayerCommand(SocketGameRequest request, Player player);
 
 	private void disconnectAllParties(){
 		//todo kick everyone out, close sessions, remove from hashmaps
@@ -138,4 +139,7 @@ public abstract class GameController implements Runnable {
 				}
 			}
 	}
+
+	public abstract void initializeGame();
+
 }
