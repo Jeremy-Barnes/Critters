@@ -55,11 +55,9 @@ class GameEngine {
     public ballSpeed: number = 35;
 
     //player data
-    public playerYLocation: number;
     public playerSprite: Phaser.Sprite;
 
     //enemy data
-    public enemyYLocation: number;
     public enemySprite: Phaser.Sprite;
 
     public keyboard: Phaser.Keyboard;
@@ -195,6 +193,15 @@ class GameEngine {
             game.paused = true;
         }
     }
+}
+
+class Paddle {
+    public location: Point;
+    public PADDLE_LENGTH: number = 12;//units, not pixels
+
+    public paddleSpeed: number = 25; //units per sec (top to bottom in 4 seconds)
+    public yVector: number = 0;
+    public instanceId: number = -1;
 }
 
 class Point {
