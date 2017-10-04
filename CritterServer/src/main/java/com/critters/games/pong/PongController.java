@@ -6,6 +6,7 @@ import com.critters.games.sockets.Player;
 import com.critters.games.sockets.SocketGameRequest;
 import com.critters.games.sockets.SocketGameResponse;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class PongController extends GameController {
 	private final int LEFT_X = 0;
 	private final int TOP_Y = 100;
 	private final int BOTTOM_Y = 0;
+
+	private int tickCount = 0;
 
 	public PongController(String gameID, String title, String hostClientID, int gameType) {
 		super(gameID, title, hostClientID, gameType);
@@ -55,6 +58,10 @@ public class PongController extends GameController {
 				p.physicsComponent.y = TOP_Y/2;
 				p.physicsComponent.x = RIGHT_X;
 			}
+			((PongPaddle)p.physicsComponent).boundingBox = new Rectangle();
+			((PongPaddle)p.physicsComponent).boundingBox.setRect(p.physicsComponent.x,
+																 p.physicsComponent.y - ((PongPaddle)p.physicsComponent).PADDLE_HEIGHT/2, 1,
+																 ((PongPaddle)p.physicsComponent).PADDLE_HEIGHT);
 			p.physicsComponent.setInstanceID(physicsplayers + 1); //could be rand int???
 			physicsplayers++;
 		}
@@ -62,13 +69,18 @@ public class PongController extends GameController {
 		PongBall lead = new PongBall();
 		lead.x = (RIGHT_X - LEFT_X)/2;
 		lead.y = (TOP_Y - BOTTOM_Y)/2;
+		lead.xVector = (int)Math.signum(Math.random() - 0.5);
 		lead.setInstanceID(3); //could be rand int???
 		world.add(lead);
 	}
 
 	public void tick(int dT){
+		tickCount++;
 		movePaddles(dT);
 		moveBall(dT);
+		if(tickCount % 10 == 0) {
+			sendPlayersGameState();
+		}
 	}
 
 	public void resolvePlayerCommand(SocketGameRequest request, Player player) {
@@ -85,29 +97,54 @@ public class PongController extends GameController {
 		}
 	}
 
-	void moveBall(int dT) {
+	private void moveBall(int dT) {
 		PongBall lead = (PongBall)world.get(0);
 		lead.x += dT/1000 * lead.xVector * lead.BALL_VELOCITY;
 		lead.y += dT/1000 * lead.yVector * lead.BALL_VELOCITY ;
 
 		if(lead.x < LEFT_X) {
 			scoreP2();
-		}
+		} else
 		if(lead.x > RIGHT_X) {
 			scoreP1();
-		}
+		} else { //collision detect!
+			for(Player p : super.clientIDToPlayer.values()) {
+				if(((PongPaddle)p.physicsComponent).boundingBox.intersects(lead.x - lead.BALL_DIAMETER/2, lead.y - lead.BALL_DIAMETER/2, lead.BALL_DIAMETER, lead.BALL_DIAMETER )) {
+					lead.xVector *= -1;
+				}
+			}
 
-		if(lead.y > TOP_Y || lead.y  < BOTTOM_Y) {
-			lead.yVector *= -1;
+			if (lead.y > TOP_Y || lead.y < BOTTOM_Y) {
+				lead.yVector *= -1;
+			}
 		}
 	}
 
-	private void movePaddles(int dT){
-
-
-
+	private void movePaddles(int dT) {
+		for(Player p : super.clientIDToPlayer.values()) {
+			PongPaddle paddle = (PongPaddle) p.physicsComponent;
+			if(paddle.yVector != 0) {
+				paddle.y += paddle.yVector * paddle.PADDLE_VELOCITY * dT/1000;
+				paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
+				paddle.needsUpdate = true;
+			}
+		}
 	}
 
+	private void sendPlayersGameState(){
+		SocketGameResponse r = new SocketGameResponse();
+		r.tickNumber = this.tickCount;
+		r.deltaObjects.add(this.world.get(0));//da ball
+		for(Player p : super.clientIDToPlayer.values()) {
+			if (p.physicsComponent.needsUpdate) {
+				r.deltaPlayers.add(p);
+				p.physicsComponent.needsUpdate = false;
+			}
+		}
+		for(Player p : super.clientIDToPlayer.values()) {
+			p.sendMessage(r);
+		}
+	}
 
 	private void scoreP1(){
 
@@ -116,5 +153,5 @@ public class PongController extends GameController {
 	private void scoreP2(){
 
 	}
-	
+
 }

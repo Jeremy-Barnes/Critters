@@ -10,6 +10,7 @@ public abstract class GameObject {
 	public int xVector;
 	public int yVector;
 	public int zVector;
+	public boolean needsUpdate;
 
 	public int GAME_INSTANCE_ID = -1;
 
