@@ -10,7 +10,11 @@ import java.util.List;
  */
 public class SocketGameResponse {
 
+	/*** Initialization variables ***/
 	public boolean startTickingNow;
+	public int assignedInstanceId;
+
+	/*** Game state variables ***/
 	public int tickNumber;
 
 	public List<GameObject> deltaObjects;
