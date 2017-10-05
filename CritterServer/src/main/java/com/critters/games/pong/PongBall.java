@@ -10,7 +10,7 @@ public class PongBall extends GameObject {
 	public PongBall() {
 		super.ENTITY_TYPE_ID = 0;
 	}
-	public final int BALL_DIAMETER = 2;
-	public final int BALL_VELOCITY = 50;
+	public final float BALL_DIAMETER = 2;
+	public final float BALL_VELOCITY = 0.025f;//25 world units per second
 
 }

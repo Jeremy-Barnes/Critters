@@ -94,10 +94,10 @@ public class PongController extends GameController {
 			((PongPaddle)player.physicsComponent).yVector = 0;
 			for(String cmd : request.commands) {
 				if(cmd.equalsIgnoreCase("W")) {
-					((PongPaddle)player.physicsComponent).yVector += 1;
+					((PongPaddle)player.physicsComponent).yVector = 1;
 				}
 				if(cmd.equalsIgnoreCase("S")) {
-					((PongPaddle)player.physicsComponent).yVector -= -1;
+					((PongPaddle)player.physicsComponent).yVector = -1;
 				}
 			}
 		}
@@ -105,17 +105,21 @@ public class PongController extends GameController {
 
 	private void moveBall(int dT) {
 		PongBall lead = (PongBall)world.get(0);
-		lead.x += (int)(dT/1000.0 * lead.xVector * lead.BALL_VELOCITY);
-		lead.y += (int)(dT/1000.0 * lead.yVector * lead.BALL_VELOCITY);
+		lead.x += (dT * lead.xVector * lead.BALL_VELOCITY);
+		lead.y += (dT/1000.0 * lead.yVector * lead.BALL_VELOCITY);
 		logger.debug(lead.x + " x");
 		logger.debug(dT + " timestep");
 		logger.debug(lead.xVector+ " xVect");
 
 		if(lead.x < LEFT_X) {
 			scoreP2();
+			lead.xVector *= -1;//todo remove, just for network proof
+
 		} else
 		if(lead.x > RIGHT_X) {
 			scoreP1();
+			lead.xVector *= -1;//todo remove, just for network proof
+
 		} else { //collision detect!
 			for(Player p : super.clientIDToPlayer.values()) {
 				if(((PongPaddle)p.physicsComponent).boundingBox.intersects(lead.x - lead.BALL_DIAMETER/2, lead.y - lead.BALL_DIAMETER/2, lead.BALL_DIAMETER, lead.BALL_DIAMETER )) {
@@ -134,8 +138,15 @@ public class PongController extends GameController {
 		for(Player p : super.clientIDToPlayer.values()) {
 			PongPaddle paddle = (PongPaddle) p.physicsComponent;
 			if(paddle.yVector != 0) {
-				paddle.y += paddle.yVector * paddle.PADDLE_VELOCITY * dT/1000;
+				paddle.y += paddle.yVector * paddle.PADDLE_VELOCITY * dT;
 				paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
+				if (paddle.boundingBox.getMinY() < this.BOTTOM_Y) {
+					paddle.y = this.BOTTOM_Y + paddle.PADDLE_HEIGHT/2;
+					paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
+				} else if(paddle.boundingBox.getMaxY() > this.TOP_Y) {
+					paddle.y = this.TOP_Y - paddle.PADDLE_HEIGHT/2;
+					paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
+				}
 				paddle.needsUpdate = true;
 			}
 		}

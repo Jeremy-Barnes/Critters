@@ -10,19 +10,18 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  */
 @XmlSeeAlso({PongPaddle.class, PongBall.class})
 public abstract class GameObject {
-	public int x;
-	public int y;
-	public int z;
-	public int xVector;
-	public int yVector;
-	public int zVector;
+	public float x;
+	public float y;
+	public float z;
+	public float xVector;
+	public float yVector;
+	public float zVector;
 	public boolean needsUpdate;
 
 	public int GAME_INSTANCE_ID = -1;
 	public int ENTITY_TYPE_ID;
 
 	public void setEntityID(int id) {
-
 	}
 
 

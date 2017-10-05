@@ -140,7 +140,7 @@ class GameEngine {
 
     public downCallback(key: Phaser.Key) {
         if (key.isDown) {
-            this.playerPaddle.yVector = 1;
+            this.playerPaddle.yVector = -1;
         } else {
             this.playerPaddle.yVector = 0;
         }
@@ -153,7 +153,7 @@ class GameEngine {
                 cmds.push("W");
             }
 
-            if (this.playerPaddle.yVector == 1) {
+            if (this.playerPaddle.yVector == -1) {
                 cmds.push("S");
             }
             if (cmds.length > 0)
@@ -161,14 +161,14 @@ class GameEngine {
         }
     }
 
-    public tickEstimate(elapsedSec: number) {
-        this.movePaddles(elapsedSec);
-        this.moveBall(elapsedSec);
+    public tickEstimate(elapsedMS: number) {
+        this.movePaddles(elapsedMS);
+        this.moveBall(elapsedMS);
     }
 
-    public moveBall(elapsedSec: number) {
-        this.ballLocation.x += elapsedSec * this.ballXVector * this.ballSpeed;
-        this.ballLocation.y += elapsedSec * this.ballYVector * this.ballSpeed;
+    public moveBall(elapsedMS: number) {
+        this.ballLocation.x += elapsedMS * this.ballXVector * this.ballSpeed;
+        this.ballLocation.y += elapsedMS * this.ballYVector * this.ballSpeed;
         var screenLoc = this.unitsToPixels(this.ballLocation);
         this.ballSprite.x = screenLoc.x;
         this.ballSprite.y = screenLoc.y;
@@ -191,9 +191,9 @@ class GameEngine {
         //}
     }
 
-    public movePaddles(elapsedSec: number) {
-        this.playerPaddle.location.y -= this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedSec;
-        this.playerPaddle.location.y += this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedSec;
+    public movePaddles(elapsedMS: number) {
+        this.playerPaddle.location.y -= this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
+        this.playerPaddle.location.y += this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
         this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.location.y);
     };
 
@@ -212,7 +212,7 @@ class GameEngine {
 
     public update(game: Phaser.Game): void {
         this.talkToServer();
-        this.tickEstimate(game.time.physicsElapsed);
+        this.tickEstimate(game.time.physicsElapsedMS);
     }
 
     public preload(game: Phaser.Game) {
@@ -253,7 +253,7 @@ class Paddle {
     public location: Point;
     public PADDLE_LENGTH: number = 12;//units, not pixels
 
-    public paddleSpeed: number = 25; //units per sec (top to bottom in 4 seconds)
+    public paddleSpeed: number = 0.025; //25 units per sec (top to bottom in 4 seconds)
     public yVector: number = 0;
     public instanceId: number = -1;
 }
