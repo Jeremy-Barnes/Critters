@@ -1,8 +1,14 @@
 package com.critters.games;
 
+import com.critters.games.pong.PongBall;
+import com.critters.games.pong.PongPaddle;
+
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  * Created by Jeremy on 7/22/2017.
  */
+@XmlSeeAlso({PongPaddle.class, PongBall.class})
 public abstract class GameObject {
 	public int x;
 	public int y;
@@ -13,9 +19,16 @@ public abstract class GameObject {
 	public boolean needsUpdate;
 
 	public int GAME_INSTANCE_ID = -1;
+	public int ENTITY_TYPE_ID;
+
+	public void setEntityID(int id) {
+
+	}
 
 
-	public abstract int getEntityID();
+	public int getEntityID() {
+		return ENTITY_TYPE_ID;
+	}
 
 	public void setInstanceID(int id){
 		GAME_INSTANCE_ID = id;

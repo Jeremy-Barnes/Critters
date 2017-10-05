@@ -5,6 +5,8 @@ import com.critters.games.GameObject;
 import com.critters.games.sockets.Player;
 import com.critters.games.sockets.SocketGameRequest;
 import com.critters.games.sockets.SocketGameResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,6 +16,9 @@ import java.util.List;
  * Created by Jeremy on 7/16/2017.
  */
 public class PongController extends GameController {
+
+	static final Logger logger = LoggerFactory.getLogger("application");
+
 
 	public enum PongEntityTypes {
 		Paddle,
@@ -100,8 +105,11 @@ public class PongController extends GameController {
 
 	private void moveBall(int dT) {
 		PongBall lead = (PongBall)world.get(0);
-		lead.x += dT/1000 * lead.xVector * lead.BALL_VELOCITY;
-		lead.y += dT/1000 * lead.yVector * lead.BALL_VELOCITY ;
+		lead.x += (int)(dT/1000.0 * lead.xVector * lead.BALL_VELOCITY);
+		lead.y += (int)(dT/1000.0 * lead.yVector * lead.BALL_VELOCITY);
+		logger.debug(lead.x + " x");
+		logger.debug(dT + " timestep");
+		logger.debug(lead.xVector+ " xVect");
 
 		if(lead.x < LEFT_X) {
 			scoreP2();
@@ -111,6 +119,7 @@ public class PongController extends GameController {
 		} else { //collision detect!
 			for(Player p : super.clientIDToPlayer.values()) {
 				if(((PongPaddle)p.physicsComponent).boundingBox.intersects(lead.x - lead.BALL_DIAMETER/2, lead.y - lead.BALL_DIAMETER/2, lead.BALL_DIAMETER, lead.BALL_DIAMETER )) {
+					logger.debug("pong");
 					lead.xVector *= -1;
 				}
 			}

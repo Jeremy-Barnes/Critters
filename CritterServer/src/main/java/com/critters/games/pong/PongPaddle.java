@@ -9,15 +9,12 @@ import java.awt.geom.Rectangle2D;
  */
 public class PongPaddle extends GameObject {
 
-	public static final int ENTITY_TYPE_ID = 1;
-
+	public PongPaddle() {
+		super.ENTITY_TYPE_ID = 1;
+	}
 	public final int PADDLE_HEIGHT = 12;
 	public final int PADDLE_VELOCITY = 25;
 
 	public Rectangle2D boundingBox;
-
-	public int getEntityID() {
-		return ENTITY_TYPE_ID;
-	}
 
 }

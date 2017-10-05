@@ -78,7 +78,7 @@ public abstract class GameController implements Runnable {
 		if(player.clientID.equalsIgnoreCase(hostID)) {
 			host = player;
 		}
-		if(host != null && clientIDToPlayer.containsKey(player.clientID)) {
+		if(host != null && !clientIDToPlayer.containsKey(player.clientID)) {
 			clientIDToPlayer.put(player.clientID,player);
 		}
 

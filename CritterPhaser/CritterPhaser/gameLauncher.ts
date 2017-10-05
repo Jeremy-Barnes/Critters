@@ -21,19 +21,83 @@ class GameEngine {
     public hasStarted: boolean = false;
     public iAmHost: boolean;
     public tickNumber: number = 0;
+    public myInstanceId = -1;
     public game: Phaser.Game;
+    public playerPaddle: Paddle;
+    public enemyPaddle: Paddle;
 
     public setUpGameComms() {
-        this.server.onmessage = this.handleIncomingMessage;
+        this.server.onmessage = this.handleIncomingMessage.bind(this);
         this.server.send(JSON.stringify({ startGame: true }));
     }
 
     public handleIncomingMessage(event: MessageEvent) {
-        if (!this.hasStarted && event.data.startTickingNow) {
+        var data = JSON.parse(event.data);
+        if (!this.hasStarted && data.startTickingNow) {
+
+            this.myInstanceId = data.assignedInstanceId;
+            for (var i = 0; i < data.deltaObjects.length; i++) {
+                let object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
+                if (object.entityID == 0) { //todo make an enum. 0 = ball, 1 = paddle
+                    this.ballLocation = { x: object.x, y: object.y };
+                    this.ballXVector = object.xVector;
+                    this.ballYVector = object.yVector;
+                    this.ballSpeed = object.BALL_VELOCITY;
+                    this.ballDiameter = object.BALL_DIAMETER;
+                }
+            }
+
+            for (var i = 0; i < data.deltaPlayers.length; i++) {
+                let player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
+                if (player.physicsComponent) {
+                    let paddle = new Paddle();
+                    paddle.instanceId = player.physicsComponent.GAME_INSTANCE_ID;
+                    paddle.location = { x: player.physicsComponent.x, y: player.physicsComponent.y };
+                    paddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
+                    paddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
+                    paddle.yVector = player.physicsComponent.yVector;
+
+                    if (player.physicsComponent.GAME_INSTANCE_ID == this.myInstanceId) { //it me, i'm that
+                        this.playerPaddle = paddle;
+                    } else {
+                        this.enemyPaddle = paddle;
+                    }
+                }
+            }
             this.hasStarted = true;
             this.game.paused = false;
         } else {
-      
+            if (data.deltaObjects)
+            for (var i = 0; i < data.deltaObjects.length; i++) {
+                let object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
+                if (object.entityID == 0) { //todo make an enum. 0 = ball, 1 = paddle
+                    this.ballLocation.x = object.x;
+                    this.ballLocation.y = object.y;
+                    this.ballXVector = object.xVector;
+                    this.ballYVector = object.yVector;
+                    this.ballSpeed = object.BALL_VELOCITY;
+                    this.ballDiameter = object.BALL_DIAMETER;
+                }
+            }
+            if(data.deltaPlayers)
+            for (var i = 0; i < data.deltaPlayers.length; i++) {
+                let player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
+                if (player.physicsComponent) {
+                    if (player.physicsComponent.GAME_INSTANCE_ID == this.playerPaddle.instanceId) {
+                        this.playerPaddle.location.x = player.physicsComponent.x;
+                        this.playerPaddle.location.y = player.physicsComponent.y;
+                        this.playerPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
+                        this.playerPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
+                        this.playerPaddle.yVector = player.physicsComponent.yVector;
+                    } else if (player.physicsComponent.GAME_INSTANCE_ID == this.enemyPaddle.instanceId) {
+                        this.enemyPaddle.location.x = player.physicsComponent.x;
+                        this.enemyPaddle.location.y = player.physicsComponent.y;
+                        this.enemyPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
+                        this.enemyPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
+                        this.enemyPaddle.yVector = player.physicsComponent.yVector;
+                    }
+                }
+            }
         }
     }
 
@@ -41,18 +105,15 @@ class GameEngine {
     public static LEFT_X: number = 0;
     public static TOP_Y: number = 100;
     public static BOTTOM_Y: number = 0;
-    public static PADDLE_LENGTH: number = 12;//units, not pixels
-
-    public paddleSpeed: number = 25; //units per sec (top to bottom in 4 seconds)
-    public upvector: number = 0;
-    public downvector: number = 0;
 
     //ball data
     public ballLocation: Point;
     public ballSprite: Phaser.Sprite;
-    public ballUpV: number = 0; //updown
-    public ballLeftV: number = 0; //leftright
-    public ballSpeed: number = 35;
+    public ballYVector: number = 0; //updown
+    public ballXVector: number = 0; //leftright
+    public ballSpeed: number = 1;
+    public ballDiameter: number = 1;
+
 
     //player data
     public playerSprite: Phaser.Sprite;
@@ -67,36 +128,32 @@ class GameEngine {
 
     public constructor(socket: WebSocket) {
         this.server = socket;
-        if(socket != null)
-        this.setUpGameComms();
     }
 
     public upCallback(key: Phaser.Key) {
         if (key.isDown) {
-            this.upvector = 1;
-            this.downvector = 0;
+            this.playerPaddle.yVector = 1;
         } else {
-            this.upvector = 0;
+            this.playerPaddle.yVector = 0;
         }
     }
 
     public downCallback(key: Phaser.Key) {
         if (key.isDown) {
-            this.upvector = 0;
-            this.downvector = 1;
+            this.playerPaddle.yVector = 1;
         } else {
-            this.downvector = 0;
+            this.playerPaddle.yVector = 0;
         }
     }
 
     public talkToServer() {
         if (this.server != null) {
             var cmds = [];
-            if (this.upvector) {
+            if (this.playerPaddle.yVector == 1) {
                 cmds.push("W");
             }
 
-            if (this.downvector) {
+            if (this.playerPaddle.yVector == 1) {
                 cmds.push("S");
             }
             if (cmds.length > 0)
@@ -110,33 +167,33 @@ class GameEngine {
     }
 
     public moveBall(elapsedSec: number) {
-        this.ballLocation.x += elapsedSec * this.ballLeftV * this.ballSpeed;
-        this.ballLocation.y += elapsedSec * this.ballUpV * this.ballSpeed;
+        this.ballLocation.x += elapsedSec * this.ballXVector * this.ballSpeed;
+        this.ballLocation.y += elapsedSec * this.ballYVector * this.ballSpeed;
         var screenLoc = this.unitsToPixels(this.ballLocation);
         this.ballSprite.x = screenLoc.x;
         this.ballSprite.y = screenLoc.y;
 
         if (this.ballLocation.y <= GameEngine.BOTTOM_Y || this.ballLocation.y >= GameEngine.TOP_Y) {
-            this.ballUpV = this.ballUpV * -1;
+            this.ballYVector = this.ballYVector * -1;
         }
 
-        if (this.ballLocation.x <= GameEngine.LEFT_X || this.ballLocation.x >= GameEngine.RIGHT_X) {
-            if ((this.ballLocation.y > this.playerPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
-                this.ballLocation.y < this.playerPaddle.location.y + GameEngine.PADDLE_LENGTH / 2 &&
-                this.ballLocation.x <= GameEngine.LEFT_X) ||
-               (this.ballLocation.x >= GameEngine.RIGHT_X &&
-                this.ballLocation.y > this.enemyPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
-                this.ballLocation.y < this.enemyPaddle.location.y + GameEngine.PADDLE_LENGTH / 2)) {
-                this.ballLeftV = this.ballLeftV * -1;
-            } else {
-                //score!
-            }
-        }
+        //if (this.ballLocation.x <= GameEngine.LEFT_X || this.ballLocation.x >= GameEngine.RIGHT_X) {
+        //    if ((this.ballLocation.y > this.playerPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
+        //        this.ballLocation.y < this.playerPaddle.location.y + GameEngine.PADDLE_LENGTH / 2 &&
+        //        this.ballLocation.x <= GameEngine.LEFT_X) ||
+        //       (this.ballLocation.x >= GameEngine.RIGHT_X &&
+        //        this.ballLocation.y > this.enemyPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
+        //        this.ballLocation.y < this.enemyPaddle.location.y + GameEngine.PADDLE_LENGTH / 2)) {
+        //        this.ballXVector = this.ballXVector * -1;
+        //    } else {
+        //        //score!
+        //    }
+        //}
     }
 
     public movePaddles(elapsedSec: number) {
-        this.playerPaddle.location.y -= this.paddleSpeed * this.upvector * elapsedSec;
-        this.playerPaddle.location.y += this.paddleSpeed * this.downvector * elapsedSec;
+        this.playerPaddle.location.y -= this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedSec;
+        this.playerPaddle.location.y += this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedSec;
         this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.location.y);
     };
 
@@ -174,17 +231,16 @@ class GameEngine {
         this.playerSprite.anchor.set(.5, .5);
         this.playerSprite.scale.set(.1);
 
-       
         this.enemySprite = game.add.sprite(0, 0, 'paddle');
         this.enemySprite.anchor.set(.5, .5);
         this.enemySprite.scale.set(.1);
 
-        this.ballLocation = { x: 75, y: 50 };
-        this.ballSprite = game.add.sprite(startLoc.x, startLoc.y, 'ball');
+        this.ballSprite = game.add.sprite(0, 0, 'ball');
         this.ballSprite.anchor.set(.5, .5);
         this.ballSprite.scale.set(.25);
-        this.ballUpV = -1;
-        this.ballLeftV = -1;
+
+        if (this.server != null)
+            this.setUpGameComms();
 
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         if (!this.hasStarted) {

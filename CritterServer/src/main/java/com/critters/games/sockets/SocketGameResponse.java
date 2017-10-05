@@ -3,6 +3,7 @@ package com.critters.games.sockets;
 
 import com.critters.games.GameObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,8 @@ public class SocketGameResponse {
 	/*** Game state variables ***/
 	public int tickNumber;
 
-	public List<GameObject> deltaObjects;
-	public List<Player> deltaPlayers;
+	public List<GameObject> deltaObjects= new ArrayList();
+	public List<Player> deltaPlayers = new ArrayList();
 
 	public String broadCastMessage;
 	public String broadCaster;
