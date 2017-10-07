@@ -333,9 +333,6 @@ export class Application {
         return ServiceMethods.connectToGameServer(gameID, clientID);
     }
 
-<<<<<<< Updated upstream
-    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
-
     public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
         var app = Application.getApp();
         return ServiceMethods.purchaseInventoryItemFromStore({
@@ -359,6 +356,4 @@ export class Application {
             app.user.critterbuxx -= totalCost;
         });
     }
-=======
->>>>>>> Stashed changes
 }
