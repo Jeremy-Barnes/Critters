@@ -24,7 +24,7 @@ CREATE TABLE storeClerkImageOptions(
 );
 
 CREATE TABLE storeBackgroundImageOptions(
-    storeClerkImageOptionID SERIAL NOT NULL PRIMARY KEY,
+    storeBackgroundImageOptionID SERIAL NOT NULL PRIMARY KEY,
     imagePath VARCHAR(200) NOT NULL
 );
 
