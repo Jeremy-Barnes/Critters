@@ -1,19 +1,12 @@
 package com.critters.ajax;
 
+import com.critters.Utilities.Serializer;
 import com.critters.dal.dto.entity.User;
-import org.eclipse.persistence.jaxb.JAXBContextProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.NewCookie;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 /**
  * Created by Jeremy on 8/9/2016.
@@ -33,21 +26,7 @@ public class AjaxService {
 	}
 
 	protected <T> T serializeDeepCopy(T object, Class objType) {
-		try {
-			JAXBContext jc = JAXBContext.newInstance(objType);
-			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty("eclipselink.media-type", "application/json");
-			marshaller.setProperty("eclipselink.json.include-root", true);
-			StringWriter sw = new StringWriter();
-			marshaller.marshal(object, sw);
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			unmarshaller.setProperty("eclipselink.json.include-root", false);
-			unmarshaller.setProperty(JAXBContextProperties.MEDIA_TYPE, "application/json");
-			T copiedObject = (T) unmarshaller.unmarshal(new StreamSource(new StringReader(sw.toString())), objType).getValue();
-			return copiedObject;
-		} catch(JAXBException jaxb) {
-			return null;
-		}
+		return Serializer.fromJSON(Serializer.toJSON(false, object, objType), objType);
 	}
 
 	protected NewCookie[] createUserCookies(User user){
