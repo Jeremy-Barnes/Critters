@@ -9,13 +9,13 @@
                 <p>{{friend.requester.userName}} ------- {{friend.requested.userName}} | accepted? {{friend.accepted}} </p>
             </div>
             <!-- Standard button -->
-            <button type="button" class="btn btn-default">Default</button>
+            <button type="button" class="btn btn-default" (click)="getID()">Default get id </button>
 
             <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-            <button type="button" class="btn btn-primary">Primary</button>
+            <button type="button" class="btn btn-primary" (click)="createGame()">Primary create game</button>
 
             <!-- Indicates a successful or positive action -->
-            <button type="button" class="btn btn-success">Success</button>
+            <button type="button" class="btn btn-success" (click)="getOtherGame()">Success connect to game</button>
 
             <!-- Contextual button for informational alert messages -->
             <button type="button" class="btn btn-info">Info</button>
@@ -47,4 +47,6 @@
             </p>
         </div>
     </div>
+    <div id="content"></div>
+    <div id="critterCanvas"></div>
 </div>

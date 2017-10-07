@@ -131,6 +131,7 @@
     <TypeScriptCompile Include="app\servicemethods.ts" />
     <TypeScriptCompile Include="Libraries\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Libraries\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Libraries\typings\systemjs\systemjs.d.ts" />
     <TypeScriptCompile Include="presentation.ts" />
   </ItemGroup>
   <ItemGroup>

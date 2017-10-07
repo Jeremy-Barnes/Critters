@@ -15,6 +15,7 @@ export class Application {
     public friends: Friendship[] = [];
     public pendingFriendRequests: Friendship[] = [];
     public outstandingFriendRequests: Friendship[] = [];
+    public secureID: string = "";
 
     public errorCallback: (text: string) => any;
     public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string) => JQueryDeferred<boolean>;
@@ -298,6 +299,12 @@ export class Application {
         return ServiceMethods.searchInventory(searchTerm);
     }
 
+    public static getStore(id: number): JQueryPromise<Store> {
+        return ServiceMethods.getStorefront(id);
+    }
+
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
+
     public static getGames(): JQueryPromise<GamesInfo> {
         if (Application.getApp().games.length = 0) {
             return ServiceMethods.getGames().done((games: GamesInfo) => {
@@ -307,10 +314,26 @@ export class Application {
         } else return jQuery.Deferred().resolve(null);
     }
 
-    public static getStore(id: number): JQueryPromise<Store> {
-        return ServiceMethods.getStorefront(id);
+    public static getGameSecureID(): JQueryPromise<{ selector: string }> {
+        return ServiceMethods.getSecureID().done((id: { selector: string }) => {
+            Application.getApp().secureID = id.selector;
+        });
     }
 
+    public static getUsernameGames(gameType: number, userName: string): JQueryPromise<string> {
+        return ServiceMethods.getUsernameGames(gameType, userName);
+    }
+
+
+    public static openGameServer(gameType: number, clientID: string, gameName: string): JQueryPromise<string> {
+        return ServiceMethods.openGameServer(gameType, clientID, gameName);
+    }
+
+    public static connectToGameServer(gameID: string, clientID: string): JQueryPromise<string> {
+        return ServiceMethods.connectToGameServer(gameID, clientID);
+    }
+
+<<<<<<< Updated upstream
     public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
 
     public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
@@ -336,4 +359,6 @@ export class Application {
             app.user.critterbuxx -= totalCost;
         });
     }
+=======
+>>>>>>> Stashed changes
 }
