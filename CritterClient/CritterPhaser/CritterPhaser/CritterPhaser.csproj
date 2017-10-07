@@ -23,23 +23,24 @@
     <Content Include="img\games\pong\ball.png" />
     <Content Include="index.html" />
     <Content Include="img\games\pong\item_full_Glide_Paddle.jpg" />
-    <Content Include="scripts\phaser2.png" />
-    <Content Include="scripts\phaser.js" />
-    <Content Include="scripts\phaser.min.js" />
+    <Content Include="libraries\phaser2.png" />
+    <Content Include="libraries\phaser.js" />
+    <Content Include="libraries\phaser.min.js" />
     <Content Include="systemjs.config.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="gameLauncher.ts" />
+    <TypeScriptCompile Include="games\pong\gameLauncher.ts" />
     <TypeScriptCompile Include="main.ts" />
-    <TypeScriptCompile Include="PlayerCommandHandler.ts" />
-    <TypeScriptCompile Include="scripts\p2.d.ts" />
-    <TypeScriptCompile Include="scripts\phaser.d.ts" />
-    <TypeScriptCompile Include="scripts\pixi.d.ts" />
+    <TypeScriptCompile Include="games\pong\PlayerCommandHandler.ts" />
+    <TypeScriptCompile Include="libraries\p2.d.ts" />
+    <TypeScriptCompile Include="libraries\phaser.d.ts" />
+    <TypeScriptCompile Include="libraries\pixi.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
+    <Content Include="copy-exclusions" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -83,4 +84,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /s "$(ProjectDir)*" "$(SolutionDir)CritterClient\" /EXCLUDE:$(ProjectDir)copy-exclusions /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

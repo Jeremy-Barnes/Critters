@@ -376,11 +376,14 @@ buildNumber.properties
 .mvn/timing.properties
 
 
-## VS 2015 Project Specific exclusions:
 */CritterClient/app/*.js
 */CritterClient/app/*.js.map
 */CritterClient/app/*/*.js
 */CritterClient/app/*/*.js.map
+*/CritterClient/games/*.js
+*/CritterClient/games/*.js.map
+*/CritterClient/games/*/*.js
+*/CritterClient/games/*/*.js.map
 
 .metadata
 bin/
