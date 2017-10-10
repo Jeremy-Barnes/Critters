@@ -138,6 +138,10 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("findUserNameGames", "games", gameType+"/"+userName, "GET");
     }
 
+    public static getActiveGamesOfType(gameType: number): JQueryPromise<Array<any>> {
+        return ServiceMethods.doAjax("getAllActiveGames", "games", gameType, "GET");
+    }
+
     public static openGameServer(gameType: number, clientID: string, gameName: string): JQueryPromise<string> {
         return ServiceMethods.doAjax("openGameServer", "games", gameType + "/" + clientID + "/" + gameName, "GET");
     }

@@ -184,6 +184,7 @@ export class GameThumbnail {
     gameDescription: string;
     gameIconPath: string;
     gameURL: string;
+    isMultiplayer: boolean;
     bannerImagePath: string;
     thumbnailImagePath1: string;
 	thumbnailImagePath2: string;
@@ -212,6 +213,27 @@ export class UserImageOption {
 export class SearchResponse {
     users: User[];
     items: Item[];
+}
+
+export class GameSocketResponse {
+
+    connectToGameRequesters: Array<any>;
+
+
+    startTickingNow: number;
+    assignedInstanceId: number;
+
+    /*** Game state variables ***/
+    tickNumber: number;
+
+    deltaObjects: Array<any>;
+    deltaPlayers: Array<any>;
+
+    broadCastMessage: string;
+    broadCaster: string;
+
+    ping: boolean;
+
 }
 
 export interface Comparable {

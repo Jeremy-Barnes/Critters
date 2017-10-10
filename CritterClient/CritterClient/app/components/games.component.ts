@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser'
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { User, GameThumbnail, GamesInfo } from '../dtos'
+import { User, GameThumbnail, GamesInfo, GameSocketResponse } from '../dtos'
 import {Application} from "../appservice"
 import '../../node_modules/rxjs/add/operator/switchMap';
 
@@ -13,7 +13,11 @@ export class GamesComponent implements OnInit {
     user: User;
     app: Application = Application.getApp();
     activeGame: GameThumbnail = new GameThumbnail();
-    activeURL: any = null;
+    clientID: string;
+    gameLobbyName: string = "";
+    visibleLobbies: Array<any> = [];
+    gameWebsocketConnection: WebSocket;
+
     specialGame: GameThumbnail = {
         gameDescription : "Halo: Combat Evolved takes place in a science fiction universe created by Bungie Studios. According to the story, the realization of faster-than-light travel has allowed the human race to colonize other planets after the overpopulation of Earth. A keystone of these efforts is the planet Reach, an interstellar naval yard and a hub of scientific and military activity.",
         gameIconPath: "http://k22.kn3.net/0CE906C3D.png",
@@ -22,10 +26,12 @@ export class GamesComponent implements OnInit {
         gameURL: "google.com",
         bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
         thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
-        thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
+        thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg",
+        isMultiplayer: true
     };
     games: GameThumbnail[];
     playGame: boolean = false;
+    creating : boolean = false;
     isFull = false;
     categories = ["chance", "adventure", "simple"];
     ngOnInit() {
@@ -52,7 +58,8 @@ export class GamesComponent implements OnInit {
                     gameURL: "http://www.homestarrunner.com",
                     bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
                     thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
-                    thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
+                    thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg",
+                    isMultiplayer: true
                 });
             //todo remove test data above
                 for (var i = 0; i < self.games.length; i++) {
@@ -69,6 +76,7 @@ export class GamesComponent implements OnInit {
 
     constructor(private route: ActivatedRoute, private router: Router, private domSanitizer: DomSanitizer) {
         var self = this;
+        self.games = self.app.games;
         Application.getGames().done(() => {
             self.games = self.app.games;
         });
@@ -85,6 +93,7 @@ export class GamesComponent implements OnInit {
             gameName: "Halo: Combat Evolved",
             gameThumbnailConfigID: 1,
             gameURL: "http://www.homestarrunner.com/",
+            isMultiplayer: true,
             bannerImagePath: "http://interactive.wttw.com/sites/default/files/images/2017/03/31/Chicago-muni-flag.png",
             thumbnailImagePath1: "http://pcmedia.ign.com/pc/image/article/794/794508/halo-2-20070605063546992-000.jpg",
             thumbnailImagePath2: "https://static.giantbomb.com/uploads/original/0/5911/1141263-h2_mp_01.jpg"
@@ -102,6 +111,61 @@ export class GamesComponent implements OnInit {
 
     togglePlayGame() {
         this.playGame = !this.playGame;
+
+        if (this.activeGame.isMultiplayer) {
+            var self = this;
+            Application.getGameSecureID().done(() => {
+                self.clientID = self.app.secureID;
+            });
+        }
+
+      
+    }
+
+    fetchGameLobbies() {
+        var self = this;
+        Application.getActiveGames(this.activeGame.gameThumbnailConfigID).done((lobbies: any) => {
+            self.visibleLobbies.push(...lobbies.runningGames);
+        });
+    }
+
+    startCreatingLobby() {
+        this.creating = true;
+    }
+
+    createGame() {
+        var self = this;
+        Application.openGameServer(this.activeGame.gameThumbnailConfigID, this.clientID, this.gameLobbyName).then(s => {
+            self.gameWebsocketConnection = new WebSocket("ws://localhost:8080/api/session/" + self.app.secureID);
+           // self.gameWebsocketConnection.send(JSON.stringify({ ping: true }));
+            self.gameWebsocketConnection.onclose = function (evt) {
+                alert(evt);
+            }
+
+            self.gameWebsocketConnection.onmessage = function (evt) {
+                //   self.gameWebsocketConnection.send(JSON.stringify({ acceptedUsers: [evt.data] }));
+                var req: GameSocketResponse = JSON.parse(evt.data);
+
+                alert(evt);
+            };
+        });
+    }
+
+    joinLobby(gameID: string) {
+        Application.connectToGameServer(gameID, this.clientID).done((o: any) =>
+            alert(o));
+    }
+
+
+    startGame() {
+        SystemJS.import('../../Libraries/phaser.min.js').then(Phaser => {
+            SystemJS.import('../../games/pong/gameLauncher.js').then(
+
+                game => {
+                    //     self.x.send(JSON.stringify({ startGame: true }));
+                    game.GameLauncher(null)
+                });
+        });
     }
 
 

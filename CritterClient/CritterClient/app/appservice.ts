@@ -306,7 +306,7 @@ export class Application {
     public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
 
     public static getGames(): JQueryPromise<GamesInfo> {
-        if (Application.getApp().games.length = 0) {
+        if (Application.getApp().games.length == 0) {
             return ServiceMethods.getGames().done((games: GamesInfo) => {
                 Application.getApp().games.length = 0;
                 Application.getApp().games.push(...games.games);
@@ -332,6 +332,11 @@ export class Application {
     public static connectToGameServer(gameID: string, clientID: string): JQueryPromise<string> {
         return ServiceMethods.connectToGameServer(gameID, clientID);
     }
+
+    public static getActiveGames(gameType: number) {
+        return ServiceMethods.getActiveGamesOfType(gameType);
+    }
+
 
     public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
         var app = Application.getApp();
