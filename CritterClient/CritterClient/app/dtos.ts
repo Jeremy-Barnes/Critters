@@ -217,8 +217,12 @@ export class SearchResponse {
 
 export class GameSocketResponse {
 
-    connectToGameRequesters: Array<any>;
-
+    notificationBody: string;
+    notificationTitle: string;
+    notificationHTML: string;
+    noButtonText: string;
+    dangerButtonText: string;
+    notificationID: string;
 
     startTickingNow: number;
     assignedInstanceId: number;
@@ -234,6 +238,15 @@ export class GameSocketResponse {
 
     ping: boolean;
 
+}
+
+export class UINotification {
+    title: string;
+    body: string;
+    customBodyHTML: string;
+    dangerButtonText: string;
+    noButtonText: string;
+    notificationID: string;
 }
 
 export interface Comparable {

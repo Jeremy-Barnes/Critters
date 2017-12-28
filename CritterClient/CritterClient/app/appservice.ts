@@ -18,7 +18,7 @@ export class Application {
     public secureID: string = "";
 
     public errorCallback: (text: string) => any;
-    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string) => JQueryDeferred<boolean>;
+    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string, noButtonText: string) => JQueryDeferred<boolean>;
 
     public static app: Application = new Application();
 
@@ -336,7 +336,6 @@ export class Application {
     public static getActiveGames(gameType: number) {
         return ServiceMethods.getActiveGamesOfType(gameType);
     }
-
 
     public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
         var app = Application.getApp();

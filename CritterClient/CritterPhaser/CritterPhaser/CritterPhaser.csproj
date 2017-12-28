@@ -31,6 +31,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="games\pong\gameLauncher.ts" />
+    <TypeScriptCompile Include="games\pong\PongObjects.ts" />
+    <TypeScriptCompile Include="games\SocketGameResponse.ts" />
     <TypeScriptCompile Include="main.ts" />
     <TypeScriptCompile Include="games\pong\PlayerCommandHandler.ts" />
     <TypeScriptCompile Include="libraries\p2.d.ts" />

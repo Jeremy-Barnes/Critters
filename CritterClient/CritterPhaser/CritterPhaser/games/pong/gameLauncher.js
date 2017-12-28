@@ -2,7 +2,7 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var PlayerCommandHandler_1;
-    var GameLauncher, GameEngine, Paddle, Point;
+    var GameLauncher, GameEngine, Point;
     return {
         setters:[
             function (PlayerCommandHandler_1_1) {
@@ -29,24 +29,26 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                     this.hasStarted = false;
                     this.tickNumber = 0;
                     this.myInstanceId = -1;
+                    this.debugMessages = [];
                     this.ballYVector = 0; //updown
                     this.ballXVector = 0; //leftright
                     this.ballSpeed = 1;
                     this.ballDiameter = 1;
+                    this.spaceBar = false;
                     this.server = null;
                     this.server = socket;
                 }
                 GameEngine.prototype.setUpGameComms = function () {
                     this.server.onmessage = this.handleIncomingMessage.bind(this);
-                    this.server.send(JSON.stringify({ startGame: true }));
                 };
                 GameEngine.prototype.handleIncomingMessage = function (event) {
                     var data = JSON.parse(event.data);
                     if (!this.hasStarted && data.startTickingNow) {
+                        this.startedTime = data.startTime;
                         this.myInstanceId = data.assignedInstanceId;
                         for (var i = 0; i < data.deltaObjects.length; i++) {
                             var object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
-                            if (object.entityID == 0) {
+                            if (object.ENTITY_TYPE_ID == 0) {
                                 this.ballLocation = { x: object.x, y: object.y };
                                 this.ballXVector = object.xVector;
                                 this.ballYVector = object.yVector;
@@ -57,13 +59,8 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                         for (var i = 0; i < data.deltaPlayers.length; i++) {
                             var player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
                             if (player.physicsComponent) {
-                                var paddle = new Paddle();
-                                paddle.instanceId = player.physicsComponent.GAME_INSTANCE_ID;
-                                paddle.location = { x: player.physicsComponent.x, y: player.physicsComponent.y };
-                                paddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                                paddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                                paddle.yVector = player.physicsComponent.yVector;
-                                if (player.physicsComponent.GAME_INSTANCE_ID == this.myInstanceId) {
+                                var paddle = player.physicsComponent;
+                                if (paddle.GAME_INSTANCE_ID == this.myInstanceId) {
                                     this.playerPaddle = paddle;
                                 }
                                 else {
@@ -74,11 +71,13 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                         this.hasStarted = true;
                         this.game.paused = false;
                     }
-                    else {
+                    else if (this.hasStarted) {
                         if (data.deltaObjects)
                             for (var i = 0; i < data.deltaObjects.length; i++) {
                                 var object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
-                                if (object.entityID == 0) {
+                                if (object.ENTITY_TYPE_ID == 0) {
+                                    this.debugMessages.push("WHEN DIFFERENT LOCAL X: " + this.ballLocation.x + " Y: " + this.ballLocation.y + " XV: " + this.ballXVector + " YV: " + this.ballYVector);
+                                    this.debugMessages.push("WHEN DIFFERENT REMOTE X: " + object.x + " Y: " + object.y + " XV: " + object.xVector + " YV: " + object.yVector);
                                     this.ballLocation.x = object.x;
                                     this.ballLocation.y = object.y;
                                     this.ballXVector = object.xVector;
@@ -91,39 +90,44 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                             for (var i = 0; i < data.deltaPlayers.length; i++) {
                                 var player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
                                 if (player.physicsComponent) {
-                                    if (player.physicsComponent.GAME_INSTANCE_ID == this.playerPaddle.instanceId) {
-                                        this.playerPaddle.location.x = player.physicsComponent.x;
-                                        this.playerPaddle.location.y = player.physicsComponent.y;
-                                        this.playerPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                                        this.playerPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                                        this.playerPaddle.yVector = player.physicsComponent.yVector;
+                                    var paddle = player.physicsComponent;
+                                    if (paddle.GAME_INSTANCE_ID == this.playerPaddle.GAME_INSTANCE_ID) {
+                                        this.playerPaddle.y = paddle.y;
+                                        this.playerPaddle.PADDLE_VELOCITY = paddle.PADDLE_VELOCITY;
+                                        this.playerPaddle.PADDLE_HEIGHT = paddle.PADDLE_HEIGHT;
+                                        this.playerPaddle.yVector = paddle.yVector;
                                     }
-                                    else if (player.physicsComponent.GAME_INSTANCE_ID == this.enemyPaddle.instanceId) {
-                                        this.enemyPaddle.location.x = player.physicsComponent.x;
-                                        this.enemyPaddle.location.y = player.physicsComponent.y;
-                                        this.enemyPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                                        this.enemyPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                                        this.enemyPaddle.yVector = player.physicsComponent.yVector;
+                                    else {
+                                        this.enemyPaddle.y = paddle.y;
+                                        this.enemyPaddle.PADDLE_VELOCITY = paddle.PADDLE_VELOCITY;
+                                        this.enemyPaddle.PADDLE_HEIGHT = paddle.PADDLE_HEIGHT;
+                                        this.enemyPaddle.yVector = paddle.yVector;
                                     }
                                 }
                             }
                     }
+                    if (data.gameOver) {
+                        alert("Goodbye");
+                    }
+                    this.text.setText("" + (data.currentTime / 1000 - this.startedTime / 1000));
                 };
                 GameEngine.prototype.upCallback = function (key) {
-                    if (key.isDown) {
-                        this.playerPaddle.yVector = 1;
-                    }
-                    else {
-                        this.playerPaddle.yVector = 0;
-                    }
+                    if (this.hasStarted)
+                        if (key.isDown) {
+                            this.playerPaddle.yVector = 1;
+                        }
+                        else {
+                            this.playerPaddle.yVector = 0;
+                        }
                 };
                 GameEngine.prototype.downCallback = function (key) {
-                    if (key.isDown) {
-                        this.playerPaddle.yVector = -1;
-                    }
-                    else {
-                        this.playerPaddle.yVector = 0;
-                    }
+                    if (this.hasStarted)
+                        if (key.isDown) {
+                            this.playerPaddle.yVector = -1;
+                        }
+                        else {
+                            this.playerPaddle.yVector = 0;
+                        }
                 };
                 GameEngine.prototype.talkToServer = function () {
                     if (this.server != null) {
@@ -134,6 +138,13 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                         if (this.playerPaddle.yVector == -1) {
                             cmds.push("S");
                         }
+                        if (this.playerPaddle.yVector == 0) {
+                            cmds.push("WS");
+                        }
+                        if (this.spaceBar) {
+                            this.spaceBar = false;
+                            cmds.push(" ");
+                        }
                         if (cmds.length > 0)
                             this.server.send(JSON.stringify({ commands: cmds }));
                     }
@@ -143,14 +154,15 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                     this.moveBall(elapsedMS);
                 };
                 GameEngine.prototype.moveBall = function (elapsedMS) {
-                    this.ballLocation.x += elapsedMS * this.ballXVector * this.ballSpeed;
-                    this.ballLocation.y += elapsedMS * this.ballYVector * this.ballSpeed;
+                    this.ballLocation.x += (elapsedMS * this.ballXVector * this.ballSpeed);
+                    this.ballLocation.y += (elapsedMS * this.ballYVector * this.ballSpeed);
                     var screenLoc = this.unitsToPixels(this.ballLocation);
                     this.ballSprite.x = screenLoc.x;
                     this.ballSprite.y = screenLoc.y;
                     if (this.ballLocation.y <= GameEngine.BOTTOM_Y || this.ballLocation.y >= GameEngine.TOP_Y) {
                         this.ballYVector = this.ballYVector * -1;
                     }
+                    this.debugMessages.push("X: " + this.ballLocation.x + " Y: " + this.ballLocation.y + " XV: " + this.ballXVector + " YV: " + this.ballYVector);
                     //if (this.ballLocation.x <= GameEngine.LEFT_X || this.ballLocation.x >= GameEngine.RIGHT_X) {
                     //    if ((this.ballLocation.y > this.playerPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
                     //        this.ballLocation.y < this.playerPaddle.location.y + GameEngine.PADDLE_LENGTH / 2 &&
@@ -165,9 +177,8 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                     //}
                 };
                 GameEngine.prototype.movePaddles = function (elapsedMS) {
-                    this.playerPaddle.location.y -= this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
-                    this.playerPaddle.location.y += this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
-                    this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.location.y);
+                    this.playerPaddle.y += this.playerPaddle.yVector * this.playerPaddle.PADDLE_VELOCITY * elapsedMS;
+                    this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.y);
                 };
                 ;
                 GameEngine.prototype.unitsToPixels = function (coordinate) {
@@ -190,9 +201,11 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                     this.game = game;
                 };
                 GameEngine.prototype.create = function (game) {
+                    var _this = this;
                     game.stage.backgroundColor = "#888";
                     PlayerCommandHandler_1.PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.W, this.upCallback, this);
                     PlayerCommandHandler_1.PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.S, this.downCallback, this);
+                    PlayerCommandHandler_1.PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.SPACEBAR, function () { _this.spaceBar = true; }, this);
                     this.playerSprite = game.add.sprite(0, 0, 'paddle');
                     this.playerSprite.anchor.set(.5, .5);
                     this.playerSprite.scale.set(.1);
@@ -208,21 +221,16 @@ System.register(['./PlayerCommandHandler'], function(exports_1, context_1) {
                     if (!this.hasStarted) {
                         game.paused = true;
                     }
+                    this.text = game.add.text(350, 400, "Your score:", {
+                        font: "15px Arial", align: "center"
+                    });
+                    this.text.anchor.set(0.5);
                 };
                 GameEngine.RIGHT_X = 150;
                 GameEngine.LEFT_X = 0;
                 GameEngine.TOP_Y = 100;
                 GameEngine.BOTTOM_Y = 0;
                 return GameEngine;
-            }());
-            Paddle = (function () {
-                function Paddle() {
-                    this.PADDLE_LENGTH = 12; //units, not pixels
-                    this.paddleSpeed = 0.025; //25 units per sec (top to bottom in 4 seconds)
-                    this.yVector = 0;
-                    this.instanceId = -1;
-                }
-                return Paddle;
             }());
             Point = (function () {
                 function Point() {

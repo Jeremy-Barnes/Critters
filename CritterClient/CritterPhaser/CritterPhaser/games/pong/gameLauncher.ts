@@ -1,4 +1,6 @@
 ﻿import {PlayerCommandHandler} from './PlayerCommandHandler'
+import {PongPaddle, PongBall} from './PongObjects'
+import {Player, User, GameObject, SocketGameResponse} from '../SocketGameResponse'
 
 export class GameLauncher {
 
@@ -23,41 +25,36 @@ class GameEngine {
     public tickNumber: number = 0;
     public myInstanceId = -1;
     public game: Phaser.Game;
-    public playerPaddle: Paddle;
-    public enemyPaddle: Paddle;
+    public playerPaddle: PongPaddle;
+    public enemyPaddle: PongPaddle;
+
+    public debugMessages: Array<String> = [];
 
     public setUpGameComms() {
         this.server.onmessage = this.handleIncomingMessage.bind(this);
-        this.server.send(JSON.stringify({ startGame: true }));
     }
 
     public handleIncomingMessage(event: MessageEvent) {
-        var data = JSON.parse(event.data);
+        var data = <SocketGameResponse> JSON.parse(event.data);
         if (!this.hasStarted && data.startTickingNow) {
-
+            this.startedTime = data.startTime;
             this.myInstanceId = data.assignedInstanceId;
             for (var i = 0; i < data.deltaObjects.length; i++) {
                 let object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
-                if (object.entityID == 0) { //todo make an enum. 0 = ball, 1 = paddle
+                if (object.ENTITY_TYPE_ID == 0) { //todo make an enum. 0 = ball, 1 = paddle
                     this.ballLocation = { x: object.x, y: object.y };
                     this.ballXVector = object.xVector;
                     this.ballYVector = object.yVector;
-                    this.ballSpeed = object.BALL_VELOCITY;
-                    this.ballDiameter = object.BALL_DIAMETER;
+                    this.ballSpeed = (<PongBall>object).BALL_VELOCITY;
+                    this.ballDiameter = (<PongBall>object).BALL_DIAMETER;
                 }
             }
 
             for (var i = 0; i < data.deltaPlayers.length; i++) {
                 let player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
                 if (player.physicsComponent) {
-                    let paddle = new Paddle();
-                    paddle.instanceId = player.physicsComponent.GAME_INSTANCE_ID;
-                    paddle.location = { x: player.physicsComponent.x, y: player.physicsComponent.y };
-                    paddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                    paddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                    paddle.yVector = player.physicsComponent.yVector;
-
-                    if (player.physicsComponent.GAME_INSTANCE_ID == this.myInstanceId) { //it me, i'm that
+                    let paddle: PongPaddle = <PongPaddle>player.physicsComponent;
+                    if (paddle.GAME_INSTANCE_ID == this.myInstanceId) { //it me, i'm that
                         this.playerPaddle = paddle;
                     } else {
                         this.enemyPaddle = paddle;
@@ -66,39 +63,49 @@ class GameEngine {
             }
             this.hasStarted = true;
             this.game.paused = false;
-        } else {
+        } else if (this.hasStarted) {
             if (data.deltaObjects)
             for (var i = 0; i < data.deltaObjects.length; i++) {
                 let object = data.deltaObjects[i]; //should only be a ball, but we can keep it like this and do EntityID comparisons if we expand
-                if (object.entityID == 0) { //todo make an enum. 0 = ball, 1 = paddle
+                if (object.ENTITY_TYPE_ID == 0) { //todo make an enum. 0 = ball, 1 = paddle
+                    this.debugMessages.push("WHEN DIFFERENT LOCAL X: " + this.ballLocation.x + " Y: " + this.ballLocation.y + " XV: " + this.ballXVector + " YV: " + this.ballYVector);
+                    this.debugMessages.push("WHEN DIFFERENT REMOTE X: " + object.x + " Y: " + object.y + " XV: " + object.xVector + " YV: " + object.yVector);
+
                     this.ballLocation.x = object.x;
                     this.ballLocation.y = object.y;
                     this.ballXVector = object.xVector;
                     this.ballYVector = object.yVector;
-                    this.ballSpeed = object.BALL_VELOCITY;
-                    this.ballDiameter = object.BALL_DIAMETER;
-                }
+                    this.ballSpeed = (<PongBall>object).BALL_VELOCITY;
+                    this.ballDiameter = (<PongBall>object).BALL_DIAMETER;
+
+
+                } 
             }
             if(data.deltaPlayers)
             for (var i = 0; i < data.deltaPlayers.length; i++) {
                 let player = data.deltaPlayers[i]; //probably only 2, but maybe spectators?
                 if (player.physicsComponent) {
-                    if (player.physicsComponent.GAME_INSTANCE_ID == this.playerPaddle.instanceId) {
-                        this.playerPaddle.location.x = player.physicsComponent.x;
-                        this.playerPaddle.location.y = player.physicsComponent.y;
-                        this.playerPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                        this.playerPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                        this.playerPaddle.yVector = player.physicsComponent.yVector;
-                    } else if (player.physicsComponent.GAME_INSTANCE_ID == this.enemyPaddle.instanceId) {
-                        this.enemyPaddle.location.x = player.physicsComponent.x;
-                        this.enemyPaddle.location.y = player.physicsComponent.y;
-                        this.enemyPaddle.paddleSpeed = player.physicsComponent.PADDLE_VELOCITY;
-                        this.enemyPaddle.PADDLE_LENGTH = player.physicsComponent.PADDLE_HEIGHT;
-                        this.enemyPaddle.yVector = player.physicsComponent.yVector;
+                    let paddle: PongPaddle = <PongPaddle>player.physicsComponent;
+                    if (paddle.GAME_INSTANCE_ID == this.playerPaddle.GAME_INSTANCE_ID) { //it me, i'm that
+                        this.playerPaddle.y = paddle.y;
+                        this.playerPaddle.PADDLE_VELOCITY = paddle.PADDLE_VELOCITY;
+                        this.playerPaddle.PADDLE_HEIGHT = paddle.PADDLE_HEIGHT;
+                        this.playerPaddle.yVector = paddle.yVector;
+                    } else {
+                        this.enemyPaddle.y = paddle.y;
+                        this.enemyPaddle.PADDLE_VELOCITY = paddle.PADDLE_VELOCITY;
+                        this.enemyPaddle.PADDLE_HEIGHT = paddle.PADDLE_HEIGHT;
+                        this.enemyPaddle.yVector = paddle.yVector;
                     }
                 }
             }
         }
+
+        if (data.gameOver) {
+            alert("Goodbye");
+        }
+
+        this.text.setText("" + (data.currentTime/1000 - this.startedTime/1000));
     }
 
     public static RIGHT_X : number = 150;
@@ -114,12 +121,15 @@ class GameEngine {
     public ballSpeed: number = 1;
     public ballDiameter: number = 1;
 
-
     //player data
     public playerSprite: Phaser.Sprite;
 
     //enemy data
     public enemySprite: Phaser.Sprite;
+
+    public text: Phaser.Text;
+    public startedTime: number;
+    public spaceBar = false;
 
     public keyboard: Phaser.Keyboard;
     public mouse: Phaser.Mouse;
@@ -131,6 +141,7 @@ class GameEngine {
     }
 
     public upCallback(key: Phaser.Key) {
+        if (this.hasStarted)
         if (key.isDown) {
             this.playerPaddle.yVector = 1;
         } else {
@@ -139,6 +150,7 @@ class GameEngine {
     }
 
     public downCallback(key: Phaser.Key) {
+        if (this.hasStarted)
         if (key.isDown) {
             this.playerPaddle.yVector = -1;
         } else {
@@ -152,10 +164,18 @@ class GameEngine {
             if (this.playerPaddle.yVector == 1) {
                 cmds.push("W");
             }
-
             if (this.playerPaddle.yVector == -1) {
                 cmds.push("S");
             }
+            if (this.playerPaddle.yVector == 0) {
+                cmds.push("WS");
+            }
+
+            if (this.spaceBar) {
+                this.spaceBar = false;
+                cmds.push(" ");
+            }
+
             if (cmds.length > 0)
                 this.server.send(JSON.stringify({ commands: cmds }));
         }
@@ -167,8 +187,9 @@ class GameEngine {
     }
 
     public moveBall(elapsedMS: number) {
-        this.ballLocation.x += elapsedMS * this.ballXVector * this.ballSpeed;
-        this.ballLocation.y += elapsedMS * this.ballYVector * this.ballSpeed;
+        this.ballLocation.x += (elapsedMS * this.ballXVector * this.ballSpeed);
+        this.ballLocation.y += (elapsedMS * this.ballYVector * this.ballSpeed);
+      
         var screenLoc = this.unitsToPixels(this.ballLocation);
         this.ballSprite.x = screenLoc.x;
         this.ballSprite.y = screenLoc.y;
@@ -176,6 +197,8 @@ class GameEngine {
         if (this.ballLocation.y <= GameEngine.BOTTOM_Y || this.ballLocation.y >= GameEngine.TOP_Y) {
             this.ballYVector = this.ballYVector * -1;
         }
+
+        this.debugMessages.push("X: " + this.ballLocation.x + " Y: " + this.ballLocation.y + " XV: " + this.ballXVector + " YV: " + this.ballYVector)
 
         //if (this.ballLocation.x <= GameEngine.LEFT_X || this.ballLocation.x >= GameEngine.RIGHT_X) {
         //    if ((this.ballLocation.y > this.playerPaddle.location.y - GameEngine.PADDLE_LENGTH / 2 &&
@@ -192,9 +215,8 @@ class GameEngine {
     }
 
     public movePaddles(elapsedMS: number) {
-        this.playerPaddle.location.y -= this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
-        this.playerPaddle.location.y += this.playerPaddle.paddleSpeed * this.playerPaddle.yVector * elapsedMS;
-        this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.location.y);
+        this.playerPaddle.y += this.playerPaddle.yVector * this.playerPaddle.PADDLE_VELOCITY * elapsedMS;
+        this.playerSprite.y = this.unitsToPixelsY(this.playerPaddle.y);
     };
 
     public unitsToPixels(coordinate: Point) {
@@ -225,6 +247,7 @@ class GameEngine {
         game.stage.backgroundColor = "#888";
         PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.W, this.upCallback, this);
         PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.S, this.downCallback, this);
+        PlayerCommandHandler.createSingleMapping(game.input.keyboard, Phaser.Keyboard.SPACEBAR, () => { this.spaceBar = true; }, this);
 
 
         this.playerSprite = game.add.sprite(0, 0, 'paddle');
@@ -246,16 +269,12 @@ class GameEngine {
         if (!this.hasStarted) {
             game.paused = true;
         }
+        this.text = game.add.text(350, 400, "Your score:", {
+            font: "15px Arial", align: "center"
+        });
+        this.text.anchor.set(0.5);
+
     }
-}
-
-class Paddle {
-    public location: Point;
-    public PADDLE_LENGTH: number = 12;//units, not pixels
-
-    public paddleSpeed: number = 0.025; //25 units per sec (top to bottom in 4 seconds)
-    public yVector: number = 0;
-    public instanceId: number = -1;
 }
 
 class Point {
