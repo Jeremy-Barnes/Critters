@@ -166,6 +166,7 @@ export class GamesComponent implements OnInit {
             alert("welcome to the party");
             self.gameWebsocketConnection = new WebSocket("ws://localhost:8080/api/session/" + self.app.secureID)
             this.createSocketOnMessage(self.gameWebsocketConnection);
+            this.startGame();
         }).fail(() => { alert("you were rejected"); });
     }
 

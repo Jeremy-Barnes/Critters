@@ -40,6 +40,7 @@
 export class Player {
     user: User;
     physicsComponent: GameObject;
+    score: number;
 }
 
 export class GameObject {
