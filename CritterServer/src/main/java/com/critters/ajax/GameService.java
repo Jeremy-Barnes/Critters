@@ -1,7 +1,10 @@
 package com.critters.ajax;
 
+import com.critters.Utilities.Serializer;
 import com.critters.dal.dto.AuthToken;
+import com.critters.dal.dto.GamesInfo;
 import com.critters.dal.dto.entity.User;
+import com.critters.games.GameController;
 import com.critters.games.sockets.SocketManager;
 
 import javax.ws.rs.GET;
@@ -39,7 +42,10 @@ public class GameService extends AjaxService {
 	@Path("/getAllActiveGames/{gameType}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllActiveGames(@PathParam("gameType") int gameType) {
-		return Response.status(200).entity(SocketManager.findAllGames(gameType)).build();
+		com.critters.dal.dto.GamesInfo g = new GamesInfo();
+		g.runningGames = SocketManager.findAllGames(gameType).toArray(new GameController[0]);
+		String g2 = Serializer.toJSON(false, g, GamesInfo.class);
+		return Response.status(200).entity(g).build();
 	}
 
 	@GET

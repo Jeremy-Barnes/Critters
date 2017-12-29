@@ -4,6 +4,7 @@ import com.critters.games.pong.PongBall;
 import com.critters.games.pong.PongPaddle;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Created by Jeremy on 7/22/2017.
@@ -18,10 +19,16 @@ public abstract class GameObject {
 	public float zVector;
 	public boolean needsUpdate;
 
+	@XmlTransient public float clientNextX;
+	@XmlTransient public float clientNextY;
+	@XmlTransient public float clientNextZ;
+
+
 	public int GAME_INSTANCE_ID = -1;
 	public int ENTITY_TYPE_ID;
 
 	public void setEntityID(int id) {
+		ENTITY_TYPE_ID = id;
 	}
 
 

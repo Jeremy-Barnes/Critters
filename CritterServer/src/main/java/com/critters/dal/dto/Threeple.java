@@ -13,4 +13,8 @@ public class Threeple<X, Y, Z> {
 		this.y = y;
 		this.z = z;
 	}
+
+	public Threeple() {
+
+	}
 }

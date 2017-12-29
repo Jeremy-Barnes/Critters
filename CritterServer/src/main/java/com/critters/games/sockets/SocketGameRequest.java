@@ -1,5 +1,7 @@
 package com.critters.games.sockets;
 
+import com.critters.games.GameObject;
+
 import java.util.List;
 
 /**
@@ -20,6 +22,10 @@ public class SocketGameRequest {
 	public boolean leaveLobby;
 	/*** Movement components ***/
 	public  String[] commands;
+	public GameObject clientState;
+	public boolean ping;
 
+	public String notificationID;
+	public boolean notificationResponse;
 	//todo figure out how to transmit game data
 }

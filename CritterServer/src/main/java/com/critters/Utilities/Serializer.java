@@ -26,7 +26,7 @@ public class Serializer {
 			marshaller.marshal(object, sw);
 			return sw.toString();
 		} catch(Exception e){
-			return "failed to serialize!";
+			return "failed to serialize!" + e.getMessage();
 		}
 	}
 

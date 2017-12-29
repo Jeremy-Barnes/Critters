@@ -11,4 +11,8 @@ public class Twople<X, Y> {
 		this.x = x;
 		this.y = y;
 	}
+
+	public Twople() {
+
+	}
 }
