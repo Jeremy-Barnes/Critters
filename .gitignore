@@ -385,6 +385,11 @@ buildNumber.properties
 */CritterClient/games/*/*.js
 */CritterClient/games/*/*.js.map
 
+*/CritterPhaser/games/*.js
+*/CritterPhaser/games/*.js.map
+*/CritterPhaser/games/*/*.js
+*/CritterPhaser/games/*/*.js.map
+
 .metadata
 bin/
 tmp/
