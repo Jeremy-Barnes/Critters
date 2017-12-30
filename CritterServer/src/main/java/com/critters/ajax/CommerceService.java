@@ -150,8 +150,13 @@ public class CommerceService extends AjaxService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response viewStore(@PathParam("id") int id) {
 		try {
-			Store copiedStore = super.serializeDeepCopy(CommerceBLL.getStore(id), Store.class);
-			return Response.status(Response.Status.OK).entity(copiedStore).build();
+			Store retrievedStore = CommerceBLL.getStore(id);
+			if(retrievedStore != null) {
+				Store copiedStore = super.serializeDeepCopy(retrievedStore, Store.class);
+				return Response.status(Response.Status.OK).entity(copiedStore).build();
+			} else {
+				return Response.status(Response.Status.NOT_FOUND).build();
+			}
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
