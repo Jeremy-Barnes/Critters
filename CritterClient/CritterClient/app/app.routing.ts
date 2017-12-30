@@ -14,6 +14,8 @@ import { InventoryComponent } from './components/inventory.component';
 import { GamesComponent } from './components/games.component';
 import { StoreComponent } from './components/store.component';
 import { SearchResultsComponent } from './components/searchresults.component';
+import { StoreConfigComponent } from './components/storeconfig.component';
+
 
 
 const appRoutes: Routes = [
@@ -69,6 +71,14 @@ const appRoutes: Routes = [
     {
         path: 'store/:id',
         component: StoreComponent
+    }, 
+    {
+        path: 'storeconfig/:id',
+        component: StoreConfigComponent
+    },
+    {
+        path: 'storeconfig',
+        component: StoreConfigComponent
     },
     {
         path: 'search/:searchTerm',

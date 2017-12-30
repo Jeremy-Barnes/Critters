@@ -159,6 +159,14 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("purchaseInventoryItemFromStore", "commerce", request);
     }
 
+    public static createStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("createStore", "commerce", { store: store, backgroundImage: background, clerkImage: clerk });
+    }
+
+    public static editStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("editStore", "commerce", { store: store, backgroundImage: background, clerkImage: clerk });
+    }
+
     /************** Chat Stuff **************/
     public static sendMessage(request: Message): JQueryPromise<Message> {
         return ServiceMethods.doAjax("sendMessage", "chat", request);
@@ -203,6 +211,10 @@ export class ServiceMethods {
 
     public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
+    }
+
+    public static moveInventoryItemFromStore(user: User, items: Item[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("removeInventoryItemFromStore", "commerce", { user: user, items: items });
     }
 
     public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {

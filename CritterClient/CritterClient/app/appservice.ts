@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest, StoreClerkImageOption, StoreBackgroundImageOption } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -283,6 +283,27 @@ export class Application {
         });
     }
 
+    public static moveItemsFromStore(items: Item[], containingGroup: InventoryGrouping) {
+        var app = Application.getApp();
+        return ServiceMethods.moveInventoryItemFromStore(this.getApp().user, items).done(() => {
+            items.forEach(i => {
+                i.ownerId = app.user.userID;
+                i.price = null;
+                i.containingStoreId = null;
+                containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
+            });
+
+            if (app.inventory && app.inventory.length > 0)
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            }
+        });
+    }
+
     public static moveItemsToGarbage(items: Item[], containingGroup: InventoryGrouping): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.discardInventoryItems(this.getApp().user, items).done((i: InventoryGrouping[]) => {
             items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
@@ -342,22 +363,45 @@ export class Application {
         return ServiceMethods.purchaseInventoryItemFromStore({
             user: app.user, items: items
         }).done(() => {
+
+            var totalCost = 0;
             items.forEach(i => {
+                totalCost += i.price
                 i.ownerId = app.user.userID;
                 i.price = null;
                 i.containingStoreId = null;
                 containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
             });
+            app.user.critterbuxx -= totalCost;
+
             if (app.inventory && app.inventory.length > 0)
                 app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else 
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
             if (containingGroup.inventoryItemsGrouped.length > 0) {
                 containingGroup.inventoryItemsGrouped[0].description = items[0].description;
             } else {
                 sellerStore.storeStock.splice(sellerStore.storeStock.indexOf(containingGroup), 1);
             }
-            var totalCost = 0;
-            items.forEach(i => totalCost += i.price);
-            app.user.critterbuxx -= totalCost;
+
         });
     }
+
+    public static createStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.createStore(store, background, clerk);
+    }
+
+    public static editStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.editStore(store, background, clerk);
+    }
+
+    public static getClerkImageOptions() {
+        return ServiceMethods.getShopkeeperImageOptions();
+    }
+
+    public static getBackgroundImageOptions() {
+        return ServiceMethods.getStoreBackgroundOptions();
+    }
+
 }

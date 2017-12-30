@@ -59,7 +59,7 @@
                         </div>
                         <div class="sortBoxHolder inlineblock">
                             <p>&nbsp;</p>
-                            <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+                            <select name="itemSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                                 <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                             </select>
                         </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="sortBoxHolder inlineblock">
                 <p>&nbsp;</p>
-                <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+                <select name="itemSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
             </div>

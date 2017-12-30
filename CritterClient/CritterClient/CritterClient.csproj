@@ -81,6 +81,7 @@
     <Content Include="package.json" />
     <Content Include="templates\games.template.htm" />
     <Content Include="templates\searchresults.template.htm" />
+    <Content Include="templates\storeconfig.template.htm" />
     <Content Include="templates\store.template.htm" />
     <Content Include="templates\inventory.template.htm" />
     <Content Include="templates\error.template.htm" />
@@ -113,6 +114,7 @@
     <TypeScriptCompile Include="app\components\inventory.component.ts" />
     <TypeScriptCompile Include="app\components\messages.component.ts" />
     <TypeScriptCompile Include="app\components\spinner.component.ts" />
+    <TypeScriptCompile Include="app\components\storeconfig.component.ts" />
     <TypeScriptCompile Include="app\components\store.component.ts" />
     <TypeScriptCompile Include="app\components\userprofile.component.ts" />
     <TypeScriptCompile Include="app\components\dashboard.component.ts" />
