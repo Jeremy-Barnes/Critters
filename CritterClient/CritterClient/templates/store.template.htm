@@ -7,7 +7,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid container-maxWidth">
     <!----------------------DETAIL VIEW------------------>
     <div id="viewItemDetail" class="modal fade" role="dialog">
         <div class="modal-dialog modal-md" role="document">
@@ -41,7 +41,7 @@
 
 
     <!----------------------MAIN VIEW------------------>
-    <div id="mainView">
+    <div id="shopsMainView">
         <div [ngStyle]="{'background-image': 'url(' + viewStore.storeBackgroundImagePath + ')'}" class="row shopTitle">
             <div class="col-xs-12 col-md-4"> 
                 <div class="imgCenterer">
@@ -59,7 +59,7 @@
                         </div>
                         <div class="sortBoxHolder inlineblock">
                             <p>&nbsp;</p>
-                            <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+                            <select name="itemSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                                 <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                             </select>
                         </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="sortBoxHolder inlineblock">
                 <p>&nbsp;</p>
-                <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
+                <select name="itemSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
             </div>

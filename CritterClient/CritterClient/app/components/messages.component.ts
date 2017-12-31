@@ -1,7 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { User, Notification, Message, Conversation, Friendship } from '../dtos'
+import { User, Notification, Message, Conversation, Friendship, SearchResponse } from '../dtos'
 import {Application} from "../appservice"
 
 @Component({
@@ -22,15 +22,18 @@ export class MessageComponent implements OnInit {
     selectedMessages: Message[] = [];
     pendingFriendRequests: Friendship[];
     outstandingFriendRequests: Friendship[];
-
+    friends: Friendship[];
+    tab: number = 0;
+    loadingTabs = false;
     constructor(private route: ActivatedRoute) {
         Application.getMailbox();
         this.user = this.app.user;
+        this.friends = this.app.friends;
+        this.pendingFriendRequests = this.app.pendingFriendRequests;
+        this.outstandingFriendRequests = this.app.outstandingFriendRequests;
         this.alerts = this.app.alerts;
         this.messages = this.app.inbox;
         this.sentMessages = this.app.sentbox;
-        this.pendingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requested.userID == this.user.userID);
-        this.outstandingFriendRequests = this.user.friends.filter(f => !f.accepted && f.requester.userID == this.user.userID);
     }
 
     ngOnInit() {
@@ -64,20 +67,40 @@ export class MessageComponent implements OnInit {
         return conversation.messages.filter(m => !m.read && m.recipient.userID == this.user.userID).length > 0
     }
 
-    returnToOverview() {
-        this.activeConversation = null;
-        this.replyMessage = null;
-        this.newMessage = null;
+    returnToOverview(tab: number) {
+        if(this.newMessage && this.newMessage.messageText != null && this.newMessage.messageText.length > 0) {
+            var self = this;
+            Application.getApp().showDialogCallback("Are you sure?", "You are about to discard your message - your message will be lost if you continue.", null, null, "Cancel").done((okay: boolean) => {
+                if (okay) {
+                    this.activeConversation = null;
+                    this.cancelMessage();
+                    this.tab = tab;
+                }
+            });
+        } else {
+            this.activeConversation = null;
+		    this.cancelMessage();
+            this.tab = tab;
+        }
     }
 
     cancelReply() {
-        this.replyMessage = null;
-        this.cancelCompose();
+        this.cancelMessage();
     }
+	
+	cancelMessage(){
+		this.replyMessage = null;
+		this.newMessage = null;
+		this.composeToFriend = null;
+	}
 
     cancelCompose() {
-        this.newMessage = null;
+        this.loadingTabs = true;
+        this.cancelMessage();
+        var tabname = this.tab == 0 ? "inbox" : this.tab == 1 ? "sent" : "friends";
+        (<any>$("#messageTabs a[href=\"#" + tabname + "\"]")).tab('show'); //I'm not happy about this either.
     }
+
 
     deleteConversation(messages: Message[]) {
         alert("this one doesn't work yet, make the server op for it, dummy");
@@ -150,6 +173,22 @@ export class MessageComponent implements OnInit {
         Application.cancelFriendRequest(friendRequest);
     }
 
+    toggleHideMessage(message: Message) {
+        if (message.collapsed) { //not just doing c = !c because not sure how null/undefined reacts with that.
+            message.collapsed = false;
+        } else {
+            message.collapsed = true;
+        }
+    }
+
+    writeMessage(friend: Friendship) {
+        var toUser = friend.requested.userID == this.user.userID ? friend.requester : friend.requested;
+        this.composeNewMessage();
+        this.onItemSelected({
+            resultText: toUser.userName + (toUser.firstName + (toUser.lastName.length > 0 ? " " : "") + toUser.lastName), resultData: toUser
+        });
+    }
+
     public searchFriends(searchTerm: string) {
         return new Promise((resolve) => {
             resolve(Application.searchFriends(searchTerm));
@@ -158,14 +197,14 @@ export class MessageComponent implements OnInit {
 
     public searchUsers(searchTerm: string) {
         return new Promise((resolve) => {
-            Application.searchUsers(searchTerm).done((results: User[]) => {
+            Application.searchUsers(searchTerm).done((results: SearchResponse) => {
                 var resultsForDisplay: { resultText: string, resultData: User }[] = [];
-                for (var i = 0; i < results.length; i++) {
-                    var resultData = results[i];
-
-                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
-                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
-                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                for (var i = 0; i < results.users.length; i++) {
+                    var resultData = results.users[i];
+                    resultData = $.extend(new User(), resultData);
+                    let resultText = resultData.userName;
+                    let nameString = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") + resultData.lastName;
+                    resultText += (nameString.length > 0 ? " (" + nameString + ")" : "");
                     resultsForDisplay.push({ resultText, resultData });
                 }
                 resolve(resultsForDisplay);
@@ -180,4 +219,9 @@ export class MessageComponent implements OnInit {
     public deselctComposeFriend() {
         this.composeToFriend = null;
     }
+
+    public selectFriendship($event: any, friend: Friendship) {
+        alert(friend.dateSent);
+    }
+
 }

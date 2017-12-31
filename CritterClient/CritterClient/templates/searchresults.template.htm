@@ -1,0 +1,54 @@
+﻿<div class="container-fluid">
+    <div class="page-title">
+            <h1>Search</h1>
+    </div>
+</div>
+
+<div class="container-fluid container-maxWidth">
+    <!----------------------MAIN VIEW------------------>
+    <div id="searchMainView"> 
+        <b>Search results for '{{searchString}}'</b>
+        <div class="row">
+            <div class="col-md-12 centered" *ngIf="!completed && (!userResults || !userResults.length)">
+                Searching, please hold.
+                <div class="cssload-container">
+                    <div class="cssload-circle-1">
+                        <div class="cssload-circle-2">
+                            <div class="cssload-circle-3">
+                                <div class="cssload-circle-4">
+                                    <div class="cssload-circle-5">
+                                        <div class="cssload-circle-6">
+                                            <div class="cssload-circle-7">
+                                                <div class="cssload-circle-8">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 centered" *ngIf="completed && (!userResults || !userResults.length)">
+                No results found!            
+            </div>
+            <div class="col-md-3" *ngFor="let result of userResults; let i = index">
+                <div class="card" (click)="selectResult(result)" >
+                    <div class="cardHeader"><i class="fa fa-user" aria-hidden="true"></i> user</div>
+                    <div class="centered">
+                        <img class="userThumb" src="{{result.userImagePath}}" />
+                        <div class="itemTitle centered">
+                            {{result.userName}} <br />
+                        </div>
+                        <div>
+                            <p>{{result.firstName}} {{result.lastName}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -7,7 +7,7 @@
                         <div class="card bg-white profileCard">
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <img src="/img/horrible clion.png" class="userThumb userThumbLg" />
+                                    <img src="{{viewUser.userImagePath}}" class="userThumb userThumbLg" />
                                     <h1>{{viewUser.userName}}</h1>
                                     <h3>{{viewUser.firstName}} {{viewUser.lastName}}</h3>
                                     <hr />
@@ -37,12 +37,70 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-lg-3" *ngFor="let loopPet of viewUser.pets">
+        <div class="col-sm-6 col-lg-3" *ngFor="let loopPet of viewUser.pets">
             <div class="card petCard" (click)="selectGame(game)">
-                <img src="{{loopPet.petSpecies.imagePathWithoutModifiers}}">
+                <img src="../img/pets/{{loopPet.petSpecies.petTypeName}}_{{loopPet.petColor.petColorName}}.png">
                 <p><strong>{{loopPet.petName}}</strong><br />
                 the {{loopPet.petColor.petColorName}} {{loopPet.petSpecies.petTypeName}}</p>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card trophyCase">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2>Trophy Case</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                            <!-- TODO: make this a real thing-->
+                            <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                            <p>
+                                <strong>Game Name</strong><br />
+                                First Place
+                            </p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                        <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                        <p>
+                            <strong>Game Name</strong><br />
+                            First Place
+                        </p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                        <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                        <p>
+                            <strong>Game Name</strong><br />
+                            First Place
+                        </p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                        <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                        <p>
+                            <strong>Game Name</strong><br />
+                            First Place
+                        </p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                        <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                        <p>
+                            <strong>Game Name</strong><br />
+                            First Place
+                        </p>
+                    </div>
+                    <div class="col-xs-6 col-md-4 col-lg-2 text-center trophyCard">
+                        <img src="https://14208-presscdn-0-76-pagely.netdna-ssl.com/wp-content/uploads/2015/03/animated-trophy.gif" class="card">
+                        <p>
+                            <strong>Game Name</strong><br />
+                            First Place
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>

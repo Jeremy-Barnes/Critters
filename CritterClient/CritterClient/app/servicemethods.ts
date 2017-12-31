@@ -1,9 +1,11 @@
 ﻿﻿/// <reference path="../Libraries/typings/jquery/jquery.d.ts" />
 /// <reference path="../Libraries/typings/jqueryui/jqueryui.d.ts" />
-import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest } from './dtos'
+import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, MessageRequest, ItemRequest,
+    StoreBackgroundImageOption, StoreClerkImageOption, UserImageOption, SearchResponse} from './dtos'
+import {Application} from "./appservice"
 
 export class ServiceMethods {
-    static baseURL: string = "http://7a0fb046.ngrok.io/api/critters/";//"http://localhost:8080/api/critters/";
+    static baseURL: string = "http://localhost:8080/api/critters/";
     static selectorValidator: string[];
     static jsessionID: string = null;
 
@@ -33,6 +35,7 @@ export class ServiceMethods {
                     ServiceMethods.jsessionID = args.getResponseHeader("JSESSIONID");
                 }
             },
+            error: Application.handleServerError,
             data: type == "POST" ? param : "",
             crossDomain: true,
         };
@@ -94,7 +97,7 @@ export class ServiceMethods {
 
     /************** Meta Stuff **************/
 
-    public static searchUsers(searchTerm: string): JQueryPromise<User[]> {
+    public static searchUsers(searchTerm: string): JQueryPromise<SearchResponse> {
         return ServiceMethods.doAjax("searchUsers", "meta", searchTerm, "GET");
     }
 
@@ -110,13 +113,58 @@ export class ServiceMethods {
         return ServiceMethods.doAjax("checkEmail", "meta", searchTerm, "GET");
     }
 
+    public static getShopkeeperImageOptions(): JQueryPromise<StoreClerkImageOption[]> {
+        return ServiceMethods.doAjax("getShopkeeperImageOptions", "meta", "", "GET");
+    }
+
+    public static getUserImageOptions(): JQueryPromise<UserImageOption[]> {
+        return ServiceMethods.doAjax("getUserImageOptions", "meta", "", "GET");
+    }
+
+    public static getStoreBackgroundOptions(): JQueryPromise<StoreBackgroundImageOption[]> {
+        return ServiceMethods.doAjax("getStoreBackgroundOptions", "meta", "", "GET");
+    }
+
+    /************** Game Stuff **************/
     public static getGames(): JQueryPromise<GamesInfo> {
         return ServiceMethods.doAjax("getGames", "meta", "", "GET");
+    }
+
+    public static getSecureID(): JQueryPromise<{ selector: string }> {
+        return ServiceMethods.doAjax("getSecureID", "games", "", "GET");
+    }
+
+    public static getUsernameGames(gameType: number, userName: string): JQueryPromise<string> {
+        return ServiceMethods.doAjax("findUserNameGames", "games", gameType+"/"+userName, "GET");
+    }
+
+    public static getActiveGamesOfType(gameType: number): JQueryPromise<Array<any>> {
+        return ServiceMethods.doAjax("getAllActiveGames", "games", gameType, "GET");
+    }
+
+    public static openGameServer(gameType: number, clientID: string, gameName: string): JQueryPromise<string> {
+        return ServiceMethods.doAjax("openGameServer", "games", gameType + "/" + clientID + "/" + gameName, "GET");
+    }
+
+    public static connectToGameServer(gameID: string, clientID: string): JQueryPromise<string> {
+        return ServiceMethods.doAjax("connectToGameServer", "games", gameID + "/" + clientID, "GET");
     }
 
     /************** Store Stuff **************/
     public static getStorefront(storeId: number): JQueryPromise<Store> {
         return ServiceMethods.doAjax("getStorefront", "commerce", storeId, "GET");
+    }
+
+    public static purchaseInventoryItemFromStore(request: ItemRequest): JQueryPromise<void> {
+        return ServiceMethods.doAjax("purchaseInventoryItemFromStore", "commerce", request);
+    }
+
+    public static createStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("createStore", "commerce", { store: store, backgroundImage: background, clerkImage: clerk });
+    }
+
+    public static editStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption): JQueryPromise<Store> {
+        return ServiceMethods.doAjax("editStore", "commerce", { store: store, backgroundImage: background, clerkImage: clerk });
     }
 
     /************** Chat Stuff **************/
@@ -163,6 +211,10 @@ export class ServiceMethods {
 
     public static moveInventoryItemToStore(user: User, items: Item[]): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("moveInventoryItemToStore", "commerce", { user: user, items: items });
+    }
+
+    public static moveInventoryItemFromStore(user: User, items: Item[]): JQueryPromise<void> {
+        return ServiceMethods.doAjax("removeInventoryItemFromStore", "commerce", { user: user, items: items });
     }
 
     public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {

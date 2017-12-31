@@ -22,6 +22,9 @@ import { GamesComponent} from './components/games.component'
 import { LimitToPipe } from './limitto.pipe'
 import { Spinner } from './components/spinner.component'
 import { StoreComponent } from './components/store.component'
+import { StoreConfigComponent } from './components/storeconfig.component'
+import { ConfirmDialogComponent } from './components/confirmdialog.component'
+import { SearchResultsComponent } from './components/searchresults.component'
 
 
 @NgModule({
@@ -32,7 +35,7 @@ import { StoreComponent } from './components/store.component'
     ],
     declarations: [LoginComponent, AccountFormComponent, AppComponent, AccountCreateBasicInfoComponent,
         AccountCreateDetailsComponent, AccountCreatePetComponent, CreatePetComponent, DashboardComponent,
-        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner, StoreComponent],
+        UserProfileComponent, MessageComponent, AutocompleteList, ErrorComponent, InventoryComponent, GamesComponent, LimitToPipe, Spinner, StoreComponent, ConfirmDialogComponent, SearchResultsComponent, StoreConfigComponent],
     bootstrap: [AppComponent],
     providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
 

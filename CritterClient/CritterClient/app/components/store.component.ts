@@ -31,8 +31,6 @@ export class StoreComponent implements OnInit {
     sorts: { id: number, text: string }[] = [{ id: 1, text: "Name (A-Z)" }, { id: 2, text: "Name (Z-A)" }, { id: 3, text: "Quantity (High-Low)" }, { id: 4, text: "Quantity (Low-High)" },
         { id: 5, text: "Rarity (High-Low)" }, { id: 6, text: "Rarity (Low-High)" }, { id: 7, text: "Group by type" }]
     activeSortBy: { id: number, text: string } = null;
-    private defaultActions = [{ id: 0, text: "Move to Shop" }, { id: 1, text: "Discard Item" }]
-    private contextActions = [{ id: 2, classes: [1], text: "Feed to Pet" }, { id: 3, classes: [4], text: "Equip to Pet" }, { id: 4, classes: [2], text: "Play with toy" }]
 
     constructor(private route: ActivatedRoute) {
         var self = this;
@@ -62,8 +60,9 @@ export class StoreComponent implements OnInit {
     }
 
     increment() {
-        if (this.selectedQuantity < this.activeItem.inventoryItemsGrouped.length)
-        this.selectedQuantity = this.selectedQuantity + 1;
+        if(this.selectedQuantity < this.activeItem.inventoryItemsGrouped.length && this.user.critterbuxx >= (this.selectedQuantity + 1) * this.activeItem.inventoryItemsGrouped[0].price) {
+            this.selectedQuantity = this.selectedQuantity + 1;
+        }
     }
 
     decrement() {
@@ -83,12 +82,10 @@ export class StoreComponent implements OnInit {
             } else {
                 items = this.activeItem.inventoryItemsGrouped.slice(0, this.selectedQuantity);
             }
-            var promise: any;
-           // promise = Application.buyItems(items, this.activeItem);
-            this.statusText = this.selectedQuantity + " " + items[0].description.itemName + (this.selectedQuantity == 1 ? " " : "s ") + "discarded!";
+            this.statusText = this.selectedQuantity + " " + items[0].description.itemName + (this.selectedQuantity == 1 ? " " : "s ") + "purchased!";
             
             var self = this;
-            promise.done((group: InventoryGrouping) => {
+            Application.purchaseItems(items, this.activeItem, this.viewStore).done(() => {
                 self.actionCompleted = true;
             });
         }

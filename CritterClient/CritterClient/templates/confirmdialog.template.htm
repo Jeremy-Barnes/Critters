@@ -1,0 +1,23 @@
+<div class="container-fluid container-maxWidth">
+    <div id="confirmDialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" (click)="respond(false)" class="close" data-dismiss="modal"><span class="fa fa-times" style="font-size:16px;"></span></button>
+                    <h1 class="text-center">{{note.title}}</h1>
+                </div>
+                <form class="modal-body" #loginForm="ngForm">
+                    <p *ngIf="body">{{note.body}}</p>
+                    <div *ngIf="customBodyHTML" [innerHTML]="customBodyHTML"></div>
+                    <div class="centered text-center">
+                        <button *ngIf="note.dangerButtonText" style="" class="btn btn-danger" (click)="respond(false)"> {{note.dangerButtonText}} </button>
+                        <button *ngIf="!note.dangerButtonText" style="" class="btn btn-primary" (click)="respond(true)"> Okay </button>
+                        <button class="btn btn-default" (click)="respond(false)"> {{note.noButtonText}} </button>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

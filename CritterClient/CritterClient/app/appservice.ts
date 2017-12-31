@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest, StoreClerkImageOption, StoreBackgroundImageOption } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -12,9 +12,14 @@ export class Application {
     public inbox: Conversation[] = [];
     public sentbox: Message[] = [];
     public inventory: InventoryGrouping[] = [];
+    public friends: Friendship[] = [];
+    public pendingFriendRequests: Friendship[] = [];
+    public outstandingFriendRequests: Friendship[] = [];
+    public secureID: string = "";
 
+    public errorCallback: (text: string) => any;
+    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string, noButtonText: string) => JQueryDeferred<boolean>;
 
-    public errorCallback: (text: string) => void;
     public static app: Application = new Application();
 
 
@@ -30,8 +35,7 @@ export class Application {
     }
 
     public static handleServerError(error: JQueryXHR) {
-        if(error.status != 500)
-            Application.getApp().errorCallback(error.responseText);
+        Application.getApp().errorCallback(error.responseText);
     }
 
     public static submitUserAccountCreationRequest(user: User, pet: Pet) : JQueryPromise<User> {
@@ -49,6 +53,10 @@ export class Application {
         });
     }
 
+    public static getUserImageOptions() {
+        return ServiceMethods.getUserImageOptions();
+    }
+
     public static submitUserAccountUpdate(user: User, image: UserImageOption): JQueryPromise<User> {
         return ServiceMethods.changeUserInformation({ user: user, pet: null, imageChoice: image });
     }
@@ -58,7 +66,8 @@ export class Application {
     }
 
     public static getPetColors() {
-        if (Application.getApp().petColors.length == 0) ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
+        if (Application.getApp().petColors.length == 0) return ServiceMethods.getPetColors().done((p: PetColor[]) => { Application.getApp().petColors.length = 0; Application.getApp().petColors.push(...p); });
+        return $.Deferred().resolve(Application.getApp().petColors);
     }
 
     public static sendFriendRequest(requestingUserID: number, requestedUserID: number) {
@@ -79,17 +88,20 @@ export class Application {
 
     public static rejectFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
         Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
+        Application.getApp().pendingFriendRequests.splice(Application.getApp().pendingFriendRequests.indexOf(friendRequest), 1);
         friendRequest.accepted = false;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
 
     public static acceptFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
+        Application.getApp().pendingFriendRequests.splice(Application.getApp().pendingFriendRequests.indexOf(friendRequest), 1);
         friendRequest.accepted = true;
         return ServiceMethods.respondToFriendRequest(friendRequest);
     }
 
     public static cancelFriendRequest(friendRequest: Friendship): JQueryPromise<void> {
         Application.getApp().user.friends.splice(Application.getApp().user.friends.indexOf(friendRequest), 1);
+        Application.getApp().outstandingFriendRequests.splice(Application.getApp().outstandingFriendRequests.indexOf(friendRequest), 1);
         return ServiceMethods.cancelFriendRequest(friendRequest);
     }
 
@@ -97,6 +109,9 @@ export class Application {
         return ServiceMethods.logIn(user).done((retUser: User) => {
             var app = Application.getApp()
             app.user.set(retUser);
+            app.pendingFriendRequests.push(...user.friends.filter(f => !f.accepted && f.requested.userID == user.userID));
+            app.outstandingFriendRequests.push(...user.friends.filter(f => !f.accepted && f.requester.userID == user.userID));
+            app.friends.push(...user.friends.filter(f => f.accepted));
             app.loggedIn = true;
             Application.startLongPolling();
             Application.getNotifications();
@@ -122,12 +137,13 @@ export class Application {
             if (messages != null && messages.length != 0) {
                 var notes: Notification[] = [];
                 for(let i = 0; i < messages.length; i++) {
-                    notes.push({ messages: [messages[i]], friendRequests: null });
+                    notes.push({ messages: [messages[i]], friendRequests: [] });
                 }
                 var user: User = Application.getApp().user;
-                var frReqs =  user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+                var frReqs = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
+
                 for(let i = 0; i < frReqs.length; i++) {
-                    notes.push({ messages: null, friendRequests: [frReqs[i]]});
+                    notes.push({ messages: [], friendRequests: [frReqs[i]]});
                 }
                 Application.getApp().alerts.push(...notes);
             }
@@ -155,9 +171,11 @@ export class Application {
                     conv.selected = false;
                     if (message.sender.userID == user.userID) {
                         sentmsgs.push(message);
-                    } else if (notReceived) { //rather than processing the whole array to find out if its already saved, track it with a boolean
+                    }
+                    if (notReceived && message.recipient.userID == user.userID) { //rather than processing the whole array to find out if its already saved, track it with a boolean
                         notReceived = false;
-                        recConvos.push(conv);
+
+                        recConvos.push({messages: conv.messages.sort((a, b) => a.dateSent > b.dateSent ? 1 : (b.dateSent > a.dateSent ? -1 : 0)), participants: conv.participants, selected: false });
                         if (message.recipient.userID == user.userID && !message.delivered) {
                             alerts.push({ messages: [message], friendRequests: null });
                         }
@@ -221,13 +239,13 @@ export class Application {
             for (var i = 0; i < app.user.friends.length; i++) {
                 var friendship = app.user.friends[i];
                 var resultData = friendship.requested.userID == app.user.userID ? friendship.requester : friendship.requested;
-
+                resultData = $.extend(new User(), resultData);
                 if (resultData.userName.toLowerCase().includes(searchTerm) ||
                     resultData.firstName.toLowerCase().includes(searchTerm) ||
                     resultData.lastName.toLowerCase().includes(searchTerm)) {
-                    let resultText = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") +
-                        (resultData.lastName != null && resultData.lastName.length > 0 ? resultData.lastName + " " : "");
-                    resultText += (resultText.length > 0 ? "| " : "") + resultData.userName;
+                    let resultText = resultData.userName;
+                    let nameString = (resultData.firstName != null && resultData.firstName.length > 0 ? resultData.firstName + " " : "") + resultData.lastName;
+                    resultText += (nameString.length > 0 ? " (" + nameString + ")" : "");
                     results.push({ resultText, resultData });
                 }
             }
@@ -235,6 +253,10 @@ export class Application {
         return results;
     }
 
+    public static search(searchString: string) {
+        return Application.searchUsers(searchString);
+    }
+    
     public static searchUsers(searchTerm: string) {
         var app = Application.getApp();
         return ServiceMethods.searchUsers(searchTerm);
@@ -261,6 +283,27 @@ export class Application {
         });
     }
 
+    public static moveItemsFromStore(items: Item[], containingGroup: InventoryGrouping) {
+        var app = Application.getApp();
+        return ServiceMethods.moveInventoryItemFromStore(this.getApp().user, items).done(() => {
+            items.forEach(i => {
+                i.ownerId = app.user.userID;
+                i.price = null;
+                i.containingStoreId = null;
+                containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
+            });
+
+            if (app.inventory && app.inventory.length > 0)
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            }
+        });
+    }
+
     public static moveItemsToGarbage(items: Item[], containingGroup: InventoryGrouping): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.discardInventoryItems(this.getApp().user, items).done((i: InventoryGrouping[]) => {
             items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
@@ -277,8 +320,14 @@ export class Application {
         return ServiceMethods.searchInventory(searchTerm);
     }
 
+    public static getStore(id: number): JQueryPromise<Store> {
+        return ServiceMethods.getStorefront(id);
+    }
+
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
+
     public static getGames(): JQueryPromise<GamesInfo> {
-        if (Application.getApp().games.length = 0) {
+        if (Application.getApp().games.length == 0) {
             return ServiceMethods.getGames().done((games: GamesInfo) => {
                 Application.getApp().games.length = 0;
                 Application.getApp().games.push(...games.games);
@@ -286,9 +335,73 @@ export class Application {
         } else return jQuery.Deferred().resolve(null);
     }
 
-    public static getStore(id: number): JQueryPromise<Store> {
-        return ServiceMethods.getStorefront(id);
+    public static getGameSecureID(): JQueryPromise<{ selector: string }> {
+        return ServiceMethods.getSecureID().done((id: { selector: string }) => {
+            Application.getApp().secureID = id.selector;
+        });
     }
 
-    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null;}
+    public static getUsernameGames(gameType: number, userName: string): JQueryPromise<string> {
+        return ServiceMethods.getUsernameGames(gameType, userName);
+    }
+
+
+    public static openGameServer(gameType: number, clientID: string, gameName: string): JQueryPromise<string> {
+        return ServiceMethods.openGameServer(gameType, clientID, gameName);
+    }
+
+    public static connectToGameServer(gameID: string, clientID: string): JQueryPromise<string> {
+        return ServiceMethods.connectToGameServer(gameID, clientID);
+    }
+
+    public static getActiveGames(gameType: number) {
+        return ServiceMethods.getActiveGamesOfType(gameType);
+    }
+
+    public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
+        var app = Application.getApp();
+        return ServiceMethods.purchaseInventoryItemFromStore({
+            user: app.user, items: items
+        }).done(() => {
+
+            var totalCost = 0;
+            items.forEach(i => {
+                totalCost += i.price
+                i.ownerId = app.user.userID;
+                i.price = null;
+                i.containingStoreId = null;
+                containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
+            });
+            app.user.critterbuxx -= totalCost;
+
+            if (app.inventory && app.inventory.length > 0)
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else 
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            } else {
+                sellerStore.storeStock.splice(sellerStore.storeStock.indexOf(containingGroup), 1);
+            }
+
+        });
+    }
+
+    public static createStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.createStore(store, background, clerk);
+    }
+
+    public static editStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.editStore(store, background, clerk);
+    }
+
+    public static getClerkImageOptions() {
+        return ServiceMethods.getShopkeeperImageOptions();
+    }
+
+    public static getBackgroundImageOptions() {
+        return ServiceMethods.getStoreBackgroundOptions();
+    }
+
 }

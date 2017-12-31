@@ -42,6 +42,7 @@
         this.friends = user.friends;
         this.pets = user.pets;
         this.isActive = user.isActive;
+        this.userImagePath = user.userImagePath;
 
     }
 
@@ -119,6 +120,7 @@ export class Message {
     read: boolean;
     delivered: boolean;
     selected: boolean = false;
+    collapsed: boolean = false;
 
 }
 
@@ -148,7 +150,7 @@ export class Item {
     ownerId: number;
     storeStock: Item[];
     description: ItemDescription;
-    price: string;
+    price: number;
     containingStoreId: number;
 }
 
@@ -182,6 +184,7 @@ export class GameThumbnail {
     gameDescription: string;
     gameIconPath: string;
     gameURL: string;
+    isMultiplayer: boolean;
     bannerImagePath: string;
     thumbnailImagePath1: string;
 	thumbnailImagePath2: string;
@@ -210,6 +213,40 @@ export class UserImageOption {
 export class SearchResponse {
     users: User[];
     items: Item[];
+}
+
+export class GameSocketResponse {
+
+    notificationBody: string;
+    notificationTitle: string;
+    notificationHTML: string;
+    noButtonText: string;
+    dangerButtonText: string;
+    notificationID: string;
+
+    startTickingNow: number;
+    assignedInstanceId: number;
+
+    /*** Game state variables ***/
+    tickNumber: number;
+
+    deltaObjects: Array<any>;
+    deltaPlayers: Array<any>;
+
+    broadCastMessage: string;
+    broadCaster: string;
+
+    ping: boolean;
+
+}
+
+export class UINotification {
+    title: string;
+    body: string;
+    customBodyHTML: string;
+    dangerButtonText: string;
+    noButtonText: string;
+    notificationID: string;
 }
 
 export interface Comparable {

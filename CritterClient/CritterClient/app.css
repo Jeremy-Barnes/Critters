@@ -33,61 +33,32 @@ body {
     }
 }
 
-/*@media all and (min-width: 768px) {
-    .container {
-        width: 490px;
-    }
-}
-
-@media all and (min-width: 992px) {
-    .container {
-        width: 710px;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .container {
-        width: 910px;
-    }
-}
-
-@media all and (min-width: 1460px) {
-    .container {
-        width: 1170px;
-    }
-}
-
-
-
-.container {
-    margin-left: 0px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
-}
-
-@media(max-width:767px) {
-    .container {
-        padding-left: 15px;
-    }
-}    */
-
 .container-fluid {
-    padding:0px !important;
+    padding: 0px;
 }
 
 .container-maxWidth {
     max-width: 1170px;
     margin-left: 0;
-    padding: 30px !important;
+    padding: 30px;
 }
 
-.row {
-    margin-bottom: 40px;
+@media (max-width: 767px) {
+    .container-maxWidth {
+        padding: 15px 10px;
+    }
 }
 
-.card .row {
-    margin-bottom: 0;
+.row + .row {
+    margin-top: 30px;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
 }
 
 .page-title > .row {
@@ -133,6 +104,10 @@ img {
     height:auto;
 }
 
+.invalidField {
+    border: 2px solid #eb5050 !important;
+}
+
 .specieRepeater {
     position: relative;
     display: inline-block;
@@ -150,16 +125,14 @@ img {
 }
 
 .specieSelect {
-    float:left ;
-    position: relative;
-    z-index: 1000;
-    transform: translateY(-70%);
+    position: absolute;
+    left: 0px;
+    top: 0px;
     width: 100%;
 }
 
 .whiteText { 
     color: white;
-
 }
 
 .framed {
@@ -171,10 +144,13 @@ img {
     border: 1px solid #acacac;
     border-radius: 5px;
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
+    padding: 30px;
 }
 
-#specialGame .card {
-    padding: 30px;
+@media (max-width: 767px) {
+    .card {
+        padding: 15px;
+    }
 }
 
 div.card16x9 {
@@ -188,20 +164,8 @@ div.card16x9 > div {
 	top: 0; bottom: 0; left: 0; right: 0;
 }
 
-
-.searchBoxHolder > input {
-    min-width: 100px !important;
-}
-
-.sortBoxHolder > select {
-    width: 100%;
-}
-
 .itemCard {
     position: relative;
-    height: 270px;
-    width: 270px;
-    padding: 20px 0px;
     text-align: center;
 }
 
@@ -210,22 +174,27 @@ div.card16x9 > div {
 }
 
 .itemCard img {
-    width: 60%;
+    width: 150px;
     margin-bottom: 15px;
 }
 
 .checkBoxPlaceholder {
-    margin-top: -12px;
-    margin-bottom: -12px;
-    margin-left: 10px;
+    margin-top: -15px;
+    margin-left: -15px;
     width: 22px;
 	height: 22px;
 	position: relative;
 }
 .itemCard .circlecheckbox {
-    margin-top: -12px;
-    margin-bottom: -12px;
-    margin-left: 10px;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
+@media (max-width: 767px) {
+    .checkBoxPlaceholder, .itemCard .circlecheckbox {
+        margin-top: 0px;
+        margin-left: 0px;
+    }
 }
 
 #viewItemDetail * {
@@ -298,7 +267,7 @@ div.card16x9 > div {
     }
 }
 @media (min-width: 993px) {
-      #mainView > .form-inline {
+      #shopsMainView > .form-inline {
         display: none;
     }
 }
@@ -323,71 +292,6 @@ div.card16x9 > div {
 }*/
 .searchBoxHolder > p {
     font-weight: bold;
-}
-
-.gameCard {
-    margin-bottom: 30px;
-    cursor: pointer;
-}
-
-.gameCard img {
-    width: 100%;
-    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
-}
-
-.gameTitle {
-    
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    background-color: rgba(0,0,0,.5);
-    color: white;
-    text-shadow: 1px 2px 4px black; 
-    text-align: right;
-    padding: 0px 20px;
-    left: 0px;
-    bottom: 0px;
-}
-
-.gameSearchBar {
-    background-color: #ebebeb;
-    padding: 30px 30px 0;
-}
-
-.gameSearchBar h2 {
-    margin-top: 6px;
-}
-
-.gameSearchBar input[type=text], .gameSearchBar select {
-    width: 66.66% !important;
-    display: inline-block;
-}
-
-.gameSearchBar .btn {
-    width: 30%;
-    display: inline-block;
-}
-
-.gameSearchBar .form-inline {
-    margin-bottom: 30px;
-}
-
-.gameTitleBackground {
-    height: 285px;
-    padding-top: 80px;
-    padding-left: 20px;
-    padding-right: 0px;
-    color: white;
-}  
-.gameTitleBackground h1 { text-shadow: 1px 2px 4px black; }
-
-.aboutGame {
-    padding: 20px 20px;
-}
-
-.aboutGame > .gameShots img{
-    width: 100%;
-    margin: 10px 0px;
 }
 
 .thumbnail {
@@ -447,12 +351,7 @@ a:hover, a:focus {color: #0F8DBA;}
     border: none;
     padding: 20px 0px;
 }
-.messageUser {
-    text-decoration: none !important;
-    font-weight: bold;
-    color: black;
-    width: 200px;
-}
+
 tr {
     border-bottom: 1px solid;
     border-color: #acacac;
@@ -474,16 +373,23 @@ table {
 .buttons button {
     margin-right: 15px;
 }
-
-.messagePreview .messageSubject, .messagePreview .messageUser {
+.messageUser {
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+    width: 200px;
+}
+.messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
     font-weight: bold;
 }
-.read {
+.read, .read > .messageSubject {
     font-weight: normal !important;
-}
-
+} 
 .inlineblock {
     display: inline-block !important;
+}
+.floatRight {
+    float: right;
 }
 .centered {
     text-align: center;
@@ -551,6 +457,10 @@ table {
     margin-right: 0px;
 }
 
+hr {
+    border-color: #acacac;
+}
+
 /*
  * Forms
  * --------------------------------------------------
@@ -590,10 +500,132 @@ select.ng-pristine {
     color: #acacac!important;
 }
 
+form .row + .row {
+    margin-top: 0;
+}
+
 /*
  * Navs
  * --------------------------------------------------
  */
+.userDropdownMoble {
+    position: relative;
+    width: 100%;
+}
+#userMenuMobile {
+    width: 100%;
+}
+.noAccountButtons {
+    margin-top: 18px;
+}
+.navBox {
+    border-left: 1px solid #0f8dba;
+    border-right: 1px solid #0f8dba;
+    height: 80px !important;
+    position: relative;
+    top: -5px;
+    padding: 30px 30px 0px 30px;
+    display: inline-block;
+}
+.navBox + .navBox {
+    right: 11px;
+}
+.navBox:nth-of-type(3) {
+    left: -6px;
+}
+#userMenu, #userMenuMobile {
+    background-color: #12a6da;
+    position: absolute;
+    right: 0px;
+    left: auto;
+    top: 100%;
+    list-style: none;
+    list-style-position:outside;
+    list-style-image: none;
+    text-align: left;
+    width: 100%;
+}
+#userMenuClickMobile {
+    padding: 0px;
+}
+.userDropdown button {
+    background: none;
+    border: none;
+    background-color: #12a6da;
+}
+.messageslink {
+    top: -1px;
+}
+.notificationCircle {
+    background: #ffae35;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    padding-bottom: 5px;
+    position: absolute;
+    top: 20%;
+    left: 60%;
+    text-align: center;
+    font-weight:bold;
+    font-size:14pt;
+    z-index: 9000;
+}
+
+.notificationCircle > * {
+    position: relative;
+    top: -10%;
+}
+
+.mobileMessagesNotifier {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+}
+.notificationCircleMobile {
+    width: 22px;
+    height: 22px;
+    top: -10px;
+    left: -15px;
+    font-size:14pt;
+    z-index: 9000;
+}
+
+.popover-repeater {
+    border-top: 1px solid #acacac;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.notification-header {
+    width: 100%;
+    text-align: center;
+    font-size: 18px; 
+    padding: 5px 0px;
+
+}
+
+.notifications-bubble {
+    border-radius: 0px;
+    width:375px;
+    margin: 0px;
+}
+@media(max-width:767px) {
+    .notifications-bubble {
+       width: 200px;
+    }
+}
+
+.popover {
+    max-width: 500px;
+    padding: 0px;
+    border-radius: 0px;
+    border: 1px solid #acacac;
+}
+
+.popover-content {
+    padding: 0px;
+}
+
 
 .navbar{
     height: 80px;
@@ -614,10 +646,6 @@ select.ng-pristine {
     padding: 24px 33px;
 }
 
-.navbar-right {
-    padding-top: 18px;
-}
-
 .optional-topbar {
     height: 50px !important;
 }
@@ -627,7 +655,72 @@ select.ng-pristine {
     float: left;
 }
 .optional-topbar > h1 {
-    margin-top: 5px;
+    margin-top: 10px;
+}
+.optional-topbar .searchHover:hover + input, 
+.optional-topbar .searchHover:focus + input, 
+.optional-topbar input:focus, .optional-topbar input:hover, 
+.optional-topbar .searchHover:active + input {
+    display: inline;
+    width:60%;
+    transition: .5s;
+    border: none;
+    border-bottom: 1px solid white;
+}
+.optional-topbar .searchHover:hover ~ h1, 
+.optional-topbar .searchHover:focus ~ h1, 
+.optional-topbar input:focus ~ h1, 
+.optional-topbar input:hover ~ h1, 
+.optional-topbar .searchHover:active ~ h1 {
+    opacity: 0;    
+    transition: .4s;
+}
+.optional-topbar h1 {
+    opacity: 1;
+    transition: .4s;
+}
+.optional-topbar input, .optional-topbar input {
+    display: inline;
+    width:0px;
+    transition: .5s;
+    position: absolute;
+    top: 15px;
+    right: 60px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+    z-index: 9999;
+}
+.optional-topbar input::-moz-placeholder {color: white;} .optional-topbar input:-ms-input-placeholder {color: white;} .optional-topbar input:-moz-placeholder {color: white;} .optional-topbar input::-webkit-input-placeholder  {color: white;}
+
+ .searchHover {
+    position: absolute;
+    top: 6px;
+    right: 50px;
+    z-index: 5000;
+    padding: 10px 10px 10px 10px;
+}
+.optional-topbar .fa-search:focus + input, 
+.optional-topbar .fa-search:hover + input, 
+.optional-topbar .fa-search:active + input, 
+.optional-topbar input:focus, 
+.optional-topbar input:hover,
+.optional-topbar input:active {
+    display: inline;
+    width:60%;
+    transition: .5s;
+    border: none;
+    border-bottom: 1px solid white;
+    z-index: 9999;
+}
+
+.optional-topbar .messageslink img {
+    width: 20px;
+}
+
+.optional-topbar .fa {
+    font-size: 15px;
 }
 
 #sidebar {
@@ -637,9 +730,10 @@ select.ng-pristine {
     background-image: url("img/print-pattern.png"), -webkit-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
     background-image: url("img/print-pattern.png"), -o-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
     background-image: url("img/print-pattern.png"), -ms-linear-gradient(top, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
-    background-image: url("img/print-pattern.png"), linear-gradient(to bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#089ed2', endColorstr='#67cd45', Grad*/ientType=0 );
+    background-image: url("img/print-pattern.png"), linear-gradient(top, bottom, rgba(8,158,210,1) 0%, rgba(103,205,69,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#089ed2', endColorstr='#67cd45', GradientType=0 );
     background-repeat: repeat;
+    color: white;
 }
 #sidebar, #sidebar-placeholder {
     width: 260px;
@@ -689,7 +783,12 @@ select.ng-pristine {
 }
 
 .sidebarSearch input {
-    width: 155px !important;;
+    width: 155px !important;
+}
+@media(max-width:767px) {
+    .sidebarSearch {
+        display: none;
+    }
 }
 
 .sidebar {
@@ -730,53 +829,27 @@ select.ng-pristine {
 
 .mobileInfopane {
     padding-top: 20px;
-    padding-left: 33px;
     padding-bottom: 20px;
     border-bottom: 1px solid #fff;
     margin-bottom: 20px;
+    background-color: #12a6da; 
+    width: 100%;
 }
-
+.mobileInfopane > .inlineblock {
+    padding-left: 30px;
+}
+.mobileInfopane ul {
+    padding: 15px;
+}
 @media(min-width:768px) {
     .mobileInfopane {
         display: none;
     }
 }
+.mobileInfopane b{
+    padding-left: 15px;
 
-.fullscreen {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-    height: 100%;
-    border: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    z-index: 999999;
 }
-iframe {
-    width: 100%;
-    height: 100%;
-}
-
-.exit-fullscreen {
-    position:fixed !important;
-    top:0;
-    left:0;
-    z-index: 999999 !important;
-}
-
-.go-fullscreen {
-    width:30%;
-}
-
-.gameHolder {
-    height: 800px;
-}
-
-[hidden],template{display:none !important}
 
 /*
  * Button Styling
@@ -911,6 +984,7 @@ iframe {
     border:3px solid #acacac;
 	border-radius: 100%;
 	position: relative;
+    margin-right: 15px;
 }
 .circlecheckbox > label {
 	width: 22px;
@@ -927,59 +1001,6 @@ iframe {
 }
 .circlecheckbox > label > .fa {
     color:transparent;
-}
-
-.messageslink {
-    position: relative;
-}
-.notificationCircle {
-    background: #ffae35;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    padding-bottom: 5px;
-    position: absolute;
-    top: -130%;
-    right: 0px;
-    text-align: center;
-    font-weight:bold;
-    font-size:14pt;
-}
-
-.notificationCircle > * {
-    position: relative;
-    top: -10%;
-}
-
-.popover-repeater {
-    border-top: 1px solid #acacac;
-    width: 100%;
-    padding: 10px 15px;
-}
-
-.notification-header {
-    width: 100%;
-    text-align: center;
-    font-size: 18px; 
-    padding: 5px 0px;
-
-}
-
-.notifications-bubble {
-    border-radius: 0px;
-    width:375px;
-    margin: 0px;
-}
-
-.popover {
-    max-width: 500px;
-    padding: 0px;
-    border-radius: 0px;
-    border: 1px solid #acacac;
-}
-
-.popover-content {
-    padding: 0px;
 }
 
 /*
@@ -1000,6 +1021,90 @@ iframe {
         width: 400px;
     }
 }
+
+/*
+ * Games Pages
+ * --------------------------------------------------
+ */
+
+.gameCard img {
+    width: 100%;
+    /*height: 100%;  TODO: Change this to be background image so images don't get squished?*/
+}
+
+.gameTitle {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    text-shadow: 1px 2px 4px black; 
+    text-align: right;
+    padding: 0px 20px;
+    left: 0px;
+    bottom: 0px;
+}
+
+.gameTitleBackground {
+    height: 285px;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 0px;
+    color: white;
+}  
+
+.gameSearchBar {
+    background-color: #ebebeb;
+}
+
+.gameSearchBar h2 {
+    margin-top: 6px;
+}
+
+.gameTitleBackground h1 { 
+    text-shadow: 1px 2px 4px black; 
+}
+
+.aboutGame > .gameShots img{
+    width: 100%;
+    margin: 10px 0px;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    z-index: 999999;
+}
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.exit-fullscreen {
+    position:fixed !important;
+    top:0;
+    left:0;
+    z-index: 999999 !important;
+}
+
+.go-fullscreen {
+    width:30%;
+}
+
+.gameHolder {
+    height: 800px;
+}
+
+[hidden],template{display:none !important}
 
 /*
  * User Profile
@@ -1036,7 +1141,7 @@ iframe {
 }
 
 .profileCard {
-    padding: 50px 30px 30px;
+    padding-top: 50px;
 }
 
 .profileBio {
@@ -1044,29 +1149,56 @@ iframe {
 }
 @media (max-width: 767px) {
     .profileCard {
-        margin-left: 30px;
-        margin-right: 30px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 }
 
+@media (max-width: 992px) {
+    .row.vertical-divider {
+        overflow: hidden;
+    }
 
-.row.vertical-divider {
-  overflow: hidden;
-}
-.row.vertical-divider div[class^="col-"] + div[class^="col-"] { 
-    padding-bottom: 100px; 
-    margin-bottom: -100px; 
-    border-left: 1px solid #acacac; 
-    padding-left: 30px;
+    .row.vertical-divider div[class^="col-"] {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .row.vertical-divider div[class^="col-"] + div[class^="col-"] {
+        padding-bottom: 100px;
+        margin-bottom: -100px;
+        border-top: 1px solid #acacac;
+    }
 }
 
-.petCard {
-    padding: 30px;
-    text-align: center;
+@media (min-width: 992px) {
+    .row.vertical-divider {
+        overflow: hidden;
+    }
+    .row.vertical-divider div[class^="col-"] {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .row.vertical-divider div[class^="col-"] + div[class^="col-"] {
+        padding-bottom: 100px;
+        margin-bottom: -100px;
+        border-left: 1px solid #acacac;
+            
+    }
 }
 
 .petCard img {
     margin-bottom: 15px;
+}
+
+.trophyCard img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+}
+
+.trophyCase h2 {
+    margin-top: 0;
 }
 
 /*
@@ -1076,6 +1208,52 @@ iframe {
 
 .messagePreview td {
     vertical-align: middle !important;
+}
+.selectedMessage {
+    background-color: #ebebeb;
+}
+#viewDetail, #composeNew {
+    margin-top: 25px;
+}
+#viewDetail .messageDate {
+    float: right;
+}
+.conversationTitle > h2 {
+    display: inline;
+}
+.conversationTitle > .btn { margin-right: 10px; }
+.conversationTitle > .btn, .subjectBar > .btn{
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+.messageGuts > textarea:focus, .messageGuts > input:focus {
+    border: 2px solid #12a6da;
+}
+.messageGuts textarea, .messageGuts input {
+    border: 2px solid #acacac;
+    border-radius: 2px;
+    width: 100%;
+    margin: 20px 0px 0px;
+
+}
+.messageGuts {
+    width: 70%;
+}
+.messageGuts textarea {
+    height: 170px;
+    margin-bottom: 20px !important;
+}
+.messageGuts > p {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+#viewDetail > .messageGuts {
+    margin: 20px 0px 20px;
 }
 
 @media (max-width: 767px) {
@@ -1089,22 +1267,193 @@ iframe {
 
     .messagePreview td {
         display: block !important;
-        float: left;
         padding: 0 0 5px 0 !important;
     }
 
-    .messageDate {
-        float: right;
+    .messagePreview td.messageUser {
+        float: left;
     }
 
-    .userThumb {
+    .messagePreview td.messageCheckBox {
+        float:right;
+    }
+
+    .messagePreview td.messageDate {
+        float: right;
+        font-size:12px;
+    }
+
+    .messagePreview .userThumb {
         width: 30px;
         height: 30px;
     }
+
+    .messagePreview td.messageContent {
+        float: left;
+    }
+
+}
+.tableButtonRight {
+    float:right;
+    padding-right: 25px;
+}
+.tableButtonRight > .btn {
+        max-width: 100px;
+}
+.selectedImage {
+    background-color: blue;
+}
+
+#viewImages img {
+    width: 150px;
+    height: 150px;
+}
+
+.cardHeader{
+    border-bottom: 1px solid #acacac;
+    text-align: left;
+    width: 100%;
+}
+
+/***LOADING ANIMATION Many thanks to https://codepen.io/DanAndreasson/ *****/
+.cssload-container {
+	width: 117px;
+	margin: 0 auto;
+}
+
+.cssload-circle-1 {
+	height: 117px;
+	width: 117px;
+	background: rgb(97,46,141);
+}
+
+.cssload-circle-2 {
+	height: 97px;
+	width: 97px;
+	background: rgb(194,34,134);
+}
+
+.cssload-circle-3 {
+	height: 78px;
+	width: 78px;
+	background: rgb(234,34,94);
+}
+
+.cssload-circle-4 {
+	height: 58px;
+	width: 58px;
+	background: rgb(237,91,53);
+}
+
+.cssload-circle-5 {
+	height: 39px;
+	width: 39px;
+	background: rgb(245,181,46);
+}
+
+.cssload-circle-6 {
+	height: 19px;
+	width: 19px;
+	background: rgb(129,197,64);
+}
+
+.cssload-circle-7 {
+	height: 10px;
+	width: 10px;
+	background: rgb(0,163,150);
+}
+
+.cssload-circle-8 {
+	height: 5px;
+	width: 5px;
+	background: rgb(22,116,188);
+}
+
+.cssload-circle-1,
+.cssload-circle-2,
+.cssload-circle-3,
+.cssload-circle-4,
+.cssload-circle-5,
+.cssload-circle-6,
+.cssload-circle-7,
+.cssload-circle-8 {
+	border-bottom: none;
+	border-radius: 50%;
+		-o-border-radius: 50%;
+		-ms-border-radius: 50%;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-o-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-ms-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		-moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+	animation-name: cssload-spin;
+		-o-animation-name: cssload-spin;
+		-ms-animation-name: cssload-spin;
+		-webkit-animation-name: cssload-spin;
+		-moz-animation-name: cssload-spin;
+	animation-duration: 4600ms;
+		-o-animation-duration: 4600ms;
+		-ms-animation-duration: 4600ms;
+		-webkit-animation-duration: 4600ms;
+		-moz-animation-duration: 4600ms;
+	animation-iteration-count: infinite;
+		-o-animation-iteration-count: infinite;
+		-ms-animation-iteration-count: infinite;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation-iteration-count: infinite;
+	animation-timing-function: linear;
+		-o-animation-timing-function: linear;
+		-ms-animation-timing-function: linear;
+		-webkit-animation-timing-function: linear;
+		-moz-animation-timing-function: linear;
 }
 
 
 
+@keyframes cssload-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
 
+@-o-keyframes cssload-spin {
+	from {
+		-o-transform: rotate(0deg);
+	}
+	to {
+		-o-transform: rotate(360deg);
+	}
+}
 
+@-ms-keyframes cssload-spin {
+	from {
+		-ms-transform: rotate(0deg);
+	}
+	to {
+		-ms-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes cssload-spin {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes cssload-spin {
+	from {
+		-moz-transform: rotate(0deg);
+	}
+	to {
+		-moz-transform: rotate(360deg);
+	}
+}
 

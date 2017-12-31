@@ -1,13 +1,17 @@
 ﻿<div class="container-fluid">
     <div class="page-title">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <h1>Inventory</h1>
             </div>
-            <div class="col-sm-3 searchBoxHolder form-inline">
-                <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword search" /> <button class="btn btn-primary" (click)="searchItems(searchText)">search</button>
+
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword search" />
+                    <span class="input-group-btn"><button class="btn btn-primary" (click)="searchItems(searchText)">search</button></span>
+                </div>
             </div>
-            <div class="col-sm-2 sortBoxHolder form-inline">
+            <div class="col-md-3">
                 <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
@@ -31,12 +35,11 @@
                             <div class="col-sm-6">
                                 <h2>{{activeItem.inventoryItemsGrouped[0].description.itemName}}</h2>
                                 <p>{{activeItem.inventoryItemsGrouped[0].description.itemDescription}} -1 this is awful. Basically, you set the width to 100% and then the margin to -50. But is causes other problems, like the button rises above the containing element, and doesn't work well with resizing. </p>
-                                <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" required>
+                                <select placeholder="Action" name="itemActionSelect" [(ngModel)]="selectedAction" class="form-control" required>
                                     <option *ngFor="let act of itemActions" [ngValue]="act">{{act.text}}</option>
                                 </select>
                                 <spinner [minimumValue]="0" [maximumValue]="activeItem.inventoryItemsGrouped.length" (result-out)="selectedQuantityChange($event)"></spinner>
                                 <button class="btn-primary btn" (click)="submitItem()">submit</button>
-                                <button class="btn-default btn">cancel</button>
                             </div>
                         </div>
                     </div>
@@ -50,7 +53,7 @@
     </div>
 
     <!----------------------MAIN VIEW------------------>
-    <div id="mainView">
+    <div id="inventoryMainView">
         <div class="buttons">
             <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
             <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
@@ -60,7 +63,7 @@
         </div>
  
         <div class="row">
-            <div class="col-md-3" *ngFor="let item of inventory; let i = index">
+            <div class="col-sm-6 col-md-3" *ngFor="let item of inventory; let i = index">
                 <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
                     <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
                     </div>

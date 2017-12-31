@@ -22,8 +22,15 @@ export class AccountCreatePetComponent implements OnInit {
     petAndColorSelected: boolean = false;
     petName: string = "";
     activeSex: string = "";
-
-    constructor(private router: Router) { Application.getPetColors(); Application.getPetSpecies(); }
+    confirmedSpecies = false;
+    showOptions = false;
+    constructor(private router: Router) {
+        var self = this;
+        Application.getPetColors().done(() => {
+            self.colorChange(this.colors[0]);
+        }); 
+        Application.getPetSpecies();
+    }
 
     ngOnInit() {
         this.user = Application.getApp().user;
@@ -61,6 +68,7 @@ export class AccountCreatePetComponent implements OnInit {
     }
 
     onPetSelect(pet: PetSpecies) {
+        this.showOptions = !this.showOptions;
         this.activeSpecies = pet;
         if (this.activeColorObject != null) this.petAndColorSelected = true;
     }
@@ -71,5 +79,14 @@ export class AccountCreatePetComponent implements OnInit {
             this.user.password && this.user.postcode && this.user.state && this.user.userName && this.user.birthDay && this.user.birthMonth);
     }
 
-    
+    confirmSpecies($event: any) {
+        $event.stopPropagation();
+        this.confirmedSpecies = true;
+        this.showOptions = false;
+    }
+
+    showInfo($event: any) {
+        (<any>$("#viewSpecies")).modal('show'); //I'm not happy about this either.
+        $event.stopPropagation();
+    }
 }

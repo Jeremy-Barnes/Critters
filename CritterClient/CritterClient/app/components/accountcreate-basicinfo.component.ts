@@ -13,6 +13,7 @@ export class AccountCreateBasicInfoComponent {
     confirmPassword: string;
     birthDay: any = "";
     birthMonth: any = "";
+    passwordsMatch: boolean = true;
 
     months = [{ number: 1, name: "January" }, { number: 2, name: "February" }, { number: 3, name: "March" }, { number: 4, name: "April" }, //i18n? Nah!
         { number: 5, name: "May" }, { number: 6, name: "June" }, { number: 7, name: "July" }, { number: 8, name: "August" },
@@ -24,9 +25,10 @@ export class AccountCreateBasicInfoComponent {
     ngOnInit() { this.user = Application.getApp().user }
 
     onSubmit() {
-        let link = ['/signUp-2'];
-        this.router.navigate(link);
-
+        if (this.passwordsMatch) {
+            let link = ['/signUp-2'];
+            this.router.navigate(link);
+        }
         return false;
     }
 
@@ -51,6 +53,12 @@ export class AccountCreateBasicInfoComponent {
     onChangeDay(event: number) {
         this.user.birthDay = event;
         this.user.birthMonth = this.birthMonth.number;
+    }
+
+    onChangePassword() {
+        if (this.confirmPassword && this.confirmPassword.length > 0) {
+            this.passwordsMatch = this.confirmPassword == this.user.password
+        }
     }
 
     

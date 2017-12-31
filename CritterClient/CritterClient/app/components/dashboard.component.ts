@@ -13,37 +13,53 @@ export class DashboardComponent implements OnInit {
     x: WebSocket;
 
     client: string;
-   // myGID: string;
-
 
     getID() {
+        //SystemJS.import('../../games/phaser.min.js').then(Phaser => {
+        //    SystemJS.import('../../games/pong/gameLauncher.js').then(
+        //        game =>
+        //            game.GameLauncher())
+        //});
         var self = this;
         Application.getGameSecureID().done(() => {
             self.client = self.app.secureID;
-           // self.x = new WebSocket("ws://localhost:8080/api/session/"+self.app.secureID);
         });
     }
 
     createGame() {
         var self = this;
-        Application.openGameServer(0, this.client, "2v2 NR 30 Min").done(s => {
-          //  self.myGID = s;
+        Application.openGameServer(0, this.client, "2v2 NR 30 Min").fail(s => {
+            //SystemJS.import('../../games/phaser.js').then(
+            //    game =>
+            //        alert(game));
+
             self.x = new WebSocket("ws://localhost:8080/api/session/" + self.app.secureID);
+
             self.x.onmessage = function (evt) {
-                alert(evt);
-                self.x.send("true");
+                alert(evt.data);
+                self.x.send(JSON.stringify({ acceptedUsers: [evt.data] }));
+             //   self.x.send("true");
             };
+
+            SystemJS.import('../../Libraries/phaser.min.js').then(Phaser => {
+                SystemJS.import('../../games/pong/gameLauncher.js').then(
+
+                    game => {
+                   //     self.x.send(JSON.stringify({ startGame: true }));
+                        game.GameLauncher(self.x)
+                    });
+            });
 
         });
     }
 
     getOtherGame() {
+
         var self = this;
         Application.getUsernameGames(0, "battlebarnes").done(s => {
             alert(s);
             Application.connectToGameServer(s, self.client).done(s2 => alert(s2));
         });
-        //this.x.send("1:0:2v2NR30Mins Lets Go");
     }
 
 

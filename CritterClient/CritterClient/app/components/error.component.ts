@@ -15,7 +15,11 @@ export class ErrorComponent implements OnInit {
 
     }
     showErrorCallback(error: string) {
-        this.errorText = error;
+        if (error) {
+            if (error.includes("Operation time out")) //special case, not a real error
+                return;
+            this.errorText = error;
+        }
         (<any>$("#error")).modal('show'); //I'm not happy about this either.
     }
 }
