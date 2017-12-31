@@ -10,7 +10,7 @@
             <div [hidden]="!app.loggedIn">
                 <div class="messageslink navBox">
                     <a href="javascript:void(0)" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
-                        <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
+                        <img src="../img/closed-envelope.png" /> <div class="notificationCircle" [hidden]="alerts.length == 0"><div>{{alerts.length}}</div></div>
                     </a>
                 </div>
                 <div class="notifications-bubble-container hide">
@@ -47,7 +47,6 @@
                         <li role="presentation"><a role="menuitem" routerLink="/account">Edit Account</a></li>
                         <li role="presentation"><a role="menuitem" routerLink="/viewUser/{{user.userID}}">View Profile</a></li>
                     </ul>
-
                 </div>
 
                 <div class="navBox"> <b>{{user.critterbuxx}}</b> critterbuxx</div>
@@ -68,7 +67,7 @@
 
     <div class="mobileMessagesNotifier" [hidden]="!app.loggedIn">
         <a href="javascript:void(0)" class="messageslink" data-toggle="popover" data-trigger="focus" (click)="deliverAlerts()">
-            <img src="../img/closed-envelope.png" /> <span class="notificationCircle" [hidden]="alerts.length == 0"></span>
+            <img src="../img/closed-envelope.png" /> <div class="notificationCircle notificationCircleMobile" [hidden]="alerts.length == 0"><div>{{alerts.length}}</div></div>
         </a>
         <div class="notifications-bubble-container hide">
             <div class="notifications-bubble">
