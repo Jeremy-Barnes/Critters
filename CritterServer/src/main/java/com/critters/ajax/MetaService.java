@@ -37,6 +37,8 @@ public class MetaService extends AjaxService {
 		if(loggedInUser == null) {
 			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());
 		} else {
+			EventBLL.registerForRandomEventLottery(loggedInUser);
+			EventBLL.tellMeWhatIWon(loggedInUser, asyncResponse);
 			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 		}
 	}

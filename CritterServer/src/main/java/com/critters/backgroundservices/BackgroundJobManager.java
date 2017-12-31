@@ -1,6 +1,7 @@
 package com.critters.backgroundservices;
 
 import com.critters.bll.CommerceBLL;
+import com.critters.bll.EventBLL;
 import com.critters.dal.dto.entity.NPCStoreRestockConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,26 @@ public class BackgroundJobManager {
 				}
 			}
 		}
+	}
+
+	@Schedule(hour="*", minute="*/5", second="*", persistent=true)
+	public void generateRandomEvents() {
+		int players = EventBLL.numberOfRegistrants();
+		int numberOfEventsToGenerate = 0;
+
+		if(players > 1 && players < 10) {
+			numberOfEventsToGenerate = (int) Math.round(Math.random());
+		} else if(players < 500) {
+			numberOfEventsToGenerate = (int)(players * .1);
+		} else if(players > 500) {
+			numberOfEventsToGenerate = (int)(players * .25);
+			logger.warn("WOW TOO MANY PLAYERS");
+		}
+		for(int i = 0; i < numberOfEventsToGenerate; i++) {
+			EventBLL.LotteryEvent event = EventBLL.generateRandomEvent();
+		}
+
+		EventBLL.clearRegistrations();
 	}
 
 }
