@@ -22,7 +22,7 @@ public class CommerceBLL {
 	public static void changeItemsPrice(Item[] items, User user) throws Exception {
 		List<Item> streamableItems = Arrays.asList(items);
 
-		UserBLL.verifyUserInventoryIsLoaded(user);
+		user.initializeInventory();
 		Stream<Item> resultant = user.getInventory().parallelStream().filter(i -> streamableItems.stream().anyMatch(si -> si.getInventoryItemId() == i.getInventoryItemId()));//.toArray(Item[]::new);
 		if(resultant != null && resultant.count() == items.length) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -53,7 +53,7 @@ public class CommerceBLL {
 	}
 
 	public static void changeItemsStore(Item[] items, User user) throws Exception {
-		UserBLL.verifyUserInventoryIsLoaded(user);
+		user.initializeInventory();
 		List<Item> streamableItems = Arrays.asList(items);
 
 		Stream<Item> resultant = user.getInventory().parallelStream().filter(i -> streamableItems.stream().anyMatch(si -> si.getInventoryItemId() == i.getInventoryItemId()));//.toArray(Item[]::new);
@@ -92,7 +92,7 @@ public class CommerceBLL {
 		User owner = null; //could be an NPC!
 		if(dbItems[0].getOwnerId() != null)
 			owner  = UserBLL.getFullUser(dbItems[0].getOwnerId());
-		UserBLL.verifyUserInventoryIsLoaded(user);
+		user.initializeInventory();
 
 		if(dbItems != null && streamableItems.stream().allMatch(is -> is.getPrice() != null)) {
 			int totalPrice = streamableItems.stream().mapToInt(Item::getPrice).sum();

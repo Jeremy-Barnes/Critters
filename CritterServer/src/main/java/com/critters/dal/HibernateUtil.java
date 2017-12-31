@@ -13,25 +13,35 @@ import javax.persistence.Persistence;
  */
 public class HibernateUtil {
 
-	private static final SessionFactory sessionFactory;
-	private static final EntityManagerFactory entityManagerFactory;
+	private static SessionFactory sessionFactory;
+	private static EntityManagerFactory entityManagerFactory;
 	static final Logger logger = LoggerFactory.getLogger(HibernateUtil.class);
 
 	static {
 		try {
-			sessionFactory = new Configuration().configure().buildSessionFactory();
-			entityManagerFactory = Persistence.createEntityManagerFactory("com.critters");
+			tryToConnectToSQL();
+		} catch (ExceptionInInitializerError ex) {
+			logger.error("Initial SQL Connection failed." + ex);
+		}
+	}
+
+	private static void tryToConnectToSQL() {
+		try {
+			if(sessionFactory == null) sessionFactory = new Configuration().configure().buildSessionFactory();
+			if(entityManagerFactory == null) entityManagerFactory = Persistence.createEntityManagerFactory("com.critters");
 		} catch (Throwable ex) {
-			logger.error("Initial SessionFactory creation failed." + ex);
+			logger.error("SessionFactory/EntityManagerFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
 
 	public static SessionFactory getSessionFactory() {
+		tryToConnectToSQL();
 		return sessionFactory;
 	}
 
 	public static EntityManagerFactory getEntityManagerFactory() {
+		tryToConnectToSQL();
 		return entityManagerFactory;
 	}
 }

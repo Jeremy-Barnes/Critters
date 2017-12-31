@@ -2,11 +2,13 @@ package com.critters.ajax;
 
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
-import com.critters.dal.dto.*;
+import com.critters.dal.dto.AccountInformationRequest;
+import com.critters.dal.dto.AuthToken;
+import com.critters.dal.dto.InventoryGrouping;
+import com.critters.dal.dto.ItemRequest;
 import com.critters.dal.dto.entity.Pet;
 import com.critters.dal.dto.entity.User;
 
-import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -113,8 +115,6 @@ public class UserService extends AjaxService{
 		}
 		try {
 			user = UserBLL.updateUser(user, loggedInUser, request.imageChoice);
-		} catch(InvalidPropertyException e){
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}

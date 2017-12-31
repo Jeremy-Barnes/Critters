@@ -1,21 +1,15 @@
 package com.critters.bll;
 
+import com.critters.Utilities.Extensions;
 import com.critters.dal.HibernateUtil;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
-import com.lambdaworks.codec.Base64;
-import com.lambdaworks.crypto.SCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import javax.resource.spi.InvalidPropertyException;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -41,92 +35,6 @@ public class UserBLL {
 		return users;
 	}
 
-	public static String createUserReturnUnHashedValidator(User user) throws Exception {
-		user.setCritterbuxx(500); //TODO: economics
-		user.setIsActive(true);
-		user.setUserImagePath(getUserImageOption(1).getImagePath());
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		try {
-			hashAndSaltPassword(user);
-			String validatorUnHashed = createSelectorAndHashValidator(user);
-			entityManager.persist(user);
-			entityManager.getTransaction().commit();
-			return validatorUnHashed;
-		} catch(UnsupportedEncodingException us){
-			logger.error("Couldn't create password " + user.getPassword(), us);
-			throw new InvalidPropertyException("Sorry! We only accept passwords with characters in A-Z, a-z and 0-9.");
-		} catch(Exception e) {
-			logger.error("User creation failed for user " + user.toString(), e);
-			return null;
-		} finally {
-			if(entityManager.getTransaction().isActive()){
-				entityManager.getTransaction().rollback();
-			}
-			entityManager.close();
-		}
-	}
-
-	public static User getUser(String selector, String validator) {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			User user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
-
-			if (verifyValidator(validator, user)) {
-				user.initializeCollections();
-				return user;
-			} else {
-				return null;
-			}
-		} catch (PersistenceException ex) {
-			logger.debug("Login failed for selector " + selector + "and validator " + validator, ex);
-			return null;
-		} finally {
-			entityManager.close();
-		}
-	}
-
-	public static User getUser(String email, String password, boolean login) {
-		logger.debug("Logging in with Email: " + email + " Password: " + password);
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-
-		try {
-			User user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
-
-			user.initializeCollections();
-			if (login) {
-				entityManager.getTransaction().begin();
-				String validator = null;
-				if (checkLogin(user.getPassword(), password, user.getSalt())) {
-					validator = createSelectorAndHashValidator(user);
-					entityManager.getTransaction().commit();
-				} else {
-					return null;
-				}
-				if (validator != null) user.setTokenValidator(validator);
-			} else {
-				user = wipeSensitiveFields(user);
-			}
-			return user;
-		} catch(NoResultException nrex) {//no user found
-			logger.error("Login failed for " + email, nrex);
-			return null;
-		} catch (Exception ex) {
-			logger.error("A weird error occurred when logging in " + email, ex);
-			return null;
-		} finally {
-			if(entityManager.getTransaction().isActive()){
-				entityManager.getTransaction().rollback();
-			}
-			entityManager.close();
-		}
-	}
-
-	public static User getUser(int id) {
-			User user = wipeSensitiveFields(getFullUser(id));
-			return user;
-	}
-
 	public static List<User> searchForUser(String searchTerm) {
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("usersearch",User.class);
@@ -143,9 +51,86 @@ public class UserBLL {
 		return results;
 	}
 
-	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) throws Exception {
-		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never
-			//from User Input. That way porn lies.
+	public static void giveUserCash(User user, int amount) {
+		
+	}
+
+
+	public static String createUserReturnUnHashedValidator(User user) {
+		user.setCritterbuxx(500); //TODO: economics and validation
+		user.setIsActive(true);
+		user.setUserImagePath(getUserImageOption(1).getImagePath());
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		entityManager.getTransaction().begin();
+		try {
+			hashAndSaltPassword(user);
+			String validatorUnHashed = createSelectorAndHashValidator(user);
+			entityManager.persist(user);
+			entityManager.getTransaction().commit();
+			return validatorUnHashed;
+		} catch(Exception e) {
+			logger.error("User creation failed for user " + user.toString(), e);
+			return null;
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+	}
+
+	public static User getUser(String selector, String validator) {
+		logger.debug("Logging in with selector: " + selector + " validator: " + validator);
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		User user = null;
+		try {
+			user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
+			user.initializeCollections();
+		} catch (PersistenceException ex) {
+			logger.debug("No selector " + selector + " found", ex);
+		} finally {
+			entityManager.close();
+		}
+		return user != null && SecurityBLL.validateEncryptedMatch(validator, validator, user.getTokenValidator()) ? user : null;
+	}
+
+	public static User getUser(String email, String password, boolean login) {
+		logger.debug("Logging in with Email: " + email + " Password: " + password);
+		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		User user = null;
+		try {
+			user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+			user.initializeCollections();
+			if (login && SecurityBLL.validateEncryptedMatch(password, user.getSalt(), user.getPassword())) {
+				entityManager.getTransaction().begin();
+				String validator = createSelectorAndHashValidator(user);
+				entityManager.getTransaction().commit();
+				user.setTokenValidator(validator); //pass back unhashed validator to the user
+			} else {
+				user = login ? null : wipeSensitiveFields(user); //login attempt failed validate
+				logger.info("Failed login attempt for email " + email);
+			}
+		} catch(NoResultException nrex) {//no user found
+			logger.error("User lookup failed for " + email, nrex);
+		} catch (Exception ex) {
+			logger.error("A weird error occurred when logging in " + email, ex);
+		} finally {
+			if(entityManager.getTransaction().isActive()){
+				entityManager.getTransaction().rollback();
+			}
+			entityManager.close();
+		}
+		return user;
+	}
+
+	public static User getUser(int id) {
+			User user = wipeSensitiveFields(getFullUser(id));
+			return user;
+	}
+
+	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) {
+		//todo validate
+		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never from User Input. That way porn lies.
 			imageOption = getUserImageOption(imageOption.getUserImageOptionID());
 			sessionUser.setUserImagePath(imageOption.getImagePath());
 		} else {
@@ -157,7 +142,7 @@ public class UserBLL {
 		try {
 			entityManager.getTransaction().begin();
 
-			if (changeUser.getPassword() != null && !changeUser.getPassword().isEmpty() && !changeUser.getPassword().equals(sessionUser.getPassword())) {
+			if (!Extensions.isNullOrEmpty(changeUser.getPassword()) && !changeUser.getPassword().equals(sessionUser.getPassword())) {
 				hashAndSaltPassword(changeUser);
 				sessionUser.setPassword(changeUser.getPassword());
 				sessionUser.setSalt(changeUser.getSalt());
@@ -165,11 +150,7 @@ public class UserBLL {
 			sessionUser.setFirstName(changeUser.getFirstName());
 			sessionUser.setLastName(changeUser.getLastName());
 			sessionUser.setPostcode(changeUser.getPostcode());
-			if (changeUser.getEmailAddress() != null && changeUser.getEmailAddress().length() >= 5 && changeUser.getEmailAddress().contains("@")) {
-				sessionUser.setEmailAddress(changeUser.getEmailAddress());
-			} else if (changeUser.getEmailAddress() != null && !changeUser.getEmailAddress().isEmpty()) {
-				throw new InvalidPropertyException("An invalid email address was supplied, please enter a valid email address. No account changes were made.");
-			}
+			sessionUser.setEmailAddress(changeUser.getEmailAddress());
 			sessionUser.setCity(changeUser.getCity());
 			sessionUser.setState(changeUser.getState());
 			sessionUser.setCountry(changeUser.getCountry());
@@ -179,12 +160,10 @@ public class UserBLL {
 			entityManager.merge(sessionUser);
 			entityManager.getTransaction().commit();
 			return changeUser;
-		} catch(UnsupportedEncodingException us) {
-			logger.error("Couldn't create password " + changeUser.getPassword(), us);
-			throw new InvalidPropertyException("Sorry! We only accept passwords with characters in A-Z, a-z and 0-9.");
-		} finally {
+		}  finally {
 			if(entityManager.getTransaction().isActive()){
 				entityManager.getTransaction().rollback();
+				logger.error("Failed to update a user", changeUser);
 			}
 			entityManager.close();
 		}
@@ -268,7 +247,7 @@ public class UserBLL {
 		List<Item> streamableItems = Arrays.asList(items);
 		List<Integer> ids = streamableItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
 
-		verifyUserInventoryIsLoaded(user);
+		user.initializeInventory();
 		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
 		if(resultant != null && resultant.length == items.length) {
 			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -291,102 +270,49 @@ public class UserBLL {
 		}
 	}
 
-	protected static void verifyUserInventoryIsLoaded(User user){
-		user.initializeInventory();
-	}
-
-	public static UserImageOption getUserImageOption(int id) throws Exception { //todo caching
+	public static UserImageOption getUserImageOption(int id) { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
 		try {
 			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id)
 																   .getSingleResult();
 			return image;
 		} catch (NoResultException nrex) {
-			return null;
+			logger.info("No such image option found with id " + id, nrex);
 		} catch (PersistenceException ex) {
-			logger.debug("No such image option found with id " + id, ex);
-			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
+			logger.error("Database error searching for id " + id, ex);
 		} finally {
 			entityManager.close();
 		}
+		return null;
 	}
 
-	public static UserImageOption[] getUserImageOptions() throws Exception { //todo caching
+	public static UserImageOption[] getUserImageOptions() { //todo caching
 		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		UserImageOption[] images = null;
 		try {
-			UserImageOption[] images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
-			return images;
+		 	images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
 		}
 		catch (PersistenceException ex) {
-			logger.debug("No image options found", ex);
-			throw new Exception("Something is bananas wrong with the database if it can't find images, tell an admin!");
-		} finally {
+			logger.error("Database error searching for images!", ex);
+		}  finally {
 			entityManager.close();
 		}
+		return images;
 	}
 
 	/***************** SECURITY STUFF **********************/
-	private static void hashAndSaltPassword(User user) throws UnsupportedEncodingException {
-		try {
-			byte[] saltByte = new byte[16];
-			SecureRandom.getInstance("SHA1PRNG").nextBytes(saltByte);
-			String saltStr = new String(Base64.encode(saltByte));
-
-			byte[] hashByte = SCrypt.scrypt(user.getPassword().getBytes("UTF-8"), saltStr.getBytes("UTF-8"), 16384, 8, 1, 64);
-			String hashStr = new String(Base64.encode(hashByte));
-
-			user.setPassword(hashStr);
-			user.setSalt(saltStr);
-		} catch (GeneralSecurityException ex) {
-			logger.error("Could not run scrypt!", ex);
-			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		}
+	private static void hashAndSaltPassword(User user) {
+			String salt = SecurityBLL.getRandomString(16);
+			String hashword = SecurityBLL.hashAndSaltEncrypt(user.getPassword(), salt);
+			user.setPassword(hashword);
+			user.setSalt(salt);
 	}
 
 	private static String createSelectorAndHashValidator(User user) {
-		String validatorStr = null;
-		try {
-			byte[] validatorByte = new byte[16];
-			SecureRandom.getInstance("SHA1PRNG").nextBytes(validatorByte);
-			validatorStr = new String(Base64.encode(validatorByte)); //Get in UTF
-			byte[] hashedValidatorByte = SCrypt.scrypt(validatorStr.getBytes("UTF-8"), validatorStr.getBytes("UTF-8"), 16384, 8, 1, 64);
-
-			user.setTokenSelector(UUID.randomUUID().toString());
-			user.setTokenValidator(new String(Base64.encode(hashedValidatorByte)));
-		} catch (GeneralSecurityException ex) {
-			logger.error("Could not run scrypt!", ex);
-			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {
-		} //shouldn't ever happen
-		return validatorStr;
-	}
-
-	protected static boolean verifyValidator(String suppliedValidator, User dbUser) {
-		String hashedCookieValidator = null;
-		try {
-			byte[] hashByte = SCrypt.scrypt(suppliedValidator.getBytes("UTF-8"), suppliedValidator.getBytes("UTF-8"), 16384, 8, 1, 64);
-			hashedCookieValidator = new String(Base64.encode(hashByte));
-		} catch (GeneralSecurityException ex) {
-			logger.error("Could not run scrypt!", ex);
-			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {
-			return false;
-		}
-		return hashedCookieValidator.equals(dbUser.getTokenValidator());
-	}
-
-	private static boolean checkLogin(String dbPasswordHash, String suppliedPassword, String suppliedSalt) {
-		String hashStrConfirm = null;
-		try {
-			byte[] hashByte = SCrypt.scrypt(suppliedPassword.getBytes("UTF-8"), suppliedSalt.getBytes("UTF-8"), 16384, 8, 1, 64);
-			hashStrConfirm = new String(Base64.encode(hashByte));
-		} catch (GeneralSecurityException ex) {
-			logger.error("Could not run scrypt!", ex);
-			System.exit(1); //if no secure algorithm is available, the service needs to shut down for emergency maintenance.
-		} catch (UnsupportedEncodingException ex) {
-			return false;
-		}
-		return hashStrConfirm.equals(dbPasswordHash);
+		String validator = SecurityBLL.getRandomString(16);
+		user.setTokenSelector(SecurityBLL.getGUID());
+		user.setTokenValidator(SecurityBLL.hashAndSaltEncrypt(validator, validator));
+		return validator;
 	}
 
 	protected static User getFullUser(int id){
