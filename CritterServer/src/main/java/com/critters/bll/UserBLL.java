@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.OberDAL;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
 import org.slf4j.Logger;
@@ -51,81 +52,75 @@ public class UserBLL {
 		return results;
 	}
 
-	public static void giveUserCash(User user, int amount) {
-		
+	public static Integer giveUserCash(int userID, int amount) {
+		try (OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			User user = dal.users.getUserByID(userID);
+			user.setCritterbuxx(user.getCritterbuxx() + amount);
+			dal.sql.beginTransaction();
+			dal.users.save(user);
+			return dal.sql.commitTransaction() ? user.getCritterbuxx() : null;
+		}
 	}
-
 
 	public static String createUserReturnUnHashedValidator(User user) {
 		user.setCritterbuxx(500); //TODO: economics and validation
 		user.setIsActive(true);
 		user.setUserImagePath(getUserImageOption(1).getImagePath());
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		try {
-			hashAndSaltPassword(user);
-			String validatorUnHashed = createSelectorAndHashValidator(user);
-			entityManager.persist(user);
-			entityManager.getTransaction().commit();
-			return validatorUnHashed;
-		} catch(Exception e) {
-			logger.error("User creation failed for user " + user.toString(), e);
-			return null;
-		} finally {
-			if(entityManager.getTransaction().isActive()){
-				entityManager.getTransaction().rollback();
+		hashAndSaltPassword(user);
+		String validatorUnHashed = createSelectorAndHashValidator(user);
+
+		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			dal.sql.beginTransaction();
+			dal.users.save(user);
+			if (dal.sql.commitTransaction()) {
+				return validatorUnHashed;
+			} else {
+				logger.error("User creation failed for user " + user.toString());
+				return null;
 			}
-			entityManager.close();
 		}
 	}
 
-	public static User getUser(String selector, String validator) {
+	public static User loginUser(String selector, String validator) {
 		logger.debug("Logging in with selector: " + selector + " validator: " + validator);
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		User user = null;
-		try {
-			user = (User) entityManager.createQuery("from User where tokenSelector = :selector and isActive = true").setParameter("selector", selector).getSingleResult();
-			user.initializeCollections();
-		} catch (PersistenceException ex) {
-			logger.debug("No selector " + selector + " found", ex);
-		} finally {
-			entityManager.close();
+		User user;
+		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			user = dal.users.getUserByTokenSelector(selector);
+			if(user != null)
+				user.initializeCollections();
 		}
 		return user != null && SecurityBLL.validateEncryptedMatch(validator, validator, user.getTokenValidator()) ? user : null;
 	}
 
 	public static User getUser(String email, String password, boolean login) {
 		logger.debug("Logging in with Email: " + email + " Password: " + password);
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		User user = null;
-		try {
-			user = (User) entityManager.createQuery("from User where emailAddress = :email and isActive = true").setParameter("email", email).getSingleResult();
+		User user;
+		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			user = dal.users.getUserByEmailAddress(email);
+			if(user == null) return null;
+			String validator = createSelectorAndHashValidator(user);
 			user.initializeCollections();
 			if (login && SecurityBLL.validateEncryptedMatch(password, user.getSalt(), user.getPassword())) {
-				entityManager.getTransaction().begin();
-				String validator = createSelectorAndHashValidator(user);
-				entityManager.getTransaction().commit();
+				dal.sql.beginTransaction();
+				dal.users.save(user);
+				dal.sql.commitTransaction();
 				user.setTokenValidator(validator); //pass back unhashed validator to the user
 			} else {
 				user = login ? null : wipeSensitiveFields(user); //login attempt failed validate
 				logger.info("Failed login attempt for email " + email);
 			}
-		} catch(NoResultException nrex) {//no user found
-			logger.error("User lookup failed for " + email, nrex);
-		} catch (Exception ex) {
-			logger.error("A weird error occurred when logging in " + email, ex);
-		} finally {
-			if(entityManager.getTransaction().isActive()){
-				entityManager.getTransaction().rollback();
-			}
-			entityManager.close();
 		}
 		return user;
 	}
 
-	public static User getUser(int id) {
-			User user = wipeSensitiveFields(getFullUser(id));
-			return user;
+	public static User getUserForDisplay(int id) {
+		User user = null;
+		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			user = dal.users.getUserByID(id);
+			if(user!= null)
+				user.initializeCollections();
+		}
+		return wipeSensitiveFields(user);
 	}
 
 	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) {
@@ -315,16 +310,4 @@ public class UserBLL {
 		return validator;
 	}
 
-	protected static User getFullUser(int id){
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			User user = (User) entityManager.createQuery("from User where userID = :id and isActive = true").setParameter("id", id).getSingleResult();
-			return user;
-		} catch (PersistenceException ex) {
-			logger.debug("No active user found with id " + id, ex);
-			return null; //no user found
-		} finally {
-			entityManager.close();
-		}
-	}
 }

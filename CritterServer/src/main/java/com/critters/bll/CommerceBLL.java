@@ -1,6 +1,8 @@
 package com.critters.bll;
 
+import com.critters.Utilities.Extensions;
 import com.critters.dal.HibernateUtil;
+import com.critters.dal.OberDAL;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
 import org.slf4j.Logger;
@@ -84,51 +86,42 @@ public class CommerceBLL {
 		}
 	}
 
-	public static void changeItemsOwnerViaPurchase(Item[] items, User user) throws Exception {
-		Item[] dbItems = getItems(items);
-		List<Item> streamableItems = Arrays.asList(dbItems);
+	public static void changeItemsOwnerViaPurchase(Item[] purchaseItems, User buyer) throws Exception {
+		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+			List<Item> items = dal.items.getItems(purchaseItems);
+			if(items == null) return;
+			buyer = dal.users.getUserByID(buyer.getUserID());
+			User owner = items.get(0).getOwnerId() == null ? null : dal.users.getUserByID(items.get(0).getOwnerId());
+			buyer.initializeInventory();
 
-		user = UserBLL.getFullUser(user.getUserID());
-		User owner = null; //could be an NPC!
-		if(dbItems[0].getOwnerId() != null)
-			owner  = UserBLL.getFullUser(dbItems[0].getOwnerId());
-		user.initializeInventory();
-
-		if(dbItems != null && streamableItems.stream().allMatch(is -> is.getPrice() != null)) {
-			int totalPrice = streamableItems.stream().mapToInt(Item::getPrice).sum();
-			if(user.getCritterbuxx() >= totalPrice) {
-				EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-				try {
-					entityManager.getTransaction().begin();
-					for(int i = 0; i < dbItems.length; i++) {
-						dbItems[i].setOwnerId(user.getUserID());
-						user.setCritterbuxx(user.getCritterbuxx() - dbItems[i].getPrice());
-						if (owner != null) owner.setCritterbuxx(owner.getCritterbuxx() + dbItems[i].getPrice());
-						dbItems[i].setPrice(null);
-						dbItems[i].setContainingStoreId(null);
-						entityManager.merge(dbItems[i]);
+			if(buyer != null && Extensions.isNullOrEmpty(items) && items.stream().allMatch(is -> is.getPrice() != null)) {
+				int totalPrice = items.stream().mapToInt(Item::getPrice).sum();
+				if(buyer.getCritterbuxx() >= totalPrice) {
+					for(int i = 0; i < items.size(); i++) {
+						Item item = items.get(i);
+						item.setOwnerId(buyer.getUserID());
+						item.setPrice(null);
+						item.setContainingStoreId(null);
 					}
-
-					entityManager.merge(user);
-					if(owner != null) entityManager.merge(owner);
-					entityManager.getTransaction().commit();
-				}  catch(Exception e) {
-					String itemArray = "";
-					List<Item> listItems = Arrays.asList(items);
-					for(Item item : listItems){
-						itemArray += "\n" + item.toString();
-					}
-					logger.error("Could transfer one of these items to the new owner " + user.toString()  + "\n" + itemArray, e);
-					throw new Exception("Couldn't complete this sale! Contact an admin about this, please.");
-				} finally {
-					if(entityManager.getTransaction().isActive()){
-						entityManager.getTransaction().rollback();
-					}
-					entityManager.close();
+					buyer.setCritterbuxx(buyer.getCritterbuxx() - totalPrice);
+					if (owner != null) owner.setCritterbuxx(owner.getCritterbuxx() + totalPrice);
+					dal.sql.beginTransaction();
+					dal.items.save(items);
+					dal.users.save(buyer);
+					if(owner != null) dal.users.save(owner);
+					dal.sql.commitTransaction();
+				} else {
+					throw new InvalidPropertyException("You don't have enough money for " +(items.size() > 1 ? "these items." : "this item."));
 				}
-			} else {
-				throw new InvalidPropertyException("You don't have enough money for " +(items.length > 1 ? "these items." : "this item."));
 			}
+		}  catch(Exception e) {
+//			String itemArray = "";
+//			List<Item> listItems = Arrays.asList(items);
+//			for(Item item : listItems){
+//				itemArray += "\n" + item.toString();
+//			}
+//			logger.error("Could transfer one of these items to the new owner " + buyer.toString()  + "\n" + itemArray, e);
+			throw new Exception("Couldn't complete this sale! Contact an admin about this, please.");
 		}
 	}
 

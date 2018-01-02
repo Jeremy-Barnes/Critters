@@ -5,8 +5,10 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  * Created by Jeremy on 8/7/2016.
@@ -43,5 +45,45 @@ public class HibernateUtil {
 	public static EntityManagerFactory getEntityManagerFactory() {
 		tryToConnectToSQL();
 		return entityManagerFactory;
+	}
+
+	public static class HibernateHelper implements AutoCloseable {
+		protected EntityManager entityManager;
+		public HibernateHelper(){
+			entityManager = HibernateUtil.entityManagerFactory.createEntityManager();
+		}
+
+		public void beginTransaction(){
+			if(!entityManager.getTransaction().isActive())
+				entityManager.getTransaction().begin();
+		}
+
+		public boolean commitTransaction(){
+			try {
+				if (entityManager.getTransaction().isActive()) {
+					entityManager.getTransaction().commit();
+					return true;
+				}
+			} catch(Exception e) {
+				rollback();
+				logger.error("Transaction failed", e);
+			}
+			return false;
+		}
+
+		public void rollback(){
+			if (entityManager.getTransaction().isActive())
+				entityManager.getTransaction().rollback();
+		}
+
+		public Query createQuery(String query) {
+			return entityManager.createQuery(query);
+		}
+
+		@Override
+		public void close() {
+			rollback();
+			entityManager.close();
+		}
 	}
 }

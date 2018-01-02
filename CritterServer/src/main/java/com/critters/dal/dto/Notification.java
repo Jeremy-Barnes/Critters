@@ -3,17 +3,16 @@ package com.critters.dal.dto;
 import com.critters.dal.dto.entity.Friendship;
 import com.critters.dal.dto.entity.Message;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Jeremy on 1/17/2017.
  */
-@XmlRootElement
 public class Notification extends DTO {
 	public List<Message> messages;
 	public List<Friendship> friendRequests;
+	public List<UINotification> serverMessages;
 
 	public Notification(List<Message> messages, List<Friendship> friendRequests) {
 		this.messages = messages;
@@ -43,6 +42,15 @@ public class Notification extends DTO {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+
+
+	public List<UINotification> getServerMessages() {
+		return serverMessages;
+	}
+
+	public void setserverMessages(List<UINotification> serverMessages) {
+		this.serverMessages = serverMessages;
 	}
 
 

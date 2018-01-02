@@ -93,7 +93,7 @@ public class UserService extends AjaxService{
 	public Response getUserFromToken(JAXBElement<AuthToken> jsonToken) {
 		AuthToken token = jsonToken.getValue();
 
-		User user = UserBLL.getUser(token.selector, token.validator);
+		User user = UserBLL.loginUser(token.selector, token.validator);
 		httpRequest.getSession().setAttribute("user", user);
 		User copiedUser = super.serializeDeepCopy(user, User.class);
 
@@ -159,7 +159,7 @@ public class UserService extends AjaxService{
 	@Path("/getUserFromID/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromID(@PathParam("id") int id) {
-		User user = UserBLL.getUser(id);
+		User user = UserBLL.getUserForDisplay(id);
 		if(user == null){
 			return Response.status(Response.Status.NOT_FOUND).entity("No such user exists").build();
 		}

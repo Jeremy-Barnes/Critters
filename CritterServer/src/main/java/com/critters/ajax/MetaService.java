@@ -43,14 +43,13 @@ public class MetaService extends AjaxService {
 		}
 	}
 
+
 	@GET
-	@Path("/search/{searchStr}")
+	@Path("/respondToServerQuery/{queryID}/{response}}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchData(@PathParam("searchStr") String searchStr) {
-		SearchResponse results = new SearchResponse();
-		results.users = UserBLL.searchUsers(searchStr).toArray(new User[0]);
+	public Response searchData(@PathParam("queryID") String queryID, @PathParam("response") String response) {
 		//TODO results.items = ItemsBLL.searchItems(searchStr).toArray(new Item[0]);
-		return Response.status(200).entity(results).build();
+		return Response.status(200).build();
 	}
 
 	@GET
