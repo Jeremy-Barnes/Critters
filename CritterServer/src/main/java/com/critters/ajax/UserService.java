@@ -33,9 +33,9 @@ public class UserService extends AjaxService{
 		boolean userNameAvailable = true;
 		boolean petAvailable = true;
 
-		emailAvailable = UserBLL.isEmailAddressValid(request.user.getEmailAddress());
+		emailAvailable = UserBLL.isEmailAddressTaken(request.user.getEmailAddress());
 		if (emailAvailable) {
-			userNameAvailable = UserBLL.isUserNameValid(request.user.getUserName());
+			userNameAvailable = UserBLL.isUserNameTaken(request.user.getUserName());
 			if (userNameAvailable) {
 				petAvailable = PetBLL.isPetNameValid(request.pet.getPetName());
 			}
@@ -130,7 +130,7 @@ public class UserService extends AjaxService{
 		if(loggedInUser == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		} else {
-			return UserBLL.deleteUser(loggedInUser) ? Response.status(Response.Status.OK).build() :
+			return UserBLL.deleteUser(loggedInUser.getUserID()) ? Response.status(Response.Status.OK).build() :
 					Response.status(Response.Status.BAD_REQUEST).entity("Couldn't delete your account. You're stuck with us! Contact an admin for help.").build();
 		}
 	}

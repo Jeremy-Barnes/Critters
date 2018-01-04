@@ -1,34 +1,63 @@
 package com.critters.dal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.EntityManager;
 
 /**
- * Created by Jeremy on 12/31/2017.
+ * Created by Jeremy on 1/1/2018.
  */
-public abstract class DAL {
-
-	protected EntityManager entityManager;
+public class DAL implements AutoCloseable {
+	static final Logger logger = LoggerFactory.getLogger("application");
+	public EntityManager sql;
+	public ItemAccessor items;
+	public UserAccessor users;
+	public PetAccessor pets;
+	public ConfigAccessor configuration;
+	public StoreAccessor shops;
+	public ChatAccessor messages;
+	public FriendAccessor friends;
+	public GameAccessor games;
 
 	public DAL(){
-		this.entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
+		sql =  HibernateUtil.getEntityManagerFactory().createEntityManager();
+		items = new ItemAccessor(sql);
+		users = new UserAccessor(sql);
+		pets = new PetAccessor(sql);
+		configuration = new ConfigAccessor(sql);
+		shops = new StoreAccessor(sql);
+		messages = new ChatAccessor(sql);
+		friends = new FriendAccessor(sql);
+		games = new GameAccessor(sql);
 	}
 
-	public DAL(EntityManager entityManager){
-		this.entityManager = entityManager;
+	public void beginTransaction(){
+			if(!sql.getTransaction().isActive())
+				sql.getTransaction().begin();
 	}
 
-	protected void getTrxn() {
-		this.entityManager.getTransaction().begin();
-	}
-
-	protected void endTrxn() {
-		if(entityManager.getTransaction().isActive()){
-			entityManager.getTransaction().rollback();
+	public boolean commitTransaction(){
+		try {
+			if (sql.getTransaction().isActive()) {
+				sql.getTransaction().commit();
+				return true;
+			}
+		} catch(Exception e) {
+			rollback();
+			logger.error("Transaction failed", e);
 		}
+		return false;
 	}
 
-	public void done(){
-		endTrxn();
-		entityManager.close();
+	public void rollback(){
+			if (sql.getTransaction().isActive())
+				sql.getTransaction().rollback();
+		}
+
+	@Override
+	public void close(){
+		rollback();
+		sql.close();
 	}
 }

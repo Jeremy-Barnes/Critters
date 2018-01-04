@@ -5,10 +5,7 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
 
 /**
  * Created by Jeremy on 8/7/2016.
@@ -47,43 +44,51 @@ public class HibernateUtil {
 		return entityManagerFactory;
 	}
 
-	public static class HibernateHelper implements AutoCloseable {
-		protected EntityManager entityManager;
-		public HibernateHelper(){
-			entityManager = HibernateUtil.entityManagerFactory.createEntityManager();
-		}
-
-		public void beginTransaction(){
-			if(!entityManager.getTransaction().isActive())
-				entityManager.getTransaction().begin();
-		}
-
-		public boolean commitTransaction(){
-			try {
-				if (entityManager.getTransaction().isActive()) {
-					entityManager.getTransaction().commit();
-					return true;
-				}
-			} catch(Exception e) {
-				rollback();
-				logger.error("Transaction failed", e);
-			}
-			return false;
-		}
-
-		public void rollback(){
-			if (entityManager.getTransaction().isActive())
-				entityManager.getTransaction().rollback();
-		}
-
-		public Query createQuery(String query) {
-			return entityManager.createQuery(query);
-		}
-
-		@Override
-		public void close() {
-			rollback();
-			entityManager.close();
-		}
-	}
+//	public static class HibernateHelper implements AutoCloseable {
+//		protected EntityManager entityManager;
+//		public HibernateHelper(){
+//			entityManager = HibernateUtil.entityManagerFactory.createEntityManager();
+//		}
+//
+//		public void beginTransaction(){
+//			if(!entityManager.getTransaction().isActive())
+//				entityManager.getTransaction().begin();
+//		}
+//
+//		public boolean commitTransaction(){
+//			try {
+//				if (entityManager.getTransaction().isActive()) {
+//					entityManager.getTransaction().commit();
+//					return true;
+//				}
+//			} catch(Exception e) {
+//				rollback();
+//				logger.error("Transaction failed", e);
+//			}
+//			return false;
+//		}
+//
+//		public void rollback(){
+//			if (entityManager.getTransaction().isActive())
+//				entityManager.getTransaction().rollback();
+//		}
+//
+//		public Query createQuery(String query) {
+//			return entityManager.createQuery(query);
+//		}
+//
+//		public Query createNativeQuery(String query){
+//			return entityManager.createNativeQuery(query);
+//		}
+//
+//		public StoredProcedureQuery createStoredProcedureQuery(String query, Class returnType) {
+//			return entityManager.createStoredProcedureQuery(query, returnType);
+//		}
+//
+//		@Override
+//		public void close() {
+//			rollback();
+//			entityManager.close();
+//		}
+	//}
 }

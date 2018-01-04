@@ -333,7 +333,7 @@ public class User extends DTO {
 	}
 
   	public void initializeInventory(){
-		this.setInventory(UserBLL.getUserInventory(this));
+		Hibernate.initialize(inventory);
 	}
 
 	public List<com.critters.dal.dto.entity.Store> getStore(){

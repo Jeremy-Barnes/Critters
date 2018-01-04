@@ -70,13 +70,13 @@ public class MetaService extends AjaxService {
 	@GET
 	@Path("/checkUserName/{userName}")
 	public boolean checkUserNameAvailability(@PathParam("userName") String userName) {
-		return UserBLL.isUserNameValid(userName);
+		return UserBLL.isUserNameTaken(userName);
 	}
 
 	@GET
 	@Path("/checkEmail/{email}")
 	public boolean checkEmailAvailability(@PathParam("email") String email) {
-		return UserBLL.isEmailAddressValid(email);
+		return UserBLL.isEmailAddressTaken(email);
 	}
 
 	@GET
@@ -116,7 +116,7 @@ public class MetaService extends AjaxService {
 	public Response getShopKeeperImageOptions() {
 		try {
 			return Response.status(Response.Status.OK).entity(
-					new GenericEntity<StoreClerkImageOption[]>(CommerceBLL.getStoreClerkImageOptions(), StoreClerkImageOption[].class)).build();
+					new GenericEntity<StoreClerkImageOption[]>(CommerceBLL.getStoreClerkImageOptionsForPresentation(), StoreClerkImageOption[].class)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
@@ -127,7 +127,7 @@ public class MetaService extends AjaxService {
 	public Response getStoreBackgroundOptions() {
 		try {
 			return Response.status(Response.Status.OK).entity(
-					new GenericEntity<StoreBackgroundImageOption[]>(CommerceBLL.getStoreBackgroundImageOptions(), StoreBackgroundImageOption[].class)).build();
+					new GenericEntity<StoreBackgroundImageOption[]>(CommerceBLL.getStoreBackgroundImageOptionsForPresentation(), StoreBackgroundImageOption[].class)).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}

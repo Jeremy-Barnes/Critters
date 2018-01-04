@@ -1,15 +1,12 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
-import com.critters.dal.HibernateUtil;
-import com.critters.dal.OberDAL;
+import com.critters.dal.DAL;
 import com.critters.dal.dto.InventoryGrouping;
 import com.critters.dal.dto.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,59 +17,39 @@ public class UserBLL {
 
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-	public static List<User> searchUsers(String searchString){
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<User> users = entityManager
-				.createQuery("from User where firstName like :searchTerm " +
-									 "or lastName like :searchTerm or userName like :searchTerm " +
-									 "or emailAddress like :searchTerm " +
-									 "and isActive = true")
-				.setParameter("searchTerm", '%' + searchString + '%')
-				.getResultList();
-		entityManager.close();
-		for(User user : users) {
-			wipeSensitiveFields(user);
+	public static List<User> searchForUser(String searchTerm) {
+		List<User> users;
+		try(DAL dal = new DAL()){
+			users = dal.users.search(searchTerm);
+		}
+
+		for(User u : users){
+			wipeSensitiveFields(u);
 		}
 		return users;
 	}
 
-	public static List<User> searchForUser(String searchTerm) {
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("usersearch",User.class);
-
-		query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-		query.setParameter(1, "%" + searchTerm + "%");
-		query.execute();
-		List<User> results = query.getResultList();
-
-		entityManager.close();
-		for(User u : results){
-			wipeSensitiveFields(u);
-		}
-		return results;
-	}
-
 	public static Integer giveUserCash(int userID, int amount) {
-		try (OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+		try (DAL dal = new DAL()) {
 			User user = dal.users.getUserByID(userID);
 			user.setCritterbuxx(user.getCritterbuxx() + amount);
-			dal.sql.beginTransaction();
+			dal.beginTransaction();
 			dal.users.save(user);
-			return dal.sql.commitTransaction() ? user.getCritterbuxx() : null;
+			return dal.commitTransaction() ? user.getCritterbuxx() : null;
 		}
 	}
 
 	public static String createUserReturnUnHashedValidator(User user) {
 		user.setCritterbuxx(500); //TODO: economics and validation
 		user.setIsActive(true);
-		user.setUserImagePath(getUserImageOption(1).getImagePath());
 		hashAndSaltPassword(user);
 		String validatorUnHashed = createSelectorAndHashValidator(user);
 
-		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
-			dal.sql.beginTransaction();
+		try(DAL dal = new DAL()) {
+			user.setUserImagePath(dal.configuration.getUserImage(1).getImagePath());
+			dal.beginTransaction();
 			dal.users.save(user);
-			if (dal.sql.commitTransaction()) {
+			if (dal.commitTransaction()) {
 				return validatorUnHashed;
 			} else {
 				logger.error("User creation failed for user " + user.toString());
@@ -84,7 +61,7 @@ public class UserBLL {
 	public static User loginUser(String selector, String validator) {
 		logger.debug("Logging in with selector: " + selector + " validator: " + validator);
 		User user;
-		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+		try(DAL dal = new DAL()) {
 			user = dal.users.getUserByTokenSelector(selector);
 			if(user != null)
 				user.initializeCollections();
@@ -95,15 +72,15 @@ public class UserBLL {
 	public static User getUser(String email, String password, boolean login) {
 		logger.debug("Logging in with Email: " + email + " Password: " + password);
 		User user;
-		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+		try(DAL dal = new DAL()) {
 			user = dal.users.getUserByEmailAddress(email);
 			if(user == null) return null;
 			String validator = createSelectorAndHashValidator(user);
 			user.initializeCollections();
 			if (login && SecurityBLL.validateEncryptedMatch(password, user.getSalt(), user.getPassword())) {
-				dal.sql.beginTransaction();
+				dal.beginTransaction();
 				dal.users.save(user);
-				dal.sql.commitTransaction();
+				dal.commitTransaction();
 				user.setTokenValidator(validator); //pass back unhashed validator to the user
 			} else {
 				user = login ? null : wipeSensitiveFields(user); //login attempt failed validate
@@ -115,7 +92,7 @@ public class UserBLL {
 
 	public static User getUserForDisplay(int id) {
 		User user = null;
-		try(OberDAL dal = new OberDAL(new HibernateUtil.HibernateHelper())) {
+		try(DAL dal = new DAL()) {
 			user = dal.users.getUserByID(id);
 			if(user!= null)
 				user.initializeCollections();
@@ -125,55 +102,56 @@ public class UserBLL {
 
 	public static User updateUser(User changeUser, User sessionUser, UserImageOption imageOption) {
 		//todo validate
-		if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never from User Input. That way porn lies.
-			imageOption = getUserImageOption(imageOption.getUserImageOptionID());
-			sessionUser.setUserImagePath(imageOption.getImagePath());
-		} else {
-			sessionUser.setUserImagePath(null);
-			changeUser.setUserImagePath(null);
+		if (!Extensions.isNullOrEmpty(changeUser.getPassword()) && !changeUser.getPassword().equals(sessionUser.getPassword())) {
+			hashAndSaltPassword(changeUser);
+			sessionUser.setPassword(changeUser.getPassword());
+			sessionUser.setSalt(changeUser.getSalt());
 		}
-
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			entityManager.getTransaction().begin();
-
-			if (!Extensions.isNullOrEmpty(changeUser.getPassword()) && !changeUser.getPassword().equals(sessionUser.getPassword())) {
-				hashAndSaltPassword(changeUser);
-				sessionUser.setPassword(changeUser.getPassword());
-				sessionUser.setSalt(changeUser.getSalt());
-			}
-			sessionUser.setFirstName(changeUser.getFirstName());
-			sessionUser.setLastName(changeUser.getLastName());
-			sessionUser.setPostcode(changeUser.getPostcode());
+		sessionUser.setFirstName(changeUser.getFirstName());
+		sessionUser.setLastName(changeUser.getLastName());
+		sessionUser.setPostcode(changeUser.getPostcode());
+		if(!Extensions.isNullOrEmpty(changeUser.getEmailAddress())) //TODO MORE VALIDATION
 			sessionUser.setEmailAddress(changeUser.getEmailAddress());
-			sessionUser.setCity(changeUser.getCity());
-			sessionUser.setState(changeUser.getState());
-			sessionUser.setCountry(changeUser.getCountry());
-			sessionUser.setIsActive(changeUser.getIsActive());
-			sessionUser.setBirthDay(changeUser.getBirthDay());
-			sessionUser.setBirthMonth(changeUser.getBirthMonth());
-			entityManager.merge(sessionUser);
-			entityManager.getTransaction().commit();
-			return changeUser;
-		}  finally {
-			if(entityManager.getTransaction().isActive()){
-				entityManager.getTransaction().rollback();
-				logger.error("Failed to update a user", changeUser);
+		sessionUser.setCity(changeUser.getCity());
+		sessionUser.setState(changeUser.getState());
+		sessionUser.setCountry(changeUser.getCountry());
+		sessionUser.setIsActive(changeUser.getIsActive());
+		sessionUser.setBirthDay(changeUser.getBirthDay());
+		sessionUser.setBirthMonth(changeUser.getBirthMonth());
+
+		try(DAL dal = new DAL()){
+			if(imageOption != null){ //WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never from User Input. That way porn lies.
+				imageOption = getUserImageOption(imageOption.getUserImageOptionID());
+				sessionUser.setUserImagePath(imageOption.getImagePath());
+			} else {
+				sessionUser.setUserImagePath(null);
 			}
-			entityManager.close();
+
+			dal.beginTransaction();
+			dal.users.save(sessionUser);
+			if(!dal.commitTransaction()) {
+				logger.error("Failed to update a user", changeUser);
+				changeUser = null;
+			}
 		}
+		return changeUser;
 	}
 
-	public static boolean deleteUser(User user) {
-		try {
+	public static boolean deleteUser(int userID) {
+		try(DAL dal = new DAL()) {
+			User user = dal.users.getUserByID(userID);
+			user.initializeCollections();
 			user.setIsActive(false);
-			updateUser(user, user, null);
 			for (Pet pet : user.getPets()) {
-				PetBLL.abandonPet(pet);
+				pet.setIsAbandoned(true);
 			}
-		} catch (Exception e){
-			logger.error("Delete user failed id:" + user.getUserID() + " email: " + user.getEmailAddress(), e);
-			return false;
+			dal.beginTransaction();
+			dal.users.save(user);
+			dal.pets.save(user.getPets());
+			if(!dal.commitTransaction()) {
+				logger.error("Delete user failed id:" + user.getUserID() + " email: " + user.getEmailAddress());
+				return false;
+			}
 		}
 		return true;
 	}
@@ -196,103 +174,62 @@ public class UserBLL {
 		return user;
 	}
 
-	public static boolean isUserNameValid(String userName){
-
-		boolean valid = true;
-		valid = (userName != null && !userName.isEmpty()); //todo: content filter
-		if(valid) {
-			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from users where userName = ?1)")
-											.setParameter(1, userName)
-											.getSingleResult();
-			entityManager.close();
+	public static boolean isUserNameTaken(String userName){
+		try(DAL dal = new DAL()){
+			return dal.users.isUserNameInUse(userName);
 		}
-
-		return valid;
 	}
 
-	public static boolean isEmailAddressValid(String email){
-		boolean valid = true;
-		valid = (email != null && !email.isEmpty()); //todo: content filter
-		if(valid) {
-			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			valid = !(boolean) entityManager.createNativeQuery("SELECT EXISTS(SELECT 1 from users where emailAddress = ?1)")
-											.setParameter(1, email)
-											.getSingleResult();
-			entityManager.close();
+	public static boolean isEmailAddressTaken(String email){
+		try(DAL dal = new DAL()){
+			return dal.users.isUserNameInUse(email);
 		}
-		return valid;
 	}
 
 	public static List<InventoryGrouping> getInventory(User user){
-		return CommerceBLL.groupItems(getUserInventory(user));
+		return CommerceBLL.groupItems(getUserInventory(user.getUserID()));
 	}
 
-	public static List<Item> getUserInventory(User user){
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		List<Item> inventory = entityManager
-				.createQuery("from Item where ownerId = :id")
-				.setParameter("id", user.getUserID())
-				.getResultList();
-		entityManager.close();
-		return inventory;
+	public static List<Item> getUserInventory(int userID){
+		try(DAL dal = new DAL()){
+			return dal.items.getItemsByOwnerID(userID);
+		}
 	}
 
-	public static void discardInventoryItems(Item[] items, User user){
-		List<Item> streamableItems = Arrays.asList(items);
-		List<Integer> ids = streamableItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
-
-		user.initializeInventory();
-		Item[] resultant = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).toArray(Item[]::new);
-		if(resultant != null && resultant.length == items.length) {
-			EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-			try {
-				entityManager.getTransaction().begin();
-				for(int i = 0; i < resultant.length; i++) {
-					user.getInventory().remove(resultant[i]);
-					resultant[i].setOwnerId(null);
-					resultant[i].setPrice(null);
-					entityManager.merge(resultant[i]);
+	public static void discardInventoryItems(Item[] dropItems, User user){
+		try(DAL dal = new DAL()){
+			List<Item> dbDropItems = dal.items.getItems(dropItems);
+			List<Integer> ids = dbDropItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
+			user.initializeInventory();
+			List<Item> userOwnedItems = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).collect(Collectors.toList());
+			if(userOwnedItems != null && userOwnedItems.size() == dbDropItems.size()){
+				for(int i = 0; i < userOwnedItems.size(); i++) {
+					user.getInventory().remove(userOwnedItems.get(i));
+					userOwnedItems.get(i).setOwnerId(null);
+					userOwnedItems.get(i).setPrice(null);
 				}
-				entityManager.merge(user);
-				entityManager.getTransaction().commit();
-			} finally {
-				if(entityManager.getTransaction().isActive()){
-					entityManager.getTransaction().rollback();
-				}
-				entityManager.close();
+				dal.beginTransaction();
+				dal.items.save(userOwnedItems);
+				dal.users.save(user);
+				dal.commitTransaction();
 			}
 		}
 	}
 
 	public static UserImageOption getUserImageOption(int id) { //todo caching
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		try {
-			UserImageOption image = (UserImageOption) entityManager.createQuery("from UserImageOption where userImageOptionID = :id").setParameter("id", id)
-																   .getSingleResult();
-			return image;
-		} catch (NoResultException nrex) {
-			logger.info("No such image option found with id " + id, nrex);
-		} catch (PersistenceException ex) {
-			logger.error("Database error searching for id " + id, ex);
-		} finally {
-			entityManager.close();
+		UserImageOption image = null;
+		try (DAL dal = new DAL()) {
+			image = dal.configuration.getUserImage(id);
 		}
-		return null;
+		return image;
 	}
 
-	public static UserImageOption[] getUserImageOptions() { //todo caching
-		EntityManager entityManager = HibernateUtil.getEntityManagerFactory().createEntityManager();
-		UserImageOption[] images = null;
-		try {
-		 	images = (UserImageOption[]) entityManager.createQuery("from UserImageOption").getResultList().toArray(new UserImageOption[0]);
+	public static UserImageOption[] getUserImageOptions() {
+		List<UserImageOption> images = null;
+		try (DAL dal = new DAL()) {
+			images = dal.configuration.getUserImages();
 		}
-		catch (PersistenceException ex) {
-			logger.error("Database error searching for images!", ex);
-		}  finally {
-			entityManager.close();
-		}
-		return images;
+		return images.toArray(new UserImageOption[0]);
 	}
 
 	/***************** SECURITY STUFF **********************/

@@ -29,14 +29,14 @@ public class FriendshipService extends AjaxService {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 		}
 		Friendship request = jsonRequest.getValue();
-		try {
+	//	try {
 			request = FriendshipBLL.createFriendship(request.getRequester(), request.getRequested(), loggedInUser);
 			return Response.status(Response.Status.OK).entity(request).build();
-		} catch (GeneralSecurityException ex) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+//		} catch (GeneralSecurityException ex) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+//		} catch (Exception e) {
+//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+//		}
 
 	}
 

@@ -6,7 +6,6 @@ import com.critters.dal.dto.StoreInformationRequest;
 import com.critters.dal.dto.entity.Store;
 import com.critters.dal.dto.entity.User;
 
-import javax.resource.spi.InvalidPropertyException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -60,7 +59,7 @@ public class CommerceService extends AjaxService {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 
 		try {
-			CommerceBLL.changeItemsPrice(request.items, loggedInUser);
+			CommerceBLL.changeItemsPrice(request.items, loggedInUser.getUserID());
 			return Response.status(Response.Status.OK).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -80,7 +79,7 @@ public class CommerceService extends AjaxService {
 
 		try {
 			for (int i = 0; i < request.items.length; i++) request.items[i].setPrice(null);
-			CommerceBLL.changeItemsPrice(request.items, loggedInUser);
+			CommerceBLL.changeItemsPrice(request.items, loggedInUser.getUserID());
 
 			for (int i = 0; i < request.items.length; i++) request.items[i].setContainingStoreId(null);
 			CommerceBLL.changeItemsStore(request.items, loggedInUser);
@@ -101,14 +100,14 @@ public class CommerceService extends AjaxService {
 		if(loggedInUser == null)
 			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
 
-		try {
+		//try {
 			CommerceBLL.changeItemsOwnerViaPurchase(request.items, loggedInUser);
 			return Response.status(Response.Status.OK).build();
-		} catch (InvalidPropertyException ex) {
-			return Response.status(Response.Status.PRECONDITION_FAILED).entity(ex.getMessage()).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+	//	} // catch (InvalidPropertyException ex) {
+//			return Response.status(Response.Status.PRECONDITION_FAILED).entity(ex.getMessage()).build();
+//		} catch (Exception e) {
+//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+//		}
 	}
 
 	@POST

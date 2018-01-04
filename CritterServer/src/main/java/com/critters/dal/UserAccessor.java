@@ -4,7 +4,10 @@ import com.critters.dal.dto.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceException;
+import javax.persistence.StoredProcedureQuery;
 import java.util.List;
 
 /**
@@ -12,9 +15,9 @@ import java.util.List;
  */
 public class UserAccessor  {
 	static final Logger logger = LoggerFactory.getLogger("application");
-	HibernateUtil.HibernateHelper sql;
+	EntityManager sql;
 
-	public UserAccessor(HibernateUtil.HibernateHelper hibernateHelper){
+	UserAccessor(EntityManager hibernateHelper){
 		sql = hibernateHelper;
 	}
 
@@ -38,10 +41,6 @@ public class UserAccessor  {
 		return user;
 	}
 
-	public void getUserByUsername() {
-
-	}
-
 	public User getUserByEmailAddress(String email){
 		User user = null;
 		try {
@@ -52,12 +51,44 @@ public class UserAccessor  {
 		return user;
 	}
 
+	public List<User> search(String searchTerm){
+		StoredProcedureQuery query = sql.createStoredProcedureQuery("usersearch", User.class);
+		query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
+		query.setParameter(1, "%" + searchTerm + "%");
+		query.execute();
+		return query.getResultList();
+	}
+
+	public boolean isUserNameInUse(String userName){
+		boolean valid = true;
+		valid = (userName != null && !userName.isEmpty());
+		if(valid) {
+			valid = !(boolean) sql.createNativeQuery("SELECT EXISTS(SELECT 1 from users where userName = ?1)")
+											.setParameter(1, userName)
+											.getSingleResult();
+		}
+
+		return valid;
+	}
+
+	public boolean isEmailAddressInUse(String email){
+		boolean valid = true;
+		valid = (email != null && !email.isEmpty());
+		if(valid) {
+			valid = !(boolean) sql.createNativeQuery("SELECT EXISTS(SELECT 1 from users where emailAddress = ?1)")
+											.setParameter(1, email)
+											.getSingleResult();
+		}
+		return valid;
+	}
+
+
 	public void save(List<User> users) {
 		users.forEach(u -> save(u));
 	}
 
 	public void save(User user) {
-		sql.entityManager.merge(user);
+		sql.merge(user);
 	}
 
 }

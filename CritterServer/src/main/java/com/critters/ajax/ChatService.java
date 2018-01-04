@@ -31,14 +31,14 @@ public class ChatService extends AjaxService {
 		}
 
 		Message msg = message.getValue();
-		try {
+		//try {
 			msg = ChatBLL.sendMessage(msg, loggedInUser);
 			return Response.status(Response.Status.OK).entity(msg).build();
-		} catch (GeneralSecurityException ex) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+//		} catch (GeneralSecurityException ex) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+//		} catch (Exception e) {
+//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+//		}
 	}
 
 
@@ -164,14 +164,14 @@ public class ChatService extends AjaxService {
 		}
 
 		MessageRequest msg = message.getValue();
-		try {
+		//try {
 			ChatBLL.deleteMessages(msg.messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser);
 			return Response.status(Response.Status.OK).build();
-		} catch (GeneralSecurityException ex) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+//		} catch (GeneralSecurityException ex) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+//		} catch (Exception e) {
+//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+//		}
 	}
 
 	@POST
