@@ -4,15 +4,15 @@
     overflow-x: hidden; /* Prevent scroll on narrow devices */
 }
 body {
-    padding-top: 50px;
-    font-family: 'Open Sans';
+    /*padding-top: 50px;*/
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     color: #333333;
 }
 
 @media (min-width:768px) {
     body {
-        padding-top: 80px;
+        /*padding-top: 80px;*/
         font-size: 16px;
     }
 }
@@ -23,6 +23,10 @@ body {
     min-height: 100%;
 }
 
+#main {
+    margin-top: 50px;
+}
+
 @media(min-width:768px) {
     #contentwrap { /*wraps the container so that we get 12 columns NEXT TO the sidebar*/
         position: relative;
@@ -30,6 +34,7 @@ body {
     #main { /* id main is the html element with padding to make the sidebar/container play nice */
         padding-left:260px;
         margin-bottom:-80px;
+        margin-top: 80px;
     }
 }
 
@@ -67,6 +72,10 @@ body {
 }
 
 .sidebar a, .navbar a {
+    color: #ffffff;
+}
+
+.sidebar a:hover, .sidebar a:focus, .navbar a:hover, .navbar a:focus {
     color: #ffffff;
 }
 
@@ -309,6 +318,15 @@ a.thumbnail:hover, .thumbnail:focus, .thumbnail:active {
  * --------------------------------------------------
  */
 
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + *  {
+    margin-top: 10px;
+}
+
 h1, h2 { font-family: 'Bubblegum Sans';}
 
 h1 { font-size: 48px; }
@@ -317,11 +335,12 @@ h3 { font-size: 18px; font-weight: bold; }
 h4 { font-size: 16px; }
 
 @media (max-width:767px) {
-    h1 { font-size:30px;}
+    h1 { font-size: 30px;}
+    h2 { font-size: 24px;}
 }
 
 
-a {color: #12a6da;}
+a {color: #12a6da; cursor: pointer;}
 
 a:hover, a:focus {color: #0F8DBA;}
 
@@ -329,22 +348,24 @@ a:hover, a:focus {color: #0F8DBA;}
     background-color: #ebebeb;
     border-bottom: 1px solid #acacac;
     width:100%;
-    padding-top: 30px;
-    padding-bottom: 20px;
+    padding: 30px;
 }
-.page-title > * {
-    margin-left: 30px;
+
+@media (max-width: 767px) {
+    .page-title {
+        padding: 15px;
+    }
 }
+
 .page-title > .row {
-    margin-left: 15px;
+    margin-left: -15px;
 }
-.page-title * {
-    margin-top: 0px;
-}
+
 .nav-tabs {
     display:block;
     width: 100%;
     height: 45px;
+    margin-bottom: 30px;
 }
 
 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
@@ -364,27 +385,7 @@ tr td:nth-child(1) {
 table {
     border: 1px solid #acacac;
 }
-.messagePreview { 
-    padding: 15px 3px;
-}
-.buttons {
-    padding: 30px 0px;
-}
-.buttons button {
-    margin-right: 15px;
-}
-.messageUser {
-    text-decoration: none !important;
-    font-weight: bold;
-    color: black;
-    width: 200px;
-}
-.messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
-    font-weight: bold;
-}
-.read, .read > .messageSubject {
-    font-weight: normal !important;
-} 
+
 .inlineblock {
     display: inline-block !important;
 }
@@ -462,6 +463,33 @@ hr {
 }
 
 /*
+ * Tabs
+ * --------------------------------------------------
+ */
+
+.nav-tabs {
+    border: none;
+}
+
+.nav-tabs > li > a {
+    background-color: none;
+    border: none;
+    border-bottom: 3px solid #acacac;
+    color: #333333;
+    margin-right: 0;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+    background-color: transparent;
+    border-bottom: 3px solid #12a6da;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid #12a6da;
+}
+
+/*
  * Forms
  * --------------------------------------------------
  */
@@ -520,12 +548,10 @@ form .row + .row {
 }
 .navBox {
     border-left: 1px solid #0f8dba;
-    border-right: 1px solid #0f8dba;
     height: 80px !important;
-    position: relative;
-    top: -5px;
-    padding: 30px 30px 0px 30px;
-    display: inline-block;
+    display:table-cell;
+    vertical-align: middle;
+    padding: 20px;
 }
 .navBox + .navBox {
     right: 11px;
@@ -534,17 +560,22 @@ form .row + .row {
     left: -6px;
 }
 #userMenu, #userMenuMobile {
-    background-color: #12a6da;
+    background-color: #0F8DBA;
     position: absolute;
-    right: 0px;
-    left: auto;
     top: 100%;
     list-style: none;
-    list-style-position:outside;
-    list-style-image: none;
     text-align: left;
-    width: 100%;
+    padding: 10px 15px;
 }
+
+#userMenu {
+    margin-left: -20px;
+}
+
+.userDropdown ul > li {
+    padding: 2px 0;
+}
+
 #userMenuClickMobile {
     padding: 0px;
 }
@@ -554,26 +585,20 @@ form .row + .row {
     background-color: #12a6da;
 }
 .messageslink {
-    top: -1px;
+    position: relative;
 }
 .notificationCircle {
     background: #ffae35;
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    padding-bottom: 5px;
     position: absolute;
     top: 20%;
     left: 60%;
     text-align: center;
     font-weight:bold;
-    font-size:14pt;
+    font-size:10pt;
     z-index: 9000;
-}
-
-.notificationCircle > * {
-    position: relative;
-    top: -10%;
 }
 
 .mobileMessagesNotifier {
@@ -582,18 +607,25 @@ form .row + .row {
     right: 20px;
 }
 .notificationCircleMobile {
-    width: 22px;
-    height: 22px;
     top: -10px;
-    left: -15px;
-    font-size:14pt;
-    z-index: 9000;
+    right: -15px;
 }
 
 .popover-repeater {
     border-top: 1px solid #acacac;
     width: 100%;
+}
+
+.popover-repeater-padding {
     padding: 10px 15px;
+}
+
+.popover-repeater:first-child {
+    border-top: none;
+}
+
+.popover-repeater:hover, .popover-repeater:focus {
+    background-color: #ebebeb;
 }
 
 .notification-header {
@@ -609,6 +641,7 @@ form .row + .row {
     width:375px;
     margin: 0px;
 }
+
 @media(max-width:767px) {
     .notifications-bubble {
        width: 200px;
@@ -620,6 +653,7 @@ form .row + .row {
     padding: 0px;
     border-radius: 0px;
     border: 1px solid #acacac;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .popover-content {
@@ -927,8 +961,18 @@ form .row + .row {
     color: #12a6da;
 }
 
-.btn i.fa {
-    padding-right:5px;
+.btn i.fa, .btn i.far, .btn i.fas {
+    padding-right: 5px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+}
+
+.icon-btn i {
+    padding: 0px !important;
 }
 
 /* Button Hover Animation */
@@ -1040,7 +1084,7 @@ form .row + .row {
     color: white;
     text-shadow: 1px 2px 4px black; 
     text-align: right;
-    padding: 0px 20px;
+    padding: 10px 20px;
     left: 0px;
     bottom: 0px;
 }
@@ -1197,53 +1241,185 @@ iframe {
     margin-bottom: 15px;
 }
 
-.trophyCase h2 {
-    margin-top: 0;
-}
-
 /*
  * Messaging
  * --------------------------------------------------
  */
 
-.messagePreview td {
-    vertical-align: middle !important;
+.messagePreviewWrapper {
+    border-top: 1px solid #ACACAC;
+    border-left: 1px solid #ACACAC;
+    border-right: 1px solid #ACACAC;
+    margin: 30px 0;
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
 }
+
+#friends .messagePreviewWrapper {
+    margin: 15px 0;
+}
+
+.messagePreview {
+    border-bottom: 1px solid #ACACAC;
+    display: table-row;
+}
+
+#inbox .messagePreview, #sent .messagePreview {
+    cursor: pointer;
+}
+
+.messagePreview > div {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 15px 0px 15px 10px;
+}
+@media (min-width: 768px) {
+    .messagePreview > div:first-child {
+    padding-left: 15px;
+    }
+    .messagePreview > div:last-child {
+        padding-right: 15px;
+    }
+}
+
 .selectedMessage {
     background-color: #ebebeb;
 }
+
+.messagePreview .circlecheckbox {
+    margin: 0;
+}
+.messageUser {
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+}
+
+.messageContent {
+    width: 100%;
+}
+.messageSubject, .messageSubject .overflow-ellipsis, .messageText, .messageText .overflow-ellipsis {
+    display: inline-block;
+}
+
+.messagePreview:not(.read) .messageSubject, .messagePreview .messageUser {
+    font-weight: bold;
+}
+.read, .read > .messageSubject {
+    font-weight: normal !important;
+}
+.messageDate {
+    text-align: right;
+}
+
+.messageAction {
+    text-align: right;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .messagePreview > div {
+        display: inline-block;
+        padding: 5px;
+    }
+
+    #friends .messagePreview > div {
+        display: table-cell;
+    }
+
+    .messagePreviewWrapper, .messagePreview {
+        display: block !important;
+    }
+
+    .messageText, .messageDate {
+        font-size: 13px;
+    }
+
+    #friends div.messageDate, #friends div.messageAction, #friends .buddies-right {
+        display: block !important;
+    }
+
+    #friends div.messageDate {
+        float: left;
+        padding-top: 14px;
+    }
+
+    .messageSubject, .messageSubject .overflow-ellipsis, .messageText, .messageText .overflow-ellipsis {
+        display: block !important;
+        float: none;
+    }
+
+    .messageCheckBox {
+        float: right;
+        padding-top: 12px !important;
+    }
+
+    .overflow-ellipsis {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .messagePreview .userThumb {
+        width: 36px;
+        height: 36px;
+    }
+}
+
 #viewDetail, #composeNew {
     margin-top: 25px;
 }
-#viewDetail .messageDate {
-    float: right;
+
+@media (max-width: 767px) {
+    .popover-repeater img.userThumb {
+        width: 36px;
+        height: 36px;
+    }
 }
-.conversationTitle > h2 {
+.conversationTitle {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ACACAC;
+    margin-bottom: 20px;
+    display: table;
+    width: 100%;
+}
+
+.conversationTitle div {
+    display: table-cell;
+    vertical-align: top;
+} 
+
+.conversationTitle h2 {
     display: inline;
 }
-.conversationTitle > .btn { margin-right: 10px; }
-.conversationTitle > .btn, .subjectBar > .btn{
-    width: 40px;
-    height: 40px;
-    text-align: center;
-}
-.messageGuts > textarea:focus, .messageGuts > input:focus {
-    border: 2px solid #12a6da;
-}
-.messageGuts textarea, .messageGuts input {
-    border: 2px solid #acacac;
-    border-radius: 2px;
-    width: 100%;
-    margin: 20px 0px 0px;
 
+@media (max-width: 767px) {
+    .conversationTitle h2 {
+        font-family: 'Open Sans', sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+    }
 }
-.messageGuts {
-    width: 70%;
+
+.conversationTitle .btn { 
+    margin-right: 10px; 
 }
-.messageGuts textarea {
-    height: 170px;
-    margin-bottom: 20px !important;
+
+.subjectBar .messageToggle {
+    margin-left: 10px;
+    margin-top: 4px;
 }
+
+.subjectBar .messageDate {
+    margin-left: 10px;
+    margin-top: 14px;
+}
+
+.messageGuts, .messageGuts textarea, .messageGuts input, .messageGuts .btn {
+    margin-top: 20px;
+}
+    
 .messageGuts > p {
     white-space: pre-wrap; /* css-3 */
     white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
@@ -1252,54 +1428,6 @@ iframe {
     word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
-#viewDetail > .messageGuts {
-    margin: 20px 0px 20px;
-}
-
-@media (max-width: 767px) {
-    .messageSubject, .messageText, .messageDate {
-        font-size: 14px;
-    }
-
-    .messagePreview tr {
-        padding: 10px;
-    }
-
-    .messagePreview td {
-        display: block !important;
-        padding: 0 0 5px 0 !important;
-    }
-
-    .messagePreview td.messageUser {
-        float: left;
-    }
-
-    .messagePreview td.messageCheckBox {
-        float:right;
-    }
-
-    .messagePreview td.messageDate {
-        float: right;
-        font-size:12px;
-    }
-
-    .messagePreview .userThumb {
-        width: 30px;
-        height: 30px;
-    }
-
-    .messagePreview td.messageContent {
-        float: left;
-    }
-
-}
-.tableButtonRight {
-    float:right;
-    padding-right: 25px;
-}
-.tableButtonRight > .btn {
-        max-width: 100px;
-}
 .selectedImage {
     background-color: blue;
 }

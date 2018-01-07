@@ -4,14 +4,18 @@ import { Comparable } from '../dtos'
 
 @Component({
     selector: "<autocomplete></autocomplete>",
-    template: `<div style="position: relative" class="inlineblock"><input type="text" placeholder="{{placeholder}}" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)"/><br />
+    template: `<div style="position: relative" class="show"><input type="text" placeholder="{{placeholder}}" [(ngModel)]="searchTextModel" (ngModelChange)="checkClearInput($event)" (keyup)="this.handleInput($event)" class="form-control" />
                 <div *ngIf="searchTextModel != null && searchTextModel.length > 0">
-				    <div class="popover bottom" style="display: block; position: absolute; top: 25px; left: 0px; width: 300px;" >
+				    <div class="popover bottom" style="display: block; position: absolute; top: 40px; left: 10px; width: 90%; max-width: 400px;" >
                         <div class="arrow" style="top: -10px; left: 20px;"></div>
                         <div class="popover-content">
-                            <div style="font-size: 12pt;" class="popover-repeater" *ngFor="let item of resultList">
-                                <b><a (click)="onClick(item)"><img *ngIf="item.resultData.userImagePath" class="userThumb" src="{{item.resultData.userImagePath}}" />  {{item.resultText}}</a></b>
-                            </div>
+                            <div *ngFor="let item of resultList" class="popover-repeater">
+                            <a (click)="onClick(item)">
+                                <div class="popover-repeater-padding">
+                                    <img *ngIf="item.resultData.userImagePath" class="userThumb" src="{{item.resultData.userImagePath}}" style="margin-right: 10px;" />{{item.resultText}}
+                                </div>
+                            </a>
+                        </div>
                         </div>
                     </div>
                 </div></div>`

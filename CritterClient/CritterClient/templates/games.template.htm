@@ -16,7 +16,7 @@
                             <p>
                                 {{specialGame.gameDescription}}
                             </p>
-                            <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="fa fa-play-circle-o"></i></span>
+                            <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="far fa-play-circle"></i></span>
                         </div>
                         <div class="col-md-6 centered">
                             <div class="imgCenterer">
@@ -72,7 +72,7 @@
                 <div class="card gameTitleBackground" [ngStyle]="{'background-image': 'url(' + activeGame.gameIconPath + ')'}">
                     <div class="col-md-4"> <h1 class="inlineblock">{{activeGame.gameName}}</h1> </div>
                     <div class="col-md-4"></div>
-                    <div class="col-md-4"> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></div> </div>
+                    <div class="col-md-4"> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="far fa-play-circle"></i></div> </div>
                 </div>
             </div>
         </div>

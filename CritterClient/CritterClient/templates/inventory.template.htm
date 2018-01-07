@@ -57,8 +57,8 @@
         <div class="buttons">
             <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
             <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
-                <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
-                <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-envelope-open-o"></i> move</button>
+                <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="far fa-trash-alt"></i> throw away</button>
+                <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="far fa-folder-open"></i> move</button>
             </div>
         </div>
  
