@@ -45,7 +45,6 @@ public class BackgroundJobManager {
 
 	@Schedule(hour="*", minute="*/1", second="1", persistent=true)
 	public void generateRandomEvents() {
-		System.out.println("LETS SEE WHAT THEYVE WON");
 		int players = EventBLL.numberOfRegistrants();
 		int numberOfEventsToGenerate = 0;
 
@@ -62,7 +61,6 @@ public class BackgroundJobManager {
 			events.add(EventBLL.generateRandomEvent());
 		}
 		EventBLL.distributePrizes(events);
-
 		EventBLL.clearRegistrations();
 	}
 
