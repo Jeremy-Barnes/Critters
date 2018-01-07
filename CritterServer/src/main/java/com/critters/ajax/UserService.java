@@ -1,5 +1,6 @@
 package com.critters.ajax;
 
+import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
 import com.critters.dal.dto.AccountInformationRequest;
@@ -103,18 +104,15 @@ public class UserService extends AjaxService{
 
 	@POST
 	@Path("/changeUserInformation")
+	@UserSecure
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changeUserInformation(JAXBElement<AccountInformationRequest> jsonRequest) {
 		AccountInformationRequest request = jsonRequest.getValue();
 		User user = request.user;
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		user.setIsActive(true);
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		}
 		try {
-			user = UserBLL.updateUser(user, loggedInUser, request.imageChoice);
+			user = UserBLL.updateUser(user, (User) httpRequest.getSession().getAttribute("user"), request.imageChoice);
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
@@ -122,21 +120,19 @@ public class UserService extends AjaxService{
 	}
 
 	@DELETE
+	@UserSecure
 	@Path("/deleteUser")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUserAccount() {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		} else {
-			return UserBLL.deleteUser(loggedInUser.getUserID()) ? Response.status(Response.Status.OK).build() :
-					Response.status(Response.Status.BAD_REQUEST).entity("Couldn't delete your account. You're stuck with us! Contact an admin for help.").build();
-		}
+		return UserBLL.deleteUser(getSessionUser().getUserID()) ? Response.status(Response.Status.OK).build() :
+				Response.status(Response.Status.BAD_REQUEST).entity("Couldn't delete your account. You're stuck with us! Contact an admin for help.").build();
+
 	}
 
 	@POST
 	@Path("/addPet")
+	@UserSecure
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPetToAccount(JAXBElement<Pet> jsonPet) {
@@ -146,12 +142,8 @@ public class UserService extends AjaxService{
 			return Response.status(Response.Status.CONFLICT).entity("Sorry! This pet name is not available! Try a different one.").build();
 		}
 
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		pet.setIsAbandoned(false);
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		}
-		pet = PetBLL.createPet(pet, loggedInUser);
+		pet = PetBLL.createPet(pet, getSessionUser());
 		return Response.status(Response.Status.OK).entity(pet).build();
 	}
 
@@ -168,30 +160,22 @@ public class UserService extends AjaxService{
 
 	@POST
 	@Path("/getInventory")
+	@UserSecure
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getInventory(JAXBElement<User> jsonUser) {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		} else {
-			return Response.status(Response.Status.OK).entity(UserBLL.getInventory(loggedInUser).toArray(new InventoryGrouping[0])).build();
-		}
+		return Response.status(Response.Status.OK).entity(UserBLL.getInventory(getSessionUser()).toArray(new InventoryGrouping[0])).build();
 	}
 
 	@POST
 	@Path("/discardInventoryItem")
+	@UserSecure
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response discardInventoryItem(JAXBElement<ItemRequest> jsonRequest) {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
 		ItemRequest request = jsonRequest.getValue();
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		} else {
-			UserBLL.discardInventoryItems(request.items, loggedInUser);
-			return Response.status(Response.Status.OK).build();
-		}
+		UserBLL.discardInventoryItems(request.items, getSessionUser());
+		return Response.status(Response.Status.OK).build();
+
 	}
 }

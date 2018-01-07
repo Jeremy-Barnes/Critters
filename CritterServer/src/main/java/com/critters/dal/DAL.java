@@ -51,9 +51,9 @@ public class DAL implements AutoCloseable {
 	}
 
 	public void rollback(){
-			if (sql.getTransaction().isActive())
-				sql.getTransaction().rollback();
-		}
+		if (sql.getTransaction().isActive())
+			sql.getTransaction().rollback();
+	}
 
 	@Override
 	public void close(){

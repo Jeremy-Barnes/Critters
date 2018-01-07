@@ -75,7 +75,7 @@ public class ChatBLL {
 		return mail;
 	}
 
-	public static List<Message> getMail(int userID, boolean undeliveredOnly) throws Exception {
+	public static List<Message> getMail(int userID, boolean undeliveredOnly)  {
 		List<Message> mail;
 		try(DAL dal = new DAL()) {
 			mail = dal.messages.getMailByUserID(userID, undeliveredOnly);
@@ -85,7 +85,7 @@ public class ChatBLL {
 		return mail;
 	}
 
-	public static List<Conversation> getConversations(int userID) throws Exception {
+	public static List<Conversation> getConversations(int userID) {
 		List<Message> mail = null;
 		List<Message> mailChildren = null;
 		try(DAL dal = new DAL()) {
@@ -95,7 +95,7 @@ public class ChatBLL {
 		return buildConversations(mail, mailChildren);
 	}
 
-	public static Message getMessage(int id, User user) throws Exception {
+	public static Message getMessage(int id, User user) {
 		Message mail;
 		try(DAL dal = new DAL()) {
 			mail = getMessage(id, user, dal);
@@ -146,7 +146,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static void deleteMessage(int messageID, User user) throws Exception {
+	public static void deleteMessage(int messageID, User user) {
 		try(DAL dal = new DAL()) {
 			Message m = getMessage(messageID, user, dal);
 			if (m.getSender().getUserID() == user.getUserID()) {
@@ -163,7 +163,7 @@ public class ChatBLL {
 		}
 	}
 
-	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) throws Exception {
+	public static List<Message> markMessagesDelivered(List<Message> messages, User loggedInUser) {
 		try(DAL dal = new DAL()) {
 			messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser, dal);
 			if (!Extensions.isNullOrEmpty(messages)) {
@@ -186,7 +186,7 @@ public class ChatBLL {
 		return messages;
 	}
 
-	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) throws Exception {
+	public static List<Message> markMessagesRead(List<Message> messages, User loggedInUser) {
 		try(DAL dal = new DAL()) {
 			messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser, dal);
 			if (!Extensions.isNullOrEmpty(messages)) {
@@ -209,7 +209,7 @@ public class ChatBLL {
 		return messages;
 	}
 
-	public static List<Message> markMessagesUnread(List<Message> messages, User loggedInUser) throws Exception {
+	public static List<Message> markMessagesUnread(List<Message> messages, User loggedInUser) {
 		try (DAL dal = new DAL()) {
 			messages = getMessages(messages.stream().map(Message::getMessageID).collect(Collectors.toList()), loggedInUser, dal);
 			if (!Extensions.isNullOrEmpty(messages)) {

@@ -36,7 +36,7 @@ public class FriendshipBLL {
 		return null;
 	}
 
-	public static Friendship acceptFriendRequest(Friendship request, User user) throws Exception {
+	public static Friendship acceptFriendRequest(Friendship request, User user) {
 		if(user.getUserID() == request.getRequested().getUserID()) {
 
 			Friendship dbReq = null;
@@ -59,7 +59,7 @@ public class FriendshipBLL {
 		}
 	}
 
-	public static void deleteFriendRequest(Friendship request, User user) throws Exception {
+	public static void deleteFriendRequest(Friendship request, User user) {
 		if(user.getUserID() == request.getRequested().getUserID()) {
 			deleteFriendRequestWithIDs(request.getRequester().getUserID(), request.getRequested().getUserID());
 		} else {
@@ -67,7 +67,7 @@ public class FriendshipBLL {
 		}
 	}
 
-	public static void cancelFriendRequest(Friendship request, User user) throws Exception {
+	public static void cancelFriendRequest(Friendship request, User user) {
 		if(user.getUserID() == request.getRequester().getUserID()) {
 			deleteFriendRequestWithIDs(request.getRequester().getUserID(), request.getRequested().getUserID());
 		} else {
@@ -75,7 +75,7 @@ public class FriendshipBLL {
 		}
 	}
 
-	public static void endFriendship(Friendship friendship, User loggedInUser) throws Exception {
+	public static void endFriendship(Friendship friendship, User loggedInUser) {
 		if(friendship.isAccepted() && (loggedInUser.getUserID() == friendship.getRequested().getUserID() || loggedInUser.getUserID() == friendship.getRequester().getUserID())){
 			deleteFriendRequestWithIDs(friendship.getRequester().getUserID(), friendship.getRequested().getUserID());
 		} else {
@@ -83,7 +83,7 @@ public class FriendshipBLL {
 		}
 	}
 
-	private static void deleteFriendRequestWithIDs(int requesterID, int requestedID) throws Exception {
+	private static void deleteFriendRequestWithIDs(int requesterID, int requestedID) {
 		try (DAL dal = new DAL()){
 			Friendship dbReq = dal.friends.getFriendshipByIDs(requesterID, requestedID);
 			dal.beginTransaction();

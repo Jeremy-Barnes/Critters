@@ -34,5 +34,9 @@ public class AjaxService {
 		NewCookie sessionID = new NewCookie("JSESSIONID", httpRequest.getSession().getId(), "/api/", null, null, 60*60*3, false ); //used because setting other cookie seems to overwrite Tomcat generated cookie.
 		return new NewCookie[]{longTermCookie, sessionID};
 	}
+
+	protected User getSessionUser(){
+		return (User) httpRequest.getSession().getAttribute("user");
+	}
 }
 

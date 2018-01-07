@@ -241,25 +241,25 @@ public class CommerceBLL {
 		}
 	}
 
-	public static StoreBackgroundImageOption getStoreBackgroundImageOptionForPresentation(int id) throws Exception {
+	public static StoreBackgroundImageOption getStoreBackgroundImageOptionForPresentation(int id)  {
 		try(DAL dal = new DAL()) {
 			return dal.configuration.getStoreBackgroundImageOption(id);
 		}
 	}
 
-	public static StoreBackgroundImageOption[] getStoreBackgroundImageOptionsForPresentation() throws Exception {
+	public static StoreBackgroundImageOption[] getStoreBackgroundImageOptionsForPresentation() {
 		try(DAL dal = new DAL()) {
 			return dal.configuration.getStoreBackgroundImageOptions().toArray(new StoreBackgroundImageOption[0]);
 		}
 	}
 
-	public static StoreClerkImageOption getStoreClerkImageOptionForPresentation(int id) throws Exception {
+	public static StoreClerkImageOption getStoreClerkImageOptionForPresentation(int id) {
 		try(DAL dal = new DAL()) {
 			return dal.configuration.getStoreClerkImageOption(id);
 		}
 	}
 
-	public static StoreClerkImageOption[] getStoreClerkImageOptionsForPresentation() throws Exception { //todo caching
+	public static StoreClerkImageOption[] getStoreClerkImageOptionsForPresentation() { //todo caching
 		try(DAL dal = new DAL()) {
 			return dal.configuration.getStoreClerkImageOptions().toArray(new StoreClerkImageOption[0]);
 		}

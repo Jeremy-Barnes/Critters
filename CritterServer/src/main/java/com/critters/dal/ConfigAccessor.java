@@ -147,8 +147,6 @@ public class ConfigAccessor{
 		}
 	}
 
-
-
 	public <T> void save(List<T> images) {
 		images.forEach(i -> save(i));
 	}

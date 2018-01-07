@@ -34,61 +34,13 @@ public class HibernateUtil {
 		}
 	}
 
-	public static SessionFactory getSessionFactory() {
+	protected static SessionFactory getSessionFactory() {
 		tryToConnectToSQL();
 		return sessionFactory;
 	}
 
-	public static EntityManagerFactory getEntityManagerFactory() {
+	protected static EntityManagerFactory getEntityManagerFactory() {
 		tryToConnectToSQL();
 		return entityManagerFactory;
 	}
-
-//	public static class HibernateHelper implements AutoCloseable {
-//		protected EntityManager entityManager;
-//		public HibernateHelper(){
-//			entityManager = HibernateUtil.entityManagerFactory.createEntityManager();
-//		}
-//
-//		public void beginTransaction(){
-//			if(!entityManager.getTransaction().isActive())
-//				entityManager.getTransaction().begin();
-//		}
-//
-//		public boolean commitTransaction(){
-//			try {
-//				if (entityManager.getTransaction().isActive()) {
-//					entityManager.getTransaction().commit();
-//					return true;
-//				}
-//			} catch(Exception e) {
-//				rollback();
-//				logger.error("Transaction failed", e);
-//			}
-//			return false;
-//		}
-//
-//		public void rollback(){
-//			if (entityManager.getTransaction().isActive())
-//				entityManager.getTransaction().rollback();
-//		}
-//
-//		public Query createQuery(String query) {
-//			return entityManager.createQuery(query);
-//		}
-//
-//		public Query createNativeQuery(String query){
-//			return entityManager.createNativeQuery(query);
-//		}
-//
-//		public StoredProcedureQuery createStoredProcedureQuery(String query, Class returnType) {
-//			return entityManager.createStoredProcedureQuery(query, returnType);
-//		}
-//
-//		@Override
-//		public void close() {
-//			rollback();
-//			entityManager.close();
-//		}
-	//}
 }

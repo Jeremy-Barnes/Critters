@@ -1,5 +1,6 @@
 package com.critters.ajax;
 
+import com.critters.ajax.filters.UserSecure;
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.*;
 import com.critters.dal.dto.SearchResponse;
@@ -31,16 +32,13 @@ public class MetaService extends AjaxService {
 	}
 
 	@Path("/pollForNotifications")
+	@UserSecure
 	@GET
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-		if(loggedInUser == null) {
-			asyncResponse.resume(Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build());
-		} else {
-			EventBLL.registerForRandomEventLottery(loggedInUser);
-			EventBLL.tellMeWhatIWon(loggedInUser, asyncResponse);
-			ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
-		}
+		User loggedInUser = getSessionUser();
+		EventBLL.registerForRandomEventLottery(loggedInUser);
+		EventBLL.tellMeWhatIWon(loggedInUser, asyncResponse);
+		ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 	}
 
 

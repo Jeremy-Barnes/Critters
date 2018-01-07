@@ -1,9 +1,9 @@
 package com.critters.ajax;
 
 import com.critters.Utilities.Serializer;
+import com.critters.ajax.filters.UserSecure;
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.GamesInfo;
-import com.critters.dal.dto.entity.User;
 import com.critters.games.GameController;
 import com.critters.games.sockets.SocketManager;
 
@@ -64,15 +64,12 @@ public class GameService extends AjaxService {
 
 	@GET
 	@Path("/getSecureID")
+	@UserSecure
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSecureID(){
-		User loggedInUser = (User) httpRequest.getSession().getAttribute("user");
-		if(loggedInUser == null) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("You need to log in first!").build();
-		}
 		Random rand = new Random();
 		String secureID = Math.random()* rand.nextInt() + " " + System.currentTimeMillis();
-		SocketManager.setUserID(secureID, loggedInUser);
+		SocketManager.setUserID(secureID, getSessionUser());
 		AuthToken auth = new AuthToken();
 		auth.selector = secureID;
 		return Response.status(Response.Status.OK).entity(auth).build();
