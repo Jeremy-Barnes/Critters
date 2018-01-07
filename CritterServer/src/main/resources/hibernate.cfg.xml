@@ -31,6 +31,7 @@
         <mapping class="com.critters.dal.dto.entity.StoreBackgroundImageOption"/>
         <mapping class="com.critters.dal.dto.entity.StoreClerkImageOption"/>
         <mapping class="com.critters.dal.dto.entity.UserImageOption"/>
+        <mapping class="com.critters.dal.dto.entity.NPC"/>
 
     </session-factory>
 </hibernate-configuration>
