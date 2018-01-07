@@ -13,8 +13,8 @@
     <session-factory>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.url">jdbc:postgresql://localhost:5432/critters?autoReconnect=true</property>
-        <property name="connection.username">Jeremy</property>
-        <property name="connection.password">214014J@b</property>
+        <property name="connection.username">*******</property>
+        <property name="connection.password">*******</property>
         <!--<property name="hbm2ddl.auto">validate</property>-->
         <mapping class="com.critters.dal.dto.entity.User" />
         <mapping class="com.critters.dal.dto.entity.Pet" />

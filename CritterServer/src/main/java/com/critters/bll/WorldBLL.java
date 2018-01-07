@@ -48,5 +48,17 @@ public class WorldBLL {
 		return response;
 	}
 
+	public static NPCResponse getNPC(int npcID, User loggedInUser) {
+		NPCResponse response = new NPCResponse();
+		NPC npc = null;
+		try(DAL dal = new DAL()) {
+			npc = dal.npcs.getNPC(npcID);
+		}
+		if(npc == null || Extensions.isNullOrEmpty(npc.getActionHandlerScript())) {
+			return null;
+		}
+		response.npc = npc;
 
+		return response;
+	}
 }
