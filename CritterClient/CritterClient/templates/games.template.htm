@@ -65,7 +65,7 @@
 </div>
 
 
-<div id="activeGameDescription" [hidden]="activeGame.gameName==null || playGame">
+<div id="activeGameDescription" [hidden]="activeGame.gameName==null || displayPlayPage">
     <div class="container-fluid container-maxWidth">
         <div class="row">
             <div class="col-md-12">
@@ -104,7 +104,7 @@
     </div>
 </div>
 
-<div id="activeGame"  [hidden]="activeGame.gameName==null || !playGame">
+<div id="activeGame"  [hidden]="activeGame.gameName==null || !displayPlayPage">
     <div class="container-fluid">
         <div class="page-title">
             <div class="row">
@@ -118,11 +118,64 @@
     <div class="container-fluid container-maxWidth">
         <div id="gameBind"></div>
         <div class="row">
-            <div class="col-md-12">
+            <!--<div class="col-md-12">
                 <div class="gameHolder"><iframe [src]="this.domSanitizer.bypassSecurityTrustResourceUrl(activeGame.gameURL)" [ngClass]="{'fullscreen': isFull, 'notFull': !isFull}" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
                 <p class="btn btn-danger btn-md go-fullscreen center-block" (click)="toggleFull()">Fullscreen!</p>
 
+            </div>-->
+
+            <div class="col-md-12">
+                <div class="gameFinder" *ngIf="activeGame.isMultiplayer" >
+                    <div *ngIf="!app.loggedIn">
+                        You have to log in to play this game!
+                    </div>
+                    <div *ngIf="this.clientID" class="centered">
+                        <button class="btn btn-primary" (click)="fetchGameLobbies()">View Games</button>
+                        <div [hidden]="visibleLobbies.length == 0 || gameWebsocketConnection != null">
+                            <div *ngFor="let lobby of visibleLobbies">
+                                <div (click)="joinLobby(lobby.gameID)"> Title: {{lobby.title}}    Host: {{lobby.host.user.userName}} </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gameLobbyWindow" [hidden]="!creating && gameWebsocketConnection == null">
+                            <p [hidden]="!creating || gameWebsocketConnection != null">You are hosting: {{gameLobbyName}}</p>
+
+                            <div *ngFor="let p of playersInTheLobby">
+                                {{p}}
+                            </div>
+                            You've connected to or created a game lobby
+                            <div *ngIf="notification != null" class="gameNotification">
+                                <div class="gameNotificationBody">
+                                    <p *ngIf="notification.body">{{notification.body}}</p>
+                                    <div class="centered text-center">
+                                        <button *ngIf="notification.dangerButtonText" style="" class="btn btn-danger" (click)="respond(true)"> {{notification.dangerButtonText}} </button>
+                                        <button *ngIf="!notification.dangerButtonText" style="" class="btn btn-primary" (click)="respond(true)"> Okay </button>
+                                        <button class="btn btn-default" (click)="respond(false)"> {{notification.noButtonText}} </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" [hidden]="!creating" (click)="startGame()">Start The Game!</button>
+                        </div>
+
+
+                        <button class="btn btn-primary" *ngIf="!creating" (click)="startCreatingLobby()">Start New Game</button>
+                        <br /><br />
+                        <input type="text" *ngIf="creating && gameWebsocketConnection == null" [(ngModel)]="gameLobbyName" placeholder="Enter your game name" />
+                        <button class="btn btn-primary" *ngIf="creating && gameWebsocketConnection == null" (click)="createGame()">Create!</button>
+                    </div>
+                       
+
+
+                </div>
             </div>
+
+            <div class="col-md-12">
+                <div class="gameHolder">
+                    <div id="critterCanvas"></div>
+                </div>
+                <p class="btn btn-danger btn-md go-fullscreen center-block" (click)="toggleFull()">Fullscreen!</p>
+            </div>
+
         </div>
         <a [hidden]="!this.isFull" class="btn btn-danger btn-sm exit-fullscreen" (click)="toggleFull()">Exit Fullscreen</a>
 

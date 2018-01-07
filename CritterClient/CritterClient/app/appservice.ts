@@ -1,4 +1,4 @@
-﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest } from './dtos'
+﻿import {User, Pet, PetColor, PetSpecies, AccountInformationRequest, Friendship, Message, Notification, Store, Conversation, Item, InventoryGrouping, GamesInfo, GameThumbnail, UserImageOption, MessageRequest, StoreClerkImageOption, StoreBackgroundImageOption } from './dtos'
 import {ServiceMethods} from "./servicemethods"
 
 
@@ -15,9 +15,10 @@ export class Application {
     public friends: Friendship[] = [];
     public pendingFriendRequests: Friendship[] = [];
     public outstandingFriendRequests: Friendship[] = [];
+    public secureID: string = "";
 
     public errorCallback: (text: string) => any;
-    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string) => JQueryDeferred<boolean>;
+    public showDialogCallback: (title: string, text: string, customHTML: string, dangerButtonText: string, noButtonText: string) => JQueryDeferred<boolean>;
 
     public static app: Application = new Application();
 
@@ -282,6 +283,27 @@ export class Application {
         });
     }
 
+    public static moveItemsFromStore(items: Item[], containingGroup: InventoryGrouping) {
+        var app = Application.getApp();
+        return ServiceMethods.moveInventoryItemFromStore(this.getApp().user, items).done(() => {
+            items.forEach(i => {
+                i.ownerId = app.user.userID;
+                i.price = null;
+                i.containingStoreId = null;
+                containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
+            });
+
+            if (app.inventory && app.inventory.length > 0)
+                app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
+            if (containingGroup.inventoryItemsGrouped.length > 0) {
+                containingGroup.inventoryItemsGrouped[0].description = items[0].description;
+            }
+        });
+    }
+
     public static moveItemsToGarbage(items: Item[], containingGroup: InventoryGrouping): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.discardInventoryItems(this.getApp().user, items).done((i: InventoryGrouping[]) => {
             items.forEach(item => containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(item), 1));
@@ -298,8 +320,14 @@ export class Application {
         return ServiceMethods.searchInventory(searchTerm);
     }
 
+    public static getStore(id: number): JQueryPromise<Store> {
+        return ServiceMethods.getStorefront(id);
+    }
+
+    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
+
     public static getGames(): JQueryPromise<GamesInfo> {
-        if (Application.getApp().games.length = 0) {
+        if (Application.getApp().games.length == 0) {
             return ServiceMethods.getGames().done((games: GamesInfo) => {
                 Application.getApp().games.length = 0;
                 Application.getApp().games.push(...games.games);
@@ -307,33 +335,73 @@ export class Application {
         } else return jQuery.Deferred().resolve(null);
     }
 
-    public static getStore(id: number): JQueryPromise<Store> {
-        return ServiceMethods.getStorefront(id);
+    public static getGameSecureID(): JQueryPromise<{ selector: string }> {
+        return ServiceMethods.getSecureID().done((id: { selector: string }) => {
+            Application.getApp().secureID = id.selector;
+        });
     }
 
-    public static searchStore(a: any): JQueryPromise<InventoryGrouping[]> { return null; }
+    public static getUsernameGames(gameType: number, userName: string): JQueryPromise<string> {
+        return ServiceMethods.getUsernameGames(gameType, userName);
+    }
+
+
+    public static openGameServer(gameType: number, clientID: string, gameName: string): JQueryPromise<string> {
+        return ServiceMethods.openGameServer(gameType, clientID, gameName);
+    }
+
+    public static connectToGameServer(gameID: string, clientID: string): JQueryPromise<string> {
+        return ServiceMethods.connectToGameServer(gameID, clientID);
+    }
+
+    public static getActiveGames(gameType: number) {
+        return ServiceMethods.getActiveGamesOfType(gameType);
+    }
 
     public static purchaseItems(items: Item[], containingGroup: InventoryGrouping, sellerStore: Store) {
         var app = Application.getApp();
         return ServiceMethods.purchaseInventoryItemFromStore({
             user: app.user, items: items
         }).done(() => {
+
+            var totalCost = 0;
             items.forEach(i => {
+                totalCost += i.price
                 i.ownerId = app.user.userID;
                 i.price = null;
                 i.containingStoreId = null;
                 containingGroup.inventoryItemsGrouped.splice(containingGroup.inventoryItemsGrouped.indexOf(i), 1);
             });
+            app.user.critterbuxx -= totalCost;
+
             if (app.inventory && app.inventory.length > 0)
                 app.inventory.find(g => g.inventoryItemsGrouped[0].description.itemConfigID == items[0].description.itemConfigID).inventoryItemsGrouped.push(...items);
+            else 
+                app.inventory.push({inventoryItemsGrouped: items, selected: false });
+
             if (containingGroup.inventoryItemsGrouped.length > 0) {
                 containingGroup.inventoryItemsGrouped[0].description = items[0].description;
             } else {
                 sellerStore.storeStock.splice(sellerStore.storeStock.indexOf(containingGroup), 1);
             }
-            var totalCost = 0;
-            items.forEach(i => totalCost += i.price);
-            app.user.critterbuxx -= totalCost;
+
         });
     }
+
+    public static createStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.createStore(store, background, clerk);
+    }
+
+    public static editStore(store: Store, background: StoreBackgroundImageOption, clerk: StoreClerkImageOption) {
+        return ServiceMethods.editStore(store, background, clerk);
+    }
+
+    public static getClerkImageOptions() {
+        return ServiceMethods.getShopkeeperImageOptions();
+    }
+
+    public static getBackgroundImageOptions() {
+        return ServiceMethods.getStoreBackgroundOptions();
+    }
+
 }

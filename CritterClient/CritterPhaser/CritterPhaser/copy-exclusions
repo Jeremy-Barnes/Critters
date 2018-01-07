@@ -1,0 +1,15 @@
+.html
+package.json
+tsconfig.json
+.config
+\node_modules
+\bin
+\obj
+.dll
+main.js
+index.html
+csproj
+app.css
+copy-exclusions
+main
+.ts
