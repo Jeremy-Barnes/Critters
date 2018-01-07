@@ -43,12 +43,12 @@ public class BackgroundJobManager {
 		}
 	}
 
-	@Schedule(hour="*", minute="*/1", second="1", persistent=true)
+	@Schedule(hour="*", minute="*/5", second="1", persistent=true)
 	public void generateRandomEvents() {
 		int players = EventBLL.numberOfRegistrants();
 		int numberOfEventsToGenerate = 0;
 
-		if(players > 0 && players < 10) {
+		if(players > 1 && players < 10) {
 			numberOfEventsToGenerate = (int) Math.round(Math.random()) + 1;
 		} else if(players < 500) {
 			numberOfEventsToGenerate = (int)(players * .1);

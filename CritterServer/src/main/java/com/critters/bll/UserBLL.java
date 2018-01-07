@@ -29,7 +29,7 @@ public class UserBLL {
 		return users;
 	}
 
-	public static Integer giveUserCash(int userID, int amount) {
+	public static Integer alterUserCash(int userID, int amount) {
 		try (DAL dal = new DAL()) {
 			User user = dal.users.getUserByID(userID);
 			user.setCritterbuxx(user.getCritterbuxx() + amount);

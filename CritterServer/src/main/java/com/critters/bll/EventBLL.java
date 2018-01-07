@@ -53,9 +53,13 @@ public class EventBLL {
 					}
 				}
 			}
-			outstandingLotteryWinners.put(winner.getUserID(), event);
-			purchasedLuck.remove(winner.getUserID());
-			registrantsForLottery.remove(winner.getUserID());
+			if(winner != null) {
+				outstandingLotteryWinners.put(winner.getUserID(), event);
+				purchasedLuck.remove(winner.getUserID());
+				registrantsForLottery.remove(winner.getUserID());
+			}
+			if(Extensions.isNullOrEmpty(registrantsForLottery.keySet()))
+				return;
 		}
 	}
 
@@ -84,7 +88,7 @@ public class EventBLL {
 		LotteryEvent event = new LotteryEvent() {
 			@Override
 			public void giveaway(User winner) {
-				winner.setCritterbuxx(UserBLL.giveUserCash(winner.getUserID(), cashPrize));
+				winner.setCritterbuxx(UserBLL.alterUserCash(winner.getUserID(), cashPrize));
 			}
 		};
 		event.message = "You found " + cashPrize + " critterbucks, just laying around!";

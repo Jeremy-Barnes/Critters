@@ -19,6 +19,7 @@ public class DAL implements AutoCloseable {
 	public ChatAccessor messages;
 	public FriendAccessor friends;
 	public GameAccessor games;
+	public NPCAccessor npcs;
 
 	public DAL(){
 		sql =  HibernateUtil.getEntityManagerFactory().createEntityManager();
@@ -30,6 +31,7 @@ public class DAL implements AutoCloseable {
 		messages = new ChatAccessor(sql);
 		friends = new FriendAccessor(sql);
 		games = new GameAccessor(sql);
+		npcs = new NPCAccessor(sql);
 	}
 
 	public void beginTransaction(){
