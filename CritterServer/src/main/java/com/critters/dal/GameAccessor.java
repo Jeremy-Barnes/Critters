@@ -29,6 +29,16 @@ public class GameAccessor {
 		return dbGames;
 	}
 
+	public GameThumbnail getGameThumbnail(int gameID){//todo cache this for gods sake
+		GameThumbnail dbGame = null;
+		try {
+			dbGame = (GameThumbnail) sql.createQuery("from GameThumbnail where gameThumbnailConfigID = :id").setParameter("id", gameID).getSingleResult();
+		} catch (PersistenceException ex) {
+			logger.error("No games found!", ex);
+		}
+		return dbGame;
+	}
+
 	public void save(List<GameThumbnail> games) {
 		games.forEach(g -> save(g));
 	}

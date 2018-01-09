@@ -65,6 +65,10 @@ public class SecurityBLL {
 		return Extensions.isNullOrEmpty(hashedValidator) ? false : hashedValidator.equals(encryptedValue);
 	}
 
+	public static String getFromBase64(String b64){
+		return new String(Base64.decode(b64.toCharArray()));
+	}
+
 
 
 }

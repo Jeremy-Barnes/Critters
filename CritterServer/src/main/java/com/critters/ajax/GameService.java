@@ -2,8 +2,10 @@ package com.critters.ajax;
 
 import com.critters.Utilities.Serializer;
 import com.critters.ajax.filters.UserSecure;
+import com.critters.bll.GameBLL;
 import com.critters.dal.dto.AuthToken;
 import com.critters.dal.dto.GamesInfo;
+import com.critters.dal.dto.entity.User;
 import com.critters.games.GameController;
 import com.critters.games.sockets.SocketManager;
 
@@ -74,4 +76,25 @@ public class GameService extends AjaxService {
 		auth.selector = secureID;
 		return Response.status(Response.Status.OK).entity(auth).build();
 	}
+
+	@GET
+	@Path("/openNewSinglePlayerSession/{gameID}")
+	@UserSecure
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response openNewSinglePlayerSession(@PathParam("gameID") String base64GameID) {
+		User loggedInUser = this.getSessionUser();
+		String sessionTokenEncrypted = GameBLL.createSinglePlayerSession(loggedInUser, base64GameID);
+		return Response.status(Response.Status.OK).entity(sessionTokenEncrypted).build();
+	}
+
+	@GET
+	@Path("/submitGameScore/{gameToken}")
+	@UserSecure
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response submitGameScore(@PathParam("gameToken") String gameToken) {
+		User loggedInUser = this.getSessionUser();
+		int prizeMoney = GameBLL.submitAndValidateGameScore(gameToken, loggedInUser);
+		return Response.status(Response.Status.OK).entity(prizeMoney).build();
+	}
+
 }

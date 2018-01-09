@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
@@ -27,6 +28,8 @@ public class GameThumbnail extends DTO {
 	private String bannerImagePath;
 	private String thumbnailImagePath1;
 	private String thumbnailImagePath2;
+	private String scoreHandlerScript;
+	private Integer pointsToCurrencyFactor;
 
 	public GameThumbnail(String gameName, String gameDescription, String gameIconPath, String gameURL, String bannerImagePath,
 						 String thumbnailImagePath1, String thumbnailImagePath2) {
@@ -104,5 +107,22 @@ public class GameThumbnail extends DTO {
 
 	public void setThumbnailImagePath2(String thumbnailImagePath2) {
 		this.thumbnailImagePath2 = thumbnailImagePath2;
+	}
+
+	@XmlTransient
+	public String getScoreHandlerScript() {
+		return scoreHandlerScript;
+	}
+	@XmlTransient
+	public void setScoreHandlerScript(String scoreHandlerScript) {
+		this.scoreHandlerScript = scoreHandlerScript;
+	}
+	@XmlTransient
+	public Integer getPointsToCurrencyFactor() {
+		return pointsToCurrencyFactor;
+	}
+	@XmlTransient
+	public void setPointsToCurrencyFactor(Integer pointsToCurrencyFactor) {
+		this.pointsToCurrencyFactor = pointsToCurrencyFactor;
 	}
 }
