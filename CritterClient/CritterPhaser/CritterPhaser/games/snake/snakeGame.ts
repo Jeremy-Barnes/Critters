@@ -15,8 +15,8 @@ export class GameEngine {
         var xV = (this.cursors.right.isDown ? 1 : 0) + (this.cursors.left.isDown ? -1 : 0);
         if (! (yV != 0 && xV != 0))
         this.snake.updateVector(xV, yV);
-        
-        this.snake.update();
+
+        this.snake.update(game.time.physicsElapsed);
     }
 
     public preload(game: Phaser.Game) {

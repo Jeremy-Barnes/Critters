@@ -71,11 +71,11 @@ export class SnakeHead extends GameObject {
             this.inflects.push(new Phaser.Point(this.x, this.y));
     }
 
-    update() {
+    update(dt: number) {
         if (this.next)
-            this.next.update();
-        this.x += this.xVector;
-        this.y += this.yVector;
+            this.next.update(dt);
+        this.x += 800 * dt * this.xVector;
+        this.y += 800* dt * this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
     }
@@ -122,17 +122,19 @@ export class SnakeTail extends GameObject {
         return this.inflects.length > 0 ? this.inflects.shift() : null;
     }     
 
-    update() {
+    update(dt : number) {
         //if (this.next != null) {
         //    this.next.update();
         //}
-        this.x += this.xVector;
-        this.y += this.yVector;
+        this.x += 800 *dt* this.xVector;
+        this.y += 800*dt *this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
-        if (this.destination == null || (this.x == this.destination.x && this.y == this.destination.y)) {
+        if (this.destination == null || Phaser.Math.fuzzyEqual(this.x, this.destination.x, 800 * dt * .5) && Phaser.Math.fuzzyEqual(this.y, this.destination.y, 800 * dt * .5)) {
             if (this.destination != null) {
                 this.inflects.push(this.destination);
+                this.x = this.destination.x;
+                this.y = this.destination.y;
             }
             this.destination = this.prev.getPoint();
             if (this.destination != null) {
@@ -148,7 +150,7 @@ export class SnakeTail extends GameObject {
         }
 
         if (this.next != null) {
-            this.next.update();
+            this.next.update(dt);
         }
     }
 
