@@ -1,14 +1,22 @@
-﻿import {SnakeFood, SnakeHead} from './snakeobjects'
+﻿import {SnakeFood, SnakeHead, SnakeTail} from './snakeobjects'
 
 export class GameEngine {
     /************ PHASER METHODS ************/
 
     game: Phaser.Game;
+    cursors: Phaser.CursorKeys; 
+    snake: SnakeHead;
 
     public update(game: Phaser.Game): void {
         game.debug.cameraInfo(game.camera, 32, 32);
-        game.camera.scale.x = .5
-        game.camera.scale.y = .5
+        
+ 
+        var yV = (this.cursors.down.isDown ? 1 : 0) + (this.cursors.up.isDown ? -1 : 0);
+        var xV = (this.cursors.right.isDown ? 1 : 0) + (this.cursors.left.isDown ? -1 : 0);
+        if (! (yV != 0 && xV != 0))
+        this.snake.updateVector(xV, yV);
+        
+        this.snake.update();
     }
 
     public preload(game: Phaser.Game) {
@@ -20,15 +28,21 @@ export class GameEngine {
     }
 
     public create(game: Phaser.Game): void {
+        this.cursors = game.input.keyboard.createCursorKeys();
         game.stage.disableVisibilityChange = true;
         game.stage.backgroundColor = "#888";
+        game.world.setBounds(0, 0, 800, 800);
+        game.camera.x = 0;
+        game.camera.y = 0;
+        game.camera.setBoundsToWorld();
 
-        game.world.setBounds(0, 0, 1000, 1000);
-        new SnakeFood(game, 988, 988);
-        new SnakeHead(game, 500, 500);
+
+
+        new SnakeFood(game, 790, 790);
+        this.snake = new SnakeHead(game, 400, 400);
         new SnakeHead(game, 0, 0);
-        new SnakeFood(game, 0, 988);
-        new SnakeFood(game, 988, 0);
+        new SnakeFood(game, 0, 790);
+        new SnakeFood(game, 790, 0);
 
 
     }

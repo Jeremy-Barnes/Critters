@@ -7,8 +7,8 @@
                     <h1 class="text-center">{{note.title}}</h1>
                 </div>
                 <form class="modal-body" #loginForm="ngForm">
-                    <p *ngIf="body">{{note.body}}</p>
-                    <div *ngIf="customBodyHTML" [innerHTML]="customBodyHTML"></div>
+                    <p *ngIf="note.body">{{note.body}}</p>
+                    <div *ngIf="note.customBodyHTML" [innerHTML]="note.customBodyHTML"></div>
                     <div class="centered text-center">
                         <button *ngIf="note.dangerButtonText" style="" class="btn btn-danger" (click)="respond(false)"> {{note.dangerButtonText}} </button>
                         <button *ngIf="!note.dangerButtonText" style="" class="btn btn-primary" (click)="respond(true)"> Okay </button>

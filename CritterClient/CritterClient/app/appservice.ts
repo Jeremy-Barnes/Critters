@@ -125,7 +125,13 @@ export class Application {
 
     private static startLongPolling() {
         ServiceMethods.startLongPolling().done((a: Notification) => {
-            Application.getApp().alerts.push(a);
+            if ((a.friendRequests != null && a.friendRequests.length > 0) ||
+                (a.messages != null && a.messages.length > 0)) {
+                Application.getApp().alerts.push(a);
+            }
+            if (a.serverMessages != null && a.serverMessages.length > 0) {
+                Application.getApp().showDialogCallback(a.serverMessages[0].title, a.serverMessages[0].body, a.serverMessages[0].customBodyHTML, a.serverMessages[0].dangerButtonText, a.serverMessages[0].noButtonText);
+            }
             Application.startLongPolling();
         }).fail((x) => {
             Application.startLongPolling();
@@ -136,14 +142,14 @@ export class Application {
         ServiceMethods.getUnreadMail().done((messages: Message[]) => {
             if (messages != null && messages.length != 0) {
                 var notes: Notification[] = [];
-                for(let i = 0; i < messages.length; i++) {
-                    notes.push({ messages: [messages[i]], friendRequests: [] });
+                for (let i = 0; i < messages.length; i++) {
+                    notes.push({ messages: [messages[i]], friendRequests: [], serverMessages: [] });
                 }
                 var user: User = Application.getApp().user;
                 var frReqs = user.friends.filter(f => !f.accepted && f.requested.userID == user.userID);
 
-                for(let i = 0; i < frReqs.length; i++) {
-                    notes.push({ messages: [], friendRequests: [frReqs[i]]});
+                for (let i = 0; i < frReqs.length; i++) {
+                    notes.push({ messages: [], friendRequests: [frReqs[i]], serverMessages: [] });
                 }
                 Application.getApp().alerts.push(...notes);
             }
@@ -177,7 +183,7 @@ export class Application {
 
                         recConvos.push({messages: conv.messages.sort((a, b) => a.dateSent > b.dateSent ? 1 : (b.dateSent > a.dateSent ? -1 : 0)), participants: conv.participants, selected: false });
                         if (message.recipient.userID == user.userID && !message.delivered) {
-                            alerts.push({ messages: [message], friendRequests: null });
+                            alerts.push({ messages: [message], friendRequests: null, serverMessages: null });
                         }
                     }
 
@@ -404,4 +410,8 @@ export class Application {
         return ServiceMethods.getStoreBackgroundOptions();
     }
 
+
+    public static test() {
+        return ServiceMethods.test();
+    }
 }
