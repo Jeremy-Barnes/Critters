@@ -22,6 +22,7 @@
     <Content Include="app.css" />
     <Content Include="img\games\pong\ball.png" />
     <Content Include="img\games\snake\blueSkull1.png" />
+    <Content Include="img\games\snake\loading.gif" />
     <Content Include="img\games\snake\miniTiles.png" />
     <Content Include="img\games\snake\skull1.png" />
     <Content Include="img\games\snake\Snake.gif" />

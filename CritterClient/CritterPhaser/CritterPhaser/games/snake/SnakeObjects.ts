@@ -34,19 +34,10 @@ export class SnakeHead extends GameObject {
         this.game = game;
         this.x = x; this.y = y; this.xVector = -1; this.yVector = 0;
         this.sprite = game.add.sprite(0, 0, 'head');
-
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.x = this.x;
         this.sprite.y = this.y;
         game.world.add(this.sprite);
-        //this.body.push(new SnakeTail(game, x + 40, y));
-        //this.body.push(new SnakeTail(game, x + 80, y));
-        //this.body.push(new SnakeTail(game, x + 120, y));
-        //this.body.push(new SnakeTail(game, x + 160, y));
-        //this.body.push(new SnakeTail(game, x + 200, y));
-        //this.body.push(new SnakeTail(game, x + 240, y));
-        //this.body.push(new SnakeTail(game, x + 280, y));
-        //this.body.push(new SnakeTail(game, x + 320, y));
         this.addBody();
         this.addBody();
         this.addBody();
@@ -74,8 +65,8 @@ export class SnakeHead extends GameObject {
     update(dt: number) {
         if (this.next)
             this.next.update(dt);
-        this.x += 800 * dt * this.xVector;
-        this.y += 800* dt * this.yVector;
+        this.x += 200 * dt * this.xVector;
+        this.y += 200 * dt * this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
     }
@@ -123,14 +114,11 @@ export class SnakeTail extends GameObject {
     }     
 
     update(dt : number) {
-        //if (this.next != null) {
-        //    this.next.update();
-        //}
-        this.x += 800 *dt* this.xVector;
-        this.y += 800*dt *this.yVector;
+        this.x += 200 * dt * this.xVector;
+        this.y += 200 * dt * this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
-        if (this.destination == null || Phaser.Math.fuzzyEqual(this.x, this.destination.x, 800 * dt * .5) && Phaser.Math.fuzzyEqual(this.y, this.destination.y, 800 * dt * .5)) {
+        if (this.destination == null || Phaser.Math.fuzzyEqual(this.x, this.destination.x, 200 * dt * .5) && Phaser.Math.fuzzyEqual(this.y, this.destination.y, 200 * dt * .5)) {
             if (this.destination != null) {
                 this.inflects.push(this.destination);
                 this.x = this.destination.x;
