@@ -4,7 +4,7 @@ export class GameEngine {
     /************ PHASER METHODS ************/
 
     game: Phaser.Game;
-
+    score: Phaser.Text;
     //arrows
     up: Phaser.Key;
     wKey: Phaser.Key;
@@ -14,9 +14,10 @@ export class GameEngine {
     aKey: Phaser.Key;
     right: Phaser.Key;
     dKey: Phaser.Key;
-    Phaser
+    
 
     snake: SnakeHead;
+    food: SnakeFood;
 
     public update(game: Phaser.Game): void {
         game.debug.cameraInfo(game.camera, 32, 32);
@@ -38,7 +39,10 @@ export class GameEngine {
         if (! (yV != 0 && xV != 0))
             this.snake.updateVector(xV, yV);
 
+        this.food.update(this.snake, this.score);
         this.snake.update(game.time.physicsElapsed);
+
+
     }
 
     public preload(game: Phaser.Game) {
@@ -56,21 +60,17 @@ export class GameEngine {
         this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
         this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+        game.world.setBounds(0, 0, 800, 800);
+
         game.input.touch.enabled = true;
         game.input.mouse.capture = true;
         game.stage.disableVisibilityChange = true;
-        game.stage.backgroundColor = "#888";
-        game.world.setBounds(0, 0, 800, 800);
         game.camera.x = 0;
         game.camera.y = 0;
-        game.camera.setBoundsToWorld();
-
-
-        new SnakeFood(game, 790, 790);
-        this.snake = new SnakeHead(game, 400, 400);
-        new SnakeHead(game, 0, 0);
-        new SnakeFood(game, 0, 790);
-        new SnakeFood(game, 790, 0);
+        this.score = game.add.text(game.camera.bounds.centerX, game.camera.bounds.bottom - 100, "Score: 0 points", null);
+        this.score.anchor.setTo(.5, .5);
+        this.food = new SnakeFood(game, 100, 190);
+        this.snake = new SnakeHead(game, 400, 400, 200);
 
 
     }

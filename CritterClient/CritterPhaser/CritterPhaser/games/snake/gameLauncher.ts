@@ -4,7 +4,7 @@ import {GameEngine} from "./snakegame"
 export class GameLauncher {
 
     public static SCREEN_WIDTH = 800;
-    public static SCREEN_HEIGHT = 600;
+    public static SCREEN_HEIGHT = 1000;
 
     constructor() {
         GameLauncher.gameEngine = new GameEngine();
@@ -18,8 +18,6 @@ export class GameLauncher {
         GameLauncher.game.state.add("mainmenu", MainMenu);
         GameLauncher.game.state.add("play", GameLauncher.gameEngine);
         GameLauncher.game.state.add("gameover", GameOver);
-
-
         GameLauncher.game.state.start("loading");
     }
     private static game: Phaser.Game = null;
@@ -53,6 +51,15 @@ export class LoadingScreen {
             game.load.image('head', 'img/games/snake/blueSkull1.png');
             game.load.image('body', 'img/games/snake/skull1.png');
             game.load.image('block', 'img/games/snake/miniTiles.png');
+            game.load.image('1', 'img/games/snake/1.png');
+            game.load.image('2', 'img/games/snake/2.png');
+            game.load.image('3', 'img/games/snake/3.png');
+            game.load.image('4', 'img/games/snake/4.png');
+            game.load.image('5', 'img/games/snake/5.png');
+            game.load.image('6', 'img/games/snake/6.png');
+            game.load.image('7', 'img/games/snake/7.png');
+            game.load.image('8', 'img/games/snake/8.png');
+
             game.load.start();
         }
     }

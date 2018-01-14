@@ -25,7 +25,6 @@
     <Content Include="img\games\snake\loading.gif" />
     <Content Include="img\games\snake\miniTiles.png" />
     <Content Include="img\games\snake\skull1.png" />
-    <Content Include="img\games\snake\Snake.gif" />
     <Content Include="index.html" />
     <Content Include="img\games\pong\item_full_Glide_Paddle.jpg" />
     <Content Include="libraries\phaser2.png" />
