@@ -34,7 +34,7 @@ export class SnakeTail extends GameObject {
     constructor(game: Phaser.Game, x, y, sprite: string) {
         super();
         this.game = game;
-        this.x = x; this.y = y; this.xVector = -1; this.yVector = 0;
+        this.x = x; this.y = y;
         this.sprite = game.add.sprite(0, 0, sprite ? sprite : 'body');
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.x = this.x;
@@ -91,21 +91,10 @@ export class SnakeTail extends GameObject {
 
 
 export class SnakeHead extends SnakeTail {
-    sprite: Phaser.Sprite;
-    body: SnakeTail[] = [];
-    game: Phaser.Game
-    inflects = [];
-
-    next: SnakeTail;
-
     constructor(game: Phaser.Game, x, y) {
-        super(game,x,y, '');
-        this.game = game;
+        super(game,x,y, 'head');
         this.x = x; this.y = y; this.xVector = -1; this.yVector = 0;
-        this.sprite = game.add.sprite(0, 0, 'head');
-        this.sprite.anchor.set(0.5, 0.5);
-        this.sprite.x = this.x;
-        this.sprite.y = this.y;      
+   
         this.addBody();
         this.addBody();
         this.addBody();
@@ -115,8 +104,6 @@ export class SnakeHead extends SnakeTail {
         this.addBody();
         this.addBody();
     }
-
-
     updateVector(xV: number, yV: number) {
         if ((xV != 0 && yV != 0) || (xV == 0 && yV == 0) || (xV == this.xVector && yV == this.yVector)) {
             return;
@@ -139,24 +126,7 @@ export class SnakeHead extends SnakeTail {
         if (this.x >= this.game.world.bounds.right || this.x <= this.game.world.bounds.x || this.y <= this.game.world.bounds.y || this.y >= this.game.world.bounds.bottom) {
             this.game.state.start("gameover");
         }
-    }
-
-    getPoint() {
-        return this.inflects.length > 0 ? this.inflects.shift() : null;
-    }     
-
-    addBody() {
-        if (this.next) {
-            this.next.addBody();
-        } else {
-            var newtail = new SnakeTail(this.game, this.x - this.xVector * 50, this.y - this.yVector * 50, null);
-            newtail.xVector = this.xVector;
-            newtail.yVector = this.yVector;
-            this.next = newtail;
-            newtail.prev = <any> this;
-        }
-    }
-    
+    }    
 }
 
 export class Obstacle extends GameObject {
