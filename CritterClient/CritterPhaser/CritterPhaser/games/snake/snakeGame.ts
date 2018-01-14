@@ -46,6 +46,7 @@ export class GameEngine {
     }
 
     public create(game: Phaser.Game): void {
+
         this.up = game.input.keyboard.addKey(Phaser.Keyboard.UP);
         this.down = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
         this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);

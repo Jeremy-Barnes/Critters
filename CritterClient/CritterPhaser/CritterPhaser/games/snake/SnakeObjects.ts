@@ -36,8 +36,7 @@ export class SnakeHead extends GameObject {
         this.sprite = game.add.sprite(0, 0, 'head');
         this.sprite.anchor.set(0.5, 0.5);
         this.sprite.x = this.x;
-        this.sprite.y = this.y;
-        game.world.add(this.sprite);
+        this.sprite.y = this.y;      
         this.addBody();
         this.addBody();
         this.addBody();
@@ -46,8 +45,6 @@ export class SnakeHead extends GameObject {
         this.addBody();
         this.addBody();
         this.addBody();
-
-
     }
 
 
@@ -69,6 +66,10 @@ export class SnakeHead extends GameObject {
         this.y += 200 * dt * this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
+
+        if (this.x >= this.game.world.bounds.right || this.x <= this.game.world.bounds.x || this.y <= this.game.world.bounds.y || this.y >= this.game.world.bounds.bottom) {
+            this.game.state.start("gameover");
+        }
     }
 
     getPoint() {

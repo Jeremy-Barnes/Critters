@@ -17,7 +17,7 @@ export class GameLauncher {
         GameLauncher.game.state.add("loading", LoadingScreen);
         GameLauncher.game.state.add("mainmenu", MainMenu);
         GameLauncher.game.state.add("play", GameLauncher.gameEngine);
-        GameLauncher.game.state.add("gameover", GameLauncher.gameEngine);
+        GameLauncher.game.state.add("gameover", GameOver);
 
 
         GameLauncher.game.state.start("loading");
@@ -112,6 +112,14 @@ export class GameOver {
     public preload(game: Phaser.Game) {
     }
     public create(game: Phaser.Game) {
+        game.stage.backgroundColor = '#337799';
+        var gover = game.add.text(game.world.centerX, 150, "Game Over", null);
+        gover.anchor.setTo(.5, .5);
+
+        var text = game.add.text(game.world.centerX, 350, "Start Over?", null);
+        text.anchor.setTo(.5, .5);
+        text.inputEnabled = true;
+        text.events.onInputUp.add(() => { game.state.start("mainmenu"); });
     }
     public update(game: Phaser.Game) {
     }
