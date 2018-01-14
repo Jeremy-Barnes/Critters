@@ -46,13 +46,30 @@ export class SnakeTail extends GameObject {
         return this.inflects.length > 0 ? this.inflects.shift() : null;
     }
 
-    update(dt: number, head: SnakeHead) {
+    update(dt: number, hx, hy, hnx, hny) {
+        if (this.prev.prev) {
+            var x1 = (this.x <= hx && this.prev.x >= hnx);
+            var x2 = (this.x >= hx && this.prev.x <= hnx);
+            var y1 = (this.y <= hy && this.prev.y >= hny);
+            var y2 = (this.y >= hy && this.prev.y <= hny);
+            if ((x1 || x2) && (y1 || y2)) {
+                alert('crossed paths');
+            }
+        } else if (this.destination) {
+            var x1 = (this.x <= hx && this.destination.x >= hnx);
+            var x2 = (this.x >= hx && this.destination.x <= hnx);
+            var y1 = (this.y <= hy && this.destination.y >= hny);
+            var y2 = (this.y >= hy && this.destination.y <= hny);
+            if ((x1 || x2) && (y1 || y2)) {
+                alert('crossed paths');
+            }
+        }
 
-        this.x += 200 * dt * this.xVector;
-        this.y += 200 * dt * this.yVector;
+        this.x = this.x + 100 * dt * this.xVector;
+        this.y = this.y + 100 * dt * this.yVector;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
-        if (this.destination == null || Phaser.Math.fuzzyEqual(this.x, this.destination.x, 200 * dt * .5) && Phaser.Math.fuzzyEqual(this.y, this.destination.y, 200 * dt * .5)) {
+        if (this.destination == null || Phaser.Math.fuzzyEqual(this.x, this.destination.x, 100 * dt * .5) && Phaser.Math.fuzzyEqual(this.y, this.destination.y, 100 * dt * .5)) {
             if (this.destination != null) {
                 this.inflects.push(this.destination);
                 this.x = this.destination.x;
@@ -72,7 +89,7 @@ export class SnakeTail extends GameObject {
         }
 
         if (this.next != null) {
-            this.next.update(dt, head);
+            this.next.update(dt, hx, hy, hnx, hny);
         }
     }
 
@@ -103,6 +120,20 @@ export class SnakeHead extends SnakeTail {
         this.addBody();
         this.addBody();
         this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
+        this.addBody();
     }
     updateVector(xV: number, yV: number) {
         if ((xV != 0 && yV != 0) || (xV == 0 && yV == 0) || (xV == this.xVector && yV == this.yVector)) {
@@ -116,10 +147,13 @@ export class SnakeHead extends SnakeTail {
     }
 
     update(dt: number) {
+        var nx = this.x + 100 * dt * this.xVector;
+        var ny = this.y + 100 * dt * this.yVector;
+
         if (this.next)
-            this.next.update(dt, this);
-        this.x += 200 * dt * this.xVector;
-        this.y += 200 * dt * this.yVector;
+            this.next.update(dt, this.x, this.y, nx, ny);
+        this.x = nx;
+        this.y = ny;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
 
