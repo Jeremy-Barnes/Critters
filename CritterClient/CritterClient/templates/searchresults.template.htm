@@ -4,12 +4,12 @@
     </div>
 </div>
 
-<div class="container-fluid container-maxWidth">
+<div class="container-fluid container-maxWidth pageContent">
     <!----------------------MAIN VIEW------------------>
     <div id="searchMainView"> 
         <b>Search results for '{{searchString}}'</b>
         <div class="row">
-            <div class="col-md-12 centered" *ngIf="!completed && (!userResults || !userResults.length)">
+            <div class="col-md-12 text-center" *ngIf="!completed && (!userResults || !userResults.length)">
                 Searching, please hold.
                 <div class="cssload-container">
                     <div class="cssload-circle-1">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 centered" *ngIf="completed && (!userResults || !userResults.length)">
+            <div class="col-md-12 text-center" *ngIf="completed && (!userResults || !userResults.length)">
                 No results found!            
             </div>
             <div class="col-md-3" *ngFor="let result of userResults; let i = index">
@@ -38,7 +38,7 @@
                     <div class="cardHeader"><i class="fa fa-user" aria-hidden="true"></i> user</div>
                     <div class="centered">
                         <img class="userThumb" src="{{result.userImagePath}}" />
-                        <div class="itemTitle centered">
+                        <div class="itemTitle text-center">
                             {{result.userName}} <br />
                         </div>
                         <div>

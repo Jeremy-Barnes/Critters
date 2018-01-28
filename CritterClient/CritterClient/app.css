@@ -4,7 +4,6 @@
     overflow-x: hidden; /* Prevent scroll on narrow devices */
 }
 body {
-    /*padding-top: 50px;*/
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     color: #333333;
@@ -12,7 +11,6 @@ body {
 
 @media (min-width:768px) {
     body {
-        /*padding-top: 80px;*/
         font-size: 16px;
     }
 }
@@ -20,7 +18,7 @@ body {
 #contentwrap {
     width:100%;
     position: absolute;
-    min-height: 100%;
+    /*min-height: 100%;*/
 }
 
 #main {
@@ -45,17 +43,16 @@ body {
 .container-maxWidth {
     max-width: 1170px;
     margin-left: 0;
+}
+
+.pageContent {
     padding: 30px;
 }
 
 @media (max-width: 767px) {
-    .container-maxWidth {
+    .pageContent {
         padding: 15px 10px;
     }
-}
-
-.row + .row {
-    margin-top: 30px;
 }
 
 .no-margin {
@@ -90,22 +87,18 @@ img {
     display: inline-block;
 }
 
-/* necessary garbage, see - https://stackoverflow.com/a/7310398/4885507 */
-.imgCenterer {
-    height: 350px;      /* equals max image height */
-    /*width: 160px;*/
-    white-space: nowrap;
-    text-align: center; margin: 1em 0;
-}
 
-.imgCenterHelper {
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
+@media (min-width: 990px) {
+  .vcenter {
+    display: table;
+    table-layout: fixed;
+  }
 
-.centeredImg {
+  .vcenter [class^="col-"] {
+    display: table-cell;
+    float: none;
     vertical-align: middle;
+  }
 }
 
 .full-width {
@@ -149,11 +142,16 @@ img {
     border-radius: 5px;
 }
 
+img.framed + img.framed {
+    margin-top: 15px;
+}
+
 .card {
     border: 1px solid #acacac;
     border-radius: 5px;
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.1);
     padding: 30px;
+    margin-bottom: 30px;
 }
 
 @media (max-width: 767px) {
@@ -184,7 +182,6 @@ div.card16x9 > div {
 
 .itemCard img {
     width: 150px;
-    margin-bottom: 15px;
 }
 
 .checkBoxPlaceholder {
@@ -203,6 +200,12 @@ div.card16x9 > div {
     .checkBoxPlaceholder, .itemCard .circlecheckbox {
         margin-top: 0px;
         margin-left: 0px;
+    }
+}
+
+@media (max-width: 992px) {
+    div[class^="col"] + div[class^="col"] {
+        margin-top: 15px;
     }
 }
 
@@ -339,10 +342,30 @@ h4 { font-size: 16px; }
     h2 { font-size: 24px;}
 }
 
-
 a {color: #12a6da; cursor: pointer;}
 
 a:hover, a:focus {color: #0F8DBA;}
+
+.bold {
+    font-weight: bold;
+}
+
+@media (max-width:992px) {
+    .sm-text-left {
+        text-align: left !important;
+    }
+
+    .sm-text-center {
+        text-align: center !important;
+    }
+
+    .sm-text-right {
+        text-align: right !important;
+    }
+    .sm-pull-left {
+        float: left !important;
+    }
+}
 
 .page-title {
     background-color: #ebebeb;
@@ -368,30 +391,10 @@ a:hover, a:focus {color: #0F8DBA;}
     margin-bottom: 30px;
 }
 
-.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
-    border: none;
-    padding: 20px 0px;
-}
-
-tr {
-    border-bottom: 1px solid;
-    border-color: #acacac;
-    border-width: 1px;
-}
-tr td:nth-child(1) {
-    padding-left: 10px !important;
-}
-
-table {
-    border: 1px solid #acacac;
-}
-
 .inlineblock {
     display: inline-block !important;
 }
-.floatRight {
-    float: right;
-}
+
 .centered {
     text-align: center;
 }
@@ -518,6 +521,9 @@ form input, form select {
     height: 30px;
     line-height: 1.5;
 }
+
+.input-group-btn button {
+    height: 44px;
 }
 
 select .placeholder {
@@ -529,7 +535,7 @@ select.ng-pristine {
 }
 
 form .row + .row {
-    margin-top: 0;
+    margin-top: 0!important;
 }
 
 /*
@@ -895,12 +901,13 @@ form .row + .row {
     font-weight: 700;
     border-radius: 5px;
     padding: 10px 14px;
+    white-space: normal;
 }
 
 .btn-lg {
     font-family: 'Bubblegum Sans';
     font-weight: 400;
-    font-size: 48px;
+    font-size: 42px;
     padding: 22px 36px;
 }
 
@@ -1018,6 +1025,10 @@ form .row + .row {
     outline:0;
 }
 
+.buttons {
+    margin-bottom: 30px;
+}
+
 /* Circle Checkbox */
 .circlecheckbox > input[type=checkbox]{
    	visibility: hidden;
@@ -1090,10 +1101,8 @@ form .row + .row {
 }
 
 .gameTitleBackground {
-    height: 285px;
     padding-top: 80px;
-    padding-left: 20px;
-    padding-right: 0px;
+    padding-bottom: 80px;
     color: white;
 }  
 
@@ -1112,6 +1121,12 @@ form .row + .row {
 .aboutGame > .gameShots img{
     width: 100%;
     margin: 10px 0px;
+}
+
+.highScore {
+    color: #12a6da;
+    font-family: 'Bubblegum Sans', sans-serif;
+    font-size: 54px;
 }
 
 .fullscreen {
@@ -1238,7 +1253,6 @@ iframe {
 .trophyCard img {
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 15px;
 }
 
 /*

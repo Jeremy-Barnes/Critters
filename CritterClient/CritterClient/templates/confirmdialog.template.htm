@@ -9,7 +9,7 @@
                 <form class="modal-body" #loginForm="ngForm">
                     <p *ngIf="body">{{note.body}}</p>
                     <div *ngIf="customBodyHTML" [innerHTML]="customBodyHTML"></div>
-                    <div class="centered text-center">
+                    <div class="text-center">
                         <button *ngIf="note.dangerButtonText" style="" class="btn btn-danger" (click)="respond(false)"> {{note.dangerButtonText}} </button>
                         <button *ngIf="!note.dangerButtonText" style="" class="btn btn-primary" (click)="respond(true)"> Okay </button>
                         <button class="btn btn-default" (click)="respond(false)"> {{note.noButtonText}} </button>
