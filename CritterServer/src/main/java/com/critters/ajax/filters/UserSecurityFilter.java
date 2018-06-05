@@ -1,6 +1,6 @@
 package com.critters.ajax.filters;
 
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;

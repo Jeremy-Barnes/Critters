@@ -1,9 +1,9 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
-import com.critters.dal.DAL;
-import com.critters.dal.dto.InventoryGrouping;
-import com.critters.dal.dto.entity.*;
+import com.critters.dal.accessors.DAL;
+import com.critters.dto.InventoryGrouping;
+import com.critters.dal.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

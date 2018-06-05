@@ -3,12 +3,12 @@ package com.critters.ajax;
 import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.PetBLL;
 import com.critters.bll.UserBLL;
-import com.critters.dal.dto.AccountInformationRequest;
-import com.critters.dal.dto.AuthToken;
-import com.critters.dal.dto.InventoryGrouping;
-import com.critters.dal.dto.ItemRequest;
-import com.critters.dal.dto.entity.Pet;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.AccountInformationRequest;
+import com.critters.dto.AuthToken;
+import com.critters.dto.InventoryGrouping;
+import com.critters.dto.ItemRequest;
+import com.critters.dal.entity.Pet;
+import com.critters.dal.entity.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -1,9 +1,10 @@
 package com.critters.ajax;
 
+import com.critters.Utilities.Enums.NPCActions;
 import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.WorldBLL;
-import com.critters.dal.dto.NPCResponse;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.NPCResponse;
+import com.critters.dal.entity.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,7 +20,7 @@ public class WorldService extends AjaxService {
 	@Path("/actionNPC/{npcID}/{action}/{targetIdAmt}")
 	@UserSecure
 	@GET
-	public Response actionToNPC(@PathParam("npcID") int npcID, @PathParam("action") int actionCode, @PathParam("targetIdAmt") int target) {
+	public Response actionToNPC(@PathParam("npcID") int npcID, @PathParam("action") NPCActions actionCode, @PathParam("targetIdAmt") int target) {
 		User loggedInUser = getSessionUser();
 		NPCResponse response = WorldBLL.actionNPC(npcID, actionCode, target, loggedInUser);
 		return Response.status(200).entity(response).build();

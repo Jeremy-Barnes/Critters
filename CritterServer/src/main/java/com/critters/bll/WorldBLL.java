@@ -1,10 +1,11 @@
 package com.critters.bll;
 
+import com.critters.Utilities.Enums.NPCActions;
 import com.critters.Utilities.Extensions;
-import com.critters.dal.DAL;
-import com.critters.dal.dto.NPCResponse;
-import com.critters.dal.dto.entity.NPC;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.accessors.DAL;
+import com.critters.dto.NPCResponse;
+import com.critters.dal.entity.NPC;
+import com.critters.dal.entity.User;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import javax.script.ScriptEngineManager;
 public class WorldBLL {
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-	public static NPCResponse actionNPC(int npcID, int actionCode, int targetIdOrAmt, User loggedInUser) {
+	public static NPCResponse actionNPC(int npcID, NPCActions actionCode, int targetIdOrAmt, User loggedInUser) {
 		NPCResponse response = new NPCResponse();
 		ScriptEngineManager factory = new ScriptEngineManager();
 		NPC npc = null;
@@ -30,12 +31,16 @@ public class WorldBLL {
 			return null;
 		}
 
+		if(actionCode == NPCActions.SayHello) {
+			checkForQuests();
+		}
+
 		try {
 			ScriptEngine engine = factory.getEngineByName("JavaScript");
 			engine.eval(npc.getActionHandlerScript());
 			Invocable inv = (Invocable) engine;
 			if((boolean)inv.invokeFunction("canAction", actionCode)){
-				ScriptObjectMirror o =(ScriptObjectMirror) inv.invokeFunction("handleAction", loggedInUser, actionCode, targetIdOrAmt);
+				ScriptObjectMirror o =(ScriptObjectMirror) inv.invokeFunction("handleAction", loggedInUser, actionCode.ordinal(), targetIdOrAmt);
 				response.responseMessage = (String)o.get("responseText");
 				response.npc = npc;
 				if(o.get("subItems") != null && !Extensions.isNullOrEmpty(((ScriptObjectMirror)o.get("subItems")).values())) {
@@ -61,4 +66,9 @@ public class WorldBLL {
 
 		return response;
 	}
+
+	public static void checkForQuests(){
+
+	}
+
 }

@@ -3,8 +3,8 @@ package com.critters.ajax;
 import com.critters.ajax.filters.UserSecure;
 import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.*;
-import com.critters.dal.dto.SearchResponse;
-import com.critters.dal.dto.entity.*;
+import com.critters.dto.SearchResponse;
+import com.critters.dal.entity.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -2,7 +2,7 @@ package com.critters.ajax;
 
 import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.FriendshipBLL;
-import com.critters.dal.dto.entity.Friendship;
+import com.critters.dal.entity.Friendship;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

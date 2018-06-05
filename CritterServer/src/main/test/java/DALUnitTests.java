@@ -1,6 +1,6 @@
 import com.critters.bll.UserBLL;
-import com.critters.dal.HibernateUtil;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.accessors.HibernateUtil;
+import com.critters.dal.entity.User;
 import junit.framework.TestCase;
 import org.mockito.listeners.InvocationListener;
 import org.mockito.listeners.MethodInvocationReport;

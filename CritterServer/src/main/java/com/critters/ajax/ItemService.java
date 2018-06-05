@@ -2,7 +2,7 @@ package com.critters.ajax;
 
 import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.UserBLL;
-import com.critters.dal.dto.ItemRequest;
+import com.critters.dto.ItemRequest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.*;

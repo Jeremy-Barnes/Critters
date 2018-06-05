@@ -1,7 +1,7 @@
 package com.critters.games.sockets;
 
-import com.critters.dal.dto.Twople;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.Twople;
+import com.critters.dal.entity.User;
 import com.critters.games.GameController;
 import com.critters.games.pong.PongController;
 

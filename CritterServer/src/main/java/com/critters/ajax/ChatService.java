@@ -2,9 +2,9 @@ package com.critters.ajax;
 
 import com.critters.ajax.filters.UserSecure;
 import com.critters.bll.ChatBLL;
-import com.critters.dal.dto.Conversation;
-import com.critters.dal.dto.MessageRequest;
-import com.critters.dal.dto.entity.Message;
+import com.critters.dto.Conversation;
+import com.critters.dto.MessageRequest;
+import com.critters.dal.entity.Message;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

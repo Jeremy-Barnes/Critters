@@ -1,12 +1,12 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
-import com.critters.dal.DAL;
-import com.critters.dal.dto.Conversation;
-import com.critters.dal.dto.Notification;
-import com.critters.dal.dto.entity.Friendship;
-import com.critters.dal.dto.entity.Message;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.accessors.DAL;
+import com.critters.dto.Conversation;
+import com.critters.dto.Notification;
+import com.critters.dal.entity.Friendship;
+import com.critters.dal.entity.Message;
+import com.critters.dal.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

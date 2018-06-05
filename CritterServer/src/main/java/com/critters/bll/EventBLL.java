@@ -1,9 +1,9 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
-import com.critters.dal.dto.Notification;
-import com.critters.dal.dto.UINotification;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.Notification;
+import com.critters.dto.UINotification;
+import com.critters.dal.entity.User;
 
 import javax.ws.rs.container.AsyncResponse;
 import java.util.*;

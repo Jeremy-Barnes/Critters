@@ -1,7 +1,7 @@
 package com.critters.games;
 
 import com.critters.Utilities.Serializer;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.entity.User;
 import com.critters.games.sockets.Player;
 import com.critters.games.sockets.SocketGameRequest;
 import com.critters.games.sockets.SocketGameResponse;

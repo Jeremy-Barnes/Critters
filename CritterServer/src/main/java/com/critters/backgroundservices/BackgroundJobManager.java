@@ -2,7 +2,7 @@ package com.critters.backgroundservices;
 
 import com.critters.bll.CommerceBLL;
 import com.critters.bll.EventBLL;
-import com.critters.dal.dto.entity.NPCStoreRestockConfig;
+import com.critters.dal.entity.NPCStoreRestockConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

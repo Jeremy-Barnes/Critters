@@ -1,10 +1,10 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
-import com.critters.dal.DAL;
-import com.critters.dal.dto.GamesInfo;
-import com.critters.dal.dto.entity.GameThumbnail;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.accessors.DAL;
+import com.critters.dto.GamesInfo;
+import com.critters.dal.entity.GameThumbnail;
+import com.critters.dal.entity.User;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
