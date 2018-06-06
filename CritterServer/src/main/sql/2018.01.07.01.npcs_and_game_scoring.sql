@@ -18,13 +18,14 @@ CREATE TABLE questStepConfigs(
     canRandom BIT NOT NULL,
     canVolunteer BIT NOT NULL,
     isActive BIT NOT NULL,
-    actionHandlerScript TEXT
+    actionHandlerScript TEXT,
+    timeLimitSeconds INT NULL 
 );
 
 CREATE TABLE userQuestInstance(
     userQuestInstanceID SERIAL NOT NULL PRIMARY KEY,
     questUserID INT NOT NULL REFERENCES users(questStepID),
     currentQuestStepID INT NOT NULL REFERENCES questSteps(questStepID),
-    startedDate DATE NOT NULL,
-    completedDate DATE NOT NULL
+    startedDate TIMESTAMP NOT NULL,
+    completedDate TIMESTAMP NOT NULL
 );
