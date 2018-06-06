@@ -14,7 +14,10 @@ CREATE TABLE questStepConfigs(
     questStepID SERIAL NOT NULL PRIMARY KEY,
     previousStepID INT NOT NULL REFERENCES questStep(questStepID),
     nextStepID INT NOT NULL REFERENCES questStep(questStepID),
-    giverNPC INT NOT NULL REFERENCES npcs(npcID),
+    giverNPC INT NULL REFERENCES npcs(npcID),
+    canRandom BIT NOT NULL,
+    canVolunteer BIT NOT NULL,
+    isActive BIT NOT NULL,
     actionHandlerScript TEXT
 );
 
@@ -22,5 +25,6 @@ CREATE TABLE userQuestInstance(
     userQuestInstanceID SERIAL NOT NULL PRIMARY KEY,
     questUserID INT NOT NULL REFERENCES users(questStepID),
     currentQuestStepID INT NOT NULL REFERENCES questSteps(questStepID),
-    startedDate DATE NOT NULL
+    startedDate DATE NOT NULL,
+    completedDate DATE NOT NULL
 );
