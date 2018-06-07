@@ -13,7 +13,7 @@ ALTER TABLE gameThumbnailConfigs ADD COLUMN scoreHandlerScript TEXT;
 CREATE TABLE questStepConfigs(
     questStepID SERIAL NOT NULL PRIMARY KEY,
     previousStepID INT NOT NULL REFERENCES questStep(questStepID),
-    nextStepID INT NOT NULL REFERENCES questStep(questStepID),
+    nextStepID INT NULL REFERENCES questStep(questStepID),
     giverNPC INT NULL REFERENCES npcs(npcID),
     canRandom BIT NOT NULL,
     canVolunteer BIT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE questStepConfigs(
 
 CREATE TABLE userQuestInstance(
     userQuestInstanceID SERIAL NOT NULL PRIMARY KEY,
-    questUserID INT NOT NULL REFERENCES users(questStepID),
+    questUserID INT NOT NULL REFERENCES users(userID),
     currentQuestStepID INT NOT NULL REFERENCES questSteps(questStepID),
     startedDate TIMESTAMP NOT NULL,
     completedDate TIMESTAMP NOT NULL
