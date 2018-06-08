@@ -3,10 +3,7 @@ package com.critters.dal.entity;
 import com.critters.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
 
@@ -82,4 +79,21 @@ public class NPC extends DTO {
 	public void setActionHandlerScript(String actionHandlerScript) {
 		this.actionHandlerScript = actionHandlerScript;
 	}
+
+	@Entity
+	@Table(name="npcItemQuestPreferenceConfigs")
+	public static class NPCItemPreferences extends DTO {
+		@Id
+		@GeneratedValue(generator = "increment")
+		@GenericGenerator(name="increment", strategy = "increment")
+		private int npcItemQuestPreferenceConfigID;
+		private int wanterNPC;
+
+		@ManyToOne
+		@JoinColumn(name="itemID", updatable = false)
+		private Item.ItemDescription item;
+		private int critterBuxxValuePerItem;
+
+	}
+
 }

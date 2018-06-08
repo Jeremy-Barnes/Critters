@@ -132,7 +132,7 @@ public class EventBLL {
 		event.giveaway(loggedInUser);
 
 
-		//temp, put in generate method
+		//TODO temp, put in generate method
 		UINotification notice = new UINotification();
 		notice.body = event.message;
 		notice.title = "LOL SO RANDOM";

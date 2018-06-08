@@ -147,12 +147,35 @@ public class ConfigAccessor{
 		}
 	}
 
-	public <T> void save(List<T> images) {
-		images.forEach(i -> save(i));
+	public List<NPC.NPCItemPreferences> getNPCItemPreferences() {
+		try {
+			List<NPC.NPCItemPreferences> options = sql.createQuery("from NPC$NPCItemPreferences").getResultList();
+			return options;
+		} catch(Exception e) {
+			logger.error("SOMEHOW THERE ARE NO ITEMPREFERENCES", e);
+			return null;
+		}
 	}
 
-	public <T> void save(T image) {
-		sql.merge(image);
+	public List<NPC.NPCItemPreferences> getNPCItemPreferences(int npcID) {
+		List<NPC.NPCItemPreferences> options = null;
+		try {
+			options = sql.createQuery("from NPC$NPCItemPreferences where npcItemQuestPreferenceConfigID = :npcID").setParameter("npcID", npcID)
+										  .getResultList();
+		} catch (NoResultException nrex) {
+			logger.info("No item preference options found with npc ID " + npcID, nrex);
+		} catch (PersistenceException ex) {
+			logger.error("Database error searching for npc ID " + npcID, ex);
+		}
+		return options;
+	}
+
+	public <T> void save(List<T> configs) {
+		configs.forEach(i -> save(i));
+	}
+
+	public <T> void save(T config) {
+		sql.merge(config);
 	}
 
 

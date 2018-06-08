@@ -44,7 +44,6 @@ public class NPCAccessor {
 		return dbItem;
 	}
 
-
 	public void save(List<NPC> npcs) {
 		npcs.forEach(i -> save(i));
 	}

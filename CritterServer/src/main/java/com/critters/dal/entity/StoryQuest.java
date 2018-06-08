@@ -10,7 +10,8 @@ import java.util.Date;
 /**
  * Created by Jeremy on 6/4/2018.
  */
-public class Quest extends DTO {
+@Table(name="userStoryQuestInstances")
+public class StoryQuest extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -19,20 +20,20 @@ public class Quest extends DTO {
 	private int questUserID;
 	@ManyToOne
 	@JoinColumn(name="currentQuestStepID", updatable = false)
-	private QuestStep currentStep;
+	private StoryQuestStep currentStep;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startedDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date completedDate;
 
-	public Quest(int questUserID, QuestStep currentStep, Date startedDate, Date completedDate) {
+	public StoryQuest(int questUserID, StoryQuestStep currentStep, Date startedDate, Date completedDate) {
 		this.questUserID = questUserID;
 		this.currentStep = currentStep;
 		this.startedDate = startedDate;
 		this.completedDate = completedDate;
 	}
 
-	public Quest(){	}
+	public StoryQuest(){	}
 
 	public int getUserQuestInstanceID() {
 		return userQuestInstanceID;
@@ -50,11 +51,11 @@ public class Quest extends DTO {
 		this.questUserID = questUserID;
 	}
 
-	public QuestStep getCurrentStep() {
+	public StoryQuestStep getCurrentStep() {
 		return currentStep;
 	}
 
-	public void setCurrentStep(QuestStep currentStep) {
+	public void setCurrentStep(StoryQuestStep currentStep) {
 		this.currentStep = currentStep;
 	}
 
@@ -75,24 +76,32 @@ public class Quest extends DTO {
 	}
 
 	@Entity
-	@Table(name = "questStepConfigs")
-	public static class QuestStep extends DTO {
+	@Table(name = "storyQuestStepConfigs")
+	public static class StoryQuestStep extends DTO {
 		@Id
 		@GeneratedValue(generator = "increment")
 		@GenericGenerator(name = "increment", strategy = "increment")
-		private int questStepID;
+		private int storyQuestStepID;
+
+		@ManyToOne
+		@JoinColumn(name = "rootStepID",  updatable = false)
+		private StoryQuestStep rootStep;
 
 		@ManyToOne
 		@JoinColumn(name = "previousStepID",  updatable = false)
-		private QuestStep previousStepID;
+		private StoryQuestStep previousStep;
 
 		@ManyToOne
 		@JoinColumn(name = "nextStepID",  updatable = false)
-		private QuestStep nextStepID;
+		private StoryQuestStep nextStep;
 
 		@ManyToOne
 		@JoinColumn(name = "giverNPC",  updatable = false)
 		private NPC giverNPC;
+
+		@ManyToOne
+		@JoinColumn(name = "redeemerNPC",  updatable = false)
+		private NPC redeemerNPC;
 
 		private boolean canRandom;
 		private boolean canVolunteer;
@@ -101,9 +110,10 @@ public class Quest extends DTO {
 		@XmlTransient
 		private String actionHandlerScript;
 
-		public QuestStep(QuestStep previousStepID, QuestStep nextStepID, NPC giverNPC, boolean canRandom, boolean canVolunteer, boolean isActive, Integer timeLimitSeconds, String actionHandlerScript) {
-			this.previousStepID = previousStepID;
-			this.nextStepID = nextStepID;
+		public StoryQuestStep(StoryQuestStep previousStep, StoryQuestStep nextStep,StoryQuestStep rootStep, NPC giverNPC, boolean canRandom, boolean canVolunteer, boolean isActive, Integer timeLimitSeconds, String actionHandlerScript) {
+			this.previousStep = previousStep;
+			this.nextStep = nextStep;
+			this.rootStep = rootStep;
 			this.giverNPC = giverNPC;
 			this.canRandom = canRandom;
 			this.canVolunteer = canVolunteer;
@@ -112,30 +122,38 @@ public class Quest extends DTO {
 			this.actionHandlerScript = actionHandlerScript;
 		}
 
-		public QuestStep() {}
+		public StoryQuestStep() {}
 
-		public int getQuestStepID() {
-			return questStepID;
+		public int getStoryQuestStepID() {
+			return storyQuestStepID;
 		}
 
-		public void setQuestStepID(int questStepID) {
-			this.questStepID = questStepID;
+		public void setStoryQuestStepID(int storyQuestStepID) {
+			this.storyQuestStepID = storyQuestStepID;
 		}
 
-		public QuestStep getPreviousStepID() {
-			return previousStepID;
+		public StoryQuestStep getRootStep() {
+			return rootStep;
 		}
 
-		public void setPreviousStepID(QuestStep previousStepID) {
-			this.previousStepID = previousStepID;
+		public void setRootStepID(StoryQuestStep rootStepID) {
+			this.rootStep = rootStepID;
 		}
 
-		public QuestStep getNextStepID() {
-			return nextStepID;
+		public StoryQuestStep getPreviousStep() {
+			return previousStep;
 		}
 
-		public void setNextStepID(QuestStep nextStepID) {
-			this.nextStepID = nextStepID;
+		public void setPreviousStep(StoryQuestStep previousStepID) {
+			this.previousStep = previousStepID;
+		}
+
+		public StoryQuestStep getNextStep() {
+			return nextStep;
+		}
+
+		public void setNextStep(StoryQuestStep nextStep) {
+			this.nextStep = nextStep;
 		}
 
 		public NPC getGiverNPC() {
@@ -144,6 +162,14 @@ public class Quest extends DTO {
 
 		public void setGiverNPC(NPC giverNPC) {
 			this.giverNPC = giverNPC;
+		}
+
+		public NPC getRedeemerNPC() {
+			return redeemerNPC;
+		}
+
+		public void setRedeemerNPC(NPC redeemerNPC) {
+			this.redeemerNPC = redeemerNPC;
 		}
 
 		public boolean isCanRandom() {
