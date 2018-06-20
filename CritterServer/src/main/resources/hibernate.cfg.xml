@@ -33,8 +33,8 @@
         <mapping class="com.critters.dal.entity.UserImageOption"/>
         <mapping class="com.critters.dal.entity.NPC"/>
         <mapping class="com.critters.dal.entity.NPC$NPCItemPreferences"/>
-        <mapping class="com.critters.dal.entity.StoryQuest"/>
-        <mapping class="com.critters.dal.entity.StoryQuest$StoryQuestStep"/>
+        <mapping class="com.critters.dal.entity.QuestInstance"/>
+        <mapping class="com.critters.dal.entity.QuestInstance$StoryQuestStep"/>
 
     </session-factory>
 </hibernate-configuration>

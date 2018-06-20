@@ -34,4 +34,35 @@ public class WorldService extends AjaxService {
 		NPCResponse response = WorldBLL.getNPC(npcID, loggedInUser);
 		return Response.status(200).entity(response).build();
 	}
+
+
+
+	@Path("/Quest/{npcID}")
+	@UserSecure
+	@GET
+	public Response getQuestNPC(@PathParam("npcID") int npcID) {
+		User loggedInUser = getSessionUser();
+		NPCResponse response = WorldBLL.getQuest(npcID, loggedInUser);
+		return Response.status(200).entity(response).build();
+	}
+
+	@Path("/QuestA/{npcID}")
+	@UserSecure
+	@GET
+	public Response getAQuestNPC(@PathParam("npcID") int npcID) {
+		User loggedInUser = getSessionUser();
+		NPCResponse response = WorldBLL.advQuest(npcID, loggedInUser);
+		return Response.status(200).entity(response).build();
+	}
+
+	@Path("/QuestR/{npcID}")
+	@UserSecure
+	@GET
+	public Response getRQuestNPC(@PathParam("npcID") int npcID) {
+		User loggedInUser = getSessionUser();
+		NPCResponse response = WorldBLL.retQuest(npcID, loggedInUser);
+		return Response.status(200).entity(response).build();
+	}
+
+
 }

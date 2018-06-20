@@ -12,8 +12,8 @@ ALTER TABLE gameThumbnailConfigs ADD COLUMN scoreHandlerScript TEXT;
 
 CREATE TABLE storyQuestStepConfigs(
     storyQuestStepID SERIAL NOT NULL PRIMARY KEY,
-    rootStepID INT NOT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
-    previousStepID INT NOT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
+    rootStepID INT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
+    previousStepID INT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
     nextStepID INT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
     giverNPC INT NULL REFERENCES npcs(npcID),
     redeemerNPC INT NULL REFERENCES npcs(npcID),
@@ -24,12 +24,15 @@ CREATE TABLE storyQuestStepConfigs(
     timeLimitSeconds INT NULL 
 );
 
-CREATE TABLE userStoryQuestInstances(
+CREATE TABLE userQuestInstances(
     userQuestInstanceID SERIAL NOT NULL PRIMARY KEY,
     questUserID INT NOT NULL REFERENCES users(userID),
-    currentQuestStepID INT NOT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
+    currentQuestStepID INT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
     startedDate TIMESTAMP NOT NULL,
-    completedDate TIMESTAMP NOT NULL
+    completedDate TIMESTAMP NULL,
+    randomQuestGiverRedeemer INT NULL REFERENCES npcs(npcID),
+    randomQuestObjectivesJSONObject TEXT,
+    CHECK (currentQuestStepID IS NOT NULL OR (randomQuestGiverRedeemer IS NOT NULL AND randomQuestObjectivesJSONObject IS NOT NULL))
 );
 
 CREATE TABLE npcItemQuestPreferenceConfigs(

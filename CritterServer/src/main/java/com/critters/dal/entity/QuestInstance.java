@@ -10,8 +10,9 @@ import java.util.Date;
 /**
  * Created by Jeremy on 6/4/2018.
  */
-@Table(name="userStoryQuestInstances")
-public class StoryQuest extends DTO {
+@Entity
+@Table(name="userQuestInstances")
+public class QuestInstance extends DTO {
 
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -26,14 +27,19 @@ public class StoryQuest extends DTO {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date completedDate;
 
-	public StoryQuest(int questUserID, StoryQuestStep currentStep, Date startedDate, Date completedDate) {
+	private Integer randomQuestGiverRedeemer;
+	private String randomQuestObjectivesJSONObject;
+
+	public QuestInstance(int questUserID, StoryQuestStep currentStep, Date startedDate, Date completedDate, Integer randomQuestGiverRedeemer, String randomQuestObjectivesJSONObject) {
 		this.questUserID = questUserID;
 		this.currentStep = currentStep;
 		this.startedDate = startedDate;
 		this.completedDate = completedDate;
+		this.randomQuestGiverRedeemer = randomQuestGiverRedeemer;
+		this.randomQuestObjectivesJSONObject = randomQuestObjectivesJSONObject;
 	}
 
-	public StoryQuest(){	}
+	public QuestInstance(){	}
 
 	public int getUserQuestInstanceID() {
 		return userQuestInstanceID;
@@ -75,6 +81,23 @@ public class StoryQuest extends DTO {
 		this.completedDate = completedDate;
 	}
 
+	public String getRandomQuestObjectivesJSONObject() {
+		return randomQuestObjectivesJSONObject;
+	}
+
+	public void setRandomQuestObjectivesJSONObject(String randomQuestObjectivesJSONObject) {
+		this.randomQuestObjectivesJSONObject = randomQuestObjectivesJSONObject;
+	}
+
+	public int getRandomQuestGiverRedeemer() {
+		return randomQuestGiverRedeemer;
+	}
+
+	public void setRandomQuestGiverRedeemer (int randomQuestGiverRedeemer) {
+		this.randomQuestGiverRedeemer = randomQuestGiverRedeemer;
+	}
+
+
 	@Entity
 	@Table(name = "storyQuestStepConfigs")
 	public static class StoryQuestStep extends DTO {
@@ -96,11 +119,11 @@ public class StoryQuest extends DTO {
 		private StoryQuestStep nextStep;
 
 		@ManyToOne
-		@JoinColumn(name = "giverNPC",  updatable = false)
+		@JoinColumn(name = "giverNPCID",  updatable = false)
 		private NPC giverNPC;
 
 		@ManyToOne
-		@JoinColumn(name = "redeemerNPC",  updatable = false)
+		@JoinColumn(name = "redeemerNPCID",  updatable = false)
 		private NPC redeemerNPC;
 
 		private boolean canRandom;

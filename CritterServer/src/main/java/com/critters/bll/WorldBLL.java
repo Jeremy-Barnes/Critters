@@ -3,9 +3,10 @@ package com.critters.bll;
 import com.critters.Utilities.Enums.NPCActions;
 import com.critters.Utilities.Extensions;
 import com.critters.dal.accessors.DAL;
-import com.critters.dto.NPCResponse;
 import com.critters.dal.entity.NPC;
+import com.critters.dal.entity.QuestInstance;
 import com.critters.dal.entity.User;
+import com.critters.dto.NPCResponse;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jeremy on 1/7/2018.
@@ -69,6 +72,53 @@ public class WorldBLL {
 
 	public static void checkForQuests(){
 
+	}
+
+	public static NPCResponse getQuest(int npcID, User loggedInUser) {
+		QuestInstance.StoryQuestStep quest = null;
+		try(DAL dal = new DAL()) {
+			quest = dal.quests.getStoryQuestStepConfig(1);
+			if(quest == null) { return null; }
+			QuestInstance q = new QuestInstance(loggedInUser.getUserID(), quest, new Date(), null, null, null);
+
+			dal.beginTransaction();
+			dal.quests.save(q);
+			dal.commitTransaction();
+
+			NPCResponse ret = new NPCResponse();
+			ret.npc = quest.getGiverNPC();
+			ret.responseMessage = "U got a quest";
+			return ret;
+		}
+	}
+
+	public static NPCResponse advQuest(int npcID, User loggedInUser) {
+		List<QuestInstance.StoryQuestStep> quest = null;
+		try(DAL dal = new DAL()) {
+			QuestInstance curQ = dal.quests.getStoryQuestInstances(loggedInUser.getUserID(), npcID).get(0);
+			quest = dal.quests.getStoryQuestNextSteps(npcID, curQ.getCurrentStep().getStoryQuestStepID());
+			if(quest == null) { return null; }
+			QuestInstance q = new QuestInstance(loggedInUser.getUserID(), quest.get(0), new Date(), null, null, null);
+			dal.beginTransaction();
+			dal.quests.save(q);
+			dal.commitTransaction();
+			NPCResponse ret = new NPCResponse();
+			ret.npc = quest.get(0).getGiverNPC();
+			ret.responseMessage = "U got a quest advanced";
+			return ret;
+		}
+	}
+
+	public static NPCResponse retQuest(int npcID, User loggedInUser) {
+		List<QuestInstance> quest = null;
+		try(DAL dal = new DAL()) {
+			quest = dal.quests.getStoryQuestInstances(loggedInUser.getUserID(), npcID);
+			if(quest == null) { return null; }
+			NPCResponse ret = new NPCResponse();
+			ret.npc = quest.get(0).getCurrentStep().getGiverNPC();
+			ret.responseMessage = "U got a quest or 2";
+			return ret;
+		}
 	}
 
 }
