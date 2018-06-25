@@ -5,6 +5,8 @@ package com.critters.Utilities.Enums;
  */
 public enum NPCActions {
 	SayHello,
+	Give,
+	SubmitQuest,
 
 
 }

@@ -8,6 +8,7 @@ public class UINotification {
 	public String title;
 	public String body;
 	public String customBodyHTML;
+	public String yesButtonText;
 	public String dangerButtonText;
 	public String noButtonText;
 	public String notificationID;

@@ -44,6 +44,27 @@ public class QuestAccessor {
 		return dbItem;
 	}
 
+	public List<QuestInstance.StoryQuestStep> getStoryQuestStepConfigByGiverID(int npcID, boolean startsOnly) {
+		List<QuestInstance.StoryQuestStep> dbItems = null;
+		try {
+			if(startsOnly)
+				dbItems = sql.createQuery("from QuestInstance$StoryQuestStep where giverNPC.npcID = :id and rootStep is null")
+						 	.setParameter("id", npcID)
+						 	.getResultList();
+			else
+				dbItems = sql.createQuery("from QuestInstance$StoryQuestStep where giverNPC.npcID = :id")
+							 .setParameter("id", npcID)
+							 .getResultList();
+		} catch (NoResultException nrex) {
+			logger.info("No such story quest found with npcid " + npcID, nrex);
+		} catch (PersistenceException ex) {
+			logger.error("Database error searching for quests with npcid " + npcID, ex);
+		}
+		return dbItems;
+	}
+
+
+
 	public QuestInstance getQuestInstance(int id) {
 		QuestInstance dbItem = null;
 		try {
@@ -115,7 +136,6 @@ public class QuestAccessor {
 		}
 		return dbItems;
 	}
-
 
 	public <T> void save(List<T> quests) {
 		quests.forEach(i -> save(i));

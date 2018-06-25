@@ -196,24 +196,29 @@ public class UserBLL {
 		}
 	}
 
-	public static void discardInventoryItems(Item[] dropItems, User user){
+	public static boolean discardInventoryItems(Item[] dropItems, User user, Integer recipientID){
 		try(DAL dal = new DAL()){
 			List<Item> dbDropItems = dal.items.getItems(dropItems);
 			List<Integer> ids = dbDropItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());
+			if (!dbDropItems.stream().allMatch(i -> i.getOwnerId() == user.getUserID())) {
+				return false;
+			}
 			user.initializeInventory();
 			List<Item> userOwnedItems = user.getInventory().stream().filter(i -> ids.contains(i.getInventoryItemId())).collect(Collectors.toList());
 			if(userOwnedItems != null && userOwnedItems.size() == dbDropItems.size()){
 				for(int i = 0; i < userOwnedItems.size(); i++) {
 					user.getInventory().remove(userOwnedItems.get(i));
-					userOwnedItems.get(i).setOwnerId(null);
+					userOwnedItems.get(i).setOwnerId(recipientID);
 					userOwnedItems.get(i).setPrice(null);
 				}
 				dal.beginTransaction();
 				dal.items.save(userOwnedItems);
 				dal.users.save(user);
 				dal.commitTransaction();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public static UserImageOption getUserImageOption(int id) { //todo caching

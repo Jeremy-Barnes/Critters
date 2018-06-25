@@ -26,15 +26,21 @@ public class QuestInstance extends DTO {
 	private Date startedDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date completedDate;
-
+	private String questText;
+	private String questTitle;
+	private String questImage;
 	private Integer randomQuestGiverRedeemer;
 	private String randomQuestObjectivesJSONObject;
 
-	public QuestInstance(int questUserID, StoryQuestStep currentStep, Date startedDate, Date completedDate, Integer randomQuestGiverRedeemer, String randomQuestObjectivesJSONObject) {
+	public QuestInstance(int questUserID, StoryQuestStep currentStep, Date startedDate, Date completedDate, String questText, String questTitle, String questImage,
+						 Integer randomQuestGiverRedeemer, String randomQuestObjectivesJSONObject) {
 		this.questUserID = questUserID;
 		this.currentStep = currentStep;
 		this.startedDate = startedDate;
 		this.completedDate = completedDate;
+		this.questText = questText;
+		this.questTitle = questTitle;
+		this.questImage = questImage;
 		this.randomQuestGiverRedeemer = randomQuestGiverRedeemer;
 		this.randomQuestObjectivesJSONObject = randomQuestObjectivesJSONObject;
 	}
@@ -81,6 +87,30 @@ public class QuestInstance extends DTO {
 		this.completedDate = completedDate;
 	}
 
+	public String getQuestText() {
+		return questText;
+	}
+
+	public void setQuestText(String questText) {
+		this.questText = questText;
+	}
+
+	public String getQuestTitle() {
+		return questTitle;
+	}
+
+	public void setQuestTitle(String questTitle) {
+		this.questTitle = questTitle;
+	}
+
+	public String getQuestImage() {
+		return questImage;
+	}
+
+	public void setQuestImage(String questImage) {
+		this.questImage = questImage;
+	}
+
 	public String getRandomQuestObjectivesJSONObject() {
 		return randomQuestObjectivesJSONObject;
 	}
@@ -125,7 +155,7 @@ public class QuestInstance extends DTO {
 		@ManyToOne
 		@JoinColumn(name = "redeemerNPCID",  updatable = false)
 		private NPC redeemerNPC;
-
+		private String questTitle;
 		private boolean canRandom;
 		private boolean canVolunteer;
 		private boolean isActive;
@@ -133,11 +163,13 @@ public class QuestInstance extends DTO {
 		@XmlTransient
 		private String actionHandlerScript;
 
-		public StoryQuestStep(StoryQuestStep previousStep, StoryQuestStep nextStep,StoryQuestStep rootStep, NPC giverNPC, boolean canRandom, boolean canVolunteer, boolean isActive, Integer timeLimitSeconds, String actionHandlerScript) {
+		public StoryQuestStep(StoryQuestStep previousStep, StoryQuestStep nextStep,StoryQuestStep rootStep, NPC giverNPC, String questTitle, boolean canRandom,
+							  boolean canVolunteer, boolean isActive, Integer timeLimitSeconds, String actionHandlerScript) {
 			this.previousStep = previousStep;
 			this.nextStep = nextStep;
 			this.rootStep = rootStep;
 			this.giverNPC = giverNPC;
+			this.questTitle = questTitle;
 			this.canRandom = canRandom;
 			this.canVolunteer = canVolunteer;
 			this.isActive = isActive;
@@ -193,6 +225,14 @@ public class QuestInstance extends DTO {
 
 		public void setRedeemerNPC(NPC redeemerNPC) {
 			this.redeemerNPC = redeemerNPC;
+		}
+
+		public String getQuestTitle() {
+			return questTitle;
+		}
+
+		public void setQuestTitle(String questTitle) {
+			this.questTitle = questTitle;
 		}
 
 		public boolean isCanRandom() {

@@ -1,6 +1,7 @@
 package com.critters.Utilities;
 
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
+import org.json.JSONObject;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,5 +43,9 @@ public class Serializer {
 		} catch(JAXBException jaxb) {
 			return null;
 		}
+	}
+
+	public static JSONObject dictionaryFromJSON(String json){
+		return new JSONObject(json);
 	}
 }

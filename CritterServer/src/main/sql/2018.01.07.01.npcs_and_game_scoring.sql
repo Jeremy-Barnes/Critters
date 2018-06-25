@@ -20,6 +20,7 @@ CREATE TABLE storyQuestStepConfigs(
     canRandom BIT NOT NULL,
     canVolunteer BIT NOT NULL,
     isActive BIT NOT NULL,
+    questTitle varchar(300) NOT NULL,
     actionHandlerScript TEXT,
     timeLimitSeconds INT NULL 
 );
@@ -30,6 +31,9 @@ CREATE TABLE userQuestInstances(
     currentQuestStepID INT NULL REFERENCES storyQuestStepConfigs(storyQuestStepID),
     startedDate TIMESTAMP NOT NULL,
     completedDate TIMESTAMP NULL,
+    questText TEXT NOT NULL,
+    questTitle varchar(300) NOT NULL,
+    questImage varchar(200) NULL,
     randomQuestGiverRedeemer INT NULL REFERENCES npcs(npcID),
     randomQuestObjectivesJSONObject TEXT,
     CHECK (currentQuestStepID IS NOT NULL OR (randomQuestGiverRedeemer IS NOT NULL AND randomQuestObjectivesJSONObject IS NOT NULL))
