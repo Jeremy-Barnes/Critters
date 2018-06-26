@@ -4,6 +4,7 @@ import com.critters.Utilities.Enums.NPCActions;
 import com.critters.Utilities.Extensions;
 import com.critters.Utilities.Serializer;
 import com.critters.dal.accessors.DAL;
+import com.critters.dal.entity.Item;
 import com.critters.dal.entity.NPC;
 import com.critters.dal.entity.QuestInstance;
 import com.critters.dal.entity.User;
@@ -19,6 +20,7 @@ import javax.script.ScriptEngineManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jeremy on 1/7/2018.
@@ -27,7 +29,7 @@ public class WorldBLL {
 	static final Logger logger = LoggerFactory.getLogger("application");
 
 
-	public static NPCResponse actionNPC(int npcID, NPCActions actionCode, int targetIdOrAmt, User loggedInUser, int[] itemIDs) {
+	public static NPCResponse actionNPC(int npcID, NPCActions actionCode, int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs) {
 		NPCResponse response = new NPCResponse();
 		NPC npc = null;
 		List<QuestInstance> usersQuests = null;
@@ -62,16 +64,25 @@ public class WorldBLL {
 						usersQuest.getCurrentStep().getRedeemerNPC().getNpcID() == npcID))) {
 
 							if(usersQuest.getRandomQuestObjectivesJSONObject() != null) {
-								JSONObject o = Serializer.dictionaryFromJSON(usersQuest.getRandomQuestObjectivesJSONObject());
-								JSONObject retrieveItems = (JSONObject) o.get("giveItems");
-								Map<String, Object> ItemsAndQtys = retrieveItems.toMap();
-								for(Map.Entry<String, Object> itemQty : ItemsAndQtys.entrySet()) {
-									int itemID = Integer.parseInt(itemQty.getKey());
-									int qty = Integer.parseInt(itemQty.getValue().toString());
+								boolean insufficientGifts = false;
+								JSONObject jsonObj = Serializer.dictionaryFromJSON(usersQuest.getRandomQuestObjectivesJSONObject());
+
+								JSONObject retrieveItems = (JSONObject) jsonObj.get("giveItems");
+								if(retrieveItems != null) {
 									loggedInUser.setInventory(UserBLL.getUserInventory(loggedInUser.getUserID()));
-								//	loggedInUser.getInventory().stream().filter(i -> i.getDescription().getItemConfigID())
-								}
-							}
+									List<Item> items = loggedInUser.getInventory().stream().filter(i -> itemIDs.contains(i.getInventoryItemId())).collect(Collectors.toList());
+									Map<String, Object> ItemsAndQtys = retrieveItems.toMap();
+									for (Map.Entry<String, Object> itemQty : ItemsAndQtys.entrySet()) {
+										int itemID = Integer.parseInt(itemQty.getKey());
+										int qty = Integer.parseInt(itemQty.getValue().toString());
+										if(items.stream().filter(i -> i.getDescription().getItemConfigID() == itemID).count() < qty) {
+											insufficientGifts = true;
+										}
+									}
+									UserBLL.discardInventoryItems((Item[])items.toArray(), loggedInUser, null);
+								} //fetch quest
+
+							}//random quest objectives
 
 						}
 					}
@@ -137,6 +148,32 @@ public class WorldBLL {
 		}
 		return userQuests;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //	public static NPCResponse getQuest(int npcID, User loggedInUser) {
 //		QuestInstance.StoryQuestStep quest = null;
