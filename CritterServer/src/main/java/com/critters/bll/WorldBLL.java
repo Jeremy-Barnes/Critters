@@ -116,7 +116,7 @@ public class WorldBLL {
 			Random rand = new Random();
 
 			if(sufficientGifts(loggedInUser, itemIDs, retrieveItems, outParamFilteredItems)) {
-				if(UserBLL.discardInventoryItems((Item[]) outParamFilteredItems.toArray(), loggedInUser, null)) {
+				if(UserBLL.discardInventoryItems(outParamFilteredItems.toArray(new Item[0]), loggedInUser, null)) {
 					dal.beginTransaction();
 					usersQuest.setCompletedDate(new Date());
 					dal.quests.save(usersQuest);
@@ -163,7 +163,7 @@ public class WorldBLL {
 				}
 			}
 		}
-		outParamFilteredItems.add(new Item());
+
 		return !insufficientGifts;
 	}
 
