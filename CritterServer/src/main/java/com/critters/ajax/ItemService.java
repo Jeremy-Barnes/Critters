@@ -23,7 +23,7 @@ public class ItemService extends AjaxService{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response discardInventoryItem(JAXBElement<ItemRequest> jsonRequest) {
 		ItemRequest request = jsonRequest.getValue();
-		UserBLL.discardInventoryItems(request.items, getSessionUser(), null);
+		UserBLL.giveOrDiscardInventoryItems(request.items, getSessionUser(), null);
 		return Response.status(Response.Status.OK).build();
 
 	}

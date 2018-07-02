@@ -196,7 +196,7 @@ public class UserBLL {
 		}
 	}
 
-	public static boolean discardInventoryItems(Item[] dropItems, User user, Integer recipientID){
+	public static boolean giveOrDiscardInventoryItems(Item[] dropItems, User user, Integer recipientID){
 		try(DAL dal = new DAL()){
 			List<Item> dbDropItems = dal.items.getItems(dropItems);
 			List<Integer> ids = dbDropItems.stream().map(Item::getInventoryItemId).collect(Collectors.toList());

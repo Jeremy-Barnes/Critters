@@ -122,7 +122,7 @@ public class CommerceBLL {
 
 		try(DAL dal = new DAL()) {
 			//WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never from User Input. That way porn lies.
-			setStoreImagesSafelyWithinDALContext(background, clerk, store, dal);
+			setStoreImagesSafely(background, clerk, store, dal);
 
 			dal.beginTransaction();
 			dal.shops.save(store);
@@ -137,7 +137,7 @@ public class CommerceBLL {
 		return store;
 	}
 
-	private static void setStoreImagesSafelyWithinDALContext(StoreBackgroundImageOption background, StoreClerkImageOption clerk, Store store, DAL dal){
+	private static void setStoreImagesSafely(StoreBackgroundImageOption background, StoreClerkImageOption clerk, Store store, DAL dal){
 		if (background != null) { //keep out the porn
 			background = dal.configuration.getStoreBackgroundImageOption(background.getStoreBackgroundImageOptionID());
 		}
@@ -154,7 +154,7 @@ public class CommerceBLL {
 
 		try(DAL dal = new DAL()){
 			//WARNING NEVER REMOVE THIS FUNCTIONALITY. Images must come from our DB, never from User Input. That way porn lies.
-			setStoreImagesSafelyWithinDALContext(background, clerk, store, dal);
+			setStoreImagesSafely(background, clerk, store, dal);
 			dal.beginTransaction();
 			dal.shops.save(store);
 			if(!dal.commitTransaction()){

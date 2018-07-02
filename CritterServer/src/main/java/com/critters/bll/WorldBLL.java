@@ -116,7 +116,19 @@ public class WorldBLL {
 			Random rand = new Random();
 
 			if(sufficientGifts(loggedInUser, itemIDs, retrieveItems, outParamFilteredItems)) {
-				if(UserBLL.discardInventoryItems(outParamFilteredItems.toArray(new Item[0]), loggedInUser, null)) {
+				if(UserBLL.giveOrDiscardInventoryItems(outParamFilteredItems.toArray(new Item[0]), loggedInUser, null)) {
+					JSONObject rewards =  (JSONObject) jsonObj.get("successRewards");
+					Map<String, Object> rewardsDictionary = rewards.toMap();
+					for (Map.Entry<String, Object> itemQty : rewardsDictionary.entrySet()) {
+						int qty = Integer.parseInt(itemQty.getValue().toString());
+						if(itemQty.getKey().equalsIgnoreCase("cash")) {
+							UserBLL.alterUserCash(loggedInUser.getUserID(), qty);
+						} else {
+							int itemConfigID = Integer.parseInt(itemQty.getKey());
+
+						}
+					}
+
 					dal.beginTransaction();
 					usersQuest.setCompletedDate(new Date());
 					dal.quests.save(usersQuest);
