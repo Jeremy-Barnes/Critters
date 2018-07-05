@@ -220,6 +220,11 @@ export class ServiceMethods {
     public static searchInventory(searchTerm: string): JQueryPromise<InventoryGrouping[]> {
         return ServiceMethods.doAjax("searchInventory", "users", searchTerm, "GET");
     }
+
+
+    public static test() {
+        return ServiceMethods.doAjax("NPC", "world", "1/1/200", "GET");
+    }
 }
 
 
