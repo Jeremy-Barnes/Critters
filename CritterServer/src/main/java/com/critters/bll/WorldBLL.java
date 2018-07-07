@@ -88,9 +88,8 @@ public class WorldBLL {
 	}
 
 
-	private static NPCResponse handleSubmitQuest(DAL dal, ScriptEngine engine, Invocable inv,
-												 int activeNPCID, int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs, NPCResponse npcResponse)
-			throws ScriptException, NoSuchMethodException {
+	private static NPCResponse handleSubmitQuest(DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID, int targetIdOrAmt, User loggedInUser,
+												 List<Integer> itemIDs, NPCResponse npcResponse) throws ScriptException, NoSuchMethodException {
 		QuestInstance usersQuest = dal.quests.getQuestInstance(targetIdOrAmt);
 		if(usersQuest != null && usersQuest.getCompletedDate() == null) {
 			if(usersQuest.getCurrentStep() != null) {
@@ -119,22 +118,26 @@ public class WorldBLL {
 				if(UserBLL.giveOrDiscardInventoryItems(outParamFilteredItems.toArray(new Item[0]), loggedInUser, null)) {
 					JSONObject rewards =  (JSONObject) jsonObj.get("successRewards");
 					Map<String, Object> rewardsDictionary = rewards.toMap();
+					Map<Integer, Integer> itemCreateDictionary = new HashMap<>();
 					for (Map.Entry<String, Object> itemQty : rewardsDictionary.entrySet()) {
 						int qty = Integer.parseInt(itemQty.getValue().toString());
 						if(itemQty.getKey().equalsIgnoreCase("cash")) {
 							UserBLL.alterUserCash(loggedInUser.getUserID(), qty);
 						} else {
 							int itemConfigID = Integer.parseInt(itemQty.getKey());
-
+							itemCreateDictionary.put(itemConfigID, qty);
 						}
 					}
 
+					List<Item> createdItems = ItemsBLL.createNewItems(itemCreateDictionary, loggedInUser.getUserID());
 					dal.beginTransaction();
 					usersQuest.setCompletedDate(new Date());
 					dal.quests.save(usersQuest);
 					dal.commitTransaction();
+
 					JSONArray successResponses = jsonObj.getJSONArray("successResponses");
 					response.messageText = successResponses.get(rand.nextInt(successResponses.length())).toString();
+					response.uiElement
 				}
 			} else {
 				JSONArray failureResponses = jsonObj.getJSONArray("incompleteFailureResponses");

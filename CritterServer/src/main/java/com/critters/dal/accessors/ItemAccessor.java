@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,17 @@ public class ItemAccessor {
 	public List<Item> getItems(Item[] items) {
 		List<Item> itemsList = Arrays.asList(items);
 		return getItems(itemsList.stream().map(Item::getInventoryItemId).collect(Collectors.toList()));
+	}
+
+	public List<Item> getItems() {
+		List<Item> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from Item")
+						 .getResultList();
+		} catch (PersistenceException ex) {
+			logger.error("Something went wrong in the database while attempting to retrieve items: ");
+		}
+		return dbItems;
 	}
 
 	public List<Item> getItems(List<Integer> itemIDs) {
@@ -66,12 +78,15 @@ public class ItemAccessor {
 	}
 
 
-	public void save(List<Item> items) {
-		items.forEach(i -> save(i));
+	public List<Item> save(List<Item> items) {
+		List<Item> dbItems = new ArrayList<Item>();
+		items.forEach(i -> dbItems.add(save(i)));
+		return dbItems;
 	}
 
-	public void save(Item item) {
-		sql.merge(item);
+	public Item save(Item item) {
+		return sql.merge(item);
+
 	}
 
 
