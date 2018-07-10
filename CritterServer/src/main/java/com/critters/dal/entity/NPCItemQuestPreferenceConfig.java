@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="npcItemQuestPreferenceConfigs")
-public class NPCItemQuestPreferenceConfigs extends DTO {
+public class NPCItemQuestPreferenceConfig extends DTO {
 	
   @Id
 	@GeneratedValue(generator = "increment")
