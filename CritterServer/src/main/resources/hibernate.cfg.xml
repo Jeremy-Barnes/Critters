@@ -35,6 +35,6 @@
         <mapping class="com.critters.dal.entity.NPC$NPCItemPreferences"/>
         <mapping class="com.critters.dal.entity.QuestInstance"/>
         <mapping class="com.critters.dal.entity.QuestInstance$StoryQuestStep"/>
-
+        <mapping class="com.critters.dal.entity.NPCItemQuestPreferenceConfig" />
     </session-factory>
 </hibernate-configuration>
