@@ -15,21 +15,23 @@ public class NPCResponse {
 	public NPCQuestMessage[] questItems;
 
 	public static class NPCMessageItem {
+		public String messageText;
+		public String messageImage;
+
 		public NPCMessageItem(){}
 
 		public NPCMessageItem(String text, String image){
 			this.messageImage = image;
 			this.messageText = text;
 		}
-
-		public String messageText;
-		public String messageImage;
 	}
 
 	public static class NPCQuestMessage extends NPCMessageItem {
-		public int questStepID;
+		public Integer questStepID;
+		public NPCQuestMessage[] subItems;
 		public UINotification uiElement = new UINotification();
-		public NPCQuestMessage(String text, String image, int questStepID, String questText, String questTitle) {
+
+		public NPCQuestMessage(String text, String image, Integer questStepID, String questText, String questTitle) {
 			super(text, image);
 			this.questStepID = questStepID;
 			this.uiElement = new UINotification();
@@ -43,6 +45,6 @@ public class NPCResponse {
 			this.uiElement = uiElement;
 		}
 
-		public NPCQuestMessage() {};
+		public NPCQuestMessage() {}
 	}
 }

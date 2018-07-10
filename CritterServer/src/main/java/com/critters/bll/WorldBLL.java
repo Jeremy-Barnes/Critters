@@ -87,7 +87,6 @@ public class WorldBLL {
 		return response;
 	}
 
-
 	private static NPCResponse handleSubmitQuest(DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID, int targetIdOrAmt, User loggedInUser,
 												 List<Integer> itemIDs, NPCResponse npcResponse) throws ScriptException, NoSuchMethodException {
 		QuestInstance usersQuest = dal.quests.getQuestInstance(targetIdOrAmt);
@@ -137,12 +136,22 @@ public class WorldBLL {
 
 					JSONArray successResponses = jsonObj.getJSONArray("successResponses");
 					response.messageText = successResponses.get(rand.nextInt(successResponses.length())).toString();
-					response.uiElement
+					//todo response.image
+					response.subItems = new NPCResponse.NPCQuestMessage[itemCreateDictionary.size()];
+					int n = 0;
+					for(Map.Entry<Integer, Integer> itemCfgAndQty : itemCreateDictionary.entrySet()) {
+						int cfgId = itemCfgAndQty.getKey();
+						int qty = itemCfgAndQty.getValue();
+
+						Item item = createdItems.stream().filter(i -> i.getDescription().getItemConfigID() == cfgId).collect(Collectors.toList()).get(0);
+						String message = "You received " + qty + " " + item.getDescription().getItemName() + (qty > 1 ? "s!" : "!");
+						response.subItems[n] = new NPCResponse.NPCQuestMessage(message, item.getDescription().getImagePath(), null, null, null);
+						n++;
+					}
 				}
 			} else {
 				JSONArray failureResponses = jsonObj.getJSONArray("incompleteFailureResponses");
 				response.messageText = failureResponses.get(rand.nextInt(failureResponses.length())).toString();
-
 			}
 		}
 		return response;
@@ -159,7 +168,6 @@ public class WorldBLL {
 
 		}
 	}
-
 
 	private static boolean sufficientGifts(User loggedInUser, List<Integer> itemIDs, JSONObject npcWantItems, List<Item> outParamFilteredItems) {
 		boolean insufficientGifts = true;
@@ -215,78 +223,5 @@ public class WorldBLL {
 
 		return userQuests;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	public static NPCResponse getQuest(int npcID, User loggedInUser) {
-//		QuestInstance.StoryQuestStep quest = null;
-//		try(DAL dal = new DAL()) {
-//			quest = dal.quests.getStoryQuestStepConfig(1);
-//			if(quest == null) { return null; }
-//			QuestInstance q = new QuestInstance(loggedInUser.getUserID(), quest, new Date(), null, null, null);
-//
-//			dal.beginTransaction();
-//			dal.quests.save(q);
-//			dal.commitTransaction();
-//
-//			NPCResponse ret = new NPCResponse();
-//			ret.npc = quest.getGiverNPC();
-//			ret.responseMessage = "U got a quest";
-//			return ret;
-//		}
-//	}
-//
-//	public static NPCResponse advQuest(int npcID, User loggedInUser) {
-//		List<QuestInstance.StoryQuestStep> quest = null;
-//		try(DAL dal = new DAL()) {
-//			QuestInstance curQ = dal.quests.getStoryQuestInstances(loggedInUser.getUserID(), npcID).get(0);
-//			quest = dal.quests.getStoryQuestNextSteps(npcID, curQ.getCurrentStep().getStoryQuestStepID());
-//			if(quest == null) { return null; }
-//			QuestInstance q = new QuestInstance(loggedInUser.getUserID(), quest.get(0), new Date(), null, null, null);
-//			dal.beginTransaction();
-//			dal.quests.save(q);
-//			dal.commitTransaction();
-//			NPCResponse ret = new NPCResponse();
-//			ret.npc = quest.get(0).getGiverNPC();
-//			ret.responseMessage = "U got a quest advanced";
-//			return ret;
-//		}
-//	}
-//
-//	public static NPCResponse retQuest(int npcID, User loggedInUser) {
-//		List<QuestInstance> quest = null;
-//		try(DAL dal = new DAL()) {
-//			quest = dal.quests.getStoryQuestInstances(loggedInUser.getUserID(), npcID);
-//			if(quest == null) { return null; }
-//			NPCResponse ret = new NPCResponse();
-//			ret.npc = quest.get(0).getCurrentStep().getGiverNPC();
-//			ret.responseMessage = "U got a quest or 2";
-//			return ret;
-//		}
-//	}
 
 }
