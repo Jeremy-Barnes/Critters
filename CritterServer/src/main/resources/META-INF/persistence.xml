@@ -25,6 +25,7 @@
         <class>com.critters.dal.entity.NPC</class>
         <class>com.critters.dal.entity.NPC$NPCItemPreferences</class>
         <class>com.critters.dal.entity.QuestInstance</class>
+        <class>com.critters.dal.entity.NPCItemQuestPreferenceConfig</class>
         <class>com.critters.dal.entity.QuestInstance$StoryQuestStep</class>
 
         <properties>
