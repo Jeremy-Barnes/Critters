@@ -19,6 +19,17 @@ public class QuestAccessor {
 	QuestAccessor(EntityManager hibernateHelper){
 		sql = hibernateHelper;
 	}
+	
+	//todo caching
+	public List<NPCItemQuestPreferenceConfig> getNPCItemQuestPreferenceConfigs() {
+		List<NPCItemQuestPreferenceConfig> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from NPCItemQuestPreferenceConfig").getResultList();
+		}catch (PersistenceException ex) {
+			logger.error("Database error searching for npc item quest preferences!", ex);
+		}
+		return dbItems;
+	}
 
 	//todo caching
 	public List<QuestInstance.StoryQuestStep> getStoryQuestStepConfigs() {
