@@ -71,7 +71,7 @@ public class WorldBLL {
 
 	private static NPCResponse handleHello(DAL dal, ScriptEngine engine, Invocable inv, NPC npc, User loggedInUser,NPCResponse response) throws ScriptException, NoSuchMethodException {
 		List<QuestInstance.StoryQuestStep> eligibleQuests = null;
-		eligibleQuests = checkForNewQuests(dal, npc.getNpcID(), loggedInUser);
+		eligibleQuests = checkForNewStoryQuests(dal, npc.getNpcID(), loggedInUser);
 		if (!Extensions.isNullOrEmpty(eligibleQuests)) {
 			response.questItems = new NPCResponse.NPCQuestMessage[eligibleQuests.size()];
 			for (int i = 0; i < eligibleQuests.size(); i++) {
@@ -204,7 +204,7 @@ public class WorldBLL {
 		return response;
 	}
 
-	private static List<QuestInstance.StoryQuestStep> checkForNewQuests(DAL dal, int npcID, User loggedInUser){
+	private static List<QuestInstance.StoryQuestStep> checkForNewStoryQuests(DAL dal, int npcID, User loggedInUser){
 		ArrayList<QuestInstance.StoryQuestStep> userQuests = new ArrayList<QuestInstance.StoryQuestStep>();
 		List<QuestInstance.StoryQuestStep> rootQuests = dal.quests.getStoryQuestStepConfigByGiverID(npcID, true);
 		for(QuestInstance.StoryQuestStep quest : rootQuests){
@@ -222,6 +222,10 @@ public class WorldBLL {
 		}
 
 		return userQuests;
+	}
+
+	private static void generateARandomQuest(int npcID, int userID) {
+
 	}
 
 }

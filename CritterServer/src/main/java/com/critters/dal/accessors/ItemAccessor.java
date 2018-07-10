@@ -77,7 +77,6 @@ public class ItemAccessor {
 		return dbItems;
 	}
 
-
 	public List<Item> save(List<Item> items) {
 		List<Item> dbItems = new ArrayList<Item>();
 		items.forEach(i -> dbItems.add(save(i)));
