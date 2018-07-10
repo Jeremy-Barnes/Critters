@@ -225,6 +225,11 @@ public class WorldBLL {
 	}
 
 	private static void generateARandomQuest(int npcID, int userID) {
+		try(DAL dal = new DAL()) {
+			List<NPCItemQuestPreferenceConfig> cfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
+			cfgs = cfgs.stream().filter(c -> c.wanterNPC == npcID).collect(Collectors.toList());
+			
+		}
 
 	}
 
