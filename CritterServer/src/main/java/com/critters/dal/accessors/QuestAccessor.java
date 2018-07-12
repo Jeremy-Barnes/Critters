@@ -1,5 +1,6 @@
 package com.critters.dal.accessors;
 
+import com.critters.dal.entity.NPCItemQuestPreferenceConfig;
 import com.critters.dal.entity.QuestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

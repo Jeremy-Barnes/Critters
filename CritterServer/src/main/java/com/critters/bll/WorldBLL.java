@@ -4,10 +4,7 @@ import com.critters.Utilities.Enums.NPCActions;
 import com.critters.Utilities.Extensions;
 import com.critters.Utilities.Serializer;
 import com.critters.dal.accessors.DAL;
-import com.critters.dal.entity.Item;
-import com.critters.dal.entity.NPC;
-import com.critters.dal.entity.QuestInstance;
-import com.critters.dal.entity.User;
+import com.critters.dal.entity.*;
 import com.critters.dto.NPCResponse;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.json.JSONArray;
@@ -225,9 +222,35 @@ public class WorldBLL {
 	}
 
 	private static void generateARandomQuest(int npcID, int userID) {
+/*
+ {
+      "giveItems" : {
+          "1" : 1,
+          "3" : 3
+      },
+      "successRewards" : {
+           "cash" : "534",
+           "47" : "2"
+      }
+      "successResponses" : [
+           "Hey thanks!",
+           "Neat, I guess",
+           "Thanks for the free stuff, chump!"
+      ],
+      "incompleteFailureResponses" : [
+           "Not enough stuff!",
+           "Thanks for nothing, jerk!"
+      ],
+ }
+ */
+
 		try(DAL dal = new DAL()) {
 			List<NPCItemQuestPreferenceConfig> cfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
-			cfgs = cfgs.stream().filter(c -> c.wanterNPC == npcID).collect(Collectors.toList());
+			cfgs = cfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
+
+			for(NPCItemQuestPreferenceConfig cfg : cfgs){
+				int reward = cfg.getCritterBuxxValuePerItem();
+			}
 			
 		}
 
