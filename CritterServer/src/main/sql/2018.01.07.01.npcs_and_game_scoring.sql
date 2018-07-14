@@ -46,3 +46,9 @@ CREATE TABLE npcItemQuestPreferenceConfigs(
     critterBuxxValuePerItem INT NOT NULL
 );
 
+CREATE TABLE npcQuestResponseConfigs {
+    npcQuestResponseConfigID SERIAL NOT NULL PRIMARY KEY,
+    respondingNPCID INT NOT NULL REFERENCES npcs(npcID),
+    response TEXT NOT NULL,
+    worksForFetchQuests BIT NOT NULL
+}

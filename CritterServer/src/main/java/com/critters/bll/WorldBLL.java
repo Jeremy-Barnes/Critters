@@ -245,10 +245,13 @@ public class WorldBLL {
  */
 
 		try(DAL dal = new DAL()) {
-			List<NPCItemQuestPreferenceConfig> cfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
-			cfgs = cfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
+			List<NPCItemQuestPreferenceConfig> questcfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
+			List<NPCQuestResponseConfig> responsecfgs = dal.quests.getNPCQuestResponseConfigs();
 
-			for(NPCItemQuestPreferenceConfig cfg : cfgs){
+			questcfgs = questcfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
+			responsecfgs = responsecfgs.stream().filter(c -> c.getRespondingNPCID() == npcID).collect(Collectors.toList());
+
+			for(NPCItemQuestPreferenceConfig cfg : questcfgs){
 				int reward = cfg.getCritterBuxxValuePerItem();
 			}
 			

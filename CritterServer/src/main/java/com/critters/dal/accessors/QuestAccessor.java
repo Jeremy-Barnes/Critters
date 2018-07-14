@@ -1,6 +1,7 @@
 package com.critters.dal.accessors;
 
 import com.critters.dal.entity.NPCItemQuestPreferenceConfig;
+import com.critters.dal.entity.NPCQuestResponseConfig;
 import com.critters.dal.entity.QuestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,18 @@ public class QuestAccessor {
 		List<NPCItemQuestPreferenceConfig> dbItems = null;
 		try {
 			dbItems = sql.createQuery("from NPCItemQuestPreferenceConfig").getResultList();
+		}catch (PersistenceException ex) {
+			logger.error("Database error searching for npc item quest preferences!", ex);
+		}
+		return dbItems;
+	}
+
+
+	//todo caching
+	public List<NPCQuestResponseConfig> getNPCQuestResponseConfigs() {
+		List<NPCQuestResponseConfig> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from NPCQuestResponseConfig").getResultList();
 		}catch (PersistenceException ex) {
 			logger.error("Database error searching for npc item quest preferences!", ex);
 		}
