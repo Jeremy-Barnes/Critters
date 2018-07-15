@@ -221,7 +221,7 @@ public class WorldBLL {
 		return userQuests;
 	}
 
-	private static void generateARandomQuest(int npcID, int userID) {
+	private static void generateARandomQuest(int npcID, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
 /*
  {
       "giveItems" : {
@@ -245,16 +245,30 @@ public class WorldBLL {
  */
 
 		try(DAL dal = new DAL()) {
-			List<NPCItemQuestPreferenceConfig> questcfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
+			List<NPCItemQuestPreferenceConfig> itemWantCfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
 			List<NPCQuestResponseConfig> responsecfgs = dal.quests.getNPCQuestResponseConfigs();
 
-			questcfgs = questcfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
+			itemWantCfgs = itemWantCfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
 			responsecfgs = responsecfgs.stream().filter(c -> c.getRespondingNPCID() == npcID).collect(Collectors.toList());
 
-			for(NPCItemQuestPreferenceConfig cfg : questcfgs){
-				int reward = cfg.getCritterBuxxValuePerItem();
+			int rewardCt = 0;
+			int iterations = 0;
+			List<Item.ItemDescription> wantItems = new ArrayList<Item.ItemDescription>();
+			while(rewardCt < maxCashReward && iterations < 10) {
+				for (NPCItemQuestPreferenceConfig cfg : itemWantCfgs) {
+					int reward = cfg.getCritterBuxxValuePerItem();
+					Item.ItemDescription itemtype = cfg.getItem();
+					Item.ItemRarityType rarity = itemtype.getRarity();
+					if (maxCashReward != null && (maxCashReward < (rewardCt + reward) || ((1.0 * (rewardCt + reward)) / maxCashReward < 1.25))) {
+						if (Extensions.flipACoin(50)) {
+							rewardCt += reward;
+							wantItems.add(cfg.getItem());
+						}
+						if (maxCashReward <= rewardCt) break;
+					}
+				}
+				iterations++;
 			}
-			
 		}
 
 	}

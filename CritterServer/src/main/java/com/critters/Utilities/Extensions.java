@@ -1,6 +1,7 @@
 package com.critters.Utilities;
 
 import java.util.Collection;
+import java.util.Random;
 
 /**
  * Created by Jeremy on 12/30/2017.
@@ -49,6 +50,14 @@ public class Extensions {
 
 	public static boolean isNullOrEmpty(byte[] object)  {
 		return object == null || object.length == 0;
+	}
+
+	public static boolean flipACoin(int percentLucky){
+		if(percentLucky == 0) return false;
+		if(percentLucky == 100) return true;
+		Random rand = new Random();
+		int rando = rand.nextInt(101);
+		return rando >= percentLucky;
 	}
 
 }
