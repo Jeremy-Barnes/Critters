@@ -22,6 +22,7 @@ public class NPCQuestResponseConfig extends DTO {
 	private boolean worksForFetchQuests;
 	private boolean isSuccessResponse;
 
+	public NPCQuestResponseConfig(){}
 
 	public NPCQuestResponseConfig(int respondingNPCID, String response, boolean worksForFetchQuests, boolean isSuccessResponse) {
 		this.respondingNPCID = respondingNPCID;

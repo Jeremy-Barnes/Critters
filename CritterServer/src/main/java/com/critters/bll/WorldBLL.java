@@ -221,6 +221,14 @@ public class WorldBLL {
 		return userQuests;
 	}
 
+	public static QuestInstance test(User user){
+		NPC npc;
+		try(DAL dal = new DAL()){
+			npc = dal.npcs.getNPC(1);
+		}
+		return generateARandomQuest(npc, user.getUserID(), null, 400);
+	}
+
 	private static QuestInstance generateARandomQuest(NPC npc, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
 /*
  {
@@ -256,12 +264,14 @@ public class WorldBLL {
 			int cashReward = 0;
 			int iterations = 0;
 			List<Item.ItemDescription> wantItems = new ArrayList<Item.ItemDescription>();
-			while(cashReward < maxCashReward && iterations < 10) {
+			while(maxCashReward != null && cashReward < maxCashReward && iterations < 10) {
 				for (NPCItemQuestPreferenceConfig cfg : itemWantCfgs) {
 					int reward = cfg.getCritterBuxxValuePerItem();
 					Item.ItemDescription itemtype = cfg.getItem();
 					Item.ItemRarityType rarity = itemtype.getRarity();
-					if (maxCashReward != null && (maxCashReward < (cashReward + reward) || ((1.0 * (cashReward + reward)) / maxCashReward < 1.25)) && rarity.getItemRarityTypeID() <= maxItemRarityType) {
+					if ( (maxCashReward < (cashReward + reward) || ((1.0 * (cashReward + reward)) / maxCashReward < 1.25)) &&
+							(maxItemRarityType == null || rarity.getItemRarityTypeID() <= maxItemRarityType)) {
+
 						if (Extensions.flipACoin(50)) {
 							cashReward += reward;
 							wantItems.add(cfg.getItem());
@@ -275,11 +285,11 @@ public class WorldBLL {
 
 			if(groupByCfgIDAndCounted.size() > 0) {
 				JSONObject giveItems = new JSONObject(groupByCfgIDAndCounted);
-				questObject.append("giveItems", giveItems);
+				questObject.accumulate("giveItems", giveItems);
 			}
 			//todo create reward objects, not just cash
 			JSONObject successRewards = new JSONObject();
-			successRewards.append("cash", cashReward);
+			successRewards.accumulate("cash", cashReward);
 
 			JSONObject successResponse = new JSONObject();
 			boolean successDone = false;
@@ -291,15 +301,16 @@ public class WorldBLL {
 					continue;
 				}
 				if(!successDone && cfg.isSuccessResponse()) {
-					successResponse.append("messageText", cfg.getResponse());
-					questObject.append("successResponse", successResponse);
+					successResponse.accumulate("messageText", cfg.getResponse());
+					questObject.accumulate("successResponse", successResponse);
+					successDone = true;
 				} else if(failureCollected < failureResponses.length && !cfg.isSuccessResponse()) {
 					failureResponses[failureCollected] = cfg.getResponse();
 					failureCollected++;
 				}
 				if(successDone && failureCollected == failureResponses.length) break;
 			}
-			questObject.append("incompleteFailureResponses", failureResponses);
+			questObject.accumulate("incompleteFailureResponses", failureResponses);
 
 
 			String questText =  generateQuestText(dal, npc,groupByCfgIDAndCounted.size() > 0, groupByCfgIDAndCounted, wantItems.stream().distinct().collect(Collectors.toList()));
@@ -321,7 +332,7 @@ public class WorldBLL {
 			}
 			for (int i = 0; i < itemDescriptions.size(); i++) {
 				if (itemDescriptions.size() != 1) {
-					if (i < 0) {
+					if (i > 0 && itemDescriptions.size() > 2) {
 						message += ",";
 					}
 					if (i == itemDescriptions.size() - 1) {
@@ -329,7 +340,7 @@ public class WorldBLL {
 					}
 				}
 				long ct = itemCfgIdAndCount.get(itemDescriptions.get(i).getItemConfigID());
-				message += " " + ct + itemDescriptions.get(i).getItemName() + (ct > 1 ? "es" : ""); //todo write real pluralizer
+				message += " " + ct + " " + itemDescriptions.get(i).getItemName() + (ct > 1 ? "es" : ""); //todo write real pluralizer, this will be wrong OFTEN
 			}
 		}
 		return message;
