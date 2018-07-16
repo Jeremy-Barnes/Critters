@@ -53,3 +53,6 @@ CREATE TABLE npcQuestResponseConfigs (
     worksForFetchQuests BIT NOT NULL,
     isSuccessResponse BIT NOT NULL
 )
+
+ALTER TABLE inventoryItems add COLUMN npcOwnerID INT NULL REFERENCES NPCS(npcID);
+ALTER TABLE inventoryItems add CHECK ((npcOwnerID IS NOT NULL AND ownerID IS NULL) OR (npcOwnerID IS NULL AND ownerID IS NOT NULL) OR (npcOwnerID IS NULL AND ownerID IS NULL));
