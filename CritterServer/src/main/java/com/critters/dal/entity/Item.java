@@ -17,7 +17,8 @@ public class Item extends DTO {
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int inventoryItemId;
 	private Integer ownerId;
-
+	private Integer npcOwnerId;
+	
 	@ManyToOne
 	@JoinColumn(name="itemTypeId", updatable = false)
 	private ItemDescription description;
@@ -25,11 +26,15 @@ public class Item extends DTO {
 	private Integer price;
 	private Integer containingStoreId;
 
-	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId){
+	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId, Integer npcOwnerId) throws Exception {
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
 		this.price = price;
 		this.containingStoreId = containingStoreId;
+		this.npcOwnerId = npcOwnerId;
+		if(npcOwnerId != null && ownerId != null) {
+			throw new Exception("An item cannot have two owners, dumb dumb");
+		}
 
 	}
 
@@ -41,6 +46,18 @@ public class Item extends DTO {
 
 	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
+		if(ownerId != null)
+			npcOwnerId = null;
+	}
+	
+	public Integer getNPCOwnerId() {
+		return npcOwnerId;
+	}
+
+	public void setNPCOwnerId(Integer npcOwnerId) {
+		this.npcOwnerId = npcOwnerId;
+		if(npcOwnerId != null)
+			ownerId = null;
 	}
 
 	public int getInventoryItemId() {
