@@ -170,12 +170,14 @@ public class ConfigAccessor{
 		return options;
 	}
 
-	public <T> void save(List<T> configs) {
-		configs.forEach(i -> save(i));
+	public <T> List<T> save(List<T> configs) {
+		List<T> dbItems = new ArrayList<T>();
+		configs.forEach(i -> dbItems.add(save(i)));
+		return dbItems;
 	}
 
-	public <T> void save(T config) {
-		sql.merge(config);
+	public <T> T save(T config) {
+		return sql.merge(config);
 	}
 
 

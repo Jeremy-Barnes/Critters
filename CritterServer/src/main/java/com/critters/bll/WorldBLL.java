@@ -131,8 +131,8 @@ public class WorldBLL {
 					dal.quests.save(usersQuest);
 					dal.commitTransaction();
 
-					JSONArray successResponses = jsonObj.getJSONArray("successResponses");
-					response.messageText = successResponses.get(rand.nextInt(successResponses.length())).toString();
+					JSONObject successResponse = jsonObj.getJSONObject("successResponse");
+					response.messageText = successResponse.get("messageText").toString();
 					//todo response.image
 					response.subItems = new NPCResponse.NPCQuestMessage[itemCreateDictionary.size()];
 					int n = 0;
@@ -221,7 +221,7 @@ public class WorldBLL {
 		return userQuests;
 	}
 
-	private static void generateARandomQuest(int npcID, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
+	private static QuestInstance generateARandomQuest(NPC npc, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
 /*
  {
       "giveItems" : {
@@ -232,45 +232,107 @@ public class WorldBLL {
            "cash" : "534",
            "47" : "2"
       }
-      "successResponses" : [
-           "Hey thanks!",
-           "Neat, I guess",
-           "Thanks for the free stuff, chump!"
-      ],
+      "successResponse" : {
+           "messageText" : "Hey thanks!"
+      },
       "incompleteFailureResponses" : [
            "Not enough stuff!",
            "Thanks for nothing, jerk!"
       ],
  }
  */
-
+		QuestInstance quest = null;
 		try(DAL dal = new DAL()) {
+			JSONObject questObject = new JSONObject();
 			List<NPCItemQuestPreferenceConfig> itemWantCfgs = dal.quests.getNPCItemQuestPreferenceConfigs();
 			List<NPCQuestResponseConfig> responsecfgs = dal.quests.getNPCQuestResponseConfigs();
 
-			itemWantCfgs = itemWantCfgs.stream().filter(c -> c.getWanterNPC() == npcID).collect(Collectors.toList());
-			responsecfgs = responsecfgs.stream().filter(c -> c.getRespondingNPCID() == npcID).collect(Collectors.toList());
+			itemWantCfgs = itemWantCfgs.stream().filter(c -> c.getWanterNPC() == npc.getNpcID()).collect(Collectors.toList());
+			responsecfgs = responsecfgs.stream().filter(c -> c.getRespondingNPCID() == npc.getNpcID()).collect(Collectors.toList());
+			Collections.shuffle(itemWantCfgs);
+			Collections.shuffle(responsecfgs);
 
-			int rewardCt = 0;
+
+			int cashReward = 0;
 			int iterations = 0;
 			List<Item.ItemDescription> wantItems = new ArrayList<Item.ItemDescription>();
-			while(rewardCt < maxCashReward && iterations < 10) {
+			while(cashReward < maxCashReward && iterations < 10) {
 				for (NPCItemQuestPreferenceConfig cfg : itemWantCfgs) {
 					int reward = cfg.getCritterBuxxValuePerItem();
 					Item.ItemDescription itemtype = cfg.getItem();
 					Item.ItemRarityType rarity = itemtype.getRarity();
-					if (maxCashReward != null && (maxCashReward < (rewardCt + reward) || ((1.0 * (rewardCt + reward)) / maxCashReward < 1.25))) {
+					if (maxCashReward != null && (maxCashReward < (cashReward + reward) || ((1.0 * (cashReward + reward)) / maxCashReward < 1.25)) && rarity.getItemRarityTypeID() <= maxItemRarityType) {
 						if (Extensions.flipACoin(50)) {
-							rewardCt += reward;
+							cashReward += reward;
 							wantItems.add(cfg.getItem());
 						}
-						if (maxCashReward <= rewardCt) break;
+						if (maxCashReward <= cashReward) break;
 					}
 				}
 				iterations++;
 			}
-		}
+			Map<Integer, Long> groupByCfgIDAndCounted = wantItems.stream().collect(Collectors.groupingBy(i -> i.getItemConfigID(), Collectors.counting()));
 
+			if(groupByCfgIDAndCounted.size() > 0) {
+				JSONObject giveItems = new JSONObject(groupByCfgIDAndCounted);
+				questObject.append("giveItems", giveItems);
+			}
+			//todo create reward objects, not just cash
+			JSONObject successRewards = new JSONObject();
+			successRewards.append("cash", cashReward);
+
+			JSONObject successResponse = new JSONObject();
+			boolean successDone = false;
+			int failureCollected = 0;
+			String[] failureResponses = new String[4];
+			//this logic left overly expanded to add other properties (image?) later
+			for(NPCQuestResponseConfig cfg : responsecfgs) {
+				if(groupByCfgIDAndCounted.size() > 0 && !cfg.worksForFetchQuests()) {
+					continue;
+				}
+				if(!successDone && cfg.isSuccessResponse()) {
+					successResponse.append("messageText", cfg.getResponse());
+					questObject.append("successResponse", successResponse);
+				} else if(failureCollected < failureResponses.length && !cfg.isSuccessResponse()) {
+					failureResponses[failureCollected] = cfg.getResponse();
+					failureCollected++;
+				}
+				if(successDone && failureCollected == failureResponses.length) break;
+			}
+			questObject.append("incompleteFailureResponses", failureResponses);
+
+
+			String questText =  generateQuestText(dal, npc,groupByCfgIDAndCounted.size() > 0, groupByCfgIDAndCounted, wantItems.stream().distinct().collect(Collectors.toList()));
+			quest = new QuestInstance(userID, null, new Date(), null, questText, "Random Quest: " + npc.getName(), npc.getImagePath(), npc.getNpcID(), questObject.toString());
+			dal.beginTransaction();
+			quest = dal.configuration.save(quest);
+			dal.commitTransaction();
+		}
+		return quest;
+	}
+
+	private static String generateQuestText(DAL dal, NPC npc, boolean isFetchQuest, Map<Integer, Long> itemCfgIdAndCount, List<Item.ItemDescription> itemDescriptions) {
+		String message = "";
+		if (isFetchQuest) {
+			if (message.length() > 0) {
+				message += " and also, bring me"; //todo write some kind of sentence builder, this sucks
+			} else {
+				message += "Bring me";
+			}
+			for (int i = 0; i < itemDescriptions.size(); i++) {
+				if (itemDescriptions.size() != 1) {
+					if (i < 0) {
+						message += ",";
+					}
+					if (i == itemDescriptions.size() - 1) {
+						message += " and";
+					}
+				}
+				long ct = itemCfgIdAndCount.get(itemDescriptions.get(i).getItemConfigID());
+				message += " " + ct + itemDescriptions.get(i).getItemName() + (ct > 1 ? "es" : ""); //todo write real pluralizer
+			}
+		}
+		return message;
 	}
 
 }

@@ -20,11 +20,14 @@ public class NPCQuestResponseConfig extends DTO {
 	private int respondingNPCID;
 	private String response;
 	private boolean worksForFetchQuests;
+	private boolean isSuccessResponse;
 
-	public NPCQuestResponseConfig(int respondingNPCID, String response, boolean worksForFetchQuests) {
+
+	public NPCQuestResponseConfig(int respondingNPCID, String response, boolean worksForFetchQuests, boolean isSuccessResponse) {
 		this.respondingNPCID = respondingNPCID;
 		this.response = response;
 		this.worksForFetchQuests = worksForFetchQuests;
+		this.isSuccessResponse = isSuccessResponse;
 	}
 
 	public Integer getNPCQuestResponseConfigID() {
@@ -51,11 +54,21 @@ public class NPCQuestResponseConfig extends DTO {
 		this.response = response;
 	}
 
-	public boolean isWorksForFetchQuests() {
+	public boolean worksForFetchQuests() {
 		return worksForFetchQuests;
 	}
 
 	public void setWorksForFetchQuests(boolean worksForFetchQuests) {
 		this.worksForFetchQuests = worksForFetchQuests;
 	}
+
+	public boolean isSuccessResponse() {
+		return isSuccessResponse;
+	}
+
+	public void setIsSuccessResponse(boolean isSuccessResponse) {
+		this.isSuccessResponse = isSuccessResponse;
+	}
+
+
 }
