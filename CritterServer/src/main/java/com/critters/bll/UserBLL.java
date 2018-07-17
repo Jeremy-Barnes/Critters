@@ -192,7 +192,7 @@ public class UserBLL {
 
 	public static List<Item> getUserInventory(int userID){
 		try(DAL dal = new DAL()){
-			return dal.items.getItemsByOwnerID(userID);
+			return dal.items.getItemsByUserOwnerID(userID);
 		}
 	}
 

@@ -20,14 +20,14 @@ public class NPCItemQuestPreferenceConfig extends DTO {
 	private int wanterNPC;
   
   	@ManyToOne
-	@JoinColumn(name="itemID", updatable = false)
-	private Item.ItemDescription item;
+	@JoinColumn(name="itemConfigID", updatable = false)
+	private Item.ItemDescription itemConfig;
 	private int critterBuxxValuePerItem;
 
-	public NPCItemQuestPreferenceConfig(int wanterNPC, int critterBuxxValuePerItem, Item.ItemDescription item) {
+	public NPCItemQuestPreferenceConfig(int wanterNPC, int critterBuxxValuePerItem, Item.ItemDescription itemConfig) {
 		this.wanterNPC = wanterNPC;
 		this.critterBuxxValuePerItem = critterBuxxValuePerItem;
-		this.item = item;
+		this.itemConfig = itemConfig;
 	}
 
 	public NPCItemQuestPreferenceConfig(){}
@@ -48,12 +48,12 @@ public class NPCItemQuestPreferenceConfig extends DTO {
 		this.wanterNPC = wanterNPC;
 	}
 
-	public Item.ItemDescription getItem() {
-		return item;
+	public Item.ItemDescription getItemConfig() {
+		return itemConfig;
 	}
 
-	public void setItem(Item.ItemDescription item) {
-		this.item = item;
+	public void setItemConfig(Item.ItemDescription itemConfig) {
+		this.itemConfig = itemConfig;
 	}
 
 	public int getCritterBuxxValuePerItem() {

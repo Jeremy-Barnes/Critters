@@ -2,6 +2,7 @@ package com.critters.dal.accessors;
 
 import com.critters.dal.entity.NPCItemQuestPreferenceConfig;
 import com.critters.dal.entity.NPCQuestResponseConfig;
+import com.critters.dal.entity.NPCQuestRewardConfig;
 import com.critters.dal.entity.QuestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,17 @@ public class QuestAccessor {
 
 	QuestAccessor(EntityManager hibernateHelper){
 		sql = hibernateHelper;
+	}
+
+	//todo caching
+	public List<NPCQuestRewardConfig> getNPCQuestRewardConfigs() {
+		List<NPCQuestRewardConfig> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from NPCQuestRewardConfig").getResultList();
+		}catch (PersistenceException ex) {
+			logger.error("Database error searching for npc quest rewards!", ex);
+		}
+		return dbItems;
 	}
 	
 	//todo caching

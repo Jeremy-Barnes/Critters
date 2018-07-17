@@ -35,8 +35,8 @@ public class NPCQuestResponseConfig extends DTO {
 		return npcQuestResponseConfigID;
 	}
 
-	public void setNPCQuestResponseConfigID(Integer npcItemQuestPreferenceConfigID) {
-		this.npcQuestResponseConfigID = npcItemQuestPreferenceConfigID;
+	public void setNPCQuestResponseConfigID(Integer npcQuestResponseConfigID) {
+		this.npcQuestResponseConfigID = npcQuestResponseConfigID;
 	}
 
 	public int getRespondingNPCID() {

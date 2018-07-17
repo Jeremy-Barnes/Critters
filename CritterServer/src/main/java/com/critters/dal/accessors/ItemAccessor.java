@@ -51,7 +51,7 @@ public class ItemAccessor {
 		return dbItems;
 	}
 
-	public List<Item> getItemsByOwnerID(int userID) {
+	public List<Item> getItemsByUserOwnerID(int userID) {
 		List<Item> dbItems = null;
 		try {
 			dbItems = sql.createQuery("from Item where ownerId = :id")
@@ -59,6 +59,18 @@ public class ItemAccessor {
 					.getResultList();
 		} catch (PersistenceException ex) {
 			logger.error("Something went wrong in the database while attempting to retrieve items for user: " + userID, ex);
+		}
+		return dbItems;
+	}
+
+	public List<Item> getItemsByNPCOwnerID(int npcID) {
+		List<Item> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from Item where npcOwnerId = :id")
+						 .setParameter("id", npcID)
+						 .getResultList();
+		} catch (PersistenceException ex) {
+			logger.error("Something went wrong in the database while attempting to retrieve items for npc: " + npcID, ex);
 		}
 		return dbItems;
 	}

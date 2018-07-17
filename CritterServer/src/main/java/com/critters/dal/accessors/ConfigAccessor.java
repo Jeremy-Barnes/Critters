@@ -147,29 +147,6 @@ public class ConfigAccessor{
 		}
 	}
 
-	public List<NPC.NPCItemPreferences> getNPCItemPreferences() {
-		try {
-			List<NPC.NPCItemPreferences> options = sql.createQuery("from NPC$NPCItemPreferences").getResultList();
-			return options;
-		} catch(Exception e) {
-			logger.error("SOMEHOW THERE ARE NO ITEMPREFERENCES", e);
-			return null;
-		}
-	}
-
-	public List<NPC.NPCItemPreferences> getNPCItemPreferences(int npcID) {
-		List<NPC.NPCItemPreferences> options = null;
-		try {
-			options = sql.createQuery("from NPC$NPCItemPreferences where npcItemQuestPreferenceConfigID = :npcID").setParameter("npcID", npcID)
-										  .getResultList();
-		} catch (NoResultException nrex) {
-			logger.info("No item preference options found with npc ID " + npcID, nrex);
-		} catch (PersistenceException ex) {
-			logger.error("Database error searching for npc ID " + npcID, ex);
-		}
-		return options;
-	}
-
 	public <T> List<T> save(List<T> configs) {
 		List<T> dbItems = new ArrayList<T>();
 		configs.forEach(i -> dbItems.add(save(i)));

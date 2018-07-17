@@ -32,10 +32,11 @@
         <mapping class="com.critters.dal.entity.StoreClerkImageOption"/>
         <mapping class="com.critters.dal.entity.UserImageOption"/>
         <mapping class="com.critters.dal.entity.NPC"/>
-        <mapping class="com.critters.dal.entity.NPC$NPCItemPreferences"/>
         <mapping class="com.critters.dal.entity.QuestInstance"/>
         <mapping class="com.critters.dal.entity.QuestInstance$StoryQuestStep"/>
         <mapping class="com.critters.dal.entity.NPCItemQuestPreferenceConfig" />
         <mapping class="com.critters.dal.entity.NPCQuestResponseConfig" />
+        <mapping class="com.critters.dal.entity.NPCQuestRewardConfig" />
+
     </session-factory>
 </hibernate-configuration>

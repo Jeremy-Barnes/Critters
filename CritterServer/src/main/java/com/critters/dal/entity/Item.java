@@ -26,7 +26,7 @@ public class Item extends DTO {
 	private Integer price;
 	private Integer containingStoreId;
 
-	public Item(int inventoryItemId, int ownerId, Integer price, Integer containingStoreId, Integer npcOwnerId) throws Exception {
+	public Item(int inventoryItemId, Integer ownerId, Integer price, Integer containingStoreId, Integer npcOwnerId) throws Exception {
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
 		this.price = price;

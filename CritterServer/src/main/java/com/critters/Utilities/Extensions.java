@@ -52,11 +52,11 @@ public class Extensions {
 		return object == null || object.length == 0;
 	}
 
-	public static boolean flipACoin(int percentLucky){
+	public static boolean flipACoin(float percentLucky){
 		if(percentLucky == 0) return false;
 		if(percentLucky == 100) return true;
 		Random rand = new Random();
-		int rando = rand.nextInt(101);
+		float rando = rand.nextFloat() * 100;
 		return rando >= percentLucky;
 	}
 

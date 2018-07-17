@@ -23,11 +23,12 @@
         <class>com.critters.dal.entity.StoreClerkImageOption</class>
         <class>com.critters.dal.entity.UserImageOption</class>
         <class>com.critters.dal.entity.NPC</class>
-        <class>com.critters.dal.entity.NPC$NPCItemPreferences</class>
         <class>com.critters.dal.entity.QuestInstance</class>
         <class>com.critters.dal.entity.NPCItemQuestPreferenceConfig</class>
         <class>com.critters.dal.entity.QuestInstance$StoryQuestStep</class>
         <class>com.critters.dal.entity.NPCQuestResponseConfig</class>
+        <class>com.critters.dal.entity.NPCQuestRewardConfig</class>
+
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/critters?autoReconnect=true"/>

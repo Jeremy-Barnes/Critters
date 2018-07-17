@@ -267,20 +267,23 @@ public class WorldBLL {
 			while(maxCashReward != null && cashReward < maxCashReward && iterations < 10) {
 				for (NPCItemQuestPreferenceConfig cfg : itemWantCfgs) {
 					int reward = cfg.getCritterBuxxValuePerItem();
-					Item.ItemDescription itemtype = cfg.getItem();
+					Item.ItemDescription itemtype = cfg.getItemConfig();
 					Item.ItemRarityType rarity = itemtype.getRarity();
 					if ( (maxCashReward < (cashReward + reward) || ((1.0 * (cashReward + reward)) / maxCashReward < 1.25)) &&
 							(maxItemRarityType == null || rarity.getItemRarityTypeID() <= maxItemRarityType)) {
 
 						if (Extensions.flipACoin(50)) {
 							cashReward += reward;
-							wantItems.add(cfg.getItem());
+							wantItems.add(cfg.getItemConfig());
 						}
 						if (maxCashReward <= cashReward) break;
 					}
 				}
 				iterations++;
 			}
+			Map<Item.ItemDescription, Long> wantCfgs = wantItems.stream().collect(Collectors.groupingBy(i -> i, Collectors.counting()));
+			//s
+			// wantItems.stream().distinct().collect(Collectors.toList());
 			Map<Integer, Long> groupByCfgIDAndCounted = wantItems.stream().collect(Collectors.groupingBy(i -> i.getItemConfigID(), Collectors.counting()));
 
 			if(groupByCfgIDAndCounted.size() > 0) {
@@ -313,13 +316,43 @@ public class WorldBLL {
 			questObject.accumulate("incompleteFailureResponses", failureResponses);
 
 
-			String questText =  generateQuestText(dal, npc,groupByCfgIDAndCounted.size() > 0, groupByCfgIDAndCounted, wantItems.stream().distinct().collect(Collectors.toList()));
+			String questText =  generateQuestText(dal, npc,groupByCfgIDAndCounted.size() > 0, groupByCfgIDAndCounted, new ArrayList<Item.ItemDescription>(wantCfgs.keySet()));
 			quest = new QuestInstance(userID, null, new Date(), null, questText, "Random Quest: " + npc.getName(), npc.getImagePath(), npc.getNpcID(), questObject.toString());
 			dal.beginTransaction();
 			quest = dal.configuration.save(quest);
 			dal.commitTransaction();
 		}
 		return quest;
+	}
+
+	private static void generateRewardItems(DAL dal, NPC npc, Map<Item.ItemDescription, Long> demandedItemsAndQty){
+		List<Item> items = dal.items.getItemsByNPCOwnerID(npc.getNpcID());
+
+		List<NPCQuestRewardConfig> createItems = dal.quests.getNPCQuestRewardConfigs();
+		Collections.shuffle(createItems);
+		for(Map.Entry<Item.ItemDescription, Long> itemAndQty : demandedItemsAndQty.entrySet()) {
+			Item.ItemDescription itemDescription = itemAndQty.getKey();
+			long qty = itemAndQty.getValue();
+			for(NPCQuestRewardConfig rewardItem : createItems){
+				if(rewardItem.getPercentOdds() != null && !Extensions.flipACoin(rewardItem.getPercentOdds())) {
+					continue;
+				}
+				if(rewardItem.isRarityMatch() &&
+						!(itemDescription.getRarity().getItemRarityTypeID() * qty > rewardItem.getRarityMatchFactor() * rewardItem.getRewardItemConfig().getRarity().getItemRarityTypeID())) {
+					continue;
+				}
+				Optional<Item> maybe = items.stream().filter(i -> i.getDescription().getItemConfigID() == rewardItem.getRewardItemConfig().getItemConfigID()).findFirst();
+
+				if(maybe.isPresent()) {
+					Item item = maybe.get();
+					
+				}
+
+			}
+
+
+		}
+
 	}
 
 	private static String generateQuestText(DAL dal, NPC npc, boolean isFetchQuest, Map<Integer, Long> itemCfgIdAndCount, List<Item.ItemDescription> itemDescriptions) {

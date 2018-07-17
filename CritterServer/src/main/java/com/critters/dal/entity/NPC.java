@@ -80,20 +80,4 @@ public class NPC extends DTO {
 		this.actionHandlerScript = actionHandlerScript;
 	}
 
-	@Entity
-	@Table(name="npcItemQuestPreferenceConfigs")
-	public static class NPCItemPreferences extends DTO {
-		@Id
-		@GeneratedValue(generator = "increment")
-		@GenericGenerator(name="increment", strategy = "increment")
-		private int npcItemQuestPreferenceConfigID;
-		private int wanterNPC;
-
-		@ManyToOne
-		@JoinColumn(name="itemID", updatable = false)
-		private Item.ItemDescription item;
-		private int critterBuxxValuePerItem;
-
-	}
-
 }
