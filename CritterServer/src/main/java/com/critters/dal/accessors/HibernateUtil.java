@@ -15,7 +15,7 @@ public class HibernateUtil {
 	private static SessionFactory sessionFactory;
 	private static EntityManagerFactory entityManagerFactory;
 	static final Logger logger = LoggerFactory.getLogger(HibernateUtil.class);
-
+	private static boolean isTest = false; //This sucks so bad, but I didn't set up DI and I'm not going back right now.
 	static {
 		try {
 			tryToConnectToSQL();
@@ -26,6 +26,7 @@ public class HibernateUtil {
 
 	private static void tryToConnectToSQL() {
 		try {
+			if(isTest) return; //man this really is gross, sorry.
 			if(sessionFactory == null) sessionFactory = new Configuration().configure().buildSessionFactory();
 			if(entityManagerFactory == null) entityManagerFactory = Persistence.createEntityManagerFactory("com.critters");
 		} catch (Throwable ex) {

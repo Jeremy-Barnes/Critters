@@ -63,6 +63,7 @@ public class EventBLL {
 		}
 	}
 
+	//used in JS, do not delete
 	public static void purchaseSomeLuck(int userID, int luck){
 		Integer newLuck = purchasedLuck.get(userID);
 		newLuck = newLuck == null ? luck : newLuck + luck;
@@ -101,7 +102,7 @@ public class EventBLL {
 			public void giveaway(User winner) {
 			}
 		};
-		event.message = "The Spoon Angel says: FART";
+		event.message = "Test message: you won some meaningless fluff"; //todo cfg tables
 		return event;
 	}
 
@@ -111,7 +112,7 @@ public class EventBLL {
 			public void giveaway(User winner) {
 			}
 		};
-		event.message = "The Spoon Angel says: FART";
+		event.message = "Test message: you won an item that someone else threw on the ground "; //todo analyze ownerless items in the inventoryitems table
 		return event;
 	}
 
@@ -121,7 +122,7 @@ public class EventBLL {
 			public void giveaway(User winner) {
 			}
 		};
-		event.message = "The Spoon Angel says: FART";
+		event.message = "Test message: you won a chore to do for some npc"; //todo real random quest creation
 		return event;
 	}
 
@@ -135,7 +136,7 @@ public class EventBLL {
 		//TODO temp, put in generate method
 		UINotification notice = new UINotification();
 		notice.body = event.message;
-		notice.title = "LOL SO RANDOM";
+		notice.title = "Notification title!!?!?";
 		notice.customBodyHTML = "<img src=\"https://40.media.tumblr.com/35934de8201e95eafc07fc77282a8359/tumblr_inline_nvepzwfkaA1qmorkz_540.jpg\" />";
 		Notification not = new Notification();
 		not.serverMessages = new ArrayList<UINotification>();

@@ -326,14 +326,15 @@ public class WorldBLL {
 	}
 
 	private static void generateRewardItems(DAL dal, NPC npc, Map<Item.ItemDescription, Long> demandedItemsAndQty){
-		List<Item> items = dal.items.getItemsByNPCOwnerID(npc.getNpcID());
-
-		List<NPCQuestRewardConfig> createItems = dal.quests.getNPCQuestRewardConfigs();
-		Collections.shuffle(createItems);
+		List<NPCQuestRewardConfig> itemsNPCCanCreate = dal.quests.getNPCQuestRewardConfigs();
+		Map<Integer, NPCQuestRewardConfig> itemConfigsToInstantiate = new HashMap<>();
+		Collections.shuffle(itemsNPCCanCreate);
 		for(Map.Entry<Item.ItemDescription, Long> itemAndQty : demandedItemsAndQty.entrySet()) {
 			Item.ItemDescription itemDescription = itemAndQty.getKey();
 			long qty = itemAndQty.getValue();
-			for(NPCQuestRewardConfig rewardItem : createItems){
+
+
+			for(NPCQuestRewardConfig rewardItem : itemsNPCCanCreate){
 				if(rewardItem.getPercentOdds() != null && !Extensions.flipACoin(rewardItem.getPercentOdds())) {
 					continue;
 				}
@@ -341,17 +342,11 @@ public class WorldBLL {
 						!(itemDescription.getRarity().getItemRarityTypeID() * qty > rewardItem.getRarityMatchFactor() * rewardItem.getRewardItemConfig().getRarity().getItemRarityTypeID())) {
 					continue;
 				}
-				Optional<Item> maybe = items.stream().filter(i -> i.getDescription().getItemConfigID() == rewardItem.getRewardItemConfig().getItemConfigID()).findFirst();
-
-				if(maybe.isPresent()) {
-					Item item = maybe.get();
-					
-				}
-
+				itemConfigsToInstantiate.put(rewardItem.getRewardItemConfig().getItemConfigID(), rewardItem);
 			}
-
-
 		}
+
+		//ItemsBLL.createNewItems()
 
 	}
 
