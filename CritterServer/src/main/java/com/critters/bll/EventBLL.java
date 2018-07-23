@@ -7,6 +7,7 @@ import com.critters.dal.entity.QuestInstance;
 import com.critters.dal.entity.User;
 import com.critters.dto.Notification;
 import com.critters.dto.UINotification;
+import org.w3c.dom.events.UIEvent;
 
 import javax.ws.rs.container.AsyncResponse;
 import java.util.*;
@@ -128,8 +129,9 @@ public class EventBLL {
 
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public void giveaway(User winner) {
+			public UINotification giveaway(User winner) {
 				QuestInstance randomQuest = WorldBLL.generateARandomQuest(questIssuer, winner.getUserID(), null, null);
+				return null;
 			}
 		};
 		event.message = "Test message- " + questIssuer.getName() + " says: Hey, I have a job for you!"; //todo unique NPC message text? needs a new table or field in the NPC action script
@@ -156,10 +158,10 @@ public class EventBLL {
 		asyncResponse.resume(not);
 	}
 
-	public static class LotteryEvent {
+	public abstract static class LotteryEvent {
 		String message;
 		String innerHTML;
-		public void giveaway(User winner){}
+		public abstract UINotification giveaway(User winner);
 	}
 }
 
