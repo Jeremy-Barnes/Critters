@@ -65,7 +65,7 @@ We also currently have 2 other branches that you mostly shouldn't commit to:
     - Web server: Nginx
     - Database: Postgresql 9.5
     
-- Games: Javascript/WebGL by way of transcompiled Java written against LibGDX. No fallback for older browsers.
+- Games: Javascript/Phaser
 
 - Client:
     - Support IE 8 when reasonable
