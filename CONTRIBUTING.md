@@ -55,18 +55,6 @@ We also currently have 2 other branches that you mostly shouldn't commit to:
 - prod
    - Don't commit to this.  
    
-### Deploying (TeamCity)
-Build server address: http://f5f8e98d.ngrok.io/
-
-Test deployed code at this address: https://c96979c7.ngrok.io/
-
-Note, this is a 7 year old Core2 Duo laptop sitting on an apartment floor in Chicago. Expect outages.
-
-We use TeamCity as our build server. All developers have an account (you should receive an email when it is created). 
-
-The master branch is built automatically each time a commit is made. This takes about 2 minutes total to build the server and client code changes, and 5 minutes per LibGDX game. (Current build takes about 11 minutes all told).
-
-If you need a branch added and built automatically, ask me to set it up.
 
 ### Targets
 
