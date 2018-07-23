@@ -7,7 +7,6 @@ import com.critters.dal.entity.QuestInstance;
 import com.critters.dal.entity.User;
 import com.critters.dto.Notification;
 import com.critters.dto.UINotification;
-import org.w3c.dom.events.UIEvent;
 
 import javax.ws.rs.container.AsyncResponse;
 import java.util.*;
@@ -92,8 +91,9 @@ public class EventBLL {
 
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public void giveaway(User winner) {
+			public UINotification giveaway(User winner) {
 				winner.setCritterbuxx(UserBLL.alterUserCash(winner.getUserID(), cashPrize));
+				return null;
 			}
 		};
 		event.message = "You found " + cashPrize + " critterbucks, just laying around!";
@@ -103,7 +103,8 @@ public class EventBLL {
 	private static LotteryEvent generateFlavorTextGiveaway(){
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public void giveaway(User winner) {
+			public UINotification giveaway(User winner) {
+				return null;
 			}
 		};
 		event.message = "Test message: you won some meaningless fluff"; //todo cfg tables
@@ -113,7 +114,8 @@ public class EventBLL {
 	private static LotteryEvent generateFloorItemGiveaway(){
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public void giveaway(User winner) {
+			public UINotification giveaway(User winner) {
+				return null;
 			}
 		};
 		event.message = "Test message: you won an item that someone else threw on the ground "; //todo analyze ownerless items in the inventoryitems table
