@@ -1,2 +1,3 @@
 echo Start Postgres
-start "" "C:\Users\Jeremy\Code\Libraries\Postgres\pgsql\bin\pg_ctl.exe" "-D" "C:\Users\Jeremy\Code\PGDataFolder" "start"
+rem to run the command without the -D "" parameter, ensure your PGDATA environment variable is set.
+start "pg_ctl.exe" "start"
