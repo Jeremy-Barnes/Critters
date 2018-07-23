@@ -229,7 +229,7 @@ public class WorldBLL {
 		return generateARandomQuest(npc, user.getUserID(), null, 400);
 	}
 
-	private static QuestInstance generateARandomQuest(NPC npc, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
+	public static QuestInstance generateARandomQuest(NPC npc, int userID, Integer maxItemRarityType,  Integer maxCashReward) {
 /*
  {
       "giveItems" : {
@@ -282,8 +282,6 @@ public class WorldBLL {
 				iterations++;
 			}
 			Map<Item.ItemDescription, Long> wantCfgs = wantItems.stream().collect(Collectors.groupingBy(i -> i, Collectors.counting()));
-			//s
-			// wantItems.stream().distinct().collect(Collectors.toList());
 			Map<Integer, Long> groupByCfgIDAndCounted = wantItems.stream().collect(Collectors.groupingBy(i -> i.getItemConfigID(), Collectors.counting()));
 
 			if(groupByCfgIDAndCounted.size() > 0) {

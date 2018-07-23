@@ -1,9 +1,12 @@
 package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
+import com.critters.dal.accessors.DAL;
+import com.critters.dal.entity.NPC;
+import com.critters.dal.entity.QuestInstance;
+import com.critters.dal.entity.User;
 import com.critters.dto.Notification;
 import com.critters.dto.UINotification;
-import com.critters.dal.entity.User;
 
 import javax.ws.rs.container.AsyncResponse;
 import java.util.*;
@@ -117,12 +120,19 @@ public class EventBLL {
 	}
 
 	private static LotteryEvent generateQuestGiveaway(){
+		List<NPC> questNPCs;
+		try(DAL dal = new DAL()){
+			questNPCs = dal.npcs.getNPCWithRandomQuests(); //could use this opportunity to filter based on alliance, friendliness, future features maybe
+		}
+		NPC questIssuer = Extensions.pickRandomItem(questNPCs);
+
 		LotteryEvent event = new LotteryEvent() {
 			@Override
 			public void giveaway(User winner) {
+				QuestInstance randomQuest = WorldBLL.generateARandomQuest(questIssuer, winner.getUserID(), null, null);
 			}
 		};
-		event.message = "Test message: you won a chore to do for some npc"; //todo real random quest creation
+		event.message = "Test message- " + questIssuer.getName() + " says: Hey, I have a job for you!"; //todo unique NPC message text? needs a new table or field in the NPC action script
 		return event;
 	}
 

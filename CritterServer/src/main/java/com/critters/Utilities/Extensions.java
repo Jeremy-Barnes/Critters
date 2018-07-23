@@ -1,6 +1,7 @@
 package com.critters.Utilities;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -58,6 +59,15 @@ public class Extensions {
 		Random rand = new Random();
 		float rando = rand.nextFloat() * 100;
 		return rando >= percentLucky;
+	}
+
+	public static <T> T pickRandomItem(List<T> list){
+		if(isNullOrEmpty(list)) {
+			return null;
+		} else {
+			Random rand = new Random();
+			return list.get(rand.nextInt(list.size()));
+		}
 	}
 
 }

@@ -21,6 +21,17 @@ public class NPCAccessor {
 	}
 
 	//todo caching
+	public List<NPC> getNPCWithRandomQuests() {
+		List<NPC> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from NPC where id in (select distinct rewardingNPCID from NPCQuestRewardConfig)").getResultList();
+		}catch (PersistenceException ex) {
+			logger.error("Database error searching for npcs!", ex);
+		}
+		return dbItems;
+	}
+
+	//todo caching
 	public List<NPC> getNPCs() {
 		List<NPC> dbItems = null;
 		try {
