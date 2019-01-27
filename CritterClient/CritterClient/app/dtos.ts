@@ -133,6 +133,7 @@ export class Conversation {
 export class Notification {
     messages: Message[];
     friendRequests: Friendship[];
+    serverMessages: UINotification[];
 }
 
 export class Store {

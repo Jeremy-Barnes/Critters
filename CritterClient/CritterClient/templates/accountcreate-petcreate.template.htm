@@ -3,13 +3,13 @@
         <h1>Pick A Pet!</h1>
     </div>
 </div>
-<div class="container-fluid container-maxWidth">
+<div class="container-fluid container-maxWidth pageContent">
     <form (ngSubmit)="onSubmit()" #accountCreateForm="ngForm">
 
         <ol class="breadcrumb">
-            <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock centered">1</div>Account Info</a></li>
-            <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock centered">2</div>User Details</a></li>
-            <li class="active"><div class="breadcrumb-circle bc-active inlineblock centered">3</div>Create A Pet</li>
+            <li><a routerLink="/signUp"><div class="breadcrumb-circle bc-inactive inlineblock text-center">1</div>Account Info</a></li>
+            <li><a routerLink="/signUp-2"><div class="breadcrumb-circle bc-inactive inlineblock text-center">2</div>User Details</a></li>
+            <li class="active"><div class="breadcrumb-circle bc-active inlineblock text-center">3</div>Create A Pet</li>
         </ol>
         <div class="row">
             <div class="col-sm-12">
@@ -28,12 +28,12 @@
                 <h2>Select your pet's species</h2>
             </div>
             <div *ngFor="let specie of species">
-                <div class="col-md-3 centered" [ngClass]="{'whitefade': (specie == activeSpecies) && showOptions }" (click)="onPetSelect(specie)">
+                <div class="col-md-3 text-center" [ngClass]="{'whitefade': (specie == activeSpecies) && showOptions }" (click)="onPetSelect(specie)">
                     <a class="specieRepeater inlineblock thumbnail full-width">
                         <img src="../img/pets/{{specie.petTypeName}}{{activeColor}}.png" /> <br />
                         <b>{{specie.petTypeName}}</b>
                     </a>
-                    <div class="specieSelect centered" *ngIf="specie == activeSpecies && showOptions">
+                    <div class="specieSelect text-center" *ngIf="specie == activeSpecies && showOptions">
                         <div class="btn btn-primary" (click)="showInfo($event)" data-toggle="modal" data-target="#viewSpecies"><i class="fa fa-info-circle"></i>Info</div>
                         <br /><br />
                         <div class="btn btn-success" (click)="confirmSpecies($event)"><i class="fa fa-check-circle"></i>Select</div>

@@ -21,6 +21,10 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="img\games\pong\ball.png" />
+    <Content Include="img\games\snake\blueSkull1.png" />
+    <Content Include="img\games\snake\loading.gif" />
+    <Content Include="img\games\snake\miniTiles.png" />
+    <Content Include="img\games\snake\skull1.png" />
     <Content Include="index.html" />
     <Content Include="img\games\pong\item_full_Glide_Paddle.jpg" />
     <Content Include="libraries\phaser2.png" />
@@ -30,6 +34,9 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="games\snake\snakegame.ts" />
+    <TypeScriptCompile Include="games\snake\gameLauncher.ts" />
+    <TypeScriptCompile Include="games\snake\snakeobjects.ts" />
     <TypeScriptCompile Include="games\pong\gameLauncher.ts" />
     <TypeScriptCompile Include="games\pong\PongObjects.ts" />
     <TypeScriptCompile Include="games\SocketGameResponse.ts" />

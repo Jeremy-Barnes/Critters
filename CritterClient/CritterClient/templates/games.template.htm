@@ -5,24 +5,21 @@
         </div>
     </div>
     
-    <div class="container-fluid container-maxWidth">
+    <div class="container-fluid container-maxWidth pageContent">
         <div id="specialGame" class="row">
             <div class="col-md-12">
-                <div class="card ">
-                    <div class="row">
+                <div class="card">
+                    <div class="row vcenter">
                         <div class="col-md-6">
                             <h2>Daily Double</h2>
                             <p>Earn double cbuxx when you play {{specialGame.gameName}}</p>
                             <p>
                                 {{specialGame.gameDescription}}
                             </p>
-                            <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="fa fa-play-circle-o"></i></span>
+                            <span class="btn btn-primary btn-lg" (click)="selectGame(specialGame)">Play now! <i class="far fa-play-circle"></i></span>
                         </div>
-                        <div class="col-md-6 centered">
-                            <div class="imgCenterer">
-                                <span class="imgCenterHelper"></span> <!--necessary garbage see  https://stackoverflow.com/a/7310398/4885507 -->
-                                <img class="framed centeredImg" src="{{specialGame.gameIconPath}}" />
-                            </div>
+                        <div class="col-md-6 text-center">
+                            <img class="framed centeredImg" src="{{specialGame.gameIconPath}}" />
                         </div>
                     </div>
                 </div>
@@ -66,56 +63,82 @@
 
 
 <div id="activeGameDescription" [hidden]="activeGame.gameName==null || displayPlayPage">
-    <div class="container-fluid container-maxWidth">
+    <div class="container-fluid container-maxWidth pageContent">
         <div class="row">
             <div class="col-md-12">
                 <div class="card gameTitleBackground" [ngStyle]="{'background-image': 'url(' + activeGame.gameIconPath + ')'}">
-                    <div class="col-md-4"> <h1 class="inlineblock">{{activeGame.gameName}}</h1> </div>
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4"> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="fa fa-play-circle-o"></i></div> </div>
+                    <div class="row">
+                        <div class="col-md-6"> <h1 class="inlineblock">{{activeGame.gameName}}</h1> </div>
+                        <div class="col-md-6 text-right sm-text-left"> <div class="btn btn-primary btn-lg" (click)="togglePlayGame()">Play now! <i class="far fa-play-circle"></i></div> </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-7">
                 <div class="card col-md-12 aboutGame">
-                    <div class="col-md-7 gameDesc">
-                        <h2>About the Game</h2>
-                        <p>{{activeGame.gameDescription}}</p>
-                    </div>
-                    <div class="col-md-5 gameShots">
-                        <img class="framed" src="http://i.onionstatic.com/avclub/5599/14/16x9/960.jpg" />
-                        <br />
-                        <img class="framed" src="https://i.ytimg.com/vi/AjyZN-fXN3M/maxresdefault.jpg" />
+                    <div class="row">
+                        <div class="col-md-7 gameDesc">
+                            <h2>About the Game</h2>
+                            <p>{{activeGame.gameDescription}}</p>
+                        </div>
+                        <div class="col-md-5 gameShots">
+                            <img class="framed" src="http://i.onionstatic.com/avclub/5599/14/16x9/960.jpg" />
+                            <img class="framed" src="https://i.ytimg.com/vi/AjyZN-fXN3M/maxresdefault.jpg" />
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-5">
-                <div class="card highScores">
+                <div class="card highScores text-center">
                     <h3>Your High Score</h3>
-                    <span>927fixme</span>
+                    <span class="highScore">927</span>
                     <hr />
                     <h3>Overall High Scores</h3>
-                    <p>lel                   1337</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="text-left bold">
+                                    username
+                                </td>
+                                <td class="text-right">
+                                    1337
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left bold">
+                                    username
+                                </td>
+                                <td class="text-right">
+                                    1337
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left bold">
+                                    username
+                                </td>
+                                <td class="text-right">
+                                    1337
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <p> </p>
     </div>
 </div>
 
 <div id="activeGame"  [hidden]="activeGame.gameName==null || !displayPlayPage">
     <div class="container-fluid">
-        <div class="page-title">
-            <div class="row">
-                <div class="col-md-8">
+        <div class="page-title clearfix">
+                <div class="pull-left">
                     <h1>{{activeGame.gameName}}</h1>
                 </div>
-                <div class="col-md-3 text-breadcrumb"> <a routerLink="/games">Games</a> > <a href="javascript:void(0)" (click)="togglePlayGame()">{{activeGame.gameName}}</a> > Play</div>
-            </div>
+                <div class="text-breadcrumb pull-right"> <a routerLink="/games">Games</a> > <a href="javascript:void(0)" (click)="togglePlayGame()">{{activeGame.gameName}}</a> > Play</div>
         </div>
     </div>
-    <div class="container-fluid container-maxWidth">
+    <div class="container-fluid container-maxWidth pageContent">
         <div id="gameBind"></div>
         <div class="row">
             <!--<div class="col-md-12">

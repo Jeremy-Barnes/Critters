@@ -7,7 +7,7 @@
         </div>
     </div>
 </div>
-<div class="container-fluid container-maxWidth">
+<div class="container-fluid container-maxWidth pageContent">
     <!----------------------DETAIL VIEW------------------>
     <div id="viewItemDetail" class="modal fade" role="dialog">
         <div class="modal-dialog modal-md" role="document">
@@ -42,12 +42,9 @@
 
     <!----------------------MAIN VIEW------------------>
     <div id="shopsMainView">
-        <div [ngStyle]="{'background-image': 'url(' + viewStore.storeBackgroundImagePath + ')'}" class="row shopTitle">
+        <div [ngStyle]="{'background-image': 'url(' + viewStore.storeBackgroundImagePath + ')'}" class="row vcenter shopTitle">
             <div class="col-xs-12 col-md-4"> 
-                <div class="imgCenterer">
-                    <span class="imgCenterHelper"></span> <!--necessary garbage see  https://stackoverflow.com/a/7310398/4885507 -->
-                    <img class="shopkeep img-circle centeredImg" src="{{viewStore.storeClerkImagePath}}" />
-                </div>
+                <img class="shopkeep img-circle centeredImg" src="{{viewStore.storeClerkImagePath}}" />
             </div>
             <div class="col-md-8">
                     <h2 class="whiteText">{{viewStore.name}}</h2> <p class="whiteText">{{viewStore.description}}</p>

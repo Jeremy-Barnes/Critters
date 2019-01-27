@@ -15,14 +15,8 @@ export class DashboardComponent implements OnInit {
     client: string;
 
     getID() {
-        //SystemJS.import('../../games/phaser.min.js').then(Phaser => {
-        //    SystemJS.import('../../games/pong/gameLauncher.js').then(
-        //        game =>
-        //            game.GameLauncher())
-        //});
         var self = this;
-        Application.getGameSecureID().done(() => {
-            self.client = self.app.secureID;
+        Application.test().done(() => {
         });
     }
 

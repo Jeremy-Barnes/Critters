@@ -1,17 +1,17 @@
 ﻿<div class="container-fluid">
     <div class="page-title">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <h1>Inventory</h1>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword search" />
+                    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="keyword" />
                     <span class="input-group-btn"><button class="btn btn-primary" (click)="searchItems(searchText)">search</button></span>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <select name="gameSort" class="form-control" [(ngModel)]="activeSortBy" (ngModelChange)="onChangeSort($event)">
                     <option *ngFor="let sort of sorts" [ngValue]="sort">{{sort.text}}</option>
                 </select>
@@ -20,7 +20,44 @@
     </div>
 </div>
 
-<div class="container-fluid container-maxWidth">
+<div class="container-fluid container-maxWidth pageContent">
+   
+
+    <!----------------------MAIN VIEW------------------>
+    <div id="inventoryMainView">
+        <div class="buttons">
+            <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
+            <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
+                <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="far fa-trash-alt"></i> throw away</button>
+                <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="far fa-folder-open"></i> move</button>
+            </div>
+        </div>
+ 
+        <div class="row">
+            <div class="col-sm-6 col-md-3" *ngFor="let item of inventory; let i = index">
+                <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
+                    <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
+                    </div>
+                    <div *ngIf="bulkSelect" class="circlecheckbox" (click)="selectItem($event, item)">
+                        <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
+                        <label [attr.for]="'inventoryCheckbox' + i">
+                            <i class="fa fa-check-circle"></i>
+                        </label>
+                    </div>
+                    <img class="framed centeredImg" src="{{item.inventoryItemsGrouped[0].description.imagePath}}" />
+                    <div class="itemTitle">
+                        {{item.inventoryItemsGrouped[0].description.itemName}} <br />
+                    </div>
+                    <div>
+                        Qty: {{item.inventoryItemsGrouped.length}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
     <!----------------------DETAIL VIEW------------------>
     <div id="viewItemDetail" class="modal fade" role="dialog">
         <div class="modal-dialog modal-md" role="document">
@@ -50,41 +87,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!----------------------MAIN VIEW------------------>
-    <div id="inventoryMainView">
-        <div class="buttons">
-            <button class="btn btn-primary" (click)="toggleBulk()">bulk select</button>
-            <div [hidden]="!bulkSelect" class="conditionalButtons inlineblock">
-                <button class="btn btn-default" (click)="affectSelectedItems(true)" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-trash-o"></i> throw away</button>
-                <button class="btn btn-default" [ngClass]="{'hide' : selectedItems.length == 0 }"><i class="fa fa-envelope-open-o"></i> move</button>
-            </div>
-        </div>
- 
-        <div class="row">
-            <div class="col-sm-6 col-md-3" *ngFor="let item of inventory; let i = index">
-                <div class="card itemCard" (click)="viewItem(item)" data-target="#viewItemDetail">
-                    <div *ngIf="!bulkSelect" class="checkBoxPlaceholder">
-                    </div>
-                    <div *ngIf="bulkSelect" class="circlecheckbox" (click)="selectItem($event, item)">
-                        <input type="checkbox" value="1" [attr.id]="'inventoryCheckbox' + i" [(ngModel)]="item.selected" name="" />
-                        <label [attr.for]="'inventoryCheckbox' + i">
-                            <i class="fa fa-check-circle"></i>
-                        </label>
-                    </div>
-                    <img class="framed centeredImg" src="{{item.inventoryItemsGrouped[0].description.imagePath}}" />
-                    <div class="itemTitle">
-                        {{item.inventoryItemsGrouped[0].description.itemName}} <br />
-                    </div>
-                    <div>
-                        Qty: {{item.inventoryItemsGrouped.length}}
-                    </div>
-                </div>
-                <br /><br />
-            </div>
-        </div>
-
-
     </div>
 </div>

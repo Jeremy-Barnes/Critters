@@ -384,7 +384,7 @@ buildNumber.properties
 */CritterClient/games/*.js.map
 */CritterClient/games/*/*.js
 */CritterClient/games/*/*.js.map
-
+*/CritterPhaser/**
 */CritterPhaser/games/*.js
 */CritterPhaser/games/*.js.map
 */CritterPhaser/games/*/*.js
