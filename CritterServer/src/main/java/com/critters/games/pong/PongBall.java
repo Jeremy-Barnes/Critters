@@ -8,9 +8,9 @@ import com.critters.games.GameObject;
 public class PongBall extends GameObject {
 
 	public PongBall() {
-		super.ENTITY_TYPE_ID = 0;
+		super.ENTITY_TYPE_ID = PongController.PongEntityTypes.Ball.ordinal();
 	}
-	public final float BALL_DIAMETER = 2;
-	public final float BALL_VELOCITY = 0.025f;//25 world units per second
+	public final float BALL_DIAMETER = 20;
+	public final float BALL_VELOCITY = .75f;//750 world units per second
 
 }

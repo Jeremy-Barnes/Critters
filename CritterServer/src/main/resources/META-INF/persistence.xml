@@ -6,22 +6,28 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 
-        <class>com.critters.dal.dto.entity.User</class>
-        <class>com.critters.dal.dto.entity.Pet</class>
-        <class>com.critters.dal.dto.entity.Pet$PetColor</class>
-        <class>com.critters.dal.dto.entity.Pet$PetSpecies</class>
+        <class>com.critters.dal.entity.User</class>
+        <class>com.critters.dal.entity.Pet</class>
+        <class>com.critters.dal.entity.Pet$PetColor</class>
+        <class>com.critters.dal.entity.Pet$PetSpecies</class>
 
-        <class>com.critters.dal.dto.entity.Item</class>
-        <class>com.critters.dal.dto.entity.Item$ItemDescription</class>
-        <class>com.critters.dal.dto.entity.Item$ItemClassification</class>
-        <class>com.critters.dal.dto.entity.Item$ItemRarityType</class>
-        <class>com.critters.dal.dto.entity.Friendship</class>
-        <class>com.critters.dal.dto.entity.Store</class>
-        <class>com.critters.dal.dto.entity.GameThumbnail</class>
-        <class>com.critters.dal.dto.entity.NPCStoreRestockConfig</class>
-        <class>com.critters.dal.dto.entity.StoreBackgroundImageOption</class>
-        <class>com.critters.dal.dto.entity.StoreClerkImageOption</class>
-        <class>com.critters.dal.dto.entity.UserImageOption</class>
+        <class>com.critters.dal.entity.Item</class>
+        <class>com.critters.dal.entity.Item$ItemDescription</class>
+        <class>com.critters.dal.entity.Item$ItemClassification</class>
+        <class>com.critters.dal.entity.Item$ItemRarityType</class>
+        <class>com.critters.dal.entity.Friendship</class>
+        <class>com.critters.dal.entity.Store</class>
+        <class>com.critters.dal.entity.GameThumbnail</class>
+        <class>com.critters.dal.entity.NPCStoreRestockConfig</class>
+        <class>com.critters.dal.entity.StoreBackgroundImageOption</class>
+        <class>com.critters.dal.entity.StoreClerkImageOption</class>
+        <class>com.critters.dal.entity.UserImageOption</class>
+        <class>com.critters.dal.entity.NPC</class>
+        <class>com.critters.dal.entity.QuestInstance</class>
+        <class>com.critters.dal.entity.NPCItemQuestPreferenceConfig</class>
+        <class>com.critters.dal.entity.QuestInstance$StoryQuestStep</class>
+        <class>com.critters.dal.entity.NPCQuestResponseConfig</class>
+        <class>com.critters.dal.entity.NPCQuestRewardConfig</class>
 
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>

@@ -1,7 +1,7 @@
 package com.critters.games.sockets;
 
-import com.critters.dal.dto.Twople;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.Twople;
+import com.critters.dal.entity.User;
 import com.critters.games.GameController;
 import com.critters.games.pong.PongController;
 
@@ -20,7 +20,6 @@ public class SocketManager {
 	 * intention. Indexed on clientID, gameType, and gameID.
 	 */
 	public static Map<String,Twople<User, GameController>> clientIDToPlayer = Collections.synchronizedMap(new HashMap<String,Twople<User, GameController>>());
-
 	public static Map<Integer,List<GameController>> gameTypeToRunningGames = Collections.synchronizedMap(new HashMap<Integer, List<GameController>>());
 	public static Map<String,GameController> gameIDToGame = Collections.synchronizedMap(new HashMap<String, GameController>());
 
@@ -33,16 +32,16 @@ public class SocketManager {
 	 */
 	public static String createNewGame(int gameType, String clientID, String gameName){
 		if(clientIDToPlayer.containsKey(clientID) && gameType >= 0) {
-			Twople<User, GameController> host = clientIDToPlayer.get(clientID);
-
+			Twople<User, GameController> hostTuple = clientIDToPlayer.get(clientID);
 			String gameInstanceID = System.currentTimeMillis() + ""; //todo real id here
 
-			GameController gameInstance = getGame(gameType, gameInstanceID, gameName, clientID);
+			GameController gameInstance = createGameInstance(gameType, gameInstanceID, gameName, clientID);
+			hostTuple.y = gameInstance;
+			//store in caches for easy access later
 			gameIDToGame.put(gameInstanceID, gameInstance);
-			host.y = gameInstance;
 			if (gameTypeToRunningGames.containsKey(gameType)) {
 				gameTypeToRunningGames.get(gameType).add(gameInstance);
-			} else {
+			} else { //we made the first game of this type? wow!
 				ArrayList gameList = new ArrayList();
 				gameList.add(gameInstance);
 				gameTypeToRunningGames.put(gameType, gameList);
@@ -68,26 +67,26 @@ public class SocketManager {
 	}
 
 	public static String findGames(int gameID, String userName){
-		return (String) gameIDToGame.keySet().toArray()[0];
+		return (String) gameIDToGame.keySet().toArray()[0]; //todo make this real
 	}
 
 	public static List<GameController> findGames(int gameID, int userID){
-		return null;
+		return null; //todo make this real
 	}
 
 	public static List<GameController> findAllGames(int gameID){
-		return null;
+		return SocketManager.gameTypeToRunningGames.get(gameID);
 	}
 
-	public static void  setUserID(String secure, User user) {
+	public static void setUserID(String secure, User user) {
 		clientIDToPlayer.put(secure, new Twople<User,GameController>(user, null));
 	}
 
-	private static GameController getGame(int gameType, String gameInstanceID, String title, String hostClientId) {
+	private static GameController createGameInstance(int gameType, String gameInstanceID, String title, String hostClientId) {
 		switch(gameType){
-			case 0: return new PongController(gameInstanceID, title, hostClientId, gameType);
+			case 1: return new PongController(gameInstanceID, title, hostClientId, gameType);
+			default: return null;
 		}
-		return null;
 	}
 }
 

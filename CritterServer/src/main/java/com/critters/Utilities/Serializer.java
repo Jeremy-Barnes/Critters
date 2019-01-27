@@ -1,6 +1,7 @@
 package com.critters.Utilities;
 
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
+import org.json.JSONObject;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -26,7 +27,7 @@ public class Serializer {
 			marshaller.marshal(object, sw);
 			return sw.toString();
 		} catch(Exception e){
-			return "failed to serialize!";
+			return "failed to serialize!" + e.getMessage();
 		}
 	}
 
@@ -42,5 +43,9 @@ public class Serializer {
 		} catch(JAXBException jaxb) {
 			return null;
 		}
+	}
+
+	public static JSONObject dictionaryFromJSON(String json){
+		return new JSONObject(json);
 	}
 }

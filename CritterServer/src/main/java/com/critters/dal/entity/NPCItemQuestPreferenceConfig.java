@@ -1,0 +1,66 @@
+package com.critters.dal.entity;
+
+import com.critters.DTO;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+
+
+/**
+ * Created by Jeremy on 7/10/2018.
+ */
+@Entity
+@Table(name="npcItemQuestPreferenceConfigs")
+public class NPCItemQuestPreferenceConfig extends DTO {
+	
+  	@Id
+	@GeneratedValue(generator = "increment")
+	@GenericGenerator(name="increment", strategy = "increment")
+	private Integer npcItemQuestPreferenceConfigID;
+	private int wanterNPC;
+  
+  	@ManyToOne
+	@JoinColumn(name="itemConfigID", updatable = false)
+	private Item.ItemDescription itemConfig;
+	private int critterBuxxValuePerItem;
+
+	public NPCItemQuestPreferenceConfig(int wanterNPC, int critterBuxxValuePerItem, Item.ItemDescription itemConfig) {
+		this.wanterNPC = wanterNPC;
+		this.critterBuxxValuePerItem = critterBuxxValuePerItem;
+		this.itemConfig = itemConfig;
+	}
+
+	public NPCItemQuestPreferenceConfig(){}
+
+	public Integer getNpcItemQuestPreferenceConfigID() {
+		return npcItemQuestPreferenceConfigID;
+	}
+
+	public void setNpcItemQuestPreferenceConfigID(Integer npcItemQuestPreferenceConfigID) {
+		this.npcItemQuestPreferenceConfigID = npcItemQuestPreferenceConfigID;
+	}
+
+	public int getWanterNPC() {
+		return wanterNPC;
+	}
+
+	public void setWanterNPC(int wanterNPC) {
+		this.wanterNPC = wanterNPC;
+	}
+
+	public Item.ItemDescription getItemConfig() {
+		return itemConfig;
+	}
+
+	public void setItemConfig(Item.ItemDescription itemConfig) {
+		this.itemConfig = itemConfig;
+	}
+
+	public int getCritterBuxxValuePerItem() {
+		return critterBuxxValuePerItem;
+	}
+
+	public void setCritterBuxxValuePerItem(int critterBuxxValuePerItem) {
+		this.critterBuxxValuePerItem = critterBuxxValuePerItem;
+	}
+}

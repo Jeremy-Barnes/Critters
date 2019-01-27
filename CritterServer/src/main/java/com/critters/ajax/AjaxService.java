@@ -1,7 +1,7 @@
 package com.critters.ajax;
 
 import com.critters.Utilities.Serializer;
-import com.critters.dal.dto.entity.User;
+import com.critters.dal.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
@@ -33,6 +33,10 @@ public class AjaxService {
 		NewCookie longTermCookie = new NewCookie("critters", user.getTokenSelector() + ":" + user.getTokenValidator(), "/", null, null, 60*60*24*30, false ); //sec*min*hours*days
 		NewCookie sessionID = new NewCookie("JSESSIONID", httpRequest.getSession().getId(), "/api/", null, null, 60*60*3, false ); //used because setting other cookie seems to overwrite Tomcat generated cookie.
 		return new NewCookie[]{longTermCookie, sessionID};
+	}
+
+	protected User getSessionUser(){
+		return (User) httpRequest.getSession().getAttribute("user");
 	}
 }
 

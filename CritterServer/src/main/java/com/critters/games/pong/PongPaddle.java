@@ -10,10 +10,10 @@ import java.awt.geom.Rectangle2D;
 public class PongPaddle extends GameObject {
 
 	public PongPaddle() {
-		super.ENTITY_TYPE_ID = 1;
+		super.ENTITY_TYPE_ID = PongController.PongEntityTypes.Paddle.ordinal();
 	}
-	public final float PADDLE_HEIGHT = 12;
-	public final float PADDLE_VELOCITY = 0.025f;//25 world units per second
+	public final float PADDLE_HEIGHT = 120;
+	public final float PADDLE_VELOCITY = 0.75f;//250 world units per second
 
 	public Rectangle2D boundingBox;
 

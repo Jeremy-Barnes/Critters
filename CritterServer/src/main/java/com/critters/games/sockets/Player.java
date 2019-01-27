@@ -1,8 +1,8 @@
 package com.critters.games.sockets;
 
 import com.critters.Utilities.Serializer;
-import com.critters.dal.dto.Twople;
-import com.critters.dal.dto.entity.User;
+import com.critters.dto.Twople;
+import com.critters.dal.entity.User;
 import com.critters.games.GameController;
 import com.critters.games.GameObject;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.IOException;
 
 /**
@@ -24,16 +25,22 @@ public class Player {
 
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-	User user;
-	public Session websocket;
-	public String clientID;
-	GameController game;
+	public User user;
+	@XmlTransient public Session websocket;
+	@XmlTransient public String clientID;
+	@XmlTransient GameController game;
 	public GameObject physicsComponent;
+	public int score;//will probably need to become a ScoreObject some day (Points/Assists/etc)
 
 	public void sendMessage(SocketGameResponse response) {
 		String responseSer = Serializer.toJSON(false, response, SocketGameResponse.class);
 		try {
-			websocket.getBasicRemote().sendText(responseSer);
+			if(websocket.isOpen())
+				websocket.getBasicRemote().sendText(responseSer);
+			else {
+				this.onClose(null, this.clientID);
+				websocket.close();
+			}
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -41,24 +48,23 @@ public class Player {
 
 
 	@OnOpen
-	public void onOpen(Session session, @PathParam("client-id") String clientId) {
+	public String onOpen(Session session, @PathParam("client-id") String clientId) {
 		if(SocketManager.clientIDToPlayer.containsKey(clientId)) {
 			Twople<User, GameController> tuple = SocketManager.clientIDToPlayer.get(clientId);
 			if (tuple.y != null) {
-				user = tuple.x;
-				game = tuple.y;
+				this.user = tuple.x;
+				this.game = tuple.y;
 				this.clientID = clientId;
-				websocket = session;
+				this.websocket = session;
 				game.addPlayer(this);
-				return; //TODO some kind of response to let the client know they are connected
+				SocketGameResponse ping = new SocketGameResponse();
+				ping.ping = true;
+				return Serializer.toJSON(false, ping, SocketGameResponse.class);
 			}
 		}
-
 		//no game and no id
-		try {
-			session.close();
-		} catch (Exception e) {
-		}
+		this.onClose(session, clientId);
+		return null;
 	}
 
 	@OnMessage
@@ -74,11 +80,16 @@ public class Player {
 			if(game != null){
 				SocketManager.gameIDToGame.remove(game.gameID);
 				SocketManager.gameTypeToRunningGames.get(game.gameType).remove(game);
+				this.game.forceKill();
 			}
 			SocketManager.clientIDToPlayer.remove(clientId);
+			if(session.isOpen()) {
+				try {
+					session.close();
+				}catch(Exception ex) {
+					logger.error(ex.getMessage(), ex);
+				}
+			}
 		}
 	}
-
-
-
 }

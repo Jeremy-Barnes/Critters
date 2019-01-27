@@ -19,18 +19,20 @@ public class PongController extends GameController {
 
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-
 	public enum PongEntityTypes {
 		Paddle,
 		Ball
 	}
 
-	private final int RIGHT_X = 150;
+	private final int RIGHT_X = 1500;
 	private final int LEFT_X = 0;
-	private final int TOP_Y = 100;
+	private final int TOP_Y = 1000;
 	private final int BOTTOM_Y = 0;
 
 	private int tickCount = 0;
+	public long startGameTimestamp;
+	public int MAX_SCORE = 10;
+	public long maxTime = 10*60*1000; //min*sec*milisec
 
 	public PongController(String gameID, String title, String hostClientID, int gameType) {
 		super(gameID, title, hostClientID, gameType);
@@ -39,97 +41,125 @@ public class PongController extends GameController {
 	private List<GameObject> world = new ArrayList<GameObject>();
 
 	public void initializeGame(){
-		setUpPhysicsBodies();
-		SocketGameResponse r = new SocketGameResponse();
-		r.deltaPlayers = new ArrayList<Player>(super.clientIDToPlayer.values());
-		r.deltaObjects = this.world;
-		r.startTickingNow = true;
-		r.tickNumber = 0;
+		initializePhysicsBodies();
+		positionPhysicsBodies();
+		this.startGameTimestamp = System.currentTimeMillis();
+		SocketGameResponse setupMessage = new SocketGameResponse();
+
+		setupMessage.deltaPlayers = new ArrayList<Player>(super.clientIDToPlayer.values());
+		setupMessage.deltaObjects = this.world;
+		setupMessage.startTickingNow = true;
+		setupMessage.tickNumber = 0;
+		setupMessage.startTime = startGameTimestamp;
+		setupMessage.currentTime = startGameTimestamp;
 		for(Player p : super.clientIDToPlayer.values()){
-			r.assignedInstanceId = p.physicsComponent.getInstanceID();
-			p.sendMessage(r);
+			setupMessage.assignedInstanceId = p.physicsComponent.getInstanceID();
+			p.sendMessage(setupMessage);
 		}
 	}
 
-	private void setUpPhysicsBodies(){
-		int physicsplayers = 0; //maybe spectators?
+	private void initializePhysicsBodies(){
+		int physicsPlayers = 0; //maybe spectators?
 		for(Player p : super.clientIDToPlayer.values()) {
-			if(physicsplayers >= 2) break;
+			if(physicsPlayers >= 2) break;
 
 			p.physicsComponent = new PongPaddle();
-			if(p.clientID.equalsIgnoreCase(hostID)) {
-				p.physicsComponent.y = TOP_Y/2;
-				p.physicsComponent.x = LEFT_X;
-			} else {
-				p.physicsComponent.y = TOP_Y/2;
-				p.physicsComponent.x = RIGHT_X;
-			}
 			((PongPaddle)p.physicsComponent).boundingBox = new Rectangle();
-			((PongPaddle)p.physicsComponent).boundingBox.setRect(p.physicsComponent.x,
-																 p.physicsComponent.y - ((PongPaddle)p.physicsComponent).PADDLE_HEIGHT/2, 1,
-																 ((PongPaddle)p.physicsComponent).PADDLE_HEIGHT);
-			p.physicsComponent.setInstanceID(physicsplayers + 1); //could be rand int???
-			physicsplayers++;
+			p.physicsComponent.setInstanceID(physicsPlayers + 1); //could be rand int???
+			physicsPlayers++;
+			world.add(p.physicsComponent);
 		}
 
-		PongBall lead = new PongBall();
-		lead.x = (RIGHT_X - LEFT_X)/2;
-		lead.y = (TOP_Y - BOTTOM_Y)/2;
-		lead.xVector = (int)Math.signum(Math.random() - 0.5);
-		lead.setInstanceID(3); //could be rand int???
-		world.add(lead);
+		PongBall pongBall = new PongBall();
+		pongBall.setInstanceID(3); //could be rand int???
+		world.add(pongBall);
+	}
+
+	private void positionPhysicsBodies() {
+		for (Player p : super.clientIDToPlayer.values()) {
+			if (p.clientID.equalsIgnoreCase(hostID)) {
+				p.physicsComponent.y = TOP_Y / 2;
+				p.physicsComponent.x = LEFT_X  + 100;
+			} else {
+				p.physicsComponent.y = TOP_Y / 2;
+				p.physicsComponent.x = RIGHT_X - 100;
+			}
+			p.physicsComponent.needsUpdate = true;
+
+			((PongPaddle) p.physicsComponent).boundingBox.setRect(p.physicsComponent.x, p.physicsComponent.y, 1, ((PongPaddle) p.physicsComponent).PADDLE_HEIGHT);
+		}
+		PongBall ball = (PongBall)world.get(world.size()-1);
+		ball.xVector = 0;
+		ball.yVector = 0;
+		ball.x = (RIGHT_X - LEFT_X)/2;
+		ball.y = (TOP_Y - BOTTOM_Y)/2;
 	}
 
 	public void tick(int dT){
 		tickCount++;
 		movePaddles(dT);
 		moveBall(dT);
-		if(tickCount % 10 == 0) {
+		if(lastTime - startGameTimestamp > maxTime){
+			gameIsOver();
+		}
+		if(tickCount % 5 == 0) {
 			sendPlayersGameState();
 		}
 	}
 
 	public void resolvePlayerCommand(SocketGameRequest request, Player player) {
 		if(request.commands != null && request.commands.length > 0) {
-			((PongPaddle)player.physicsComponent).yVector = 0;
+			player.physicsComponent.yVector = 0;
+			player.physicsComponent.needsUpdate = true;
+
 			for(String cmd : request.commands) {
 				if(cmd.equalsIgnoreCase("W")) {
-					((PongPaddle)player.physicsComponent).yVector = 1;
-				}
-				if(cmd.equalsIgnoreCase("S")) {
 					((PongPaddle)player.physicsComponent).yVector = -1;
 				}
+				if(cmd.equalsIgnoreCase("S")) {
+					((PongPaddle)player.physicsComponent).yVector = 1;
+				}
+				if(cmd.equalsIgnoreCase("WS")) {
+					((PongPaddle)player.physicsComponent).yVector = 0;
+				}
+				if(player.clientID.equalsIgnoreCase(this.hostID) && cmd.equalsIgnoreCase(" ")) {
+					PongBall ball = (PongBall) this.world.get(world.size() - 1);
+					if(ball.xVector == 0) {
+						ball.xVector = (float)Math.signum(Math.random() - 0.5);
+						ball.yVector = (float) (Math.signum(Math.random() - 0.5) * Math.random());
+					}
+				}
 			}
+			if(request.clientState != null) //todo lag compensation
+				player.physicsComponent.clientNextY = request.clientState.y;
 		}
 	}
 
 	private void moveBall(int dT) {
-		PongBall lead = (PongBall)world.get(0);
-		lead.x += (dT * lead.xVector * lead.BALL_VELOCITY);
-		lead.y += (dT/1000.0 * lead.yVector * lead.BALL_VELOCITY);
-		logger.debug(lead.x + " x");
-		logger.debug(dT + " timestep");
-		logger.debug(lead.xVector+ " xVect");
+		PongBall ball = (PongBall)world.get(world.size()-1);
+		ball.x += (dT * ball.xVector * ball.BALL_VELOCITY);
+		ball.y += (dT * ball.yVector * ball.BALL_VELOCITY);
 
-		if(lead.x < LEFT_X) {
-			scoreP2();
-			lead.xVector *= -1;//todo remove, just for network proof
-
-		} else
-		if(lead.x > RIGHT_X) {
-			scoreP1();
-			lead.xVector *= -1;//todo remove, just for network proof
-
+		if(ball.x < LEFT_X) {
+			score(false);
+		} else if(ball.x > RIGHT_X) {
+			score(true);
 		} else { //collision detect!
+
 			for(Player p : super.clientIDToPlayer.values()) {
-				if(((PongPaddle)p.physicsComponent).boundingBox.intersects(lead.x - lead.BALL_DIAMETER/2, lead.y - lead.BALL_DIAMETER/2, lead.BALL_DIAMETER, lead.BALL_DIAMETER )) {
-					logger.debug("pong");
-					lead.xVector *= -1;
+				PongPaddle paddle = (PongPaddle) p.physicsComponent;
+				if(paddle.yVector != 0 && paddle.boundingBox.intersects(ball.x - ball.BALL_DIAMETER/2, ball.y - ball.BALL_DIAMETER/2, ball.BALL_DIAMETER, ball.BALL_DIAMETER )) {
+					ball.xVector *= -1;
+					ball.yVector = (float) (((ball.y - paddle.boundingBox.getCenterY()) / (paddle.PADDLE_HEIGHT / 6)) * ball.BALL_VELOCITY) + (paddle.yVector * paddle.PADDLE_VELOCITY);
+					ball.x += (dT * ball.xVector * ball.BALL_VELOCITY);
+					ball.y += (dT * ball.yVector * ball.BALL_VELOCITY);
+					break;
 				}
 			}
 
-			if (lead.y > TOP_Y || lead.y < BOTTOM_Y) {
-				lead.yVector *= -1;
+			if (ball.y >= TOP_Y || ball.y <= BOTTOM_Y) {
+				ball.yVector *= -1;
+				ball.y += (dT * ball.yVector * ball.BALL_VELOCITY);
 			}
 		}
 	}
@@ -138,16 +168,17 @@ public class PongController extends GameController {
 		for(Player p : super.clientIDToPlayer.values()) {
 			PongPaddle paddle = (PongPaddle) p.physicsComponent;
 			if(paddle.yVector != 0) {
-				paddle.y += paddle.yVector * paddle.PADDLE_VELOCITY * dT;
-				paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
-				if (paddle.boundingBox.getMinY() < this.BOTTOM_Y) {
-					paddle.y = this.BOTTOM_Y + paddle.PADDLE_HEIGHT/2;
-					paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
-				} else if(paddle.boundingBox.getMaxY() > this.TOP_Y) {
-					paddle.y = this.TOP_Y - paddle.PADDLE_HEIGHT/2;
-					paddle.boundingBox.setRect(paddle.x, paddle.y - paddle.PADDLE_HEIGHT / 2, 1, paddle.PADDLE_HEIGHT);
-				}
 				paddle.needsUpdate = true;
+				paddle.y += paddle.yVector * paddle.PADDLE_VELOCITY * dT;
+				paddle.boundingBox.setRect(paddle.x, paddle.y, 1, paddle.PADDLE_HEIGHT);
+
+				if (paddle.boundingBox.getMinY() < this.BOTTOM_Y) { //colliding with top or bottom?
+					paddle.y = this.BOTTOM_Y;
+					paddle.boundingBox.setRect(paddle.x, paddle.y, 1, paddle.PADDLE_HEIGHT);
+				} else if(paddle.boundingBox.getMaxY() > this.TOP_Y) {
+					paddle.y = this.TOP_Y - paddle.PADDLE_HEIGHT;
+					paddle.boundingBox.setRect(paddle.x, paddle.y, 1, paddle.PADDLE_HEIGHT);
+				}
 			}
 		}
 	}
@@ -155,11 +186,12 @@ public class PongController extends GameController {
 	private void sendPlayersGameState(){
 		SocketGameResponse r = new SocketGameResponse();
 		r.tickNumber = this.tickCount;
-		r.deltaObjects.add(this.world.get(0));//da ball
+		r.currentTime = System.currentTimeMillis();
+		r.deltaObjects.add(this.world.get(world.size()-1));//da ball
 		for(Player p : super.clientIDToPlayer.values()) {
 			if (p.physicsComponent.needsUpdate) {
-				r.deltaPlayers.add(p);
 				p.physicsComponent.needsUpdate = false;
+				r.deltaPlayers.add(p);
 			}
 		}
 		for(Player p : super.clientIDToPlayer.values()) {
@@ -167,12 +199,51 @@ public class PongController extends GameController {
 		}
 	}
 
-	private void scoreP1(){
-
+	private void score(boolean leftSidePlayerScored){
+		for(Player p : super.clientIDToPlayer.values()) {
+			if (leftSidePlayerScored && p.physicsComponent.getInstanceID() == 1) {
+				p.score++;
+				if(p.score == this.MAX_SCORE) {
+					gameIsOver();
+				}
+				break;
+			} else if (!leftSidePlayerScored && p.physicsComponent.getInstanceID() == 2) {
+				p.score++;
+				if(p.score == this.MAX_SCORE) {
+					gameIsOver();
+				}
+				break;
+			}
+		}
+		positionPhysicsBodies();
+		sendPlayersGameState();
 	}
 
-	private void scoreP2(){
+	public void handlePostGameEvents() {
+		Player winner = null;
+		int scoreToBeat = 0; //only search list of players once, ties != wins
+
+		for(Player p : super.clientIDToPlayer.values()) {
+			if(p.score == this.MAX_SCORE) {
+				winner = p;
+			} else if((winner == null && scoreToBeat < p.score) || winner.score < p.score) {
+				winner = p;
+			} else if(winner.score == p.score) {
+				winner = null;
+				scoreToBeat = p.score; //tie detected, prevent future ties.
+			}
+		}
+		SocketGameResponse r = new SocketGameResponse();
+		if(winner != null) {
+			//give the winner some coin! TODO
+		}
+		r.gameOver = true;
+		r.tickNumber = this.tickCount;
+		r.currentTime = System.currentTimeMillis();
+		r.deltaPlayers = new ArrayList<Player>(super.clientIDToPlayer.values());
+		for(Player p : super.clientIDToPlayer.values()) {
+			p.sendMessage(r);
+		}
 
 	}
-
 }
