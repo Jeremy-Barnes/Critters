@@ -18,15 +18,8 @@ import java.util.Random;
 @Singleton
 public class BackgroundJobManager {
 
-	public static int jobs = 0;
-	public static String logs = "";
 	static final Logger logger = LoggerFactory.getLogger("application");
 
-	@Schedule(hour="*", minute="*", second="*/10", persistent=true)
-	public void someQuarterlyJob() {
-		jobs++;
-		System.out.println("JOB JAERB JEOREARB");
-	}
 
 	@Schedule(hour="*", minute="*/15", second="*", persistent=true)
 	public void restockAllShopsMaybe() {
@@ -58,9 +51,11 @@ public class BackgroundJobManager {
 		}
 		ArrayList<EventBLL.LotteryEvent> events = new ArrayList();
 		for(int i = 0; i < numberOfEventsToGenerate; i++) {
-			events.add(EventBLL.generateRandomEvent());
+			EventBLL.LotteryEvent event = EventBLL.generateRandomEvent();
+			if(event != null) events.add(event);
+			else i--;
 		}
-		EventBLL.distributePrizes(events);
+		EventBLL.linkRandomEventsToUsers(events);
 		EventBLL.clearRegistrations();
 	}
 

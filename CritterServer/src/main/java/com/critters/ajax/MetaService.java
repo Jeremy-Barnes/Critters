@@ -1,10 +1,9 @@
 package com.critters.ajax;
 
 import com.critters.ajax.filters.UserSecure;
-import com.critters.backgroundservices.BackgroundJobManager;
 import com.critters.bll.*;
-import com.critters.dto.SearchResponse;
 import com.critters.dal.entity.*;
+import com.critters.dto.SearchResponse;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,7 +14,6 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.FileNotFoundException;
 
 /**
  * Created by Jeremy on 8/22/2016.
@@ -23,21 +21,13 @@ import java.io.FileNotFoundException;
 @Path("/meta")
 public class MetaService extends AjaxService {
 
-	@Path("/jobs")
-	@GET
-	@Produces("text/plain")
-	public Response checkJobs() throws FileNotFoundException {
-		Object us = UserBLL.searchForUser("");
-		return Response.status(Response.Status.OK).entity(BackgroundJobManager.jobs).build();
-	}
-
 	@Path("/pollForNotifications")
 	@UserSecure
 	@GET
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
 		User loggedInUser = getSessionUser();
 		EventBLL.registerForRandomEventLottery(loggedInUser);
-		EventBLL.tellMeWhatIWon(loggedInUser, asyncResponse);
+		EventBLL.redeemRandomEventForUser(loggedInUser, asyncResponse);
 		ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 	}
 

@@ -34,7 +34,6 @@ public class WorldBLL {
 
 		try(DAL dal = new DAL()) {
 			npc = dal.npcs.getNPC(npcID);
-
 			if (npc == null || Extensions.isNullOrEmpty(npc.getActionHandlerScript())) {
 				return null;
 			}
@@ -54,7 +53,7 @@ public class WorldBLL {
 					}
 
 					if (actionCode == NPCActions.SubmitQuest) {
-						response = handleSubmitQuest(dal, engine, inv, npcID, targetIdOrAmt, loggedInUser, itemIDs, response);
+						response = submitQuest(dal, engine, inv, npcID, targetIdOrAmt, loggedInUser, itemIDs, response);
 					} else if(actionCode == NPCActions.SayHello) {
 						response = handleHello(dal, engine, inv, npc, loggedInUser, response);
 					}
@@ -84,15 +83,16 @@ public class WorldBLL {
 		return response;
 	}
 
-	private static NPCResponse handleSubmitQuest(DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID, int targetIdOrAmt, User loggedInUser,
-												 List<Integer> itemIDs, NPCResponse npcResponse) throws ScriptException, NoSuchMethodException {
+	private static NPCResponse submitQuest(DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID, int targetIdOrAmt, User loggedInUser,
+										   List<Integer> itemIDs, NPCResponse npcResponse) throws ScriptException, NoSuchMethodException {
+
 		QuestInstance usersQuest = dal.quests.getQuestInstance(targetIdOrAmt);
-		if(usersQuest != null && usersQuest.getCompletedDate() == null) {
-			if(usersQuest.getCurrentStep() != null) {
-				handleSubmitStoryQuest(usersQuest, dal, engine, inv, activeNPCID, targetIdOrAmt, loggedInUser, itemIDs);
+		if(usersQuest != null && usersQuest.getCompletedDate() == null) { //quest is real and not finished already
+			if(usersQuest.getCurrentStep() != null) { //queststeps are for story quests only
+				submitStoryQuest(usersQuest, dal, engine, inv, activeNPCID, targetIdOrAmt, loggedInUser, itemIDs);
 			} else if(usersQuest.getRandomQuestObjectivesJSONObject() != null) {
 				npcResponse.questItems = new NPCResponse.NPCQuestMessage[1];
-				npcResponse.questItems[0] = handleSubmitRandomQuest(usersQuest, dal, activeNPCID, targetIdOrAmt, loggedInUser, itemIDs);
+				npcResponse.questItems[0] = submitRandomQuest(usersQuest, dal, activeNPCID, targetIdOrAmt, loggedInUser, itemIDs);
 			}
 		} else {
 
@@ -100,7 +100,7 @@ public class WorldBLL {
 		return npcResponse;
 	}
 
-	private static NPCResponse.NPCQuestMessage handleSubmitRandomQuest(QuestInstance usersQuest, DAL dal, int activeNPCID, int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs){
+	private static NPCResponse.NPCQuestMessage submitRandomQuest(QuestInstance usersQuest, DAL dal, int activeNPCID, int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs){
 		NPCResponse.NPCQuestMessage response = new NPCResponse.NPCQuestMessage();
 
 		JSONObject jsonObj = Serializer.dictionaryFromJSON(usersQuest.getRandomQuestObjectivesJSONObject());
@@ -110,7 +110,7 @@ public class WorldBLL {
 			List<Item> outParamFilteredItems = new ArrayList<Item>();
 			Random rand = new Random();
 
-			if(sufficientGifts(loggedInUser, itemIDs, retrieveItems, outParamFilteredItems)) {
+			if(sufficientItemsForQuest(loggedInUser, itemIDs, retrieveItems, outParamFilteredItems)) {
 				if(UserBLL.giveOrDiscardInventoryItems(outParamFilteredItems.toArray(new Item[0]), loggedInUser, null)) {
 					JSONObject rewards =  (JSONObject) jsonObj.get("successRewards");
 					Map<String, Object> rewardsDictionary = rewards.toMap();
@@ -154,8 +154,8 @@ public class WorldBLL {
 		return response;
 	}
 
-	private static void handleSubmitStoryQuest(QuestInstance usersQuest, DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID,
-											   int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs) throws ScriptException, NoSuchMethodException {
+	private static void submitStoryQuest(QuestInstance usersQuest, DAL dal, ScriptEngine engine, Invocable inv, int activeNPCID,
+										 int targetIdOrAmt, User loggedInUser, List<Integer> itemIDs) throws ScriptException, NoSuchMethodException {
 
 		if(usersQuest.getCurrentStep().getRedeemerNPC() != null && usersQuest.getCurrentStep().getRedeemerNPC().getNpcID() == activeNPCID){
 			Object questScript = engine.eval(usersQuest.getCurrentStep().getActionHandlerScript());
@@ -166,7 +166,7 @@ public class WorldBLL {
 		}
 	}
 
-	private static boolean sufficientGifts(User loggedInUser, List<Integer> itemIDs, JSONObject npcWantItems, List<Item> outParamFilteredItems) {
+	private static boolean sufficientItemsForQuest(User loggedInUser, List<Integer> itemIDs, JSONObject npcWantItems, List<Item> outParamFilteredItems) {
 		boolean insufficientGifts = true;
 		if(!Extensions.isNullOrEmpty(itemIDs)) {
 			loggedInUser.setInventory(UserBLL.getUserInventory(loggedInUser.getUserID()));
@@ -343,9 +343,7 @@ public class WorldBLL {
 				itemConfigsToInstantiate.put(rewardItem.getRewardItemConfig().getItemConfigID(), rewardItem);
 			}
 		}
-
 		//ItemsBLL.createNewItems()
-
 	}
 
 	private static String generateQuestText(DAL dal, NPC npc, boolean isFetchQuest, Map<Integer, Long> itemCfgIdAndCount, List<Item.ItemDescription> itemDescriptions) {

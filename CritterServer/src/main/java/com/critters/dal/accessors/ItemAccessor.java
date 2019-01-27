@@ -23,9 +23,13 @@ public class ItemAccessor {
 		sql = hibernateHelper;
 	}
 
+	public List<Item> getItems(List<Item> items) {
+		return getItemsByID(items.stream().map(Item::getInventoryItemId).collect(Collectors.toList()));
+	}
+
 	public List<Item> getItems(Item[] items) {
 		List<Item> itemsList = Arrays.asList(items);
-		return getItems(itemsList.stream().map(Item::getInventoryItemId).collect(Collectors.toList()));
+		return getItemsByID(itemsList.stream().map(Item::getInventoryItemId).collect(Collectors.toList()));
 	}
 
 	public List<Item> getItems() {
@@ -39,7 +43,7 @@ public class ItemAccessor {
 		return dbItems;
 	}
 
-	public List<Item> getItems(List<Integer> itemIDs) {
+	public List<Item> getItemsByID(List<Integer> itemIDs) {
 		List<Item> dbItems = null;
 		try {
 			dbItems = sql.createQuery("from Item where inventoryItemId in :ids")
@@ -85,6 +89,20 @@ public class ItemAccessor {
 			logger.info("No such items found in store id " + shopID, nrex);
 		}  catch (PersistenceException ex) {
 			logger.error("Something went wrong in the database while attempting to retrieve items for shop: " + shopID, ex);
+		}
+		return dbItems;
+	}
+
+	public List<Item> getItemsWithoutOwner(int count, boolean ignoreEventAttachedItems) {
+		List<Item> dbItems = null;
+		try {
+			dbItems = sql.createQuery("from Item where npcOwnerId = null and ownerId = null and containingStoreId = null" + (ignoreEventAttachedItems ? " and attachedToEvent = null" : ""))
+						 .setMaxResults(count)
+						 .getResultList();
+		}  catch (NoResultException nrex) {
+			logger.info("No abandoned items found", nrex);
+		}  catch (PersistenceException ex) {
+			logger.error("Something went wrong in the database while attempting to retrieve abandoned items", ex);
 		}
 		return dbItems;
 	}

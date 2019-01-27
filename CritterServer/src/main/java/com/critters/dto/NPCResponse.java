@@ -14,6 +14,38 @@ public class NPCResponse {
 	public NPCMessageItem[] subItems;
 	public NPCQuestMessage[] questItems;
 
+	public NPC getNpc() {
+		return npc;
+	}
+
+	public void setNpc(NPC npc) {
+		this.npc = npc;
+	}
+
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+
+	public void setResponseMessage(String responseMessage) {
+		this.responseMessage = responseMessage;
+	}
+
+	public NPCMessageItem[] getSubItems() {
+		return subItems;
+	}
+
+	public void setSubItems(NPCMessageItem[] subItems) {
+		this.subItems = subItems;
+	}
+
+	public NPCQuestMessage[] getQuestItems() {
+		return questItems;
+	}
+
+	public void setQuestItems(NPCQuestMessage[] questItems) {
+		this.questItems = questItems;
+	}
+
 	public static class NPCMessageItem {
 		public String messageText;
 		public String messageImage;

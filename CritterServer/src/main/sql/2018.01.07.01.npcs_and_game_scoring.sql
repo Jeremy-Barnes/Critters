@@ -52,10 +52,11 @@ CREATE TABLE npcQuestResponseConfigs (
     response TEXT NOT NULL,
     worksForFetchQuests BIT NOT NULL,
     isSuccessResponse BIT NOT NULL
-)
+);
 
 ALTER TABLE inventoryItems add COLUMN npcOwnerID INT NULL REFERENCES npcs(npcID);
 ALTER TABLE inventoryItems add CHECK ((npcOwnerID IS NOT NULL AND ownerID IS NULL) OR (npcOwnerID IS NULL AND ownerID IS NOT NULL) OR (npcOwnerID IS NULL AND ownerID IS NULL));
+ALTER TABLE inventoryItems add COLUMN attachedToEvent DATE NULL;
 
 CREATE TABLE npcQuestRewardConfigs (
     npcQuestRewardConfigID SERIAL NOT NULL PRIMARY KEY,
@@ -66,4 +67,4 @@ CREATE TABLE npcQuestRewardConfigs (
     percentOdds FLOAT NULL,
     specialMessage TEXT NULL,
     CHECK ((rarityMatch = true AND rarityMatchFactor IS NOT NULL) OR (rarityMatch = false AND percentOdds IS NOT NULL))
-)
+);

@@ -26,7 +26,7 @@ public class CommandService extends AjaxService {
 	public void pollForNotification(@Suspended final AsyncResponse asyncResponse) throws InterruptedException {
 		User loggedInUser = getSessionUser();
 		EventBLL.registerForRandomEventLottery(loggedInUser);
-		EventBLL.tellMeWhatIWon(loggedInUser, asyncResponse);
+		EventBLL.redeemRandomEventForUser(loggedInUser, asyncResponse);
 		ChatBLL.createPoll(loggedInUser.getUserID(), asyncResponse);
 	}
 

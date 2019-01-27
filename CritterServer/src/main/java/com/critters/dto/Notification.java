@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Created by Jeremy on 1/17/2017.
+ * Generic holder for server -> client messages
+ * Unopinionated on display, except for UINotifications
  */
 public class Notification extends DTO {
 	public List<Message> messages;
@@ -20,11 +22,19 @@ public class Notification extends DTO {
 		this.friendRequests = friendRequests;
 	}
 
-	public Notification(Message message, Friendship friendRequest) {
-		this.messages = new ArrayList<Message>();
-		messages.add(message);
-		this.friendRequests = new ArrayList<Friendship>();
-		friendRequests.add(friendRequest);
+	public Notification(Message message, Friendship friendRequest, UINotification notification) {
+		if(message != null) {
+			this.messages = new ArrayList<Message>();
+			messages.add(message);
+		}
+		if(friendRequest != null) {
+			this.friendRequests = new ArrayList<Friendship>();
+			friendRequests.add(friendRequest);
+		}
+		if(notification != null) {
+			this.serverMessages = new ArrayList<UINotification>();
+			serverMessages.add(notification);
+		}
 	}
 
 	public Notification(){}

@@ -4,6 +4,8 @@ import com.critters.DTO;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by Jeremy on 8/22/2016.
@@ -25,13 +27,15 @@ public class Item extends DTO {
 
 	private Integer price;
 	private Integer containingStoreId;
+	private LocalDateTime attachedToEvent;
 
-	public Item(int inventoryItemId, Integer ownerId, Integer price, Integer containingStoreId, Integer npcOwnerId) throws Exception {
+	public Item(int inventoryItemId, Integer ownerId, Integer price, Integer containingStoreId, Integer npcOwnerId, LocalDateTime attachedToEvent) throws Exception {
 		this.inventoryItemId = inventoryItemId;
 		this.ownerId = ownerId;
 		this.price = price;
 		this.containingStoreId = containingStoreId;
 		this.npcOwnerId = npcOwnerId;
+		this.attachedToEvent = attachedToEvent;
 		if(npcOwnerId != null && ownerId != null) {
 			throw new Exception("An item cannot have two owners, dumb dumb");
 		}
@@ -91,6 +95,16 @@ public class Item extends DTO {
 	public void setContainingStoreId(Integer storeId) {
 		this.containingStoreId = storeId;
 	}
+
+	public LocalDateTime getAttachedToEvent() {
+		return attachedToEvent;
+	}
+
+	public void setAttachedToEvent(LocalDateTime attachedToEvent) {
+		this.attachedToEvent = attachedToEvent;
+	}
+
+
 
 	@Entity
 	@Table(name="itemconfigs")

@@ -2,6 +2,7 @@ package com.critters.bll;
 
 import com.critters.Utilities.Extensions;
 import com.critters.dal.accessors.DAL;
+import com.critters.dal.entity.Item;
 import com.critters.dal.entity.NPC;
 import com.critters.dal.entity.QuestInstance;
 import com.critters.dal.entity.User;
@@ -32,16 +33,15 @@ public class EventBLL {
 		registrantsForLottery.clear();
 	}
 
-	public static void distributePrizes(List<LotteryEvent> events) {
+	public static void linkRandomEventsToUsers(List<LotteryEvent> events) {
 		if(Extensions.isNullOrEmpty(registrantsForLottery.keySet()) || Extensions.isNullOrEmpty(events))
 			return;
 
 		for(LotteryEvent event : events) {
 			User winner = null;
 
-			double odds = 1/registrantsForLottery.size();
-
 			while(winner == null && !Extensions.isNullOrEmpty(registrantsForLottery.keySet())) {
+				double odds = 1/registrantsForLottery.size();
 				for(User registrant : registrantsForLottery.values()) {
 					int tries = 1;
 					Integer luck = purchasedLuck.get(registrant);
@@ -61,8 +61,6 @@ public class EventBLL {
 				purchasedLuck.remove(winner.getUserID());
 				registrantsForLottery.remove(winner.getUserID());
 			}
-			if(Extensions.isNullOrEmpty(registrantsForLottery.keySet()))
-				return;
 		}
 	}
 
@@ -74,7 +72,7 @@ public class EventBLL {
 	}
 
 	public static LotteryEvent generateRandomEvent(){
-		double threshold = Math.random();//used for determining giveaway types
+		double threshold = Math.random();//used for determining random event giveaway types
 		if(threshold < .5) {
 			return generateCashGiveaway();
 		} else if(threshold < .75) {
@@ -87,23 +85,26 @@ public class EventBLL {
 	}
 
 	private static LotteryEvent generateCashGiveaway(){
-		int cashPrize = (int)((Math.random()*100) + 1);
+		int cashPrize = (int)((Math.random()*100) + 1); //todo economics
 
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public UINotification giveaway(User winner) {
+			public UINotification actionToUser(User winner) {
 				winner.setCritterbuxx(UserBLL.alterUserCash(winner.getUserID(), cashPrize));
-				return null;
+				UINotification notification = new UINotification();
+				notification.body = "You found something! " + cashPrize + "cB!";
+				notification.title = "Random Event";
+				return notification;
 			}
 		};
-		event.message = "You found " + cashPrize + " critterbucks, just laying around!";
+		event.message = "You found " + cashPrize + " critterbucks, just laying around! You shouldn't be seeing this message";
 		return event;
 	}
 
 	private static LotteryEvent generateFlavorTextGiveaway(){
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public UINotification giveaway(User winner) {
+			public UINotification actionToUser(User winner) {
 				return null;
 			}
 		};
@@ -112,13 +113,36 @@ public class EventBLL {
 	}
 
 	private static LotteryEvent generateFloorItemGiveaway(){
+
+		List<Item> items = ItemsBLL.getAbandonedItems(true);
+		List<Item> foundItems = new ArrayList<Item>();
+		if(Extensions.isNullOrEmpty(items)) return null;
+
+		int totalRarity = 0;
+		for(Item i : items) {
+			if(i.getDescription().getRarity().getItemRarityTypeID() >= 4) {
+				foundItems.clear();
+			}
+			foundItems.add(i);
+			if(totalRarity >= 4) {
+				break;
+			}
+		}
+
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public UINotification giveaway(User winner) {
+			public UINotification actionToUser(User winner) {
+				if(ItemsBLL.giveDiscardedInventoryItems(items, winner)) {
+					UINotification notification = new UINotification();
+					notification.body = "You found something!";
+					notification.title = "Random Event";
+					notification.customBodyHTML = items.stream().map(i -> i.getDescription().getItemName()).reduce("",(s, s2) -> s + ", " + s2);//todo build a real UI template here
+					return notification;
+				}
 				return null;
 			}
 		};
-		event.message = "Test message: you won an item that someone else threw on the ground "; //todo analyze ownerless items in the inventoryitems table
+		event.message = "Test message: you won an item that someone else threw on the ground. You probably shouldn't see this message??? ";
 		return event;
 	}
 
@@ -131,7 +155,7 @@ public class EventBLL {
 
 		LotteryEvent event = new LotteryEvent() {
 			@Override
-			public UINotification giveaway(User winner) {
+			public UINotification actionToUser(User winner) {
 				QuestInstance randomQuest = WorldBLL.generateARandomQuest(questIssuer, winner.getUserID(), null, null);
 				return null;
 			}
@@ -140,30 +164,19 @@ public class EventBLL {
 		return event;
 	}
 
-	public static void tellMeWhatIWon(User loggedInUser, AsyncResponse asyncResponse) {
+	public static void redeemRandomEventForUser(User loggedInUser, AsyncResponse asyncResponse) {
 		LotteryEvent event = outstandingLotteryWinners.get(loggedInUser.getUserID());
 		outstandingLotteryWinners.remove(loggedInUser.getUserID());
 		if(event == null) return;
-		event.giveaway(loggedInUser);
-
-
-		//TODO temp, put in generate method
-		UINotification notice = new UINotification();
-		notice.body = event.message;
-		notice.title = "Notification title!!?!?";
-		notice.customBodyHTML = "<img src=\"https://40.media.tumblr.com/35934de8201e95eafc07fc77282a8359/tumblr_inline_nvepzwfkaA1qmorkz_540.jpg\" />";
-		Notification not = new Notification();
-		not.serverMessages = new ArrayList<UINotification>();
-		not.serverMessages.add(notice);
-
-
-		asyncResponse.resume(not);
+		UINotification notification = event.actionToUser(loggedInUser);
+		if(notification == null) return;
+		asyncResponse.resume(new Notification(null, null, notification));
 	}
 
 	public abstract static class LotteryEvent {
 		String message;
 		String innerHTML;
-		public abstract UINotification giveaway(User winner);
+		public abstract UINotification actionToUser(User winner);
 	}
 }
 

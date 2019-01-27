@@ -43,7 +43,7 @@ public class ChatBLL {
 		logger.trace("Notifying user " + userId + "of " + message + " " + friendRequest);
 		if(listeners.containsKey(userId)) {
 			logger.trace("User " + userId + " found in listeners map");
-			Notification notification = new Notification(message, friendRequest);
+			Notification notification = new Notification(message, friendRequest, null);
 			listeners.get(userId).resume(Response.status(Response.Status.OK).entity(notification).build());
 			listeners.remove(userId);
 		} else {
